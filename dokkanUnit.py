@@ -6,9 +6,9 @@ from scipy.stats import poisson
 # If want to increase efficiency can save Objects with Pickle module - probably also want to change class methods to save outputs as attributes
 # On ki collect assume on average get 3.5 type orbs (50% same type, 50% other type) and 1 rainbow orb ->6.25 ki on average
 # TODO
-# Pikkon Super Strike
-# Path to Ultimate Power Event
-# Gamma 1 & 2 Dokkan Events
+# New Quest Stages
+# Path to Ultimate Power Event Treasures
+
 turnMax = 10
 leaderSkillBuff = 4
 leaderSkillKi = 6
@@ -36,7 +36,7 @@ HP_SA_Mult = [6,7,8,14,15]
 def PoissonCDF(x,mu):
     return (poisson.pmf(x,mu)-poisson.pmf(0,mu))/(1-poisson.pmf(0,mu))
 def SAMultiplier(multiplier,EZA,exclusivity,nCopies,nStacks,SA_Att):
-    stackingPenalty=0
+    SAMultipliers = [0]*turnMax
     if(exclusivity=='Super Strike'):
         baseMultiplier = 6.3
     else:
@@ -60,30 +60,103 @@ def SAMultiplier(multiplier,EZA,exclusivity,nCopies,nStacks,SA_Att):
                     baseMultiplier = 4.25
                 case 'Mega-Colossal':
                     baseMultiplier = 5.7
-    if (nStacks==turnMax): # If infinite stacker
-        stackingPenalty = SA_Att
-    return baseMultiplier+0.05*HP_SA_Mult[nCopies-1]-stackingPenalty
+    for i in range(turnMax):
+        stackingPenalty=0
+        if (nStacks[i]==turnMax): # If infinite stacker
+            stackingPenalty = SA_Att[i]
+        SAMultipliers[i] = baseMultiplier+0.05*HP_SA_Mult[nCopies-1]-stackingPenalty
+    return SAMultipliers
 def KiMultiplier(base,ki):
-    if ki<=12:
-        return 1
-    else:
-        return (np.linspace(base,2,12))[ki-13]
-def AttackDistribution(constantKi,randomKi,intentional12Ki,rarity):
-    Pr_N = PoissonCDF(max(12-constantKi,0),randomKi)
-    if(intentional12Ki or rarity!='LR'):
-        Pr_12Ki = 1-Pr_N
-        Pr_18Ki = 0
-    else:
-        Pr_18Ki = 1-PoissonCDF(max(17-constantKi,0),randomKi)
-        Pr_12Ki = 1-Pr_N-Pr_18Ki
-    return [Pr_N, Pr_12Ki, Pr_18Ki]
+    kiMultipliers = [0]*turnMax
+    for i in range(turnMax):
+        if ki[i]<=12:
+            kiMultipliers[i] = 1
+        else:
+            kiMultipliers[i] = (np.linspace(base,2,12))[ki[i]-13]
+    return kiMultipliers
+def branchAtt(i,nAA,M_12,M_N,P_AA,nProcs,P_SA,P_g,N_0,A_12_0,SA_mult,P_HP):
+        #i_loc = i
+        #M_12_loc = M_12
+        #M_N_loc = M_N
+        #p_A_loc = p_A
+        #procs_loc = procs
+        N = M_N * N_0
+        A_12 = M_12 * A_12_0
+        if(i == nAA - 1): #If no more additional attacks
+            branchAtt = 0.5 * P_AA * (A_12 + N) #Add average HP damage
+        else:
+            i+= 1 # Increment attack counter
+            # Calculate extra attack if get additional super and subsequent addditional attacks
+            tempAtt0 = branchAtt(i, nAA, M_12, M_N, P_AA, nProcs, P_SA, P_g, N_0, A_12_0, SA_mult, P_HP) # Add damage if don't get any additional attacks
+            tempAtt1 = branchAtt(i, nAA, M_12, M_N, P_AA + P_HP * (1 - P_HP) ^ nProcs, nProcs + 1, P_SA, P_g, N_0, A_12_0, SA_mult, P_HP)
+            tempAtt2 = branchAtt(i, nAA,M_12 + SA_mult, M_N + SA_mult, P_AA + P_HP * (1 - P_HP) ^ nProcs, nProcs + 1, P_SA, P_g, N_0, A_12_0, SA_mult, P_HP)
+            branchAtt = P_SA[i] * (tempAtt2 + A_12) + (1 - P_SA[i])* (P_g[i] * (tempAtt1 + N) + (1 - P_g[i]) * (tempAtt0))
+        return branchAtt
+def branchAA(i,nAA,P_AA,nProcs,P_SA,P_g,P_HP):
+        #i_loc = i
+        #M_12_loc = M_12
+        #M_N_loc = M_N
+        #p_A_loc = p_A
+        #procs_loc = procs
+        if(i == nAA - 1): #If no more additional attacks
+            branchAA = 0.5 * P_AA # Add average HP super chance
+        else:
+            i+= 1 # Increment attack counter
+            # Calculate extra attack if get additional super and subsequent addditional attacks
+            tempAA0 = branchAA(i, nAA, P_AA, nProcs, P_SA, P_g, P_HP) # Add damage if don't get any additional attacks
+            tempAA1 = branchAA(i, nAA, P_AA + P_HP * (1 - P_HP) ^ nProcs, nProcs + 1, P_SA, P_g, P_HP)
+            branchAA = P_SA[i] * tempAA1 + (1 - P_SA[i])* (P_g[i] * tempAA1 + (1 - P_g[i]) * tempAA0)
+        return branchAA
 class Unit:
     def __init__(self,ID,nCopies,HPS,skillOrbs):
         self.ID = str(ID)
         self.nCopies = nCopies
         self.HPS = HPS
         self.skillOrbs = skillOrbs
-    def HP_Stats(self):
+        self.HP_Stats = self.getHP_Stats()
+        self.skillOrbs_Stats = self.getSkillOrb_Stats()
+        self.att = self.kit.attack+self.HP_Stats[0]+self.skillOrbs_Stats[0]
+        self.defence =self.kit.defence+self.HP_Stats[1]+self.skillOrbs_Stats[1]
+        self.HP_P_AA = self.getHP_P_AA()
+        self.HP_P_Crit = self.getHP_P_Crit()
+        self.HP_P_Dodge = self.getHP_P_Dodge()
+        self.leaderSkill = self.kit.leaderSkill
+        self.SBR = self.kit.SBR
+        [self.links_Commonality, self.links_Ki, self.linkAtt_SoT, self.linkDef, self.linkCrit, self.linkAtt_OnSuper, self.linkDodge, self.linkDmgRed, self.linkHealing] = self.getLinks()
+        self.healing = self.kit.healing+self.linkHealing
+        self.dmgRed = self.kit.dmgRed + self.linkDmgRed
+        self.special = self.kit.special
+        self.support = self.kit.support
+        self.useability = self.kit.nTeams/nTeamsMax*(self.support[0]+self.links_Commonality[0])
+        self.constantKi = leaderSkillKi+self.kit.passiveKi
+        self.randomKi = self.links_Ki+self.kit.collectKi+avgKiSupport
+        self.ki = (np.around(self.constantKi + self.randomKi)).astype('int32')
+        [self.Pr_N, self.Pr_SA, self.Pr_USA] = self.getAttackDistribution()
+        [self.stackedAtt, self.stackedDef] = self.getStackedStats()
+        self.p1Att = self.kit.P1_Att+avgSupport
+        self.p2Att = self.kit.P2_Att+self.linkAtt_OnSuper
+        self.p3Att = self.kit.P3_Att
+        self.p1Def = self.kit.P1_Def+avgSupport
+        self.p2Def = self.kit.P2A_Def+self.kit.P2B_Def
+        self.p3Def = self.kit.P3_Def
+        self.normal = self.getNormal()
+        self.sa = self.getSA()
+        if self.kit.rarity == 'LR':
+            self.usa = self.getUSA()
+        [self.avg_AA_SA, self.avgAtt] = self.getAvg()
+        self.P_Crit = self.kit.passiveCrit+(1-self.kit.passiveCrit)*(self.HP_P_Crit+(1-self.HP_P_Crit)*self.linkCrit)
+        self.avgAttModifer = self.P_Crit*CritMultiplier+(1-self.P_Crit)*(self.kit.P_SEaaT*SEaaTMultiplier+(1-self.kit.P_SEaaT)*avgTypeAdvantage)
+        self.apt = self.avgAtt*self.avgAttModifer
+        self.P_Dodge = self.kit.P_dodge + (1-self.kit.P_dodge) * (self.HP_P_Dodge+(1-self.HP_P_Dodge)*self.linkDodge)
+        self.avgDefMult = self.getAvgDefMult()
+        self.avgDefPreSuper = self.defence*(1+leaderSkillBuff)*(1+self.p1Def)*(1+self.linkDef)*(1+self.kit.P2A_Def)*(1+self.p3Def)*(1+self.stackedDef)
+        self.avgDefPostSuper = self.defence*(1+leaderSkillBuff)*(1+self.p1Def)*(1+self.linkDef)*(1+self.p2Def)*(1+self.p3Def)*(1+self.avgDefMult)
+        self.normalDefence = np.minimum(-(1-(1-dodgeCancelFrac)*self.P_Dodge)*(self.kit.P_guard*(maxNormalDamage*(1-avgGuardFactor)*(1-self.dmgRed)-self.avgDefPostSuper)*guardMod+(1-self.kit.P_guard)*(maxNormalDamage*(1-self.dmgRed)-self.avgDefPostSuper)*avgTypeMod)/(maxNormalDamage*avgTypeMod),[0]*turnMax)
+        self.saDefencePreSuper = -(1-(self.kit.P_nullify+(1-self.kit.P_nullify)*(1-dodgeCancelFrac)*self.P_Dodge))*((self.kit.P_guard*(maxSADamage*(1-avgGuardFactor)*(1-self.dmgRed)-self.avgDefPreSuper)*guardMod+(1-self.kit.P_guard)*(maxSADamage*(1-self.dmgRed)-self.avgDefPreSuper)*avgTypeMod))/(maxSADamage*avgTypeMod)
+        self.saDefencePostSuper = -(1-(self.kit.P_nullify+(1-self.kit.P_nullify)*(1-dodgeCancelFrac)*self.P_Dodge))*((self.kit.P_guard*(maxSADamage*(1-avgGuardFactor)*(1-self.dmgRed)-self.avgDefPostSuper)*guardMod+(1-self.kit.P_guard)*(maxSADamage*(1-self.dmgRed)-self.avgDefPostSuper)*avgTypeMod))/(maxSADamage*avgTypeMod)
+        self.slot1Ability = np.maximum(2*(0.5-self.saDefencePostSuper+self.saDefencePreSuper),[0]*turnMax)*(1+self.saDefencePostSuper)
+        self.attributes = [self.leaderSkill, self.SBR, self.healing,self.special, self.support, self.useability,self.apt,self.normalDefence,self.saDefencePostSuper,self.slot1Ability]
+    def getHP_Stats(self):
         match self.kit.type:
             case 'PHY':
                 if (self.kit.exclusivity=='F2P'):
@@ -107,17 +180,17 @@ class Unit:
                     return HP_TEQ[:,self.nCopies-1]
             case 'INT':
                 if (self.kit.exclusivity=='F2P'):
-                    return HP_F2P[:][4]
+                    return HP_F2P[:,4]
                 else:
                     return HP_INT[:,self.nCopies-1]
-    def SkillOrb_Stats(self):
+    def getSkillOrb_Stats(self):
         if(self.skillOrbs == 'A'):
             return [500,0]
         elif(self.skillOrbs == 'D'):
             return [0,500]
         else:
             raise Exception("Invalid Skill Orb entered")
-    def HP_P_AA(self):
+    def getHP_P_AA(self):
         INT_penalty = 0
         if(self.kit.type=='INT'):
             INT_penalty = 0.1
@@ -139,7 +212,7 @@ class Unit:
             return 0.1
         else:
             return 0
-    def HP_P_Crit(self):
+    def getHP_P_Crit(self):
         INT_penalty = 0
         if(self.kit.type=='INT'):
             INT_penalty = 0.1
@@ -161,7 +234,7 @@ class Unit:
             return 0.1
         else:
             return 0
-    def HP_P_Dodge(self):
+    def getHP_P_Dodge(self):
         if(self.HPS[0]=='D'):
             if(self.nCopies>2):
                 return 0.25
@@ -180,21 +253,100 @@ class Unit:
             return 0.05
         else:
             return 0
+    def getLinks(self):
+        linkCommonality, linkKi, linkAtt_SoT, linkDef, linkCrit, linkAtt_OnSuper, linkDodge, linkDmgRed, linkHealing = np.zeros(turnMax), np.zeros(turnMax), np.zeros(turnMax),np.zeros(turnMax), np.zeros(turnMax), np.zeros(turnMax),np.zeros(turnMax), np.zeros(turnMax), np.zeros(turnMax)
+        for turn in range(turnMax):
+            for link in self.kit.links[:,turn]:
+                linkCommonality[turn] += link.commonality
+                linkKi[turn] += link.commonality*link.ki
+                linkAtt_SoT[turn] += link.commonality*link.att_SoT
+                linkDef[turn] += link.commonality*link.defence
+                linkCrit[turn] += link.commonality*link.crit
+                linkAtt_OnSuper[turn] += link.commonality*link.att_OnSuper
+                linkDodge[turn] += link.commonality*link.dodge
+                linkDmgRed[turn] += link.commonality*link.dmgRed
+                linkHealing[turn] += link.commonality*link.healing
+        return [linkCommonality/7, linkKi, linkAtt_SoT, linkDef, linkCrit, linkAtt_OnSuper, linkDodge, linkDmgRed, linkHealing]
+    def getAttackDistribution(self):
+        Pr_N, Pr_SA, Pr_USA = [0]*turnMax, [0]*turnMax, [0]*turnMax
+        for i in range(turnMax):
+            Pr_N[i] = PoissonCDF(max(12-self.constantKi[i],0),self.randomKi[i])
+            if(self.kit.intentional12Ki[i] or self.kit.rarity !='LR'):
+                Pr_SA[i] = 1-Pr_N[i]
+                Pr_USA[i] = 0
+            else:
+                Pr_USA[i] = 1-PoissonCDF(max(17-self.constantKi[i],0),self.randomKi[i])
+                Pr_SA[i] = 1-Pr_N[i]-Pr_USA[i]
+        return [Pr_N, Pr_SA, Pr_USA]
+    def getAvg(self):
+        nAA = [len(List) for List in self.kit.AA_P_super] # Number of additional attacks from passive in each turn
+        i = -1 # iteration counter
+        nProcs = 1 # Initialise number of HP procs
+        SAmultiplier = SAMultiplier(self.kit.SA_Mult_12,self.kit.EZA,self.kit.exclusivity,self.nCopies,self.kit.SA_12_Att_Stacks,self.kit.SA_12_Att)
+        if(self.kit.rarity=='LR'): # If self. is a LR
+            USAmultiplier = SAMultiplier(self.kit.SA_Mult_18,self.kit.EZA,self.kit.exclusivity,self.nCopies,self.kit.SA_18_Att_Stacks,self.kit.SA_18_Att) # USA multiplier
+        M_12 = SAmultiplier+self.kit.SA_12_Att+self.stackedAtt # 12 ki multiplier after SA effect
+        A_12_0 = self.sa/M_12 # Get 12 ki SA attack stat without multiplier
+        N_0 = self.normal/(self.p1Att+self.stackedAtt) # Get normal attack stat without SoT attack
+        P_AA = self.HP_P_AA # Probability of doing an additional attack next
+        P_SA = self.kit.AA_P_super # Probability of doing a super on inbuilt additional
+        P_g = self.kit.AA_P_guarantee # Probability of inbuilt additional
+        counterAtt = (4*self.kit.P_counterNormal+0.5*self.kit.P_counterSA)*self.kit.counterMod*self.normal
+        avg_AA_SA, avgAtt = [0]*turnMax, [0]*turnMax
+        for j in range(turnMax):
+            avg_AA_SA[j] = branchAA(i,nAA[j],P_AA,nProcs,P_SA[j],P_g[j],self.HP_P_AA)
+            avgAtt[j] = self.Pr_N[j]*(self.normal[j]+branchAtt(i,nAA[j],M_12[j],self.p1Att[j],P_AA,nProcs,P_SA[j],P_g[j],N_0[j],A_12_0[j],self.kit.SA_12_Att[j],self.HP_P_AA)) \
+                   + self.Pr_SA[j]*(self.sa[j]+branchAtt(i,nAA[j],M_12[j]+SAmultiplier[j],self.p1Att[j]+SAmultiplier[j],P_AA,nProcs,P_SA[j],P_g[j],N_0[j],A_12_0[j],self.kit.SA_12_Att[j],self.HP_P_AA))
+            if(self.kit.rarity=='LR'): # If self. is a LR
+                avgAtt[j] += self.Pr_USA[j]*(self.usa[j]+branchAtt(i,nAA[j],M_12[j]+USAmultiplier[j],self.p1Att[j]+USAmultiplier[j],P_AA,nProcs,P_SA[j],P_g[j],N_0[j],A_12_0[j],self.kit.SA_12_Att[j],self.HP_P_AA))
+        avgAtt += counterAtt
+        return [avg_AA_SA, avgAtt]
+    def getStackedStats(self):
+        # Can make more efficient later by saving stacked attack for each turn and just add on next turn, rather than calculating the whole thing on each call
+        stackedAtt, stackedDef = [0]*turnMax, [0]*turnMax
+        for turn in range(turnMax-1): # For each turn < self.turn (i.e. turns which can affect how much defense have on self.turn) 
+            if(self.kit.SA_18_Att_Stacks[turn]>1): # If stack for long enough to last to turn self.turn
+                stackedAtt[turn+1:turn+self.kit.SA_18_Att_Stacks[turn]-1] += self.Pr_USA[turn]*self.kit.SA_18_Att[turn] # add stacked att
+            if(self.kit.SA_18_Def_Stacks[turn]>1): # If stack for long enough to last to turn self.turn
+                stackedDef[turn+1:turn+self.kit.SA_18_Def_Stacks[turn]-1] += self.Pr_USA[turn]*self.kit.SA_18_Def[turn] # add stacked att
+            if(self.kit.SA_12_Att_Stacks[turn]>1): # If stack for long enough to last to turn self.turn
+                stackedAtt[turn+1:turn+self.kit.SA_12_Att_Stacks[turn]-1] += (self.Pr_SA[turn]+self.avg_AA_SA[turn])*self.kit.SA_12_Att[turn] # add stacked att
+            if(self.kit.SA_12_Def_Stacks[turn]>1): # If stack for long enough to last to turn self.turn
+                stackedAtt[turn+1:turn+self.kit.SA_12_Def_Stacks[turn]-1] += (self.Pr_SA[turn]+self.avg_AA_SA[turn])*self.kit.SA_12_Def[turn] # add stacked att
+        return [np.array(stackedAtt), np.array(stackedDef)]
+    def getNormal(self):
+        kiMultiplier = KiMultiplier(self.kit.kiMod_12,np.minimum(self.ki,[24]*turnMax))
+        return self.att*(1+leaderSkillBuff)*(1+self.p1Att)*(1+self.linkAtt_SoT)*(1+self.p2Att)*(1+self.p3Att)*kiMultiplier
+    def getSA(self):
+        kiMultiplier = [self.kit.kiMod_12]*turnMax
+        SAmultiplier = SAMultiplier(self.kit.SA_Mult_12,self.kit.EZA,self.kit.exclusivity,self.nCopies,self.kit.SA_12_Att_Stacks,self.kit.SA_12_Att)
+        return self.att*(1+leaderSkillBuff)*(1+self.p1Att)*(1+self.linkAtt_SoT)*(1+self.p2Att)*(1+self.p3Att)*kiMultiplier*(SAmultiplier+self.kit.SA_12_Att)
+    def getUSA(self):
+        kiMultiplier = KiMultiplier(self.kit.kiMod_12,np.minimum(np.maximum(self.ki,[18]*turnMax),[24]*turnMax))
+        SAmultiplier = SAMultiplier(self.kit.SA_Mult_18,self.kit.EZA,self.kit.exclusivity,self.nCopies,self.kit.SA_18_Att_Stacks,self.kit.SA_18_Att)
+        return self.att*(1+leaderSkillBuff)*(1+self.p1Att)*(1+self.linkAtt_SoT)*(1+self.p2Att)*(1+self.p3Att)*kiMultiplier*(SAmultiplier+self.kit.SA_18_Att)
+    def getAvgDefMult(self):
+        if(self.kit.rarity=='LR'): # If unit is a LR
+            avgDefMult = self.Pr_SA*self.kit.SA_12_Def+self.Pr_USA*self.kit.SA_18_Def
+        else:
+            avgDefMult = self.Pr_SA*self.kit.SA_12_Def
+        avgDefMult += self.stackedDef + self.avg_AA_SA*self.kit.SA_12_Def
+        return avgDefMult
 class TUR(Unit):
     def __init__(self,ID,nCopies,HPS,skillOrbs):
+        self.kit = Kit(str(ID),"TUR").getKit()
         super().__init__(ID,nCopies,HPS,skillOrbs)
-        self.kit = Kit(self.ID,"TUR").getKit()
 class LR(Unit):
     def __init__(self,ID,nCopies,HPS,skillOrbs):
-        super().__init__(ID,nCopies,HPS,skillOrbs)
-        self.kit = Kit(self.ID,"LR").getKit()
+        self.kit = Kit(str(ID),"LR").getKit()
+        super().__init__(ID,nCopies,HPS,skillOrbs)     
 class Kit:
     def __init__(self,ID,rarity):
         self.ID = ID
         self.rarity = rarity
         self.links = np.array([[None]*turnMax for i in range(7)])
     def getKit(self):
-        filepath = 'C:/Users/Tyler/OneDrive/Documents/Gaming/DokkanKits/'+self.ID+'.csv'
+        filepath = 'C:/Users/Tyler/OneDrive/Documents/DokkanAnalysis/DokkanKits/'+self.ID+'.csv'
         file = open(filepath)
         kitData = np.genfromtxt(file,dtype='str',delimiter=',',skip_header=True)
         for i in range(17):
@@ -335,7 +487,7 @@ class Link:
     def __init__(self,name):
         self.name = name
     def getLink(self):
-        filepath = 'C:/Users/Tyler/OneDrive/Documents/Gaming/LinkTable.csv'
+        filepath = 'C:/Users/Tyler/OneDrive/Documents/DokkanAnalysis/LinkTable.csv'
         file = open(filepath)
         linkData = np.genfromtxt(file,dtype='str',delimiter=',',skip_header=True)
         names = list(linkData[:,0])
@@ -351,362 +503,8 @@ class Link:
         self.commonality = float(linkData[i,9])
         file.close()
         return self
-class Evaluator:
-    # First create attributes some singular, others for each turn
-    # Then have different weightings for each based on SBR, FL, Red Zone etc.
-    def __init__(self,attributes):
-        self.attributes = attributes
+#class Evaluator:
 
-class Factor():
-     def __init__(self,SBR,FL,RZ,overall):
-        self.SBR = SBR
-        self.FL = FL
-        self.RZ = RZ
-        self.overall = overall
-class TurnBasedFactor(Factor):
-    def __init__(self,turn,SBR,FL,RZ,overall):
-        super().__init__(SBR,FL,RZ,overall)
-        self.turn = turn
-class TurnBasedHelper():
-    def __init__(self,turn):
-        self.turn = turn
-class LeaderSkill(Factor):
-    def __init__(self,SBR=0,FL=0,RZ=0,overall=0):
-        super().__init__(SBR,FL,RZ,overall)
-    def calculate(self,unit):
-        return unit.kit.leaderSkill
-class Useability(Factor):
-    def __init__(self,SBR=0,FL=0,RZ=0,overall=0):
-        super().__init__(SBR,FL,RZ,overall)
-    def calculate(self,unit):
-        return unit.kit.nTeams/nTeamsMax*(unit.kit.support[0]+Links_Commonality(1).calculate(unit))
-class SBR(Factor):
-    def __init__(self,SBR=0,FL=0,RZ=0,overall=0):
-        super().__init__(SBR,FL,RZ,overall)
-    def calculate(self,unit):
-        return unit.kit.SBR
-class Offense(TurnBasedFactor):
-    def __init__(self,turn,SBR=0,FL=0,RZ=0,overall=0):
-        super().__init__(turn,SBR,FL,RZ,overall)
-    def calculate(self,unit):
-        apt = APT(self.turn).calculate(unit)
-        return apt
-        # Need to divide this by the max APT, do this once have stored each unit, so will need to save APT undivided too
-class NormalDefence(TurnBasedFactor):
-    def __init__(self,turn,SBR=0,FL=0,RZ=0,overall=0):
-        super().__init__(turn,SBR,FL,RZ,overall)
-    def calculate(self,unit):
-        P_dodge = unit.kit.P_dodge[self.turn-1] + (1-unit.kit.P_dodge[self.turn-1]) * (unit.HP_P_Dodge()+(1-unit.HP_P_Dodge())*Links_Dodge(self.turn).calculate(unit))
-        dmgRed = DmgRed(self.turn).calculate(unit)
-        avgDefPostSuper = AvgDefPostSuper(self.turn).calculate(unit)
-        return min(-(1-(1-dodgeCancelFrac)*P_dodge)*(unit.kit.P_guard[self.turn-1]*(maxNormalDamage[self.turn-1]*(1-avgGuardFactor)*(1-dmgRed)-avgDefPostSuper)*guardMod+(1-unit.kit.P_guard[self.turn-1])*(maxNormalDamage[self.turn-1]*(1-dmgRed)-avgDefPostSuper)*avgTypeMod)/(maxNormalDamage[self.turn-1]*avgTypeMod),0)
-class SADefence(TurnBasedFactor):
-    def __init__(self,turn,SBR=0,FL=0,RZ=0,overall=0):
-        super().__init__(turn,SBR,FL,RZ,overall)
-    def calculate(self,unit,slot1=False):
-        P_dodge = unit.kit.P_dodge[self.turn-1] + (1-unit.kit.P_dodge[self.turn-1]) * (unit.HP_P_Dodge()+(1-unit.HP_P_Dodge())*Links_Dodge(self.turn).calculate(unit))
-        dmgRed = DmgRed(self.turn).calculate(unit)
-        if slot1:
-            avgDef = AvgDefPreSuper(self.turn).calculate(unit)
-        else:
-            avgDef = AvgDefPostSuper(self.turn).calculate(unit)
-        return -(1-(unit.kit.P_nullify[self.turn-1]+(1-unit.kit.P_nullify[self.turn-1])*(1-dodgeCancelFrac)*P_dodge))*((unit.kit.P_guard[self.turn-1]*(maxSADamage[self.turn-1]*(1-avgGuardFactor)*(1-dmgRed)-avgDef)*guardMod+(1-unit.kit.P_guard[self.turn-1])*(maxSADamage[self.turn-1]*(1-dmgRed)-avgDef)*avgTypeMod))/(maxSADamage[self.turn-1]*avgTypeMod)
-class Slot1Ability(TurnBasedFactor):
-    def __init__(self,turn,SBR=0,FL=0,RZ=0,overall=0):
-            super().__init__(turn,SBR,FL,RZ,overall)
-    def calculate(self,unit):
-        saDefencePreSuper = SADefence(self.turn).calculate(unit,slot1=True)
-        saDefencePostSuper = SADefence(self.turn).calculate(unit)
-        slot1DefFrac = 1-saDefencePostSuper+saDefencePreSuper
-        return max(2*(slot1DefFrac-0.5),0)*(1+SADefence(self.turn).calculate(unit))
-class Healing(TurnBasedFactor):
-    def __init__(self,turn,SBR=0,FL=0,RZ=0,overall=0):
-            super().__init__(turn,SBR,FL,RZ,overall)
-    def calculate(self,unit):
-        return unit.kit.healing[self.turn-1]
-class Support(TurnBasedFactor):
-    def __init__(self,turn,SBR=0,FL=0,RZ=0,overall=0):
-            super().__init__(turn,SBR,FL,RZ,overall)
-    def calculate(self,unit):
-        return unit.kit.support[self.turn-1]
-class Special(TurnBasedFactor):
-    def __init__(self,turn,SBR=0,FL=0,RZ=0,overall=0):
-            super().__init__(turn,SBR,FL,RZ,overall)
-    def calculate(self,unit):
-        return unit.kit.special[self.turn-1]
-class APT(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        avg_att = AvgAtt(self.turn).calculate(unit)
-        avg_att_modifier = AvgAttModifier(self.turn).calculate(unit)
-        return avg_att * avg_att_modifier
-class AvgAtt(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def branchAtt(self,i,nAA,M_12,M_N,P_AA,nProcs,P_SA,P_g,N_0,A_12_0,SA_mult,P_HP):
-        #i_loc = i
-        #M_12_loc = M_12
-        #M_N_loc = M_N
-        #p_A_loc = p_A
-        #procs_loc = procs
-        N = M_N * N_0
-        A_12 = M_12 * A_12_0
-        if(i == nAA - 1): #If no more additional attacks
-            branchAtt = 0.5 * P_AA * (A_12 + N) #Add average HP damage
-        else:
-            i+= 1 # Increment attack counter
-            # Calculate extra attack if get additional super and subsequent addditional attacks
-            tempAtt0 = self.branchAtt(i, nAA, M_12, M_N, P_AA, nProcs, P_SA, P_g, N_0, A_12_0, SA_mult, P_HP) # Add damage if don't get any additional attacks
-            tempAtt1 = self.branchAtt(i, nAA, M_12, M_N, P_AA + P_HP * (1 - P_HP) ^ nProcs, nProcs + 1, P_SA, P_g, N_0, A_12_0, SA_mult, P_HP)
-            tempAtt2 = self.branchAtt(i, nAA,M_12 + SA_mult, M_N + SA_mult, P_AA + P_HP * (1 - P_HP) ^ nProcs, nProcs + 1, P_SA, P_g, N_0, A_12_0, SA_mult, P_HP)
-            branchAtt = P_SA[i] * (tempAtt2 + A_12) + (1 - P_SA[i])* (P_g[i] * (tempAtt1 + N) + (1 - P_g[i]) * (tempAtt0))
-        return branchAtt
-    def calculate(self,unit):
-        nAA = len(unit.kit.AA_P_super[self.turn-1]) # Number of additional attacks from passive
-        normal = Normal(self.turn).calculate(unit) # Damage from normal
-        sa = SA(self.turn).calculate(unit) # Damage from 12 Ki SA
-        SAmultiplier = SAMultiplier(unit.kit.SA_Mult_12,unit.kit.EZA,unit.kit.exclusivity,unit.nCopies,unit.kit.SA_12_Att_Stacks[self.turn-1],unit.kit.SA_12_Att[self.turn-1]) # 12 Ki SA multipler
-        [constantKi,randomKi] = Ki(self.turn).calculate(unit)
-        attackDistribution = AttackDistribution(constantKi,randomKi,unit.kit.intentional12Ki[self.turn-1],unit.kit.rarity)
-        i = -1 # iteration counter
-        M_12 = (SAmultiplier+unit.kit.SA_12_Att[self.turn-1]) # 12 ki multiplier after SA effect
-        A_12_0 = sa/M_12 # Get 12 ki SA attack stat without multiplier
-        P1_Att = unit.kit.P1_Att[self.turn-1]+avgSupport # get SoT attack stat for SA multiplier scaling
-        N_0 = normal/P1_Att # Get normal attack stat without SoT attack
-        nProcs = 1 # Initialise number of HP procs
-        P_AA = unit.HP_P_AA() # Probability of doing an additional attack next
-        P_SA = unit.kit.AA_P_super[self.turn-1] # Probability of doing a super on inbuilt additional
-        P_g = unit.kit.AA_P_guarantee[self.turn-1] # Probability of inbuilt additional
-        counterAtt = (4*unit.kit.P_counterNormal[self.turn-1]+0.5*unit.kit.P_counterSA[self.turn-1])*unit.kit.counterMod*normal
-        avgAtt = attackDistribution[0]*(normal+self.branchAtt(i,nAA,M_12,P1_Att,P_AA,nProcs,P_SA,P_g,N_0,A_12_0,unit.kit.SA_12_Att[self.turn-1],unit.HP_P_AA)) \
-                   + attackDistribution[1]*(sa+self.branchAtt(i,nAA,M_12+SAmultiplier,P1_Att+SAmultiplier,P_AA,nProcs,P_SA,P_g,N_0,A_12_0,unit.kit.SA_12_Att[self.turn-1],unit.HP_P_AA))
-        if(unit.kit.rarity=='LR'): # If unit is a LR
-            USAmultiplier = SAMultiplier(unit.kit.SA_Mult_18,unit.kit.EZA,unit.kit.exclusivity,unit.nCopies,unit.kit.SA_18_Att_Stacks[self.turn-1],unit.kit.SA_18_Att[self.turn-1]) # USA multiplier
-            usa = USA(self.turn).calculate(unit) # USA attack stat
-            avgAtt += attackDistribution[2]*(usa+self.branchAtt(i,nAA,M_12+USAmultiplier,P1_Att+USAmultiplier,P_AA,nProcs,P_SA,P_g,N_0,A_12_0,unit.kit.SA_12_Att[self.turn-1],unit.HP_P_AA()))
-        avgAtt += counterAtt
-        return avgAtt   
-class Normal(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        att = unit.kit.attack+(unit.HP_Stats())[0]+(unit.SkillOrb_Stats())[0]
-        p1_Att = unit.kit.P1_Att[self.turn-1]+avgSupport+StackedAtt(self.turn).calculate(unit)
-        links_Att = Links_Att(self.turn).calculate(unit)
-        p2_Att = unit.kit.P2_Att[self.turn-1]+Links_Att_OnSuper(self.turn).calculate(unit)
-        p3_Att = unit.kit.P3_Att[self.turn-1]
-        kiMultiplier = KiMultiplier(unit.kit.kiMod_12,min(round(sum(Ki(self.turn).calculate(unit))),24))
-        return att*(1+leaderSkillBuff)*(1+p1_Att)*(1+links_Att)*(1+p2_Att)*(1+p3_Att)*kiMultiplier
-class SA(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        att = unit.kit.attack+(unit.HP_Stats())[0]+(unit.SkillOrb_Stats())[0]
-        p1_Att = unit.kit.P1_Att[self.turn-1]+avgSupport+StackedAtt(self.turn).calculate(unit)
-        links_Att = Links_Att(self.turn).calculate(unit)
-        p2_Att = unit.kit.P2_Att[self.turn-1]+Links_Att_OnSuper(self.turn).calculate(unit)
-        p3_Att = unit.kit.P3_Att[self.turn-1]
-        kiMultiplier = unit.kit.kiMod_12
-        SAmultiplier = SAMultiplier(unit.kit.SA_Mult_12,unit.kit.EZA,unit.kit.exclusivity,unit.nCopies,unit.kit.SA_12_Att_Stacks[self.turn-1],unit.kit.SA_12_Att[self.turn-1])
-        return att*(1+leaderSkillBuff)*(1+p1_Att)*(1+links_Att)*(1+p2_Att)*(1+p3_Att)*kiMultiplier*(SAmultiplier+unit.kit.SA_12_Att[self.turn-1])
-class USA(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        att = unit.kit.attack+(unit.HP_Stats())[0]+(unit.SkillOrb_Stats())[0]
-        p1_Att = unit.kit.P1_Att[self.turn-1]+avgSupport+StackedAtt(self.turn).calculate(unit)
-        links_Att = Links_Att(self.turn).calculate(unit)
-        p2_Att = unit.kit.P2_Att[self.turn-1]+Links_Att_OnSuper(self.turn).calculate(unit)
-        p3_Att = unit.kit.P3_Att[self.turn-1]
-        kiMultiplier = KiMultiplier(unit.kit.kiMod_12,min(max(round(sum(Ki(self.turn).calculate(unit))),18),24))
-        SAmultiplier = SAMultiplier(unit.kit.SA_Mult_18,unit.kit.EZA,unit.kit.exclusivity,unit.nCopies,unit.kit.SA_18_Att_Stacks[self.turn-1],unit.kit.SA_18_Att[self.turn-1])
-        return att*(1+leaderSkillBuff)*(1+p1_Att)*(1+links_Att)*(1+p2_Att)*(1+p3_Att)*kiMultiplier*(SAmultiplier+unit.kit.SA_18_Att[self.turn-1])
-class StackedAtt(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        # Can make more efficient later by saving stacked attack for each turn and just add on next turn, rather than calculating the whole thing on each call
-        stackedAtt = 0
-        for turn in range(1,self.turn): # For each turn < self.turn (i.e. turns which can affect how much defense have on self.turn)
-            [constantKi,randomKi] = Ki(turn).calculate(unit)
-            attackDistribution = AttackDistribution(constantKi,randomKi,unit.kit.intentional12Ki[self.turn-1],unit.kit.rarity) # compute probabilities of normal,SA and USA
-            if(unit.kit.SA_18_Att_Stacks[turn-1]>=self.turn-turn): # If stack for long enough to last to turn self.turn
-                stackedAtt += attackDistribution[2]*unit.kit.SA_18_Att[turn-1] # add stacked att
-            if(unit.kit.SA_12_Att_Stacks[turn-1]>=self.turn-turn): # If stack for long enough to last to turn self.turn
-                stackedAtt += (attackDistribution[1]+Avg_AA_SA(turn).calculate(unit))*unit.kit.SA_12_Att[turn-1] # add stacked att
-        return stackedAtt
-class StackedDef(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        # Can make more efficient later by saving stacked attack for each turn and just add on next turn, rather than calculating the whole thing on each call
-        stackedDef = 0
-        for turn in range(1,self.turn): # For each turn < self.turn (i.e. turns which can affect how much defense have on self.turn)
-            [constantKi,randomKi] = Ki(turn).calculate(unit)
-            attackDistribution = AttackDistribution(constantKi,randomKi,unit.kit.intentional12Ki[self.turn-1],unit.kit.rarity) # compute probabilities of normal,SA and USA
-            if(unit.kit.SA_18_Def_Stacks[turn-1]>=self.turn-turn): # If stack for long enough to last to turn self.turn
-                stackedDef += attackDistribution[2]*unit.kit.SA_18_Def[turn-1] # add stacked att
-            if(unit.kit.SA_12_Def_Stacks[turn-1]>=self.turn-turn): # If stack for long enough to last to turn self.turn
-                stackedDef += (attackDistribution[1]+Avg_AA_SA(turn).calculate(unit))*unit.kit.SA_12_Def[turn-1] # add stacked att
-        return stackedDef
-class Links_Att(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        sum = 0
-        for link in unit.kit.links[:,self.turn-1]:
-            sum += link.att_SoT*link.commonality
-        return sum
-class Links_Att_OnSuper(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        sum = 0
-        for link in unit.kit.links[:,self.turn-1]:
-            sum += link.att_OnSuper*link.commonality
-        return sum
-class Links_Ki(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        sum = 0
-        for link in unit.kit.links[:,self.turn-1]:
-            sum += link.ki*link.commonality
-        return sum
-class Links_Defence(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        sum = 0
-        for link in unit.kit.links[:,self.turn-1]:
-            sum += link.defence*link.commonality
-        return sum
-class Links_Crit(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        sum = 0
-        for link in unit.kit.links[:,self.turn-1]:
-            sum += link.crit*link.commonality
-        return sum
-class Links_DmgRed(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        sum = 0
-        for link in unit.kit.links[:,self.turn-1]:
-            sum += link.dmgRed*link.commonality
-        return sum
-class Links_Dodge(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        sum = 0
-        for link in unit.kit.links[:,self.turn-1]:
-            sum += link.dodge*link.commonality
-        return sum
-class Links_Healing(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        sum = 0
-        for link in unit.kit.links[:,self.turn-1]:
-            sum += link.healing*link.commonality
-        return sum
-class Links_Commonality(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        sum = 0
-        for link in unit.kit.links[:,self.turn-1]:
-            sum += link.commonality
-        return sum/7
-class Ki(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        links_ki = Links_Ki(self.turn)
-        return [leaderSkillKi+unit.kit.passiveKi[self.turn-1],links_ki.calculate(unit)+unit.kit.collectKi[self.turn-1]+avgKiSupport]
-class AvgAttModifier(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        P_crit = P_Crit(self.turn).calculate(unit)
-        return P_crit*CritMultiplier+(1-P_crit)*(unit.kit.P_SEaaT[self.turn-1]*SEaaTMultiplier+(1-unit.kit.P_SEaaT[self.turn-1])*avgTypeAdvantage)
-class P_Crit(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        return unit.kit.passiveCrit[self.turn-1]+(1-unit.kit.passiveCrit[self.turn-1])*(unit.HP_P_Crit()+(1-unit.HP_P_Crit())*Links_Crit(self.turn).calculate(unit))
-class DmgRed(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        return unit.kit.dmgRed[self.turn-1] + Links_DmgRed(self.turn).calculate(unit)
-class AvgDefPreSuper(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        defStat = unit.kit.defence+(unit.HP_Stats())[1]+(unit.SkillOrb_Stats())[1]
-        defSoT = unit.kit.P1_Def[self.turn-1]+avgSupport
-        links_Defence = Links_Defence(self.turn).calculate(unit)
-        p2_Def = unit.kit.P2A_Def[self.turn-1]
-        p3_Def = unit.kit.P3_Def[self.turn-1]
-        avgDefMult = StackedDef(self.turn).calculate(unit)
-        return defStat*(1+leaderSkillBuff)*(1+defSoT)*(1+links_Defence)*(1+p2_Def)*(1+p3_Def)*(1+avgDefMult)
-class AvgDefPostSuper(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        defStat = unit.kit.defence+(unit.HP_Stats())[1]+(unit.SkillOrb_Stats())[1]
-        defSoT = unit.kit.P1_Def[self.turn-1]+avgSupport
-        links_Defence = Links_Defence(self.turn).calculate(unit)
-        p2_Def = unit.kit.P2A_Def[self.turn-1]+unit.kit.P2B_Def[self.turn-1]
-        p3_Def = unit.kit.P3_Def[self.turn-1]
-        avgDefMult = AvgDefMult(self.turn).calculate(unit)
-        return defStat*(1+leaderSkillBuff)*(1+defSoT)*(1+links_Defence)*(1+p2_Def)*(1+p3_Def)*(1+avgDefMult)
-class Avg_AA_SA(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def branchAA(self,i,nAA,P_AA,nProcs,P_SA,P_g,P_HP):
-        #i_loc = i
-        #M_12_loc = M_12
-        #M_N_loc = M_N
-        #p_A_loc = p_A
-        #procs_loc = procs
-        if(i == nAA - 1): #If no more additional attacks
-            branchAA = 0.5 * P_AA # Add average HP super chance
-        else:
-            i+= 1 # Increment attack counter
-            # Calculate extra attack if get additional super and subsequent addditional attacks
-            tempAA0 = self.branchDef(i, nAA, P_AA, nProcs, P_SA, P_g, P_HP) # Add damage if don't get any additional attacks
-            tempAA1 = self.branchDef(i, nAA, P_AA + P_HP * (1 - P_HP) ^ nProcs, nProcs + 1, P_SA, P_g, P_HP)
-            branchAA = P_SA[i] * tempAA1 + (1 - P_SA[i])* (P_g[i] * tempAA1 + (1 - P_g[i]) * tempAA0)
-        return branchAA
-    def calculate(self,unit):
-        nAA = len(unit.kit.AA_P_super[self.turn-1]) # Number of additional attacks from passive
-        i = -1 # iteration counter
-        nProcs = 1 # Initialise number of HP procs
-        P_AA = unit.HP_P_AA() # Probability of doing an additional attack next
-        P_SA = unit.kit.AA_P_super[self.turn-1] # Probability of doing a super on inbuilt additional
-        P_g = unit.kit.AA_P_guarantee[self.turn-1] # Probability of inbuilt additional
-        avg_AA_SA = self.branchAA(i,nAA,P_AA,nProcs,P_SA,P_g,unit.HP_P_AA)
-        return avg_AA_SA
-class AvgDefMult(TurnBasedHelper):
-    def __init__(self,turn):
-        super().__init__(turn)
-    def calculate(self,unit):
-        [constantKi,randomKi] = Ki(self.turn).calculate(unit)
-        attackDistribution = AttackDistribution(constantKi,randomKi,unit.kit.intentional12Ki[self.turn-1],unit.kit.rarity)
-        if(unit.kit.rarity=='LR'): # If unit is a LR
-            avgDefMult = attackDistribution[1]*unit.kit.SA_12_Def[self.turn-1]+attackDistribution[2]*unit.kit.SA_18_Def[self.turn-1]
-        else:
-            avgDefMult = attackDistribution[1]*unit.kit.SA_12_Def[self.turn-1]
-        avgDefMult += StackedDef(self.turn).calculate(unit) + Avg_AA_SA(self.turn).calculate(unit)*unit.kit.SA_12_Def[self.turn-1]
-        return avgDefMult
-
-Goku = LR(1,1,['C','A'],'D')
-leaderSkill = LeaderSkill(10).calculate(Goku)
-slot1 = SBR(10).calculate(Goku)
-print(slot1)
+Goku = LR(1,5,['C','A'],'D')
+for attribute in Goku.attributes:
+    print(attribute)
