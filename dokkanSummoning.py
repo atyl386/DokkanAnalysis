@@ -29,7 +29,7 @@ def SummonRating(ID):
         case 0:
             EZADI = 0.8
 
-    if (unit.kit.rarity in ['DFLR','DF','DCLR']):
+    if (unit.kit.rarity in ['DF LR','DF','Carnival LR','DFLR','DCLR']):
         rarityScore = 50 # These are summonRatings, have to be tuned
     else:
         rarityScore = 25
@@ -40,7 +40,7 @@ def SummonRating(ID):
     else:
         EZA = 1
         globalEZADate=unit.kit.GLB_releaseDate + relativedelta(months=4*12)
-        futureEZA = EZADiscountFactor**(relativedelta(globalEZADate,now).months)*EZADI
+        futureEZA = rarityScore**1.5*EZADiscountFactor**(relativedelta(globalEZADate,now).years)*EZADI
     for i in range(copiesMax):
         df = pd.read_excel('DokkanUnits/'+HP_dupes[i]+'/unitSummary.xlsx')
         evals[i] = df.at[ID-1,'Evaluation']
@@ -71,7 +71,7 @@ class Banner:
             self.threePlus1 = 4/3
         else:
             self.threePlus1 = 1
-        self.summonScore = self.units*self.coin*self.featuredRate*self.tickets*self.threePlus1
+        self.summonScore = self.units*self.coin*self.featuredRate*self.tickets*self.threePlus1*discount
     def shouldSummmon(self):
         if (self.summonScore>300): # Will need to be tuned
             return True
@@ -83,5 +83,9 @@ Heroes2022EZA = Banner([41,42,43,44,45,46,47,48],'blue',featuredSSR_rate=0.7,gFe
 print(Heroes2022EZA.summonScore)
 Gammas = Banner([8,9,11,38,38,38,38],'red')
 print(Gammas.summonScore)
-GalickGun = Banner([4,48,34,28,1,10,1,1,43],'red',threePlus1=True)
+GalickGun = Banner([4,53,54,55,56,57,58,59,60],'red',threePlus1=True,discount=15/11)
 print(GalickGun.summonScore)
+BeastGohan = Banner([4,8,50,38,63,38,60,60],'red') # Beast Gohan, Banner Unit, 
+print(BeastGohan.summonScore)
+OrangePiccolo = Banner([4,9,50,38,62,38,60,60],'red')
+print(OrangePiccolo.summonScore)

@@ -11,7 +11,6 @@ from sklearn.model_selection import cross_validate
 turnMax = 10
 nSclarAttributes = 3
 nAttributes = 10
-nUnits = 48
 copiesMax = 5
 User = [['A','C','D',16], # TEQLR SS Goku
     ['A','C','D',14], # PHYLR SS4s
@@ -61,8 +60,32 @@ User = [['A','C','D',16], # TEQLR SS Goku
     ['A','C','D',31], # Golden Cooler
     ['A','C','D',5], # STR Sealas
     ['C','A','D',23], # TEQ Great Saiyaman 3
+    ['A','C','D',0], # INT Yamcha
+    ['A','D','D',0], # TEQ Yajirobe
+    ['A','D','D',0], # TEQ Bardock
+    ['C','D','D',0], # INT Tora
+    ['A','D','D',0], # AGL Goku Black
+    ['A','C','D',1], # TEQ LR Gogeta
+    ['C','A','D',2], # PHY LR Blu Bois
+    ['C','A','D',3], # TEQ LR SS Gohan & Goten
+    ['C','A','D',1], # PHY SS Goten & Trunks
+    ['C','A','D',2], # STR Kefla
+    ['A','C','D',3], # STR SSGSSK Goku
+    ['A','D','D',1], # INT Goku Black
+    ['C','A','D',0], # STR Super Saiyan Goku LR
+    ['C','A','D',3], # STR Kid Buu
+    ['A','D','D',4], # PHY Super Saiyan 2 Goku
+    ['A','C','D',0],  # RoF Blues
+    ['A','C','D',0], # LR TEQ SS Goku & Gohan
+    ['A','C','D',0], # LR Goku & Piccolo/Piccolo
+    ['A','C','D',0], # PHY Raditz
+    ['C','A','D',0], # INT Majin Vegeta
+    ['A','C','D',0] # LR Goku Black & Zamasu
 ]
-def logisticMap(x,x_max,L=100,d=5,x_min=-9):
+
+nUnits = len(User)
+def logisticMap(x,x_max,L=100,d=1,x_min=-7):
+    L = L + d
     x_0=(x_min+x_max)/2
     k = 2*np.log((L-d)/d)/(x_max-x_min)
     return L/(1+np.exp(-k*(x-x_0)))
@@ -132,11 +155,11 @@ class Evaluator:
             score += self.attributeWeights[i]*np.dot(self.turnWeights,attribute)
         return score
 #overallTurnWeights = OverallTurnWeights()
-overallTurnWeights = np.array([2.2,2,2.7,2.7,2,1.5,1,0.5,0.6,0.7])
-overallAttributeWeights = np.array([8,2,4,1,6,4,8,1,9,5])
+overallTurnWeights = np.array([3.3,2.5,3.4,2.7,2.1,1.6,1.2,0.9,0.7,0.6])
+overallAttributeWeights = np.array([5.5,2,5,1,6,3.75,7,4.5,9,2.5])
 overallEvaluator = Evaluator(overallTurnWeights,overallAttributeWeights)
 
-reCalc = False
+reCalc = True
 if reCalc:
     attributeValues = np.zeros((nUnits,turnMax,nAttributes,copiesMax))
     units = [[None]*nUnits for i in range(copiesMax)]

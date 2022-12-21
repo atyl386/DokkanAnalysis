@@ -1,4 +1,7 @@
 # List of nCopies of units as they currently are in my account
+
+#TODO Tien Prime Battle
+# Burst Mode
 User = [['A','C','D',1], # TEQLR SS Goku
     ['A','C','D',3], # PHYLR SS4s
     ['A','C','D',1], # TEQLR Gods
@@ -6,7 +9,7 @@ User = [['A','C','D',1], # TEQLR SS Goku
     ['A','C','D',0], # PHY Goku Youth
     ['A','C','D',1], # AGLLR SSs
     ['C','A','A',1], # STRLR Final Form Cooler
-    ['A','C','D',0], # STR Gamma 1
+    ['A','C','D',1], # STR Gamma 1
     ['A','C','A',0], # AGL Gamma 2
     ['C','A','D',1], # PHYLR Metal Cooler
     ['C','A','A',1], # TEQ Androids 17&18
@@ -47,6 +50,27 @@ User = [['A','C','D',1], # TEQLR SS Goku
     ['A','C','D',3], # Golden Cooler
     ['A','C','D',0], # STR Sealas
     ['C','A','D',0], # TEQ Great Saiyaman 3
+    ['A','C','D',0], # INT Yamcha
+    ['A','D','D',0], # TEQ Yajirobe
+    ['A','D','D',0], # TEQ Bardock
+    ['C','D','D',0], # INT Tora
+    ['A','D','D',0], # AGL Goku Black
+    ['A','C','D',1], # TEQ LR Gogeta
+    ['C','A','D',2], # PHY LR Blu Bois
+    ['C','A','D',3], # TEQ LR SS Gohan & Goten
+    ['C','A','D',1], # PHY SS Goten & Trunks
+    ['C','A','D',2], # STR Kefla
+    ['A','C','D',3], # STR SSGSSK Goku
+    ['A','D','D',1], # INT Goku Black
+    ['C','A','D',0], # STR Super Saiyan Goku LR
+    ['C','A','D',3], # STR Kid Buu
+    ['A','D','D',4], # PHY Super Saiyan 2 Goku
+    ['A','C','D',0],  # RoF Blues
+    ['A','C','D',0], # LR TEQ SS Goku & Gohan
+    ['A','C','D',0], # LR Goku & Piccolo/Piccolo
+    ['A','C','D',0], # PHY Raditz
+    ['C','A','D',0], # INT Majin Vegeta
+    ['A','C','D',0] # LR Goku Black & Zamasu
 ]
 
 # EZA Area
