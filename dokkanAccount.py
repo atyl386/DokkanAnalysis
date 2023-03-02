@@ -1,9 +1,11 @@
 # List of nCopies of units as they currently are in my account
 
 #TODO
+# Dokkan Event
 # Further investigate standby skill stacking of orbs, what is the max?
 # Chnage input structure so have expected number of same-type and rainbow and other orbs.
 # Also make so don't have to do any computation before hand - I'm not sure if this is feasible given how varied units are
+# Dmg pre and post super
 User = [['A','C','D',1], # TEQLR SS Goku
     ['A','D','D',3], # PHYLR SS4s
     ['A','D','D',1], # TEQLR Gods
@@ -117,5 +119,7 @@ User = [['A','C','D',1], # TEQLR SS Goku
     ['A','D','D',5], # LR INT God Goku
     ['A','D','D',2], # LR AGL SS SBA Goku
     ['C','A','D',0], # LR Cha-la
-    ['A','C','D',0] # LR Dragon Soul
+    ['A','C','D',0], # LR Dragon Soul
+    ['A','C','D',2], # LR STR Gogeta
+    ['C','A','D',3] # LR TEQ Vegito
 ]

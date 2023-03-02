@@ -7,6 +7,7 @@ from scipy.optimize import fsolve
 # On ki collect assume on average get 3.75 type orbs (50% same type, 50% other type, unless get bonus key per type ki sphere then 20% same type) and 1.25 rainbow orb ->6.5 ki on average
 # Calculate average healing from Orbs- should really have input of # of same type and # of rainbow and other type
 # Change input method so inputs don't depend on HP
+# Should include average enemy defence to account for crit ignnoring it. Will require reformat of getAvgAtt and branchAtt as should return a list of all attcks, not their sum
 nonTurnBasedKitEntries = 21 # Not including SA Mult 12 and 18 because too hard to change input format
 activeIndex = 12
 reviveIndex = 13
@@ -31,6 +32,7 @@ STOrbPerKi = 0.25
 avgHealth = 650000
 maxNormalDamage = np.append(np.linspace(300000,530000,peakTurn),[530000]*(turnMax-peakTurn),axis=0)
 maxSADamage = np.append(np.linspace(812000,1855000,peakTurn),[1855000]*(turnMax-peakTurn),axis=0)
+maxDefence = np.append(np.linspace(75000,84000,peakTurn),[84000]*(turnMax-peakTurn),axis=0)
 SBR_df = 0.25 #discount factor of SBR ability per turn
 HP_PHY = np.array([[2000,3700,4000,4700,5000],[2000,3300,3600,3910,4600]])
 HP_STR = np.array([[2000,4100,4400,5100,5400],[2000,3300,3600,3910,4600]])
@@ -210,6 +212,7 @@ class Unit:
             self.P_Crit_GR = self.kit.passiveCrit_Active+(1-self.kit.passiveCrit_Active)*(self.HP_P_Crit)
             self.avgAttModifer_GR = self.P_Crit_GR*CritMultiplier+(1-self.P_Crit_GR)*(self.kit.P_SEaaT_Active*SEaaTMultiplier+(1-self.kit.P_SEaaT_Active)*avgTypeAdvantage)
             self.apt_GR = self.kit.GRLength*3*self.avgAtt_GR*self.avgAttModifer_GR
+            #self.dpt_GR
         if self.kit.activeTurn!=0:
             self.SBR += SBR_df**(self.kit.activeTurn-1)*self.kit.SBR_Active
             self.activeSkillTurn = int(max(self.kit.activeTurn,peakTurn))
