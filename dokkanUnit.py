@@ -1,13 +1,12 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import poisson
-from scipy.optimize import fsolve
-# Make a modelling parameters file and put the below parameters in it
 # Make drop down lists for input files for cells that have discrete options, e.g. Links, SA multipliers
 # On ki collect assume on average get 3.75 type orbs (50% same type, 50% other type, unless get bonus key per type ki sphere then 20% same type) and 1.25 rainbow orb ->6.5 ki on average
 # Calculate average healing from Orbs- should really have input of # of same type and # of rainbow and other type
 # Change input method so inputs don't depend on HP
 # Should include average enemy defence to account for crit ignnoring it. Will require reformat of getAvgAtt and branchAtt as should return a list of all attcks, not their sum
+# Could store average from previous complete run so didn't have to completely rerun each time add new characters (Although inly doing a new complete run would give the true result)
 nonTurnBasedKitEntries = 21 # Not including SA Mult 12 and 18 because too hard to change input format
 activeIndex = 12
 reviveIndex = 13
@@ -30,9 +29,9 @@ CritMultiplier = 2.03
 SEaaTMultiplier = 1.624
 STOrbPerKi = 0.25
 avgHealth = 650000
-maxNormalDamage = np.append(np.linspace(300000,530000,peakTurn),[530000]*(turnMax-peakTurn),axis=0)
-maxSADamage = np.append(np.linspace(812000,1855000,peakTurn),[1855000]*(turnMax-peakTurn),axis=0)
-maxDefence = np.append(np.linspace(75000,84000,peakTurn),[84000]*(turnMax-peakTurn),axis=0)
+maxNormalDamage = np.append(np.linspace(330000,530000,peakTurn),[530000]*(turnMax-peakTurn),axis=0)
+maxSADamage = np.append(np.linspace(924000,1855000,peakTurn),[1855000]*(turnMax-peakTurn),axis=0)
+maxDefence = np.append(np.linspace(100000,110000,peakTurn),[110000]*(turnMax-peakTurn),axis=0)
 SBR_df = 0.25 #discount factor of SBR ability per turn
 HP_PHY = np.array([[2000,3700,4000,4700,5000],[2000,3300,3600,3910,4600]])
 HP_STR = np.array([[2000,4100,4400,5100,5400],[2000,3300,3600,3910,4600]])
@@ -192,9 +191,8 @@ class Unit:
         self.P_Crit = self.kit.passiveCrit+(1-self.kit.passiveCrit)*(self.HP_P_Crit+(1-self.HP_P_Crit)*self.linkCrit)
         self.P_SEaaT = self.kit.P_SEaaT
         self.P_Dodge = self.kit.P_dodge + (1-self.kit.P_dodge) * (self.HP_P_Dodge+(1-self.HP_P_Dodge)*self.linkDodge)
-        self.P_DodgeSA = self.kit.P_counterSA+ (1-self.kit.P_counterSA)* (self.kit.P_dodge + (1-self.kit.P_dodge) * (self.HP_P_Dodge+(1-self.HP_P_Dodge)*self.linkDodge))
         self.P_guard = self.kit.P_guard
-        self.P_nullify = self.kit.P_nullify
+        self.P_nullify = self.kit.P_nullify+ (1-self.kit.P_nullify) * self.kit.P_counterSA
         if self.kit.GRLength!=0:
             self.GRTurn = max(self.kit.activeTurn,peakTurn)
             self.att_GR = self.kit.attack_GR+self.HP_Stats[0]+self.skillOrbs_Stats[0]
@@ -222,7 +220,6 @@ class Unit:
             self.constantKi[self.activeSkillTurn-1] += self.kit.passiveKi_Active
             self.randomKi[self.activeSkillTurn-1] = self.links_Ki[self.activeSkillTurn-1]+self.kit.collectKi_Active+avgKiSupport
             self.P_Dodge[self.activeSkillTurn-1] = self.kit.P_dodge_Active+(1-self.kit.P_dodge_Active)*(self.kit.P_dodge[self.activeSkillTurn-1] + (1-self.kit.P_dodge[self.activeSkillTurn-1]) * (self.HP_P_Dodge+(1-self.HP_P_Dodge)*self.linkDodge[self.activeSkillTurn-1]))
-            self.P_DodgeSA[self.activeSkillTurn-1] = self.kit.P_counterSA[self.activeSkillTurn-1]+ (1-self.kit.P_counterSA[self.activeSkillTurn-1])* self.kit.P_dodge_Active+(1-self.kit.P_dodge_Active)*(self.kit.P_dodge[self.activeSkillTurn-1] + (1-self.kit.P_dodge[self.activeSkillTurn-1]) * (self.HP_P_Dodge+(1-self.HP_P_Dodge)*self.linkDodge[self.activeSkillTurn-1]))
             self.P_guard[self.activeSkillTurn-1] = self.kit.P_guard_Active+(1-self.kit.P_guard_Active)*self.kit.P_guard[self.activeSkillTurn-1]
             self.P_nullify[self.activeSkillTurn-1] = self.kit.P_nullify_Active+(1-self.kit.P_nullify_Active)*self.kit.P_nullify[self.activeSkillTurn-1]
             self.P_Crit[self.activeSkillTurn-1] = self.kit.passiveCrit_Active+(1-self.kit.passiveCrit_Active)*(self.kit.passiveCrit[self.activeSkillTurn-1] + (1-self.kit.passiveCrit[self.activeSkillTurn-1])*(self.HP_P_Crit+(1-self.HP_P_Crit)*self.linkCrit[self.activeSkillTurn-1]))
@@ -267,8 +264,8 @@ class Unit:
         self.avgDefPostSuper = self.defence*(1+leaderSkillBuff)*(1+self.p1Def)*(1+self.linkDef)*(1+self.p2Def)*(1+self.p3Def)*(1+self.avgDefMult)
         self.normalDefencePreSuper = np.minimum(-(1-(1-dodgeCancelFrac)*self.P_Dodge)*(self.P_guard*GuardModifer(maxNormalDamage*avgGuardFactor*(1-self.dmgRedNormal)-self.avgDefPreSuper,guardMod)+(1-self.P_guard)*(maxNormalDamage*avgTypeFactor*(1-self.dmgRedNormal)-self.avgDefPreSuper))/(maxNormalDamage*avgTypeFactor),0.2)
         self.normalDefencePostSuper = np.minimum(-(1-(1-dodgeCancelFrac)*self.P_Dodge)*(self.P_guard*GuardModifer(maxNormalDamage*avgGuardFactor*(1-self.dmgRedNormal)-self.avgDefPostSuper,guardMod)+(1-self.P_guard)*(maxNormalDamage*avgTypeFactor*(1-self.dmgRedNormal)-self.avgDefPostSuper))/(maxNormalDamage*avgTypeFactor),0.2)
-        self.saDefencePreSuper = np.minimum(-(1-(self.P_nullify+(1-self.P_nullify)*(1-dodgeCancelFrac)*self.P_DodgeSA))*(self.P_guard*GuardModifer(maxSADamage*avgGuardFactor*(1-self.dmgRed)-self.avgDefPreSuper,guardMod)+(1-self.P_guard)*(maxSADamage*avgTypeFactor*(1-self.dmgRed)-self.avgDefPreSuper))/(maxSADamage*avgTypeFactor),0.2)
-        self.saDefencePostSuper = np.minimum(-(1-(self.P_nullify+(1-self.P_nullify)*(1-dodgeCancelFrac)*self.P_DodgeSA))*(self.P_guard*GuardModifer(maxSADamage*avgGuardFactor*(1-self.dmgRed)-self.avgDefPostSuper,guardMod)+(1-self.P_guard)*(maxSADamage*avgTypeFactor*(1-self.dmgRed)-self.avgDefPostSuper))/(maxSADamage*avgTypeFactor),0.2)
+        self.saDefencePreSuper = np.minimum(-(1-(self.P_nullify+(1-self.P_nullify)*(1-dodgeCancelFrac)*self.P_Dodge))*(self.P_guard*GuardModifer(maxSADamage*avgGuardFactor*(1-self.dmgRed)-self.avgDefPreSuper,guardMod)+(1-self.P_guard)*(maxSADamage*avgTypeFactor*(1-self.dmgRed)-self.avgDefPreSuper))/(maxSADamage*avgTypeFactor),0.2)
+        self.saDefencePostSuper = np.minimum(-(1-(self.P_nullify+(1-self.P_nullify)*(1-dodgeCancelFrac)*self.P_Dodge))*(self.P_guard*GuardModifer(maxSADamage*avgGuardFactor*(1-self.dmgRed)-self.avgDefPostSuper,guardMod)+(1-self.P_guard)*(maxSADamage*avgTypeFactor*(1-self.dmgRed)-self.avgDefPostSuper))/(maxSADamage*avgTypeFactor),0.2)
         self.slot1Ability = np.maximum(self.normalDefencePreSuper+self.saDefencePreSuper,-0.5)
         self.healing += (0.03+0.0015*HP_Recovery[self.nCopies-1])*self.avgDefPreSuper*self.kit.collectKi*STOrbPerKi/avgHealth
         self.attributes = [self.leaderSkill, self.SBR,self.useability, self.healing, self.support,self.apt,self.normalDefencePostSuper,self.saDefencePostSuper,self.slot1Ability]

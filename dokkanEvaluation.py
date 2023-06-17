@@ -191,7 +191,7 @@ turnDistribution = truncnorm(a,b,meanPeakTurn,meanPeakTurnStd)
 overallTurnWeights = turnDistribution.cdf(np.arange(2,turnMax+2))-turnDistribution.cdf(np.arange(1,turnMax+1))
 # overallAttributeWeights = np.array([7,1,4,1,7,3,8.6,10,8.5,3.6]) Previous version tured weights
 #overallAttributeWeights = np.array([8,0.5,7,2,3,12,12,10,7])
-overallAttributeWeights = np.array([5,0.5,4,2,6,10,8,8,5])
+overallAttributeWeights = np.array([5,0.5,4,1.5,5,10,8,8,4])
 overallEvaluator = Evaluator(overallTurnWeights,overallAttributeWeights)
 
 reCalc = True
