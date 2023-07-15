@@ -39,7 +39,43 @@ HP_AGL = np.array([[2000,3700,4000,4700,5000],[2000,4100,4400,4710,5400]])
 HP_TEQ = np.array([[2000,4100,4400,5100,5400],[2000,3700,4000,4310,5000]])
 HP_INT = np.array([[2000,3700,4000,4700,5000],[2000,3700,4000,4310,5000]])
 HP_F2P = np.array([[3000,3240,3000,3240,3000],[2760,2760,3240,3000,3000]])
-HP = [] # 2D array mapping each row contains each the nUnits currently entered into the database and the three columns are the 3 HP choices for a unit 'A', 'C', 'Defence'
+BRZ_STAT = 500
+BRZ_HP = 0.02
+SLV_HP = 0.04
+GLD_HP1 = 0.05
+GLD_HP2 = 0.01
+# ATT,DEF,ADD,CRT,DGE
+HP_D0 = {'AGL':[0,0,0.1,0,0],
+         'INT':[0,0,0,0,0.05],
+         'PHY':[0,0,0.1,0,0],
+         'STR':[0,0,0,0.1,0],
+         'TEQ':[0,0,0,0.1,0]}
+HP_D1 = {('ADD','CRT'):[0,0,0.18,0.06,0],
+         ('ADD','DGE'):[0,0,0.18,0,0.03],
+         ('CRT','DGE'):[0,0,0,0.18,0.03],
+         ('CRT','ADD'):[0,0,0.06,0.18,0],
+         ('DGE','ADD'):[0,0,0.06,0,0.09],
+         ('DGE','CRT'):[0,0,0,0.06,0.09]}
+HP_D2 = {('ADD','CRT'):[0,0,0.12,0.06,0],
+         ('ADD','DGE'):[0,0,0.12,0,0.03],
+         ('CRT','DGE'):[0,0,0,0.12,0.03],
+         ('CRT','ADD'):[0,0,0.06,0.12,0],
+         ('DGE','ADD'):[0,0,0.06,0,0.06],
+         ('DGE','CRT'):[0,0,0,0.06,0.06]}
+HP_BRZ = {'ATT':[BRZ_STAT,0,0,0,0],
+          'DEF':[0,BRZ_STAT,0,0,0],
+          'ADD':[0,0,2*BRZ_HP,0,0],
+          'CRT':[0,0,0,2*BRZ_HP,0],
+          'DGE':[0,0,0,0,BRZ_HP]}
+HP_SLV = {'ADD':[0,0,2*SLV_HP,0,0],
+          'CRT':[0,0,0,2*SLV_HP,0],
+          'DGE':[0,0,0,0,SLV_HP]}
+HP_GLD = {('ADD','CRT'):[0,0,2*GLD_HP1,2*GLD_HP2,0],
+         ('ADD','DGE'):[0,0,2*GLD_HP1,0,GLD_HP2],
+         ('CRT','DGE'):[0,0,0,2*GLD_HP1,GLD_HP2],
+         ('CRT','ADD'):[0,0,2*GLD_HP2,2*GLD_HP1,0],
+         ('DGE','ADD'):[0,0,2*GLD_HP2,0,GLD_HP1],
+         ('DGE','CRT'):[0,0,0,2*GLD_HP2,GLD_HP1]}
 HP_SA_Mult = [6,7,8,14,15]
 HP_Recovery = [7,7,8,9,15]
 LRExclusivities = ['Carnival LR', 'LR', 'DF LR']
@@ -159,19 +195,20 @@ def getAvgAtt(AA_P_super,SA_Mult_12,EZA,exclusivity,nCopies,SA_12_Att_Stacks,SA_
     avgAtt += counterAtt
     return avgAtt
 class Unit:
-    def __init__(self,ID,nCopies,HPS,skillOrbs):
+    def __init__(self,ID,nCopies,BRZ,HP1,HP2):
         self.ID = str(ID)
         self.nCopies = nCopies
-        self.HPS = HPS
-        self.skillOrbs = skillOrbs
+        self.BRZ = BRZ
+        self.HP1 = HP1
+        self.HP2 = HP2
         self.kit = Kit(str(ID)).getKit()
         self.HP_Stats = self.getHP_Stats()
-        self.skillOrbs_Stats = self.getSkillOrb_Stats()
-        self.att = self.kit.attack+self.HP_Stats[0]+self.skillOrbs_Stats[0]
-        self.defence =self.kit.defence+self.HP_Stats[1]+self.skillOrbs_Stats[1]
-        self.HP_P_AA = self.getHP_P_AA()
-        self.HP_P_Crit = self.getHP_P_Crit()
-        self.HP_P_Dodge = self.getHP_P_Dodge()
+        self.HP = self.getHP()
+        self.att = self.kit.attack+self.HP_Stats[0]+self.HP[0]
+        self.defence =self.kit.defence+self.HP_Stats[1]+self.HP[1]
+        self.HP_P_AA = self.HP[2]
+        self.HP_P_Crit = self.HP[3]
+        self.HP_P_Dodge = self.HP[4]
         self.leaderSkill = self.kit.leaderSkill
         [self.links_Commonality, self.links_Ki, self.linkAtt_SoT, self.linkDef, self.linkCrit, self.linkAtt_OnSuper, self.linkDodge, self.linkDmgRed, self.linkHealing] = self.getLinks()
         self.dmgRed = np.minimum(self.kit.dmgRed + self.linkDmgRed,[1]*turnMax)
@@ -195,7 +232,7 @@ class Unit:
         self.P_nullify = self.kit.P_nullify+ (1-self.kit.P_nullify) * self.kit.P_counterSA
         if self.kit.GRLength!=0:
             self.GRTurn = max(self.kit.activeTurn,peakTurn)
-            self.att_GR = self.kit.attack_GR+self.HP_Stats[0]+self.skillOrbs_Stats[0]
+            self.att_GR = self.kit.attack_GR+self.HP_Stats[0]+self.HP[0]
             self.constantKi_GR = leaderSkillKi+self.kit.passiveKi_Active
             self.randomKi_GR = self.kit.collectKi_Active
             self.ki_GR = np.minimum((np.around(self.constantKi_GR + self.randomKi_GR)).astype('int32'),24)
@@ -246,8 +283,6 @@ class Unit:
             self.sa[i] = getSA(self.kit.kiMod_12,self.att,self.p1Att[i],self.stackedAtt[i],self.linkAtt_SoT[i],self.p2Att[i],self.p3Att[i],self.kit.SA_Mult_12[i],self.kit.EZA,self.kit.exclusivity,self.nCopies,self.kit.SA_12_Att_Stacks[i],self.kit.SA_12_Att[i])
             if self.kit.rarity == 'LR':
                 self.usa[i] = getUSA(self.kit.kiMod_12,self.ki[i],self.att,self.p1Att[i],self.stackedAtt[i],self.linkAtt_SoT[i],self.p2Att[i],self.p3Att[i],self.kit.SA_Mult_18[i],self.kit.EZA,self.kit.exclusivity,self.nCopies,self.kit.SA_18_Att_Stacks[i],self.kit.SA_18_Att[i])
-                if (self.ID=="105" and i==2):
-                    k = 1
                 self.avgAtt[i] = getAvgAtt(self.kit.AA_P_super[i],self.kit.SA_Mult_12[i],self.kit.EZA,self.kit.exclusivity,self.nCopies,self.kit.SA_12_Att_Stacks[i],self.kit.SA_12_Att[i],self.kit.SA_18_Att[i],self.stackedAtt[i],self.p1Att[i],self.normal[i],self.sa[i],self.usa[i],self.HP_P_AA,self.kit.AA_P_guarantee[i],self.kit.P_counterNormal[i],self.kit.P_counterSA[i],self.kit.counterMod,self.Pr_N[i],self.Pr_SA[i],self.Pr_USA[i],self.kit.rarity)
                 if self.kit.activeTurn !=0 and i==self.activeSkillTurn-1:
                     self.avgAtt[i] += getActiveAttack(self.kit.kiMod_12,24,self.att,self.p1Att[self.activeSkillTurn-1],self.stackedAtt[self.activeSkillTurn-1],self.linkAtt_SoT[self.activeSkillTurn-1],self.p2Att[self.activeSkillTurn-1],self.p3Att[self.activeSkillTurn-1],self.kit.activeMult,self.nCopies)
@@ -296,76 +331,13 @@ class Unit:
                     return HP_F2P[:,4]
                 else:
                     return HP_INT[:,self.nCopies-1]
-    def getSkillOrb_Stats(self):
-        if(self.skillOrbs == 'A'):
-            return [500,0]
-        elif(self.skillOrbs == 'D'):
-            return [0,500]
-        else:
-            raise Exception("Invalid Skill Orb entered")
-    def getHP_P_AA(self):
-        INT_penalty = 0
-        if(self.kit.type=='INT'):
-            INT_penalty = 0.1
-        if(self.HPS[0]=='A'):
-            if(self.nCopies>2):
-                return 0.5
-            elif(self.nCopies==2):
-                return 0.28
-            else:
-                return 0.1
-        elif(self.HPS[1]=='A'):
-            if(self.nCopies>2):
-                return 0.22-INT_penalty
-            elif(self.nCopies==2):
-                return 0.16-INT_penalty
-            else:
-                return 0.1-INT_penalty
-        elif(self.kit.type=='PHY' or self.kit.type=='AGL'):
-            return 0.1
-        else:
-            return 0
-    def getHP_P_Crit(self):
-        INT_penalty = 0
-        if(self.kit.type=='INT'):
-            INT_penalty = 0.1
-        if(self.HPS[0]=='C'):
-            if(self.nCopies>2):
-                return 0.5
-            elif(self.nCopies==2):
-                return 0.28
-            else:
-                return 0.1
-        elif(self.HPS[1]=='C'):
-            if(self.nCopies>2):
-                return 0.22-INT_penalty
-            elif(self.nCopies==2):
-                return 0.16-INT_penalty
-            else:
-                return 0.1-INT_penalty
-        elif(self.kit.type=='STR' or self.kit.type=='TEQ'):
-            return 0.1
-        else:
-            return 0
-    def getHP_P_Dodge(self):
-        if(self.HPS[0]=='D'):
-            if(self.nCopies>2):
-                return 0.25
-            elif(self.nCopies==2):
-                return 0.14
-            else:
-                return 0.05
-        elif(self.HPS[1]=='D'):
-            if(self.nCopies>2):
-                return 0.11
-            elif(self.nCopies==2):
-                return 0.08
-            else:
-                return 0.05
-        elif(self.kit.type=='INT'):
-            return 0.05
-        else:
-            return 0       
+    def getHP(self):
+        HP = np.array(HP_D0[self.kit.type]) + HP_BRZ[self.BRZ] + HP_SLV[self.HP1]
+        if self.nCopies > 1:
+            HP += HP_D1[(self.HP1,self.HP2)]
+        if self.nCopies > 2:
+            HP += np.array(HP_D2[(self.HP1,self.HP2)]) + HP_GLD[(self.HP1,self.HP2)]
+        return HP
     def getLinks(self):
         linkCommonality, linkKi, linkAtt_SoT, linkDef, linkCrit, linkAtt_OnSuper, linkDodge, linkDmgRed, linkHealing = np.zeros(turnMax), np.zeros(turnMax), np.zeros(turnMax),np.zeros(turnMax), np.zeros(turnMax), np.zeros(turnMax),np.zeros(turnMax), np.zeros(turnMax), np.zeros(turnMax)
         for turn in range(turnMax):

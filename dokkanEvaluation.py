@@ -1,14 +1,7 @@
 import pickle
-import openpyxl
 from dokkanUnit import Unit, turnMax
 import numpy as np
 import pandas as pd
-from sklearn import linear_model, metrics
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.model_selection import cross_validate, cross_val_score, train_test_split
-from xgboost import XGBRegressor
 from scipy.stats import truncnorm
 from dokkanAccount import User
 nSclarAttributes = 3
@@ -16,103 +9,6 @@ nAttributes = 9
 copiesMax = 5
 meanPeakTurn = 3.471591
 meanPeakTurnStd = 1.857813
-Units = [['A','C','D',6,1], # TEQLR SS Goku
-    ['A','C','D',9,2], # PHYLR SS4s
-    ['A','C','D',8,3], # TEQLR Gods
-    ['A','C','D',4,4], # INTLR Vegeta & Trunks
-    ['A','C','D',10,5], # PHY Goku Youth
-    ['A','C','D',17,6], # AGLLR SSs
-    ['C','A','A',12,7], # STRLR Final Form Cooler
-    ['A','C','D',7,8], # STR Gamma 1
-    ['A','C','A',11,9], # AGL Gamma 2
-    ['C','A','D',20,10], # PHYLR Metal Cooler
-    ['C','A','A',21,11], # TEQ Androids 17&18
-    ['C','A','D',22,12], # AGLLR Golden Frieza
-    ['A','C','A',34,13], # AGLLR MUI Goku
-    ['A','C','D',15,14], # STR SS Goku/Gohan
-    ['C','A','D',24,15], # TEQ Pan
-    ['A','D','D',32,17], # INT Cheelai
-    ['A','C','D',29,18], # STR Cooler
-    ['A','C','D',16,19], # TEQ Ultimate Gohan
-    ['A','C','D',19,20], # AGL Captain Ginyu
-    ['C','A','D',36,21], # PHYLR Super Janemba
-    ['A','C','D',40,22], # STR Namek Goku
-    ['C','A','D',50,23], # INTLR Super Vegito
-    ['A','C','D',65,24], # AGLLR SS4 Goku
-    ['C','A','D',62,25], # STRLR SS4 Vegeta
-    ['C','A','D',53,26], # AGLLR Future Gohan & Trunks
-    ['A','C','D',38,27], # INT 19&20
-    ['A','C','D',46,28], # TEQ Kale & Caulifla
-    ['A','C','D',31,29], # AGL 1st Form Cell
-    ['C','A','D',35,30], # AGL Hacchan
-    ['A','C','D',23,31], # STR Piccolo (Banner)
-    ['C','A','D',43,34], # STR Super Hearts
-    ['C','D','D',54,35], # INT SS4 Gohan
-    ['A','C','D',85,36], # STR SS4 Bardock
-    ['A','C','D',94,37], # STR Supreme Kai of Time (Brainwashed)
-    ['A','C','D',70,38], # Robelu
-    ['C','A','D',88,39], # Golden Metal Cooler
-    ['A','C','D',86,40], # Janemba (Reconstructed)
-    ['A','C','D',90,41], # PHY Super Saiyan Cumber
-    ['A','D','D',81,42], # TEQ Supreme Opai of Time
-    ['A','C','D',92,43], # PHY SS3 Vegeta (Xeno)
-    ['A','C','D',39,44], # STR SS3 Goku (Xeno)
-    ['A','C','D',57,46], # Golden Cooler
-    ['A','C','D',72,47], # STR Sealas
-    ['C','A','D',79,48], # TEQ Great Saiyaman 3
-    ['A','C','D',28,49], # INT Yamcha
-    ['A','D','D',27,50], # TEQ Yajirobe
-    ['A','D','D',30,51], # TEQ Bardock
-    ['C','D','D',41,52], # INT Tora
-    ['A','C','D',45,54], # TEQ LR Gogeta
-    ['C','A','D',91,56], # TEQ LR SS Gohan & Goten
-    ['A','C','D',95,59], # STR SSGSSK Goku
-    ['A','D','D',93,60], # INT Goku Black
-    ['C','A','D',25,62], # STR Kid Buu
-    ['A','D','D',55,63], # PHY Super Saiyan 2 Goku
-    ['A','C','D',64,64],  # RoF Blues
-    ['A','C','D',80,65], # LR TEQ SS Goku & Gohan
-    ['A','C','D',77,66], # LR Goku & Piccolo/Piccolo
-    ['C','A','D',42,68], # INT Majin Vegeta
-    ['A','C','D',37,69], # LR Goku Black & Zamasu
-    ['C','A','D',51,70], # LR INT Boujack
-    ['C','A','D',13,71], # LR Beast Gohan
-    ['A','C','D',3,72], # LR Orange Piccolo
-    ['A','D','D',56,73], # Pan (Kid)
-    ['C','A','D',49,75], # LR Vegeta (Great Ape)
-    ['A','C','D',73,76], # LR Goku (Kaioken)
-    ['A','C','D',47,77], # STR Ultimate Gohan
-    ['A','C','D',52,79], # PHY Future Gohan
-    ['A','D','D',89,80], # STR Super Vegeta
-    ['A','C','D',84,81], # STR Videl
-    ['C','A','D',63,82], # LR Full Power Frieza AGL
-    ['A','C','D',44,83], # LR Super Saiyan Goku INT
-    ['A','C','D',60,84], # INT LSS Broly
-    ['A','D','D',69,85], # AGL Paikuhan
-    ['D','A','D',66,86], # TEQ Janemba
-    ['C','A','D',71,87], # STR UI Goku
-    ['A','C','D',74,88], # TEQ VB
-    ['A','C','D',78,89], # STR Rose Goku Black
-    ['A','C','D',18,90], # AGL Blue Gogeta
-    ['C','A','D',33,91], # PHY SS Broly
-    ['C','A','D',58,93], # INT SS3 Bardock
-    ['A','C','D',67,94], # INT Kid Goku
-    ['A','C','D',76,95], # AGL SSGSSE Vegeta
-    ['A','C','D',82,96], # AGL Turles
-    ['D','A','D',68,97], # AGL Super 17
-    ['A','C','D',75,98], # AGL Transforming Goku
-    ['A','C','D',87,99], # INT Angel Golden Frieza
-    ['A','C','D',61,100], # INT UI Goku
-    ['C','A','D',48,101], # TEQ Super FP Saiyan 4 Goku
-    ['A','C','D',59,102], # TEQ Super Saiyan 4 Gogeta
-    ['A','C','D',14,103], # LR INT Cell
-    ['A','C','D',5,104], # LR AGL Gohan
-    ['A','C','D',1,105], # LR GoldenBois
-    ['C','A','D',2,106], # LR GT Bois
-    ['C','D','D',26,107], # SS3 Gotenks & Piccolo
-    ['A','D','D',83,108] # Eis & Nouva Shenron
-]
-
 nUnits = len(User)
 def logisticMap(x,x_max,L=100,d=1,x_min=-7):
     L = L + d
@@ -120,7 +16,7 @@ def logisticMap(x,x_max,L=100,d=1,x_min=-7):
     k = 2*np.log((L-d)/d)/(x_max-x_min)
     return L/(1+np.exp(-k*(x-x_0)))
 HP_dupes = ['55%','69%','79%','90%','100%']
-HP_builds = [['A','C','D'],['A','C','A'],['A','D','D'],['A','D','A'],['C','A','D'],['C','A','A'],['C','D','D'],['C','D','A'],['D','C','D'],['D','A','D']]
+HP_builds = [['ATT','ADD','CRT'],['ATT','ADD','DGE'],['ATT','CRT','DGE'],['ATT','CRT','ADD'],['DEF','ADD','CRT'],['DEF','ADD','DGE'],['DEF','CRT','DGE'],['DEF','CRT','ADD'],['DEF','DGE','CRT'],['DEF','DGE','ADD'],['ADD','ADD','CRT'],['ADD','ADD','DGE'],['CRT','CRT','DGE'],['CRT','CRT','ADD'],['DGE','DGE','CRT'],['ATT','DGE','ADD']]
 attributes = ['LeaderSkill','SBR','Useability','Healing','Support','APT','normalDefence','saDefence','slot1Ability']
 def save_object(obj, filename):
     with open(filename, 'wb') as outp:  # Overwrites any existing file.
@@ -191,7 +87,7 @@ turnDistribution = truncnorm(a,b,meanPeakTurn,meanPeakTurnStd)
 overallTurnWeights = turnDistribution.cdf(np.arange(2,turnMax+2))-turnDistribution.cdf(np.arange(1,turnMax+1))
 # overallAttributeWeights = np.array([7,1,4,1,7,3,8.6,10,8.5,3.6]) Previous version tured weights
 #overallAttributeWeights = np.array([8,0.5,7,2,3,12,12,10,7])
-overallAttributeWeights = np.array([5,0.5,4,1.5,5,10,8,8,4])
+overallAttributeWeights = np.array([5,0.5,4,1.5,4,10,8,8,4])
 overallEvaluator = Evaluator(overallTurnWeights,overallAttributeWeights)
 
 reCalc = True
@@ -202,7 +98,7 @@ if reCalc:
     evaluations = np.zeros((nUnits,copiesMax))
     for ID in range(1,nUnits+1):
         print(ID)
-        units[-1][ID-1] = Unit(ID,copiesMax,User[ID-1][0:2],User[ID-1][2])
+        units[-1][ID-1] = Unit(ID,copiesMax,User[ID-1][0],User[ID-1][1],User[ID-1][2])
         attributeValues[ID-1,:,:,-1] = getAttributes(units[-1][ID-1])
     [rainbowMeans,rainbowStds] = summaryStats(attributeValues[:,:,:,-1])
     for ID in range(1,nUnits+1):
@@ -213,7 +109,7 @@ if reCalc:
             best_HP = None
             best_eval = evaluations[ID-1][-1]
             for i,HP_build in enumerate(HP_builds):
-                HP_unit = Unit(ID,copiesMax,HP_build[0:2],HP_build[2])
+                HP_unit = Unit(ID,copiesMax,HP_build[0],HP_build[1],HP_build[2])
                 normalizeUnit(HP_unit,rainbowMeans,rainbowStds)
                 HP_evaluation = overallEvaluator.evaluate(HP_unit)
                 if HP_evaluation > best_eval:
@@ -226,7 +122,7 @@ if reCalc:
     for ID in range(1,nUnits+1):
         print(ID)
         for nCopies in range(1,copiesMax):
-            units[nCopies-1][ID-1] = Unit(ID,nCopies,User[ID-1][0:2],User[ID-1][2])
+            units[nCopies-1][ID-1] = Unit(ID,nCopies,User[ID-1][0],User[ID-1][1],User[ID-1][2])
             attributeValues[ID-1,:,:,nCopies-1] = normalizeUnit(units[nCopies-1][ID-1],rainbowMeans,rainbowStds)
             evaluations[ID-1][nCopies-1] = overallEvaluator.evaluate(units[nCopies-1][ID-1])
     maxEvaluation = max(evaluations[:,-1])
