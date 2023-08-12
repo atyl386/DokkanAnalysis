@@ -11,23 +11,23 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','ADD','DGE',3], # PHYLR SS4s
     ['DEF','ADD','DGE',2], # TEQLR Gods
     ['DEF','ADD','CRT',1], # INTLR Vegeta & Trunks
-    ['DEF','DGE','ADD',0], # PHY Goku Youth
+    ['DEF','DGE','ADD',1], # PHY Goku Youth
     ['DEF','ADD','CRT',2], # AGLLR SSs
-    ['DEF','CRT','ADD',4], # STRLR Final Form Cooler
+    ['DEF','CRT','ADD',4], # STR LR Final Form Cooler
     ['DEF','ADD','CRT',3], # STR Gamma 1
     ['ATT','ADD','CRT',0], # AGL Gamma 2
     ['DEF','CRT','DGE',1], # PHYLR Metal Cooler
     ['DEF','ADD','CRT',2], # TEQ Androids 17&18
-    ['DEF','CRT','ADD',0], # AGLLR Golden Frieza
-    ['DEF','DGE','ADD',5], # AGLLR MUI Goku
+    ['DEF','CRT','ADD',1], # AGL LR Golden Frieza
+    ['DEF','DGE','ADD',5], # AGL LR MUI Goku
     ['DEF','ADD','CRT',2], # STR SS Goku/Gohan
     ['DEF','ADD','CRT',0], # TEQ Pan
-    ['ATT','ADD','CRT',0], # INTLR Fusion Zamasu
+    ['ATT','ADD','CRT',0], # INT LR Fusion Zamasu
     ['DEF','DGE','ADD',1], # INT Cheelai
     ['DEF','ADD','DGE',5], # STR Cooler
     ['DEF','ADD','DGE',5], # TEQ Ultimate Gohan
-    ['DEF','ADD','DGE',1], # AGL Captain Ginyu
-    ['DEF','CRT','ADD',0], # PHYLR Super Janemba
+    ['DEF','ADD','DGE',2], # AGL Captain Ginyu
+    ['DEF','CRT','ADD',0], # PHY LR Super Janemba
     ['DEF','ADD','CRT',5], # STR Namek Goku
     ['DEF','CRT','DGE',5], # INTLR Super Vegito
     ['DEF','DGE','ADD',4], # AGLLR SS4 Goku
@@ -70,8 +70,8 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','CRT','ADD',0], # STR Super Saiyan Goku LR
     ['DEF','ADD','DGE',5], # STR Kid Buu
     ['DEF','DGE','ADD',5], # PHY Super Saiyan 2 Goku
-    ['DEF','DGE','ADD',0],  # RoF Blues
-    ['DEF','DGE','ADD',0], # LR TEQ SS Goku & Gohan
+    ['DEF','DGE','ADD',0], # RoF Blues
+    ['DEF','DGE','ADD',1], # LR TEQ SS Goku & Gohan
     ['DEF','DGE','CRT',0], # LR Goku & Piccolo/Piccolo
     ['DEF','DGE','ADD',2], # PHY Raditz
     ['DEF','ADD','DGE',0], # INT Majin Vegeta
@@ -79,9 +79,9 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',3], # LR INT Boujack
     ['DEF','CRT','ADD',0], # LR Beast Gohan
     ['DEF','CRT','ADD',1], # LR Orange Piccolo
-    ['DEF','DGE','ADD',1], # Pan (Kid)
+    ['DEF','DGE','ADD',2], # Pan (Kid)
     ['DEF','DGE','ADD',0], # Trunks & Goten (Teen)
-    ['DEF','CRT','ADD',0], # LR Vegeta (Great Ape)
+    ['DEF','CRT','ADD',1], # LR Vegeta (Great Ape)
     ['DEF','DGE','ADD',1], # LR Goku (Kaioken)
     ['DEF','ADD','DGE',1], # STR Ultimate Gohan
     ['DEF','DGE','CRT',1], # AGL Trunks
@@ -147,4 +147,9 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',0], # TEQ Baby
     ['DEF','ADD','CRT',0], # INT Super Saiyan 4 Goku
     ['DEF','DGE','ADD',5], # PHYLR Super Gogeta
+    ['DEF','ADD','CRT',0], # LR Omega Shenron
+    ['DEF','ADD','DGE',2], # LR Super Baby 2 (Giant Ape)
+    ['DEF','CRT','ADD',0], # Banner Super Saiyan Gohan (Youth)
+    ['DEF','ADD','DGE',0], # DF Super Saiyan Trunks (Teen)
+    ['DEF','ADD','CRT',5], # Transforming Vegeta
 ]

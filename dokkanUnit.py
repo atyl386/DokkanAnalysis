@@ -5,6 +5,8 @@ from scipy.stats import poisson
 # On ki collect assume on average get 3.75 type orbs (50% same type, 50% other type, unless get bonus key per type ki sphere then 20% same type) and 1.25 rainbow orb ->6.5 ki on average
 # Calculate average healing from Orbs- should really have input of # of same type and # of rainbow and other type
 # Change input method so inputs don't depend on HP
+# Add Hit points as variable
+# Somehow take account of units requiring to get hit better
 # Should include average enemy defence to account for crit ignnoring it. Will require reformat of getAvgAtt and branchAtt as should return a list of all attcks, not their sum
 # Could store average from previous complete run so didn't have to completely rerun each time add new characters (Although inly doing a new complete run would give the true result)
 nonTurnBasedKitEntries = 21 # Not including SA Mult 12 and 18 because too hard to change input format
