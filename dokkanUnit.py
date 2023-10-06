@@ -31,9 +31,9 @@ CritMultiplier = 2.03
 SEaaTMultiplier = 1.624
 STOrbPerKi = 0.25
 avgHealth = 650000
-maxNormalDamage = np.append(np.linspace(330000,530000,peakTurn),[530000]*(turnMax-peakTurn),axis=0)
-maxSADamage = np.append(np.linspace(924000,1855000,peakTurn),[1855000]*(turnMax-peakTurn),axis=0)
-maxDefence = np.append(np.linspace(100000,110000,peakTurn),[110000]*(turnMax-peakTurn),axis=0)
+maxNormalDamage = 1.2 * np.append(np.linspace(550000,700000,peakTurn),[700000]*(turnMax-peakTurn),axis=0) # 1.2 factor to future proof calcs against powercreep
+maxSADamage = 1.2 * np.append(np.linspace(1540000,1855000,peakTurn),[1855000]*(turnMax-peakTurn),axis=0)
+maxDefence = 1.2* np.append(np.linspace(100000,110000,peakTurn),[110000]*(turnMax-peakTurn),axis=0)
 SBR_df = 0.25 #discount factor of SBR ability per turn
 HP_PHY = np.array([[2000,3700,4000,4700,5000],[2000,3300,3600,3910,4600]])
 HP_STR = np.array([[2000,4100,4400,5100,5400],[2000,3300,3600,3910,4600]])
@@ -220,7 +220,7 @@ class Unit:
         self.randomKi = self.links_Ki+self.kit.collectKi+avgKiSupport
         self.healing = self.kit.healing+self.linkHealing
         self.support = self.kit.support
-        self.useability = self.kit.nTeams/nTeamsMax*(1+self.support[0]/5+self.links_Commonality[0])
+        self.useability = self.kit.nTeams/nTeamsMax*(1+self.support[peakTurn]/5+self.links_Commonality[peakTurn])
         self.p1Att = np.maximum(self.kit.P1_Att+avgSupport,-1)
         self.p2Att = self.kit.P2_Att+self.linkAtt_OnSuper
         self.p1Def = self.kit.P1_Def+avgSupport
@@ -249,6 +249,7 @@ class Unit:
             self.P_Crit_GR = self.kit.passiveCrit_Active+(1-self.kit.passiveCrit_Active)*(self.HP_P_Crit)
             self.avgAttModifer_GR = self.P_Crit_GR*CritMultiplier+(1-self.P_Crit_GR)*(self.kit.P_SEaaT_Active*SEaaTMultiplier+(1-self.kit.P_SEaaT_Active)*avgTypeAdvantage)
             self.apt_GR = self.kit.GRLength*3*self.avgAtt_GR*self.avgAttModifer_GR
+            self.support_GR = 2 # Support for nullifying super attacks for a turn
             #self.dpt_GR
         if self.kit.activeTurn!=0:
             self.SBR += SBR_df**(self.kit.activeTurn-1)*self.kit.SBR_Active
@@ -296,13 +297,14 @@ class Unit:
         self.apt = self.avgAtt*self.avgAttModifer
         if self.kit.GRLength!=0:
             self.apt[self.activeSkillTurn-1] += self.apt_GR
+            self.support[self.activeSkillTurn-1] += self.support_GR
         self.avgDefMult = self.getAvgDefMult()
         self.avgDefPreSuper = self.defence*(1+leaderSkillBuff)*(1+self.p1Def)*(1+self.linkDef)*(1+self.kit.P2A_Def)*(1+self.p3Def)*(1+self.stackedDef)
         self.avgDefPostSuper = self.defence*(1+leaderSkillBuff)*(1+self.p1Def)*(1+self.linkDef)*(1+self.p2Def)*(1+self.p3Def)*(1+self.avgDefMult)
-        self.normalDefencePreSuper = np.minimum(-(1-(1-dodgeCancelFrac)*self.P_Dodge)*(self.P_guard*GuardModifer(maxNormalDamage*avgGuardFactor*(1-self.dmgRedNormal)-self.avgDefPreSuper,guardMod)+(1-self.P_guard)*(maxNormalDamage*avgTypeFactor*(1-self.dmgRedNormal)-self.avgDefPreSuper))/(maxNormalDamage*avgTypeFactor),0.2)
-        self.normalDefencePostSuper = np.minimum(-(1-(1-dodgeCancelFrac)*self.P_Dodge)*(self.P_guard*GuardModifer(maxNormalDamage*avgGuardFactor*(1-self.dmgRedNormal)-self.avgDefPostSuper,guardMod)+(1-self.P_guard)*(maxNormalDamage*avgTypeFactor*(1-self.dmgRedNormal)-self.avgDefPostSuper))/(maxNormalDamage*avgTypeFactor),0.2)
-        self.saDefencePreSuper = np.minimum(-(1-(self.P_nullify+(1-self.P_nullify)*(1-dodgeCancelFrac)*self.P_Dodge))*(self.P_guard*GuardModifer(maxSADamage*avgGuardFactor*(1-self.dmgRed)-self.avgDefPreSuper,guardMod)+(1-self.P_guard)*(maxSADamage*avgTypeFactor*(1-self.dmgRed)-self.avgDefPreSuper))/(maxSADamage*avgTypeFactor),0.2)
-        self.saDefencePostSuper = np.minimum(-(1-(self.P_nullify+(1-self.P_nullify)*(1-dodgeCancelFrac)*self.P_Dodge))*(self.P_guard*GuardModifer(maxSADamage*avgGuardFactor*(1-self.dmgRed)-self.avgDefPostSuper,guardMod)+(1-self.P_guard)*(maxSADamage*avgTypeFactor*(1-self.dmgRed)-self.avgDefPostSuper))/(maxSADamage*avgTypeFactor),0.2)
+        self.normalDefencePreSuper = np.minimum(-(1-(1-dodgeCancelFrac)*self.P_Dodge)*(self.P_guard*GuardModifer(maxNormalDamage*avgGuardFactor*(1-self.dmgRedNormal)-self.avgDefPreSuper,guardMod)+(1-self.P_guard)*(maxNormalDamage*avgTypeFactor*(1-self.dmgRedNormal)-self.avgDefPreSuper))/(maxNormalDamage*avgTypeFactor),0.0)
+        self.normalDefencePostSuper = np.minimum(-(1-(1-dodgeCancelFrac)*self.P_Dodge)*(self.P_guard*GuardModifer(maxNormalDamage*avgGuardFactor*(1-self.dmgRedNormal)-self.avgDefPostSuper,guardMod)+(1-self.P_guard)*(maxNormalDamage*avgTypeFactor*(1-self.dmgRedNormal)-self.avgDefPostSuper))/(maxNormalDamage*avgTypeFactor),0.0)
+        self.saDefencePreSuper = np.minimum(-(1-(self.P_nullify+(1-self.P_nullify)*(1-dodgeCancelFrac)*self.P_Dodge))*(self.P_guard*GuardModifer(maxSADamage*avgGuardFactor*(1-self.dmgRed)-self.avgDefPreSuper,guardMod)+(1-self.P_guard)*(maxSADamage*avgTypeFactor*(1-self.dmgRed)-self.avgDefPreSuper))/(maxSADamage*avgTypeFactor),0.0)
+        self.saDefencePostSuper = np.minimum(-(1-(self.P_nullify+(1-self.P_nullify)*(1-dodgeCancelFrac)*self.P_Dodge))*(self.P_guard*GuardModifer(maxSADamage*avgGuardFactor*(1-self.dmgRed)-self.avgDefPostSuper,guardMod)+(1-self.P_guard)*(maxSADamage*avgTypeFactor*(1-self.dmgRed)-self.avgDefPostSuper))/(maxSADamage*avgTypeFactor),0.0)
         self.slot1Ability = np.maximum(self.normalDefencePreSuper+self.saDefencePreSuper,-0.5)
         self.healing += (0.03+0.0015*HP_Recovery[self.nCopies-1])*self.avgDefPreSuper*self.kit.collectKi*STOrbPerKi/avgHealth
         self.attributes = [self.leaderSkill, self.SBR,self.useability, self.healing, self.support,self.apt,self.normalDefencePostSuper,self.saDefencePostSuper,self.slot1Ability]
@@ -486,31 +488,31 @@ class Kit:
                     case 'Link 1 Commonality':
                         self.linkCommonality = extended.astype('float64')
                     case 'Link 1':
-                        self.links[0][:] = [Link(name).getLink(self.linkCommonality[0]) for name in extended]
+                        self.links[0][:] = [Link(name).getLink(self.linkCommonality[j]) for j,name in enumerate(extended)]
                     case 'Link 2 Commonality':
                         self.linkCommonality = extended.astype('float64')
                     case 'Link 2':
-                        self.links[1][:] = [Link(name).getLink(self.linkCommonality[0]) for name in extended]
+                        self.links[1][:] = [Link(name).getLink(self.linkCommonality[j]) for j,name in enumerate(extended)]
                     case 'Link 3 Commonality':
                         self.linkCommonality = extended.astype('float64')
                     case 'Link 3':
-                        self.links[2][:] = [Link(name).getLink(self.linkCommonality[0]) for name in extended]
+                        self.links[2][:] = [Link(name).getLink(self.linkCommonality[j]) for j,name in enumerate(extended)]
                     case 'Link 4 Commonality':
                         self.linkCommonality = extended.astype('float64')
                     case 'Link 4':
-                        self.links[3][:] = [Link(name).getLink(self.linkCommonality[0]) for name in extended]
+                        self.links[3][:] = [Link(name).getLink(self.linkCommonality[j]) for j,name in enumerate(extended)]
                     case 'Link 5 Commonality':
                         self.linkCommonality = extended.astype('float64')
                     case 'Link 5':
-                        self.links[4][:] = [Link(name).getLink(self.linkCommonality[0]) for name in extended]
+                        self.links[4][:] = [Link(name).getLink(self.linkCommonality[j]) for j,name in enumerate(extended)]
                     case 'Link 6 Commonality':
                         self.linkCommonality = extended.astype('float64')
                     case 'Link 6':
-                        self.links[5][:] = [Link(name).getLink(self.linkCommonality[0]) for name in extended]
+                        self.links[5][:] = [Link(name).getLink(self.linkCommonality[j]) for j,name in enumerate(extended)]
                     case 'Link 7 Commonality':
                         self.linkCommonality = extended.astype('float64')
                     case 'Link 7':
-                        self.links[6][:] = [Link(name).getLink(self.linkCommonality[0]) for name in extended]
+                        self.links[6][:] = [Link(name).getLink(self.linkCommonality[j]) for j,name in enumerate(extended)]
                     case 'Passive Ki':
                         self.passiveKi = extended.astype('float64')
                         self.passiveKi_Active = kitData[i,activeIndex]
