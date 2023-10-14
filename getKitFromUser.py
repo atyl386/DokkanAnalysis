@@ -2,6 +2,8 @@ import click as clc
 import datetime as dt
 import numpy as np
 
+# I think need a function/Questionaire for every type of passive ability, e.g. one for rainbow orbs, might be good to use classes here. I think this is the only way to cater for all the complexities of Dokkan passives in an automated way
+
 # TODO:
 # - Make separate file where all constants and imports are stored
 # - Ideally would just pull data from database, but not up in time for new units. Would be amazing for old units though.
@@ -49,7 +51,9 @@ GIANT_RAGE_DURATION = ['0', '1', '2'] # Turns
 MAX_TURN = 10
 MAX_NUM_LINKS = 7
 LINKS = ["All in the Family", "Android Assault", "Attack of the Clones", "Auto Regeneration", "Battlefield Diva", "Berserker", "Big Bad Bosses", "Blazing Battle", "Bombardment", "Brainiacs", "Brutal Beatdown", "Budding Warrior", "Champion's Strength", "Cold Judgement", "Connoisseur", "Cooler's Armored Squad", "Cooler's Underling", "Courage", "Coward", "Crane School", "Deficit Boost", "Demonic Power", "Demonic Ways", "Destroyer of the Universe", "Dismal Future", "Dodon Ray", "Energy Absorption", "Evil Autocrats", "Experienced Fighters", "Family Ties", "Fear and Faith", "Fierce Battle", "Flee", "Formidable Enemy", "Fortuneteller Baba's Fighter", "Frieza's Army","Frieza's Minion", "Fused Fighter", "Fusion", "Fusion Failure", "Galactic Warriors", "Galactuc Visitor", "Gaze of Respect", "Gentleman", "Godly Power", "Golden Warrior", "Golden Z-Fighter", "GT", "Guidance of the Dragon Balls", "Hardened Grudge", "Hatred of Saiyans", "Hero", "Hero of Justice", "High Compatility", "Infighter", "Infinite Energy", "Infinite Regeneration", "Kamehameha", "Legendary Power", "Limit-Breaking Form", "Loyalty", "Majin", "Majin Resurrection Plan", "Master of Magic", "Mechanical Menaces", "Messenger from the Future", "Metamorphosis", "Money Money Money", "More Than Meets the Eye", "Namekians", "New", "New Frieza Army", "Nightmare", "None", "Organic Upgrade", "Otherworld Warriors", "Over 9000", "Over in a Flash", "Patrol", "Penguin Village Adventure", "Power Bestowed by God", "Prepared for Battle", "Prodigies", "Respect", "Resurrection F", "Revival", "Royal Lineage:", "RR Army", "Saiyan Pride", "Saiyan Roar", "Saiyan Warrior Race", "Scientist", "Shadow Dragons", "Shattering the Limit", "Shocking Speed", "Signature Pose", "Solid Support", "Soul vs Soul", "Speedy Retribution", "Strength in Unity", "Strongest Clan in Space", "Super Saiyan", "Super Strike", "Super-God Combat", "Supreme Power", "Supreme Warrior", "Tag Team of Terror", "Team Bardock", "Team Turles", "Telekinesis", "Telepathy", "The First Awakened", "The Ginyu Force", "The Hera Clan", "The Incredible Adventure", "The Innocents", "The Saiyan Lineage", "The Students", "The Wall Standing Tall", "Thirst for Conquest", "Tough as Nails", "Tournament of Power", "Transform", "Turtle School", "Twin Terrors", "Ultimate Lifeform", "Unbreakable Bond", "Universe's Most Malevolent", "Warrior Gods", "Warriors of Universe 6", "World Tournament Champion", "World Tournament Reborn", "Xenoverse", "Z Fighters"]
-
+NUM_ATTACKS_RECIEVED = [4, 2, 2] # Average number of attacks recieved per turn. 3 elements correspons to slot 1, 2 and 3.
+SLOTS = ['1', '2', '3']
+TYPES_OF_BUFFS = ["Att", "Def"]
 
 # Helper dicts
 yesNo2Bool = dict(zip(YES_NO, [True, False]))
@@ -79,11 +83,47 @@ superattackMultiplerConversion = [
 superAttackLevelConversion = dict(zip(UNIQUE_RARITIES,superAttackEZALevels ))
 superAttackConversion = dict(zip(SUPER_ATTACK_MULTIPLIER_NAMES,superattackMultiplerConversion))
 
+ # A kit has PassiveAbilities
+class PassiveAbility: # Informal Interface
+    def __init__(self, kit, start, end):
+        self.kit = kit
+        self.start = start # Turn the passive ability starts from
+        self.end = end # Turn the passive ability ends
+    def setEffect(self):
+        pass
+
+class perAttackReceived(PassiveAbility):
+    def __init__(self, kit, start, end, increment, max):
+        super().__init__(kit, start, end)
+        self.increment = increment
+        self.max = max
+
+class defPerAttackReceived(perAttackReceived):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    def setEffect(self):
+        for turn in range(self.start, self.end):
+            self.kit.p2DefA[turn] = min(((2 * turn + 1) * NUM_ATTACKS_RECIEVED[self.kit.slot - 1] - 1) * self.increment / 2, self.max)
+
+class withinSameTurnAfterReceivingAttack(PassiveAbility):
+    def __init__(self, kit, start, end, buff):
+        super().__init__(kit, start, end)
+        self.buff = buff
+
+class defWithinSameTurnAfterReceivingAttack(withinSameTurnAfterReceivingAttack):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    def setEffect(self):
+        self.kit.p2DefA[self.start:self.end] = [(NUM_ATTACKS_RECIEVED[self.kit.slot - 1] - 1) / NUM_ATTACKS_RECIEVED[self.kit.slot - 1]] * (self.end - self.start)
+
+
+
 class Kit:
     def __init__(self, id):
         self.id = id
         # Initialise arrays
-        self.sa_mult_12 = np.zeros(MAX_TURN); self.sa_mult_18 = np.zeros(MAX_TURN); self.sa_12_att_buff = np.zeros(MAX_TURN); self.sa_12_def_buff = np.zeros(MAX_TURN); self.sa_18_att_buff = np.zeros(MAX_TURN); self.sa_18_def_buff = np.zeros(MAX_TURN); self.sa_12_att_stacks = np.zeros(MAX_TURN); self.sa_12_def_stacks = np.zeros(MAX_TURN); self.sa_18_att_stacks = np.zeros(MAX_TURN); self.sa_18_def_stacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = [['' for x in range(MAX_NUM_LINKS)] for y in range(MAX_TURN)]
+        self.sa_mult_12 = np.zeros(MAX_TURN); self.sa_mult_18 = np.zeros(MAX_TURN); self.sa_12_att_buff = np.zeros(MAX_TURN); self.sa_12_def_buff = np.zeros(MAX_TURN); self.sa_18_att_buff = np.zeros(MAX_TURN); self.sa_18_def_buff = np.zeros(MAX_TURN); self.sa_12_att_stacks = np.zeros(MAX_TURN); self.sa_12_def_stacks = np.zeros(MAX_TURN); self.sa_18_att_stacks = np.zeros(MAX_TURN); self.sa_18_def_stacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = [['' for x in range(MAX_NUM_LINKS)] for y in range(MAX_TURN)]; self.p2DefA = np.zeros(MAX_TURN)
+
     def initialQuestionaire(self):
         self.exclusivity = clc.prompt("What is the unit's exclusivity?", type=clc.Choice(EXCLUSIVITIES, case_sensitive=False), default='DF')
         self.rarity = exclusivity2Rarity[self.exclusivity]
@@ -109,11 +149,11 @@ class Kit:
             self.special_skill_att_mult += clc.prompt("What is the additional attack buff when performing the special attack?", default=0.0)
         self.revival_skill_turn = clc.prompt("What is the earliest turn the unit can reliably use their revive?", default=0)
         self.giant_rage_duration = clc.prompt("How many turns does the unit's giant/rage mode last for?", type=clc.Choice(GIANT_RAGE_DURATION), default='0')
+        self.slot = int(clc.prompt("What slot is this unit best suited for?", type=clc.Choice(SLOTS), default='2'))
 
     def sbrQuestionaire(self):
-        sbr_abilities = yesNo2Bool[clc.prompt("Does the unit have any SBR abilities?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]
-        self.sbr = 0.0
-        if sbr_abilities:
+        self.sbr = 0.0        
+        if yesNo2Bool[clc.prompt("Does the unit have any SBR abilities?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]:
             attack_all = attackAllConversion[clc.prompt("Does the unit attack all enemies on super?",type=clc.Choice(yesNo2Bool.keys(),case_sensitive=False), default='N')]
 
             seal = sealTurnConversion[clc.prompt("How many turns does the unit seal for?", type=clc.Choice(sealTurnConversion.keys()), default='0')]
@@ -136,7 +176,27 @@ class Kit:
             
             self.sbr += attackAllDebuffConversion[attack_all] * (seal + stun + att_debuff_on_att) + att_debuff_passive + multiple_enemy_buff + attack_all
 
-    
+
+    def perAttackReceivedQuestionaire(self, start, end):
+        numPerAttackReceivedAbilities = clc.prompt("How many different buffs does the unit get on attacks received?", default=0)
+        for perAttackReceivedAbilities in range(numPerAttackReceivedAbilities):
+            buffPerAttackReceived = clc.prompt("What buff does the unit get on attack received?",type=clc.Choice(TYPES_OF_BUFFS, case_sensitive=False), default="Def")
+            increment = clc.prompt("How much is the buff per attack received?", default=0.2)
+            max = clc.prompt("What is the maximum buff?", default=1.0)
+            match buffPerAttackReceived:
+                case "Def":
+                    defPerAttackReceived(self, start, end, increment, max).setEffect()
+
+
+    def withinSameTurnAfterReceivingAttackQuestionaire(self, start, end):
+        numWithinSameTurnAfterReceivingAttackAbilities = clc.prompt("How many different buffs does the unit get within the same turn after receiving an attack?", default=0)
+        for perAttackReceivedAbilities in range(numWithinSameTurnAfterReceivingAttackAbilities):
+            buffAfterReceivingAttack = clc.prompt("What buff does the unit get after receiving an attack?",type=clc.Choice(TYPES_OF_BUFFS, case_sensitive=False), default="Def")
+            buff = clc.prompt("How much is the buff after receiving an attack?", default=0.5)
+            match buffAfterReceivingAttack:
+                case "Def":
+                    defPerAttackReceived(self, start, end, buff).setEffect()        
+
     def turnBasedQuestionaire(self):
         # Ask the user the bunch of questions then, go through the while loop to do the calcs
         # Links first
@@ -164,8 +224,14 @@ class Kit:
                 self.intentional12Ki[turn:turn + formDuration] = [yesNo2Bool[clc.prompt("Should a 12 Ki be targetted for this unit?", default='N')]]*formDuration
             for link in range(MAX_NUM_LINKS):
                 self.links[turn:turn + formDuration][link] = [clc.prompt(f"What is the unit's link # {link+1}", type = clc.Choice(LINKS, case_sensitive=False), default='Fierce Battle')]*formDuration
-                
-            assert len(np.unique(self.links))==MAX_NUM_LINKS, 'Duplicate links'
+            #assert len(np.unique(self.links))==MAX_NUM_LINKS, 'Duplicate links'
+            # for each passiveAbility subclass
+            # Ask user if has those abilities
+            # Do this recursively till get to bottom of class inheritance
+            # call class.getEffect(self, arguments gotten from questions)
+            self.perAttackReceivedQuestionaire(turn, turn + formDuration)
+            self.withinSameTurnAfterReceivingAttackQuestionaire(turn, turn + formDuration)
+
 
     """  def calculateStats(self):
         isFullyBuiltUp = False
@@ -177,7 +243,6 @@ class Kit:
         self.initialQuestionaire()
         self.turnBasedQuestionaire()
         self.sbrQuestionaire()
-        #self.calculateStats()
 
 
 if __name__ == '__main__':
