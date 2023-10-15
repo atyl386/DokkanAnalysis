@@ -100,31 +100,31 @@ superAttackConversion = dict(zip(SUPER_ATTACK_MULTIPLIER_NAMES,superattackMultip
 # A restriction class to calculate probabilities of an ability activating per turn. Should assume this is constant to make things simpler.
 
 class Ability:
-    def __init__(self, kit, start, end, effect):
+    def __init__(self, kit, start, end, activationProbability):
         self.kit = kit
         self.start = start
         self.end = end
-        self.effect = effect
+        self.activationProbability = activationProbability
     def setEffect(self):
         pass
 
 # Includes all one-turn special abilities, i.e. active, revival, standby
 
 class SpecialAbility(Ability):
-    def __init__(self, kit, start, end, effect, activationProbability):
-        super().__init__(kit, start, end, effect)
-        self.activationTurn = start + round(1 / activationProbability) # Mean of geometric distribution is 1/p
+    def __init__(self, *args, **kwargs):
+        super().__init__(kit, *args, **kwargs)
+        self.activationTurn = self.start + round(1 / self.activationProbability) # Mean of geometric distribution is 1/p
     def setEffect(self):
         pass
 
-class Active(SpecialAbility):
-    def __init__(self, kit, start, end, effect, activationProbability):
-        super().__init__(kit, start, end, effect, activationProbability)
+class ActiveSkill(SpecialAbility):
+    def __init__(self, kit, start, end, activationProbability):
+        super().__init__(kit, start, end, activationProbability)
 
 
 class Revive(SpecialAbility):
-    def __init__(self, kit, start, end, effect, activationProbability, hpRegen, isThisCharacterOnly):
-        super().__init__(kit, start, end, effect, activationProbability)
+    def __init__(self, kit, start, end, activationProbability, hpRegen, isThisCharacterOnly):
+        super().__init__(kit, start, end, activationProbability)
         self.hpRegen = hpRegen
         self.isThisCharacterOnly = isThisCharacterOnly
     def setEffect(self):
@@ -139,20 +139,22 @@ class Revive(SpecialAbility):
 
  # A kit has PassiveAbilities
 class PassiveAbility(Ability): # Informal Interface
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-    # Unconditional buffs
+    def __init__(self, kit, start, end, activationProbability, effect):
+        super().__init__(kit, start, end, activationProbability)
+        self.effect = effect
+    # Regular buffs
     def setEffect(self):
         match self.effect:
             case "Guard":
-                self.kit.guard[self.start:self.end][:] = np.ones(MAX_TURN, NUM_SLOTS)
+                self.kit.guard[self.start:self.end][:] = self.activationProbability * np.ones(MAX_TURN, NUM_SLOTS)
             case "Crit":
+                self.kit.crit[self.start:self.end][:] = self.activationProbability * np.ones(MAX_TURN, NUM_SLOTS)
 
 
 class PerAttackReceived(PassiveAbility):
     def __init__(self, kit, start, end, effect, args):
         super().__init__(kit, start, end, effect)
-        self.increment = args[0]
+        self.increment = args[0] * self.activationProbability
         self.max = args[1]
     def setEffect(self):
         for i, turn in enumerate(range(self.start, self.end)):
@@ -167,7 +169,7 @@ class PerAttackReceived(PassiveAbility):
 class WithinSameTurnAfterReceivingAttack(PassiveAbility):
     def __init__(self, kit, start, end, effect, args):
         super().__init__(kit, start, end, effect)
-        self.buff = args[0]
+        self.buff = args[0] * self.activationProbability
     def setEffect(self):
         match self.effect:
             case "Def":
@@ -180,7 +182,7 @@ class Kit:
     def __init__(self, id):
         self.id = id
         # Initialise arrays
-        self.sa_mult_12 = np.zeros(MAX_TURN); self.sa_mult_18 = np.zeros(MAX_TURN); self.sa_12_att_buff = np.zeros(MAX_TURN); self.sa_12_def_buff = np.zeros(MAX_TURN); self.sa_18_att_buff = np.zeros(MAX_TURN); self.sa_18_def_buff = np.zeros(MAX_TURN); self.sa_12_att_stacks = np.zeros(MAX_TURN); self.sa_12_def_stacks = np.zeros(MAX_TURN); self.sa_18_att_stacks = np.zeros(MAX_TURN); self.sa_18_def_stacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = [['' for x in range(MAX_NUM_LINKS)] for y in range(MAX_TURN)]; self.ki=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Att=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Att = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); healing = np.zeros((MAX_TURN, NUM_SLOTS)); support = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.sa_mult_12 = np.zeros(MAX_TURN); self.sa_mult_18 = np.zeros(MAX_TURN); self.sa_12_att_buff = np.zeros(MAX_TURN); self.sa_12_def_buff = np.zeros(MAX_TURN); self.sa_18_att_buff = np.zeros(MAX_TURN); self.sa_18_def_buff = np.zeros(MAX_TURN); self.sa_12_att_stacks = np.zeros(MAX_TURN); self.sa_12_def_stacks = np.zeros(MAX_TURN); self.sa_18_att_stacks = np.zeros(MAX_TURN); self.sa_18_def_stacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = [['' for x in range(MAX_NUM_LINKS)] for y in range(MAX_TURN)]; self.ki=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Att=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Att = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS)); self.support = np.zeros((MAX_TURN, NUM_SLOTS))
 
     def initialQuestionaire(self):
         self.exclusivity = clc.prompt("What is the unit's exclusivity?", type=clc.Choice(EXCLUSIVITIES, case_sensitive=False), default='DF')
@@ -301,7 +303,8 @@ def abilityQuestionaire(kit, start, end, abilityPrompt, parameterPrompts, defaul
             parameters.append(clc.prompt(parameterPrompt), default = defaults[i])
         if abilityType == 'passive':
             effect = clc.prompt("What type of buff does the unit get?",type=clc.Choice(EFFECTS, case_sensitive=False), default="Att")
-            func(kit, start, end, effect, parameters).setEffect()
+            activationProbability = clc.prompt("What is the probability this ability activates?", default=1.0)
+            func(kit, start, end, activationProbability, effect, parameters).setEffect()
         elif abilityType == 'special':
             probabilityPerTurn = restrictionQuestionaire()
             func(kit, start, end, probabilityPerTurn, parameters).setEffect()       
