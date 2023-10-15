@@ -53,20 +53,27 @@ MAX_TURN = 10
 MAX_NUM_LINKS = 7
 LINKS = ["All in the Family", "Android Assault", "Attack of the Clones", "Auto Regeneration", "Battlefield Diva", "Berserker", "Big Bad Bosses", "Blazing Battle", "Bombardment", "Brainiacs", "Brutal Beatdown", "Budding Warrior", "Champion's Strength", "Cold Judgement", "Connoisseur", "Cooler's Armored Squad", "Cooler's Underling", "Courage", "Coward", "Crane School", "Deficit Boost", "Demonic Power", "Demonic Ways", "Destroyer of the Universe", "Dismal Future", "Dodon Ray", "Energy Absorption", "Evil Autocrats", "Experienced Fighters", "Family Ties", "Fear and Faith", "Fierce Battle", "Flee", "Formidable Enemy", "Fortuneteller Baba's Fighter", "Frieza's Army","Frieza's Minion", "Fused Fighter", "Fusion", "Fusion Failure", "Galactic Warriors", "Galactuc Visitor", "Gaze of Respect", "Gentleman", "Godly Power", "Golden Warrior", "Golden Z-Fighter", "GT", "Guidance of the Dragon Balls", "Hardened Grudge", "Hatred of Saiyans", "Hero", "Hero of Justice", "High Compatility", "Infighter", "Infinite Energy", "Infinite Regeneration", "Kamehameha", "Legendary Power", "Limit-Breaking Form", "Loyalty", "Majin", "Majin Resurrection Plan", "Master of Magic", "Mechanical Menaces", "Messenger from the Future", "Metamorphosis", "Money Money Money", "More Than Meets the Eye", "Namekians", "New", "New Frieza Army", "Nightmare", "None", "Organic Upgrade", "Otherworld Warriors", "Over 9000", "Over in a Flash", "Patrol", "Penguin Village Adventure", "Power Bestowed by God", "Prepared for Battle", "Prodigies", "Respect", "Resurrection F", "Revival", "Royal Lineage:", "RR Army", "Saiyan Pride", "Saiyan Roar", "Saiyan Warrior Race", "Scientist", "Shadow Dragons", "Shattering the Limit", "Shocking Speed", "Signature Pose", "Solid Support", "Soul vs Soul", "Speedy Retribution", "Strength in Unity", "Strongest Clan in Space", "Super Saiyan", "Super Strike", "Super-God Combat", "Supreme Power", "Supreme Warrior", "Tag Team of Terror", "Team Bardock", "Team Turles", "Telekinesis", "Telepathy", "The First Awakened", "The Ginyu Force", "The Hera Clan", "The Incredible Adventure", "The Innocents", "The Saiyan Lineage", "The Students", "The Wall Standing Tall", "Thirst for Conquest", "Tough as Nails", "Tournament of Power", "Transform", "Turtle School", "Twin Terrors", "Ultimate Lifeform", "Unbreakable Bond", "Universe's Most Malevolent", "Warrior Gods", "Warriors of Universe 6", "World Tournament Champion", "World Tournament Reborn", "Xenoverse", "Z Fighters"]
 NUM_ATTACKS_PER_TURN = 8
-NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING = np.array([NUM_ATTACKS_PER_TURN/4, NUM_ATTACKS_PER_TURN/2, NUM_ATTACKS_PER_TURN - NUM_ATTACKS_PER_TURN/4])
+NUM_SUPER_ATTACKS_PER_TURN = 1.0
+PEAK_TURN = 3 # Most important turn (actually more like double this, but this is relative to a unit)
+NUM_ENEMY_PHASES = 2 # Average number of enemy phases (in Red Zone fights)
+PROBABILITY_KILL_ENEMY_PER_TURN = NUM_ENEMY_PHASES / (PEAK_TURN * 2)
+PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING = np.array([0.0, PROBABILITY_KILL_ENEMY_PER_TURN / 3, PROBABILITY_KILL_ENEMY_PER_TURN * 2 / 3]) # Factors in the fact that the later slots are less likely to their turn
+PROBABILITY_KILL_ENEMY_AFTER_ATTACKING = np.flip(PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING) # Probability that kill enemy later than after attacking in each slot
+PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS = np.array([PROBABILITY_KILL_ENEMY_PER_TURN / 3, PROBABILITY_KILL_ENEMY_PER_TURN * 2 / 3, PROBABILITY_KILL_ENEMY_PER_TURN])
+NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING = (1.0 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING) * np.array([NUM_ATTACKS_PER_TURN / 4, NUM_ATTACKS_PER_TURN / 2, NUM_ATTACKS_PER_TURN - NUM_ATTACKS_PER_TURN / 4])
 SLOTS = ['1', '2', '3']
 NUM_SLOTS = len(SLOTS)
-EFFECTS = ["None", "Ki", "Att", "Def", "SEAAT", "Crit", "Guard"]
+EFFECTS = ["None", "Ki", "Att", "Def", "SEAAT", "Crit", "Guard", "Disable"]
 AOE_PROBABILITY_PER_ATTACK = 0.01 # Complete guess
 NUM_AOE_ATTACKS_BEFORE_ATTACKING = AOE_PROBABILITY_PER_ATTACK * NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING # Probablity of an aoe attack per turn before each slot attacks
-NUM_ATTACKS_NOT_DIRECTED = np.array([NUM_ATTACKS_PER_TURN/2, NUM_ATTACKS_PER_TURN*3/4, NUM_ATTACKS_PER_TURN*3/4])
-NUM_AOE_ATTACKS = AOE_PROBABILITY_PER_ATTACK * NUM_ATTACKS_NOT_DIRECTED
-NUM_ATTACKS_DIRECTED = np.array([NUM_ATTACKS_PER_TURN/2, NUM_ATTACKS_PER_TURN/4, NUM_ATTACKS_PER_TURN/4]) # Average number of attacks recieved per turn. 3 elements correspons to slot 1, 2 and 3.
-NUM_ATTACKS_RECEIVED = NUM_AOE_ATTACKS + NUM_ATTACKS_DIRECTED
-NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING = np.array([NUM_ATTACKS_PER_TURN/4, 0.0, 0.0])
+NUM_ATTACKS_NOT_DIRECTED = np.array([NUM_ATTACKS_PER_TURN / 2, NUM_ATTACKS_PER_TURN* 3 / 4, NUM_ATTACKS_PER_TURN * 3 / 4])
+NUM_AOE_ATTACKS = AOE_PROBABILITY_PER_ATTACK * NUM_ATTACKS_NOT_DIRECTED * (1.0 - PROBABILITY_KILL_ENEMY_AFTER_ATTACKING)
+NUM_ATTACKS_DIRECTED = np.array([NUM_ATTACKS_PER_TURN / 2, NUM_ATTACKS_PER_TURN / 4, NUM_ATTACKS_PER_TURN / 4]) # Average number of attacks recieved per turn. 3 elements correspons to slot 1, 2 and 3.
+NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING = np.array([NUM_ATTACKS_PER_TURN / 4, 0.0, 0.0])
 NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING = NUM_AOE_ATTACKS_BEFORE_ATTACKING + NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
+NUM_ATTACKS_DIRECTED_AFTER_ATTACKING = NUM_ATTACKS_DIRECTED - NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
+NUM_ATTACKS_RECEIVED = NUM_AOE_ATTACKS + NUM_ATTACKS_DIRECTED * (1.0 - PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS * NUM_ATTACKS_DIRECTED_AFTER_ATTACKING / NUM_ATTACKS_DIRECTED)
 RESTRICTIONS = ["Max HP", "Min HP"]
-PEAK_TURN = 3 # Most important turn (actually more like double this, but this is relative to a unit)
 REVIVE_UNIT_SUPPORT_BUFF = 0.75 # Just revives this unit
 REVIVE_ROTATION_SUPPORT_BUFF = 1.0 # Revive whole rotation
 
@@ -104,6 +111,7 @@ class Ability:
         self.kit = kit
         self.start = start
         self.end = end
+        self.duration = end - start
         self.activationProbability = activationProbability
     def setEffect(self):
         pass
@@ -125,6 +133,7 @@ class ActiveSkillAttack(SpecialAbility):
     def setEffect(self):
         self.kit.activeAttackTurn = self.activationTurn
         self.kit.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
+        abilityQuestionaire(self.kit, self.activationTurn, self.activationTurn + 1, "How many additional single-turn buffs does this active skill attack have?", PassiveAbility, "passive")
 
 
 class Revive(SpecialAbility):
@@ -138,7 +147,7 @@ class Revive(SpecialAbility):
             self.kit.support[self.activationTurn][:] += [REVIVE_UNIT_SUPPORT_BUFF] * NUM_SLOTS
         else:
             self.kit.support[self.activationTurn][:] += [REVIVE_ROTATION_SUPPORT_BUFF] * NUM_SLOTS
-        abilityQuestionaire(self.kit, self.activationTurn, self.end, "How many additional buffs does this revive have?", [], [], PassiveAbility, "passive")
+        abilityQuestionaire(self.kit, self.activationTurn, self.end, "How many additional constant buffs does this revive have?", PassiveAbility, "passive")
 
 
 class PassiveAbility(Ability): # Informal Interface
@@ -149,9 +158,12 @@ class PassiveAbility(Ability): # Informal Interface
     def setEffect(self):
         match self.effect:
             case "Guard":
-                self.kit.guard[self.start:self.end][:] = self.activationProbability * np.ones(MAX_TURN, NUM_SLOTS)
+                self.kit.guard[self.start:self.end][:] += self.activationProbability * np.ones(self.duration, NUM_SLOTS)
             case "Crit":
-                self.kit.crit[self.start:self.end][:] = self.activationProbability * np.ones(MAX_TURN, NUM_SLOTS)
+                self.kit.crit[self.start:self.end][:] += self.activationProbability * np.ones(self.duration, NUM_SLOTS)
+            case "Disable":
+                pNullify = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN * np.ones((self.duration, NUM_SLOTS))
+                self.kit.pNullify[self.start:self.end][:] = pNullify * (1.0 - self.kit.pNullify[self.start:self.end]) + (1.0 - pNullify) * self.kit.pNullify[self.start:self.end]
 
 
 class PerAttackReceived(PassiveAbility):
@@ -177,16 +189,16 @@ class WithinSameTurnAfterReceivingAttack(PassiveAbility):
     def setEffect(self):
         match self.effect:
             case "Def":
-                self.kit.p2DefA[self.start:self.end][:] += [self.buff * (NUM_ATTACKS_RECEIVED - 1) / NUM_ATTACKS_RECEIVED] * (self.end - self.start)
+                self.kit.p2DefA[self.start:self.end][:] += [self.buff * (NUM_ATTACKS_RECEIVED - 1) / NUM_ATTACKS_RECEIVED] * self.duration
             case "SEAAT":
-                self.kit.SEAAT[self.start:self.end][:] = [self.buff * np.minimum(NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING, 1.0)] * (self.end - self.start)        
+                self.kit.SEAAT[self.start:self.end][:] = [self.buff * np.minimum(NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING, 1.0)] * self.duration        
 
 
 class Kit:
     def __init__(self, id):
         self.id = id
         # Initialise arrays
-        self.sa_mult_12 = np.zeros(MAX_TURN); self.sa_mult_18 = np.zeros(MAX_TURN); self.sa_12_att_buff = np.zeros(MAX_TURN); self.sa_12_def_buff = np.zeros(MAX_TURN); self.sa_18_att_buff = np.zeros(MAX_TURN); self.sa_18_def_buff = np.zeros(MAX_TURN); self.sa_12_att_stacks = np.zeros(MAX_TURN); self.sa_12_def_stacks = np.zeros(MAX_TURN); self.sa_18_att_stacks = np.zeros(MAX_TURN); self.sa_18_def_stacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = [['' for x in range(MAX_NUM_LINKS)] for y in range(MAX_TURN)]; self.ki=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Att=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Att = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS)); self.support = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.sa_mult_12 = np.zeros(MAX_TURN); self.sa_mult_18 = np.zeros(MAX_TURN); self.sa_12_att_buff = np.zeros(MAX_TURN); self.sa_12_def_buff = np.zeros(MAX_TURN); self.sa_18_att_buff = np.zeros(MAX_TURN); self.sa_18_def_buff = np.zeros(MAX_TURN); self.sa_12_att_stacks = np.zeros(MAX_TURN); self.sa_12_def_stacks = np.zeros(MAX_TURN); self.sa_18_att_stacks = np.zeros(MAX_TURN); self.sa_18_def_stacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = [['' for x in range(MAX_NUM_LINKS)] for y in range(MAX_TURN)]; self.ki=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Att=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Att = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS)); self.support = np.zeros((MAX_TURN, NUM_SLOTS)); self.pNullify = np.zeros((MAX_TURN, NUM_SLOTS))
 
     def initialQuestionaire(self):
         self.exclusivity = clc.prompt("What is the unit's exclusivity?", type=clc.Choice(EXCLUSIVITIES, case_sensitive=False), default='DF')
