@@ -5,6 +5,7 @@ import numpy as np
 # I think need a function/Questionaire for every type of passive ability, e.g. one for rainbow orbs, might be good to use classes here. I think this is the only way to cater for all the complexities of Dokkan passives in an automated way
 
 # TODO:
+# - Still need to get stats out of links, but can mostly copy whats in dokkanUnit.py
 # - Should determine which slot is best for the unit
 # - Make separate file where all constants and imports are stored
 # - Ideally would just pull data from database, but not up in time for new units. Would be amazing for old units though.
@@ -73,31 +74,30 @@ REVIVE_ROTATION_SUPPORT_BUFF = 1.0 # Revive whole rotation
 yesNo2Bool = dict(zip(YES_NO, [True, False]))
 bool2Binary = dict(zip([True, False], [1, 0]))
 exclusivity2Rarity = dict(zip(EXCLUSIVITIES, RARITIES))
-leaderSkillConversion = dict(zip(LEADER_SKILL_TIERS,LEADER_SKILL_SCORES))
-sealTurnConversion = dict(zip(DEBUFF_DURATIONS,SEAL_SCORE_PER_TURN))
-stunTurnConversion = dict(zip(DEBUFF_DURATIONS,STUN_SCORE_PER_TURN))
-attDebuffTurnConversion = dict(zip(DEBUFF_DURATIONS,ATT_DEBUFF_SCORE_PER_TURN))
-attDebuffOnAttackConversion = dict(zip(ATT_DEBUFF_ON_ATT_NAMES,ATT_DEBUFF_ON_ATT_SCORE))
-multipleEnemyBuffConversion = dict(zip(MULTIPLE_ENEMY_BUFF_TIERS,MULTIPLE_ENEMY_BUFF_SCORES))
+leaderSkillConversion = dict(zip(LEADER_SKILL_TIERS, LEADER_SKILL_SCORES))
+sealTurnConversion = dict(zip(DEBUFF_DURATIONS, SEAL_SCORE_PER_TURN))
+stunTurnConversion = dict(zip(DEBUFF_DURATIONS, STUN_SCORE_PER_TURN))
+attDebuffTurnConversion = dict(zip(DEBUFF_DURATIONS, ATT_DEBUFF_SCORE_PER_TURN))
+attDebuffOnAttackConversion = dict(zip(ATT_DEBUFF_ON_ATT_NAMES, ATT_DEBUFF_ON_ATT_SCORE))
+multipleEnemyBuffConversion = dict(zip(MULTIPLE_ENEMY_BUFF_TIERS, MULTIPLE_ENEMY_BUFF_SCORES))
 attackAllConversion = dict(zip(YES_NO, ATTACK_ALL_SCORE))
 attackAllDebuffConversion = dict(zip(ATTACK_ALL_SCORE, ATTACK_ALL_DEBUFF_FACTOR))
-counterAttackConversion = dict(zip(COUNTER_ATTACK_MULTIPLIER_NAMES,COUNTER_ATTACK_MULTIPLIERS))
-specialAttackConversion = dict(zip(SPECIAL_ATTACK_MULTIPLIER_NAMES,SPECIAL_ATTACK_MULTIPLIERS))
+counterAttackConversion = dict(zip(COUNTER_ATTACK_MULTIPLIER_NAMES, COUNTER_ATTACK_MULTIPLIERS))
+specialAttackConversion = dict(zip(SPECIAL_ATTACK_MULTIPLIER_NAMES, SPECIAL_ATTACK_MULTIPLIERS))
 superAttackEZALevels = [
     dict(zip([False, True], TUR_SUPER_ATTACK_LEVELS)),
     dict(zip([False, True], LR_SUPER_ATTACK_LEVELS))
 ]
 superattackMultiplerConversion = [
-    dict(zip(SUPER_ATTACK_LEVELS,DESTRUCTIVE_MULTIPLIERS)),
-    dict(zip(SUPER_ATTACK_LEVELS,SUPREME_MULTIPLIERS)),
-    dict(zip(SUPER_ATTACK_LEVELS,IMMENSE_MULTIPLIERS)),
-    dict(zip(SUPER_ATTACK_LEVELS,COLOSSAL_MULTIPLIERS)),
-    dict(zip(SUPER_ATTACK_LEVELS,MEGA_COLOSSAL_MULTIPLIERS)),
+    dict(zip(SUPER_ATTACK_LEVELS, DESTRUCTIVE_MULTIPLIERS)),
+    dict(zip(SUPER_ATTACK_LEVELS, SUPREME_MULTIPLIERS)),
+    dict(zip(SUPER_ATTACK_LEVELS, IMMENSE_MULTIPLIERS)),
+    dict(zip(SUPER_ATTACK_LEVELS, COLOSSAL_MULTIPLIERS)),
+    dict(zip(SUPER_ATTACK_LEVELS, MEGA_COLOSSAL_MULTIPLIERS)),
 ]
-superAttackLevelConversion = dict(zip(UNIQUE_RARITIES,superAttackEZALevels ))
-superAttackConversion = dict(zip(SUPER_ATTACK_MULTIPLIER_NAMES,superattackMultiplerConversion))
+superAttackLevelConversion = dict(zip(UNIQUE_RARITIES, superAttackEZALevels))
+superAttackConversion = dict(zip(SUPER_ATTACK_MULTIPLIER_NAMES, superattackMultiplerConversion))
 
-# A restriction class to calculate probabilities of an ability activating per turn. Should assume this is constant to make things simpler.
 
 class Ability:
     def __init__(self, kit, start, end, activationProbability):
@@ -108,18 +108,23 @@ class Ability:
     def setEffect(self):
         pass
 
-# Includes all one-turn special abilities, i.e. active, revival, standby
 
 class SpecialAbility(Ability):
     def __init__(self, *args, **kwargs):
         super().__init__(kit, *args, **kwargs)
-        self.activationTurn = self.start + round(1 / self.activationProbability) # Mean of geometric distribution is 1/p
+        self.activationTurn = int(max(self.start + round(1 / self.activationProbability), PEAK_TURN - 1)) # Mean of geometric distribution is 1/p
     def setEffect(self):
         pass
 
-class ActiveSkill(SpecialAbility):
-    def __init__(self, kit, start, end, activationProbability):
+
+class ActiveSkillAttack(SpecialAbility):
+    def __init__(self, kit, start, end, activationProbability, attackMultiplier, attackBuff):
         super().__init__(kit, start, end, activationProbability)
+        self.attackMultiplier = attackMultiplier
+        self.attackBuff = attackBuff
+    def setEffect(self):
+        self.kit.activeAttackTurn = self.activationTurn
+        self.kit.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
 
 
 class Revive(SpecialAbility):
@@ -128,16 +133,14 @@ class Revive(SpecialAbility):
         self.hpRegen = hpRegen
         self.isThisCharacterOnly = isThisCharacterOnly
     def setEffect(self):
-        reviveTurn = int(max(self.activationTurn + 1, PEAK_TURN))
-        self.kit.healing[reviveTurn][:] += np.minimum([self.hpRegen] * NUM_SLOTS, 1.0)
+        self.kit.healing[self.activationTurn + 1][:] += np.minimum([self.hpRegen] * NUM_SLOTS, 1.0)
         if self.isThisCharacterOnly:
-            self.kit.support[reviveTurn][:] += [REVIVE_UNIT_SUPPORT_BUFF] * NUM_SLOTS
+            self.kit.support[self.activationTurn][:] += [REVIVE_UNIT_SUPPORT_BUFF] * NUM_SLOTS
         else:
-            self.kit.support[reviveTurn][:] += [REVIVE_ROTATION_SUPPORT_BUFF] * NUM_SLOTS
-        abilityQuestionaire(self.kit, reviveTurn, self.end, "How many additional buffs does this revive have?", [], [], PassiveAbility, "passive")
+            self.kit.support[self.activationTurn][:] += [REVIVE_ROTATION_SUPPORT_BUFF] * NUM_SLOTS
+        abilityQuestionaire(self.kit, self.activationTurn, self.end, "How many additional buffs does this revive have?", [], [], PassiveAbility, "passive")
 
 
- # A kit has PassiveAbilities
 class PassiveAbility(Ability): # Informal Interface
     def __init__(self, kit, start, end, activationProbability, effect):
         super().__init__(kit, start, end, activationProbability)
@@ -165,6 +168,7 @@ class PerAttackReceived(PassiveAbility):
                     self.kit.p2Att[turn][:] += np.minimum(self.increment * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING + i * NUM_ATTACKS_RECEIVED), self.max)
                 case "Def":
                     self.kit.p2DefA[turn][:] += np.minimum(((2 * i + 1) * NUM_ATTACKS_RECEIVED - 1) * self.increment / 2, self.max)            
+
 
 class WithinSameTurnAfterReceivingAttack(PassiveAbility):
     def __init__(self, kit, start, end, effect, args):
@@ -202,12 +206,6 @@ class Kit:
         self.normal_counter_mult = counterAttackConversion[clc.prompt("What is the unit's normal counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]
         self.sa_counter_mult = counterAttackConversion[clc.prompt("What is the unit's super attack counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]
         self.keep_stacking = yesNo2Bool[clc.prompt("Does the unit have the ability to keep stacking before transforming?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]
-        self.special_skill_turn = clc.prompt("What is the earliest turn the unit can reliably use their single-turn active/standby skill?", default=0)
-        self.special_skill_att_mult = 0.0
-        if self.special_skill_turn != 0:
-            self.special_skill_att_mult += specialAttackConversion[clc.prompt("What is the special attack multiplier?", clc.Choice(specialAttackConversion.keys()), default='Ultimate')]
-            self.special_skill_att_mult += clc.prompt("What is the additional attack buff when performing the special attack?", default=0.0)
-        self.revival_skill_turn = clc.prompt("What is the earliest turn the unit can reliably use their revive?", default=0)
         self.giant_rage_duration = clc.prompt("How many turns does the unit's giant/rage mode last for?", type=clc.Choice(GIANT_RAGE_DURATION), default='0')
 
     def sbrQuestionaire(self):
@@ -265,10 +263,11 @@ class Kit:
             for link in range(MAX_NUM_LINKS):
                 self.links[start:end][link] = [clc.prompt(f"What is the form's link # {link+1}", type = clc.Choice(LINKS, case_sensitive=False), default='Fierce Battle')]*formDuration
             #assert len(np.unique(self.links))==MAX_NUM_LINKS, 'Duplicate links'
-            abilityQuestionaire(self, start, end, "How many other unconditional buffs does the form have?", [], [], PassiveAbility, "passive")
-            abilityQuestionaire(self, start, end, "How many different buffs does the form get on attacks received?", ["How much is the buff per attack received?", "What is the maximum buff?"], [0.2, 1.0], PerAttackReceived, "passive")
-            abilityQuestionaire(self, start, end, "How many different buffs does the form get within the same turn after receiving an attack?", ["How much is the buff upon receiving an attack?"], [0.5], WithinSameTurnAfterReceivingAttack, "passive")
-            abilityQuestionaire(self, start, end, "How many revive skills does the form have?", ["How much HP is revived with?", "Does the revive only apply to this unit?"], [0.7, 'N'], Revive, "special")
+            abilityQuestionaire(self, start, end, "How many other unconditional buffs does the form have?", PassiveAbility, "passive")
+            abilityQuestionaire(self, start, end, "How many different buffs does the form get on attacks received?", PerAttackReceived, "passive", ["How much is the buff per attack received?", "What is the maximum buff?"], [None, None], [0.2, 1.0])
+            abilityQuestionaire(self, start, end, "How many different buffs does the form get within the same turn after receiving an attack?", WithinSameTurnAfterReceivingAttack, "passive", ["How much is the buff upon receiving an attack?"], [None], [0.5])
+            abilityQuestionaire(self, start, end, "How many revive skills does the form have?", Revive, "special", ["How much HP is revived with?", "Does the revive only apply to this unit?"], [None, None], [0.7, 'N'])
+            abilityQuestionaire(self, start, end, "How many active skill attacks does the form have?", ActiveSkillAttack, "special", ["What is the attack multiplier?", "What is the additional attack buff when performing thes attack?"], [clc.Choice(specialAttackConversion.keys()), None], ['Ultimate', 0.0])
 
     def getKitFromUser(self):
         clc.echo(f'Hello! This program will guide you through inputting the data required to enter Dokkan unit ID={self.id} into the database')
@@ -295,12 +294,15 @@ def restrictionQuestionaire():
         totalRestrictionProbability = (1.0 - totalRestrictionProbability) * restrictionProbability + (1.0 - restrictionProbability) * totalRestrictionProbability
     return 1.0 - totalRestrictionProbability
 
-def abilityQuestionaire(kit, start, end, abilityPrompt, parameterPrompts, defaults, func, abilityType):
+def abilityQuestionaire(kit, start, end, abilityPrompt, func, abilityType, parameterPrompts=[], types=[], defaults=[]):
     numAbilities = clc.prompt(abilityPrompt, default=0)
     for ability in range(numAbilities):
         parameters = []
         for i, parameterPrompt in enumerate(parameterPrompts):
-            parameters.append(clc.prompt(parameterPrompt), default = defaults[i])
+            if types[i] == None:
+                parameters.append(clc.prompt(parameterPrompt), default = defaults[i])
+            else:
+                parameters.append(clc.prompt(parameterPrompt), type = types[i], default = defaults[i])
         if abilityType == 'passive':
             effect = clc.prompt("What type of buff does the unit get?",type=clc.Choice(EFFECTS, case_sensitive=False), default="Att")
             activationProbability = clc.prompt("What is the probability this ability activates?", default=1.0)
