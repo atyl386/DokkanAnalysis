@@ -73,14 +73,16 @@ def SummonRatings():
     with pd.ExcelWriter('SummonRating.xlsx') as writer:
         df.to_excel(writer)
 class Banner:
-    def __init__(self,units,coin,SSR_rate=0.1,featuredSSR_rate=0.5,tickets=False,discount=1,threePlus1=False,gFeatured=False):
+    def __init__(self,units,coin,SSR_rate=0.1,featuredSSR_rate=0.5,tickets=False,discount=1,threePlus1=False,gFeatured=False, gFeaturedEvery3=False):
         self.units = np.mean([SummonRating(unit) for unit in units])
         if coin == 'red' or coin == 'cyan':
             self.coin = 1
-        else:
+        elif coin == 'limited' or coin == 'yellow':
             self.coin = 0.8
         if gFeatured:
             self.featuredRate = (1+9*SSR_rate*featuredSSR_rate)/(10*0.1*0.5)
+        elif gFeaturedEvery3:
+            self.featuredRate = (2 * SSR_rate*featuredSSR_rate/(0.1*0.5) + (1+9*SSR_rate*featuredSSR_rate)/(10*0.1*0.5))/3
         else:
             self.featuredRate = SSR_rate*featuredSSR_rate/(0.1*0.5)
         if tickets:
@@ -98,8 +100,10 @@ class Banner:
         else:
             return False
 #SummonRatings()
-Turles = Banner([133,134,135,96,51,49,70],'red')
-print(Turles.summonScore)
+#Turles = Banner([133,134,135,96,51,49,70],'red')
+#print(Turles.summonScore)
+TurlesMovieGoku = Banner([136, 65, 12, 50, 62, 62, 62, 62, 30, 62], 'limited',gFeaturedEvery3=True)
+print(TurlesMovieGoku.summonScore)
 SSJ4Goku = Banner([139,4,54,55,8,9,15,138,32,35],'red',threePlus1=True)
 print(SSJ4Goku.summonScore)
 OmegaShenron = Banner([141,61,26,108,38,84,38,38,38,38],'cyan',SSR_rate=0.2)
