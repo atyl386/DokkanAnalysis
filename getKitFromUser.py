@@ -302,7 +302,20 @@ class PerRainbowOrb(PassiveAbility):
                 self.kit.dmgRedB[self.start:self.end][:] += self.buffFromRainbowOrbs
             case "Evasion":
                 self.kit.pEvade[self.start:self.end][:] += self.buffFromRainbowOrbs
-                
+
+
+class SlotDepedent(PassiveAbility):
+    def __init__(self, kit, start, end, activationProbability, effect, buff, args):
+        super().__init__(kit, start, end, activationProbability, effect, buff)
+        self.slotRequired = args[0]
+    def setEffect(self):
+        match self.effect:
+            case "Att":
+                self.kit.p1Att[self.start:self.end][self.slotRequired] += self.buff
+            case "Def":
+                self.kit.p1Def[self.start:self.end][self.slotRequired] += self.buff
+            case "Gaurd":
+                self.kit.guard[self.start:self.end][self.slotRequired] += self.buff
 
 
 class Nullification(PassiveAbility):
@@ -438,6 +451,7 @@ class Kit:
             abilityQuestionaire(self, "How many turn dependent buffs does the form have?", TurnDependent, start, end, ["What turn does the buff start from?", "What turn does the buff end on?"], [None, None], [start, end])
             abilityQuestionaire(self, "How many different buffs does the form get on attacks received?", PerAttackReceived, start, end, ["What is the maximum buff?"], [None], [1.0])
             abilityQuestionaire(self, "How many different buffs does the form get within the same turn after receiving an attack?", WithinSameTurnAfterReceivingAttack, start, end)
+            abilityQuestionaire(self, "How many slot specific buffs does the form have?", SlotDepedent, start, end, ["Which slot is required?"], [clc.Choice(SLOTS)], [1])
             self.setRandomKi(start, end) # Compute the average ki each turn which has a random component because need to be able to compute how much ki the unit gets on average for ki dependent effects
             abilityQuestionaire(self, "How many ki dependent buffs does the form have?", KiDependent, start, end, ["What is the required ki?"], [None], [24])
             abilityQuestionaire(self, "How many different nullification abilities does the form have?", Nullification, start, end, ["Does this nullification have counter?"], [YES_NO], ["N"])
