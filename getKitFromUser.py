@@ -66,7 +66,7 @@ PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS = np.array([PROBABILITY_KILL
 NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING = (1.0 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING) * np.array([NUM_ATTACKS_PER_TURN / 4, NUM_ATTACKS_PER_TURN / 2, NUM_ATTACKS_PER_TURN - NUM_ATTACKS_PER_TURN / 4])
 SLOTS = ['1', '2', '3']
 NUM_SLOTS = len(SLOTS)
-EFFECTS = ["None", "Ki", "Att", "Def", "SEAAT", "Crit", "Guard", "DmgRed", "DmgRedA", "DmgRedB", "Disable", "KiPerTypeKiSphere", "AdditionalSuper", "AAWithChanceToSuper", "NullifyPhysical", "NullifyMelee", "NullifyKi-Blast", "NullifyOther", "NullifyAll"]
+EFFECTS = ["None", "Ki", "Att", "Def", "SEAAT", "Crit", "Guard", "Evasion", "DmgRed", "DmgRedA", "DmgRedB", "Disable", "KiPerTypeKiSphere", "AdditionalSuper", "AAWithChanceToSuper", "NullifyPhysical", "NullifyMelee", "NullifyKi-Blast", "NullifyOther", "NullifyAll"]
 AOE_PROBABILITY_PER_ATTACK = 0.01 # Complete guess
 NUM_AOE_ATTACKS_BEFORE_ATTACKING = AOE_PROBABILITY_PER_ATTACK * NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING # Probablity of an aoe attack per turn before each slot attacks
 NUM_ATTACKS_NOT_DIRECTED = np.array([NUM_ATTACKS_PER_TURN / 2, NUM_ATTACKS_PER_TURN* 3 / 4, NUM_ATTACKS_PER_TURN * 3 / 4])
@@ -217,6 +217,8 @@ class TurnDependent(PassiveAbility):
             self.duration = self.end - self.start
     def setEffect(self):
         match self.effect:
+            case "Ki":
+                self.kit.constantKi[self.start:self.end][:] += self.buff
             case "Att":
                 self.kit.p1Att[self.start:self.end][:] += self.buff
             case "Def":
@@ -225,11 +227,20 @@ class TurnDependent(PassiveAbility):
                 self.kit.guard[self.start:self.end][:] += self.buff
             case "Crit":
                 self.kit.crit[self.start:self.end][:] += self.buff
+            case "Evasion":
+                self.kit.pEvade[self.start:self.end][:] += self.buff 
             case "Disable":
                 pNullify = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN * np.ones((self.duration, NUM_SLOTS))
                 self.kit.pNullify[self.start:self.end][:] = pNullify * (1.0 - self.kit.pNullify[self.start:self.end]) + (1.0 - pNullify) * self.kit.pNullify[self.start:self.end]
             case "KiPerTypeKiSphere":
                 self.kit.kiPerTypeOrb[self.start:self.end][:] +=  self.buff
+            case "AdditonalSuper":
+                self.kit.aaPSuper[self.start:self.end][:].append(self.activationProbability)
+                self.kit.aaPGuarantee[self.start:self.end][:].append(0.0)
+            case "AAWithChanceToSuper":
+                chanceToSuper = clc.prompt("What is the chance to super given the additional triggered?", default=0)
+                self.kit.aaPSuper[self.start:self.end][:].append(chanceToSuper)
+                self.kit.aaPGuarantee[self.start:self.end][:].append(self.activationProbability)
 
 class KiDependent(PassiveAbility):
     def __init__(self, kit, start, end, activationProbability, effect, buff, args):
@@ -262,7 +273,9 @@ class PerAttackReceived(PassiveAbility):
                 case "Att":
                     self.kit.p2Att[turn][:] += np.minimum(self.buff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING + i * NUM_ATTACKS_RECEIVED), self.max)
                 case "Def":
-                    self.kit.p2DefA[turn][:] += np.minimum(((2 * i + 1) * NUM_ATTACKS_RECEIVED - 1) * self.buff / 2, self.max)            
+                    self.kit.p2DefA[turn][:] += np.minimum(((2 * i + 1) * NUM_ATTACKS_RECEIVED - 1) * self.buff / 2, self.max)
+                case "Crit":
+                    self.kit.crit[turn][:] += np.minimum(self.buff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING + i * NUM_ATTACKS_RECEIVED), self.max)
 
 
 class WithinSameTurnAfterReceivingAttack(PassiveAbility):
@@ -279,13 +292,17 @@ class WithinSameTurnAfterReceivingAttack(PassiveAbility):
 class PerRainbowOrb(PassiveAbility):
     def __init__(self, kit, start, end, activationProbability, effect, buff, args):
         super().__init__(kit, start, end, activationProbability, effect, buff)
+        self.buffFromRainbowOrbs = self.buff * self.kit.numRainbowOrbs
     def setEffect(self):
         match self.effect:
             case "Crit":
-                self.kit.crit[self.start:self.end][:] += self.buff * self.kit.numRainbowOrbs
+                self.kit.crit[self.start:self.end][:] += self.buffFromRainbowOrbs
             case "DmgRed":
-                self.kit.dmgRedA[self.start:self.end][:] += self.buff * self.kit.numRainbowOrbs
-                self.kit.dmgRedB[self.start:self.end][:] += self.buff * self.kit.numRainbowOrbs
+                self.kit.dmgRedA[self.start:self.end][:] += self.buffFromRainbowOrbs
+                self.kit.dmgRedB[self.start:self.end][:] += self.buffFromRainbowOrbs
+            case "Evasion":
+                self.kit.pEvade[self.start:self.end][:] += self.buffFromRainbowOrbs
+                
 
 
 class Nullification(PassiveAbility):
@@ -314,7 +331,7 @@ class Kit:
     def __init__(self, id):
         self.id = id
         # Initialise arrays
-        self.saMult12 = np.zeros(MAX_TURN); self.saMult18 = np.zeros(MAX_TURN); self.sa12AttBuff = np.zeros(MAX_TURN); self.sa12DefBuff = np.zeros(MAX_TURN); self.sa18AttBuff = np.zeros(MAX_TURN); self.sa18DefBuff = np.zeros(MAX_TURN); self.sa12AttStacks = np.zeros(MAX_TURN); self.sa12DefStacks = np.zeros(MAX_TURN); self.sa18AttStacks = np.zeros(MAX_TURN); self.sa18DefStacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = np.array([[None for x in range(MAX_TURN)] for y in range(MAX_NUM_LINKS)]); self.constantKi=LEADER_SKILL_KI*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerOtherTypeOrb = np.ones((MAX_TURN, NUM_SLOTS)); self.numRainbowOrbs = NUM_RAINBOW_ORBS_NO_ORB_CHANGING * np.ones((MAX_TURN, NUM_SLOTS)); self.numOtherTypeOrbs = NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB*np.ones((MAX_TURN, NUM_SLOTS)); self.numSameTypeOrbs = NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerRainbowKiSphere =np.ones((MAX_TURN, NUM_SLOTS)); self.randomKi = np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Att=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Att = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); self.guard = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS)); self.support = np.zeros((MAX_TURN, NUM_SLOTS)); self.pNullify = np.zeros((MAX_TURN, NUM_SLOTS)); self.aaPSuper = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.aaPGuarantee = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.linkCommonality = np.zeros(MAX_TURN); self.linkKi= np.zeros(MAX_TURN); self.linkAtt_SoT= np.zeros(MAX_TURN); self.linkDef= np.zeros(MAX_TURN); self.linkCrit= np.zeros(MAX_TURN); self.linkAtt_OnSuper= np.zeros(MAX_TURN); self.linkDodge=np.zeros(MAX_TURN); self.linkDmgRed= np.zeros(MAX_TURN); self.linkHealing = np.zeros(MAX_TURN); self.dmgRedA = np.zeros((MAX_TURN, NUM_SLOTS)); self.dmgRedB = np.zeros((MAX_TURN, NUM_SLOTS)); self.normalCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.saCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.pCounterSA = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.saMult12 = np.zeros(MAX_TURN); self.saMult18 = np.zeros(MAX_TURN); self.sa12AttBuff = np.zeros(MAX_TURN); self.sa12DefBuff = np.zeros(MAX_TURN); self.sa18AttBuff = np.zeros(MAX_TURN); self.sa18DefBuff = np.zeros(MAX_TURN); self.sa12AttStacks = np.zeros(MAX_TURN); self.sa12DefStacks = np.zeros(MAX_TURN); self.sa18AttStacks = np.zeros(MAX_TURN); self.sa18DefStacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = np.array([[None for x in range(MAX_TURN)] for y in range(MAX_NUM_LINKS)]); self.constantKi=LEADER_SKILL_KI*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerOtherTypeOrb = np.ones((MAX_TURN, NUM_SLOTS)); self.numRainbowOrbs = NUM_RAINBOW_ORBS_NO_ORB_CHANGING * np.ones((MAX_TURN, NUM_SLOTS)); self.numOtherTypeOrbs = NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB*np.ones((MAX_TURN, NUM_SLOTS)); self.numSameTypeOrbs = NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerRainbowKiSphere =np.ones((MAX_TURN, NUM_SLOTS)); self.randomKi = np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Att=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Att = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); self.guard = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS)); self.pEvade = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS)); self.support = np.zeros((MAX_TURN, NUM_SLOTS)); self.pNullify = np.zeros((MAX_TURN, NUM_SLOTS)); self.aaPSuper = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.aaPGuarantee = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.linkCommonality = np.zeros(MAX_TURN); self.linkKi= np.zeros(MAX_TURN); self.linkAtt_SoT= np.zeros(MAX_TURN); self.linkDef= np.zeros(MAX_TURN); self.linkCrit= np.zeros(MAX_TURN); self.linkAtt_OnSuper= np.zeros(MAX_TURN); self.linkDodge=np.zeros(MAX_TURN); self.linkDmgRed= np.zeros(MAX_TURN); self.linkHealing = np.zeros(MAX_TURN); self.dmgRedA = np.zeros((MAX_TURN, NUM_SLOTS)); self.dmgRedB = np.zeros((MAX_TURN, NUM_SLOTS)); self.normalCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.saCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.pCounterSA = np.zeros((MAX_TURN, NUM_SLOTS))
     
     def getLinkEffects(self, start, end):
         for turn in range(start, end):
