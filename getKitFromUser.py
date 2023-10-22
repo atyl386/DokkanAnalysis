@@ -64,7 +64,7 @@ PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS = np.array([PROBABILITY_KILL
 NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING = (1.0 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING) * np.array([NUM_ATTACKS_PER_TURN / 4, NUM_ATTACKS_PER_TURN / 2, NUM_ATTACKS_PER_TURN - NUM_ATTACKS_PER_TURN / 4])
 SLOTS = ['1', '2', '3']
 NUM_SLOTS = len(SLOTS)
-EFFECTS = ["None", "Ki", "Att", "Def", "SEAAT", "Crit", "Guard", "Disable", "KiPerTypeKiSphere", "AdditionalSuper", "AAWithChanceToSuper"]
+EFFECTS = ["None", "Ki", "Att", "Def", "SEAAT", "Crit", "Guard", "DmgRed", "DmgRedA", "DmgRedB", "Disable", "KiPerTypeKiSphere", "AdditionalSuper", "AAWithChanceToSuper", "NullifyPhysical", "NullifyMelee", "NullifyKi-Blast", "NullifyOther", "NullifyAll"]
 AOE_PROBABILITY_PER_ATTACK = 0.01 # Complete guess
 NUM_AOE_ATTACKS_BEFORE_ATTACKING = AOE_PROBABILITY_PER_ATTACK * NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING # Probablity of an aoe attack per turn before each slot attacks
 NUM_ATTACKS_NOT_DIRECTED = np.array([NUM_ATTACKS_PER_TURN / 2, NUM_ATTACKS_PER_TURN* 3 / 4, NUM_ATTACKS_PER_TURN * 3 / 4])
@@ -74,7 +74,7 @@ NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING = np.array([NUM_ATTACKS_PER_TURN / 4, 0.0,
 NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING = NUM_AOE_ATTACKS_BEFORE_ATTACKING + NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
 NUM_ATTACKS_DIRECTED_AFTER_ATTACKING = NUM_ATTACKS_DIRECTED - NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
 NUM_ATTACKS_RECEIVED = NUM_AOE_ATTACKS + NUM_ATTACKS_DIRECTED * (1.0 - PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS * NUM_ATTACKS_DIRECTED_AFTER_ATTACKING / NUM_ATTACKS_DIRECTED)
-RESTRICTIONS = ["Max HP", "Min HP"]
+RESTRICTIONS = ["Turn", "Max HP", "Min HP", "Max Enemy HP", "Min Enemy HP"]
 REVIVE_UNIT_SUPPORT_BUFF = 0.75 # Just revives this unit
 REVIVE_ROTATION_SUPPORT_BUFF = 1.0 # Revive whole rotation
 NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING = 1.75
@@ -85,6 +85,11 @@ LEADER_SKILL_KI = 6.0
 KI_SUPPORT = 1.0
 LINK_DATA = np.genfromtxt('C:/Users/Tyler/Documents/DokkanAnalysis/LinkTable.csv', dtype='str', delimiter=',',skip_header=True)
 LINK_NAMES = list(LINK_DATA[:,0])
+SUPER_ATTACK_TYPES = ["Physical", "Melee", "Ki-Blast", "Other", "All"]
+FRAC_PHYSICAL_SA = 0.075
+FRAC_MELEE_SA = 0.2
+FRAC_KI_BLAST_SA = 0.4
+FRAC_OTHER_SA = 1.0 - FRAC_PHYSICAL_SA - FRAC_MELEE_SA - FRAC_KI_BLAST_SA
 
 # Helper dicts
 yesNo2Bool = dict(zip(YES_NO, [True, False]))
@@ -132,12 +137,9 @@ class Link:
             self.commonality = float(commonality)
 
 class Ability:
-    def __init__(self, kit, start, end, activationProbability):
+    def __init__(self, kit, start):
         self.kit = kit
         self.start = start
-        self.end = end
-        self.duration = end - start
-        self.activationProbability = activationProbability
     def setEffect(self):
         pass
 
@@ -145,25 +147,42 @@ class Ability:
 class SpecialAbility(Ability):
     def __init__(self, *args, **kwargs):
         super().__init__(kit, *args, **kwargs)
-        self.activationTurn = int(max(self.start + round(1 / self.activationProbability), PEAK_TURN - 1)) # Mean of geometric distribution is 1/p
+        self.activationProbability, self.maxTurnRestriction = restrictionQuestionaire()
     def setEffect(self):
         pass
 
 
-class ActiveSkillAttack(SpecialAbility):
-    def __init__(self, kit, start, end, activationProbability, attackMultiplier, attackBuff):
-        super().__init__(kit, start, end, activationProbability)
+class Transformation(SpecialAbility):
+    def __init__(self, *args, **kwargs):
+        super().__init__(kit, *args, **kwargs)
+        self.activationTurn = int(min(self.start + round(1 / self.activationProbability), self.maxTurnRestriction)) # Mean of geometric distribution is 1/p
+    def setEffect(self):
+        pass
+
+
+class SingleTurnAbility(SpecialAbility):
+    def __init__(self, kit, start, end):
+        super().__init__(kit, start)
+        self.end = end
+        self.activationTurn = int(max(min(self.start + round(1 / self.activationProbability), self.maxTurnRestriction), PEAK_TURN - 1)) # Mean of geometric distribution is 1/p
+    def setEffect(self):
+        pass
+
+
+class ActiveSkillAttack(SingleTurnAbility):
+    def __init__(self, kit, start, end, attackMultiplier, attackBuff):
+        super().__init__(kit, start, end)
         self.attackMultiplier = attackMultiplier
         self.attackBuff = attackBuff
     def setEffect(self):
         self.kit.activeAttackTurn = self.activationTurn
         self.kit.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
-        abilityQuestionaire(self.kit, self.activationTurn, self.activationTurn + 1, "How many additional single-turn buffs does this active skill attack have?", TurnDependentAbility)
+        abilityQuestionaire(self.kit, "How many additional single-turn buffs does this active skill attack have?", TurnDependent, self.activationTurn, self.activationTurn + 1)
 
 
-class Revive(SpecialAbility):
-    def __init__(self, kit, start, end, activationProbability, hpRegen, isThisCharacterOnly):
-        super().__init__(kit, start, end, activationProbability)
+class Revive(SingleTurnAbility):
+    def __init__(self, kit, start, end, hpRegen, isThisCharacterOnly):
+        super().__init__(kit, start, end)
         self.hpRegen = hpRegen
         self.isThisCharacterOnly = isThisCharacterOnly
     def setEffect(self):
@@ -172,19 +191,22 @@ class Revive(SpecialAbility):
             self.kit.support[self.activationTurn][:] += [REVIVE_UNIT_SUPPORT_BUFF] * NUM_SLOTS
         else:
             self.kit.support[self.activationTurn][:] += [REVIVE_ROTATION_SUPPORT_BUFF] * NUM_SLOTS
-        abilityQuestionaire(self.kit, self.activationTurn, self.end, "How many additional constant buffs does this revive have?", TurnDependentAbility)
+        abilityQuestionaire(self.kit, "How many additional constant buffs does this revive have?", TurnDependent, self.activationTurn, self.end, )
 
 
 class PassiveAbility(Ability):
     def __init__(self, kit, start, end, activationProbability, effect, buff):
-        super().__init__(kit, start, end, activationProbability)
+        super().__init__(kit, start)
+        self.end = end
+        self.duration = end - start
+        self.activationProbability = activationProbability
         self.effect = effect
         self.buff = buff * activationProbability
     def setEffect(self):
         pass      
 
 
-class TurnDependentAbility(PassiveAbility):
+class TurnDependent(PassiveAbility):
     def __init__(self, kit, start, end, activationProbability, effect, buff, args):
         super().__init__(kit, start, end, activationProbability, effect, buff)
         if args != None: # If called it with overwriting turns
@@ -207,7 +229,7 @@ class TurnDependentAbility(PassiveAbility):
             case "KiPerTypeKiSphere":
                 self.kit.kiPerTypeOrb[self.start:self.end][:] +=  self.buff
 
-class KiDependentAbility(PassiveAbility):
+class KiDependent(PassiveAbility):
     def __init__(self, kit, start, end, activationProbability, effect, buff, args):
         super().__init__(kit, start, end, activationProbability, effect, buff)
         self.kiRequired = args[0]
@@ -217,9 +239,14 @@ class KiDependentAbility(PassiveAbility):
         match self.effect:
             case "AdditonalSuper":
                 self.kit.aaPSuper[self.start:self.end][:].append(self.activationProbability)
+                self.kit.aaPGuarantee[self.start:self.end][:].append(0.0)
             case "AAWithChanceToSuper":
+                chanceToSuper = clc.prompt("What is the chance to super given the additional triggered?", default=0)
+                self.kit.aaPSuper[self.start:self.end][:].append(chanceToSuper)
                 self.kit.aaPGuarantee[self.start:self.end][:].append(self.activationProbability)
-            
+            case "SEAAT":
+                self.kit.SEAAT[self.start:self.end][:] += self.activationProbability
+
 
 class PerAttackReceived(PassiveAbility):
     def __init__(self, kit, start, end, activationProbability, effect, buff, args):
@@ -254,12 +281,38 @@ class PerRainbowOrb(PassiveAbility):
         match self.effect:
             case "Crit":
                 self.kit.crit[self.start:self.end][:] += self.buff * self.kit.numRainbowOrbs
+            case "DmgRed":
+                self.kit.dmgRedA[self.start:self.end][:] += self.buff * self.kit.numRainbowOrbs
+                self.kit.dmgRedB[self.start:self.end][:] += self.buff * self.kit.numRainbowOrbs
+
+
+class Nullification(PassiveAbility):
+    def __init__(self, kit, start, end, activationProbability, effect, buff, args):
+        super().__init__(kit, start, end, activationProbability, effect, buff)
+        self.hasCounter = args[0]
+    def setEffect(self):
+        match self.effect:
+            case "NullifyPhysical":
+                saFrac = FRAC_PHYSICAL_SA
+            case "NullifyMelee":
+                saFrac = FRAC_MELEE_SA
+            case "NullifyKi-Blast":
+                saFrac = FRAC_KI_BLAST_SA
+            case "NullifyOther":
+                saFrac = FRAC_OTHER_SA
+            case "All":
+                saFrac = 1.0
+        pNullify = self.activationProbability * (1.0 - (1.0 - saFrac) ** 2)
+        self.kit.pNullify = (1.0 - self.kit.pNullify) * pNullify + (1.0 - pNullify) * self.kit.pNullify
+        if self.hasCounter:
+            self.kit.pCounterSA = (1.0 - self.kit.pCounterSA) * pNullify + (1.0 - pNullify) * self.kit.pCounterSA
+
 
 class Kit:
     def __init__(self, id):
         self.id = id
         # Initialise arrays
-        self.sa_mult_12 = np.zeros(MAX_TURN); self.sa_mult_18 = np.zeros(MAX_TURN); self.sa_12_att_buff = np.zeros(MAX_TURN); self.sa_12_def_buff = np.zeros(MAX_TURN); self.sa_18_att_buff = np.zeros(MAX_TURN); self.sa_18_def_buff = np.zeros(MAX_TURN); self.sa_12_att_stacks = np.zeros(MAX_TURN); self.sa_12_def_stacks = np.zeros(MAX_TURN); self.sa_18_att_stacks = np.zeros(MAX_TURN); self.sa_18_def_stacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = np.array([[None for x in range(MAX_TURN)] for y in range(MAX_NUM_LINKS)]); self.constantKi=LEADER_SKILL_KI*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerOtherTypeOrb = np.ones((MAX_TURN, NUM_SLOTS)); self.numRainbowOrbs = NUM_RAINBOW_ORBS_NO_ORB_CHANGING * np.ones((MAX_TURN, NUM_SLOTS)); self.numOtherTypeOrbs = NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB*np.ones((MAX_TURN, NUM_SLOTS)); self.numSameTypeOrbs = NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerRainbowKiSphere =np.ones((MAX_TURN, NUM_SLOTS)); self.randomKi = np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Att=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Att = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS)); self.support = np.zeros((MAX_TURN, NUM_SLOTS)); self.pNullify = np.zeros((MAX_TURN, NUM_SLOTS)); self.aaPSuper = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.aaPGuarantee = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.linkCommonality = np.zeros(MAX_TURN); self.linkKi= np.zeros(MAX_TURN); self.linkAtt_SoT= np.zeros(MAX_TURN); self.linkDef= np.zeros(MAX_TURN); self.linkCrit= np.zeros(MAX_TURN); self.linkAtt_OnSuper= np.zeros(MAX_TURN); self.linkDodge=np.zeros(MAX_TURN); self.linkDmgRed= np.zeros(MAX_TURN); self.linkHealing = np.zeros(MAX_TURN)
+        self.saMult12 = np.zeros(MAX_TURN); self.saMult18 = np.zeros(MAX_TURN); self.sa12AttBuff = np.zeros(MAX_TURN); self.sa12DefBuff = np.zeros(MAX_TURN); self.sa18AttBuff = np.zeros(MAX_TURN); self.sa18DefBuff = np.zeros(MAX_TURN); self.sa12AttStacks = np.zeros(MAX_TURN); self.sa12DefStacks = np.zeros(MAX_TURN); self.sa18AttStacks = np.zeros(MAX_TURN); self.sa18DefStacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = np.array([[None for x in range(MAX_TURN)] for y in range(MAX_NUM_LINKS)]); self.constantKi=LEADER_SKILL_KI*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerOtherTypeOrb = np.ones((MAX_TURN, NUM_SLOTS)); self.numRainbowOrbs = NUM_RAINBOW_ORBS_NO_ORB_CHANGING * np.ones((MAX_TURN, NUM_SLOTS)); self.numOtherTypeOrbs = NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB*np.ones((MAX_TURN, NUM_SLOTS)); self.numSameTypeOrbs = NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerRainbowKiSphere =np.ones((MAX_TURN, NUM_SLOTS)); self.randomKi = np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Att=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Att = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS)); self.support = np.zeros((MAX_TURN, NUM_SLOTS)); self.pNullify = np.zeros((MAX_TURN, NUM_SLOTS)); self.aaPSuper = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.aaPGuarantee = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.linkCommonality = np.zeros(MAX_TURN); self.linkKi= np.zeros(MAX_TURN); self.linkAtt_SoT= np.zeros(MAX_TURN); self.linkDef= np.zeros(MAX_TURN); self.linkCrit= np.zeros(MAX_TURN); self.linkAtt_OnSuper= np.zeros(MAX_TURN); self.linkDodge=np.zeros(MAX_TURN); self.linkDmgRed= np.zeros(MAX_TURN); self.linkHealing = np.zeros(MAX_TURN); self.dmgRedA = np.zeros((MAX_TURN, NUM_SLOTS)); self.dmgRedB = np.zeros((MAX_TURN, NUM_SLOTS)); self.normalCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.saCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.pCounterSA = np.zeros((MAX_TURN, NUM_SLOTS))
     
     def getLinkEffects(self, start, end):
         for turn in range(start, end):
@@ -277,7 +330,6 @@ class Kit:
 
     def setRandomKi(self, start, end):
         kiCollect = self.kiPerOtherTypeOrb[start:end][:] * self.numOtherTypeOrbs[start:end][:] + self.kiPerSameTypeOrb[start:end][:] * self.numSameTypeOrbs[start:end][:] + self.numRainbowOrbs[start:end][:] * self.kiPerRainbowKiSphere[start:end][:]
-
         self.randomKi = kiCollect + np.array([self.linkKi[start:end]] * NUM_SLOTS).T + KI_SUPPORT
 
     def initialQuestionaire(self):
@@ -294,17 +346,15 @@ class Kit:
         self._def = clc.prompt("What is the unit's base DEF stat?", default=0)
         self.leader_skill = leaderSkillConversion[clc.prompt("How would you rate the unit's leader skill on a scale of 1-10?\n200% limited - e.g. LR Hatchiyak Goku\n 200% small - e.g. LR Metal Cooler\n 200% medium - e.g. PHY God Goku\n 200% large - e.g. LR Vegeta & Trunks\n", type=clc.Choice(leaderSkillConversion.keys(), case_sensitive=False), default='<150%')]
         self.teams = clc.prompt("How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account.", default=1)
-        self.ki_mod_12 = float(clc.prompt("What is the unit's 12 ki attck modifer?", type=clc.Choice(KI_MODIFIERS_12), default='1.5'))
-        self.normal_counter_mult = counterAttackConversion[clc.prompt("What is the unit's normal counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]
-        self.sa_counter_mult = counterAttackConversion[clc.prompt("What is the unit's super attack counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]
-        self.keep_stacking = yesNo2Bool[clc.prompt("Does the unit have the ability to keep stacking before transforming?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]
-        self.giant_rage_duration = clc.prompt("How many turns does the unit's giant/rage mode last for?", type=clc.Choice(GIANT_RAGE_DURATION), default='0')
+        self.kiMod12 = float(clc.prompt("What is the unit's 12 ki attck modifer?", type=clc.Choice(KI_MODIFIERS_12), default='1.5'))
+        self.keepStacking = yesNo2Bool[clc.prompt("Does the unit have the ability to keep stacking before transforming?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]
+        self.giantRageDuration = clc.prompt("How many turns does the unit's giant/rage mode last for?", type=clc.Choice(GIANT_RAGE_DURATION), default='0')
         
 
     def sbrQuestionaire(self):
         self.sbr = 0.0        
         if yesNo2Bool[clc.prompt("Does the unit have any SBR abilities?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]:
-            attack_all = attackAllConversion[clc.prompt("Does the unit attack all enemies on super?",type=clc.Choice(yesNo2Bool.keys(),case_sensitive=False), default='N')]
+            attackAll = attackAllConversion[clc.prompt("Does the unit attack all enemies on super?",type=clc.Choice(yesNo2Bool.keys(),case_sensitive=False), default='N')]
 
             seal = sealTurnConversion[clc.prompt("How many turns does the unit seal for?", type=clc.Choice(sealTurnConversion.keys()), default='0')]
             if seal != 0:
@@ -314,60 +364,67 @@ class Kit:
             if stun != 0:
                 stun *= clc.prompt("What is the unit's chance to stun?", default=0.0)
             
-            att_debuff_on_att = attDebuffTurnConversion[clc.prompt("How many turns does the unit lower the enemy attack by attacking?", type=clc.Choice(attDebuffTurnConversion.keys()), default='0')]
-            if att_debuff_on_att != 0:
-                att_debuff_on_att *= attDebuffOnAttackConversion[clc.prompt("How much is attack lowered by on attack?", type=clc.Choice(attDebuffOnAttackConversion.keys(), case_sensitive=False), default='Lowers')]
+            attDebuffOnAtt = attDebuffTurnConversion[clc.prompt("How many turns does the unit lower the enemy attack by attacking?", type=clc.Choice(attDebuffTurnConversion.keys()), default='0')]
+            if attDebuffOnAtt != 0:
+                attDebuffOnAtt *= attDebuffOnAttackConversion[clc.prompt("How much is attack lowered by on attack?", type=clc.Choice(attDebuffOnAttackConversion.keys(), case_sensitive=False), default='Lowers')]
 
-            att_debuff_passive = attDebuffTurnConversion[clc.prompt("How many turns does the unit lower the enemy attack passively?", type=clc.Choice(attDebuffTurnConversion.keys()), default='0')]
-            if att_debuff_passive != 0:
-                att_debuff_passive *= clc.prompt("How much is attack lowered passively?", default=0.3)
+            attDebuffPassive = attDebuffTurnConversion[clc.prompt("How many turns does the unit lower the enemy attack passively?", type=clc.Choice(attDebuffTurnConversion.keys()), default='0')]
+            if attDebuffPassive != 0:
+                attDebuffPassive *= clc.prompt("How much is attack lowered passively?", default=0.3)
             
-            multiple_enemy_buff = multipleEnemyBuffConversion[clc.prompt("How much of a buff does the unit get when facing multiple enemies?",type=clc.Choice(multipleEnemyBuffConversion.keys(), case_sensitive=False), default='None')]
+            multipleEnemyBuff = multipleEnemyBuffConversion[clc.prompt("How much of a buff does the unit get when facing multiple enemies?",type=clc.Choice(multipleEnemyBuffConversion.keys(), case_sensitive=False), default='None')]
             
-            self.sbr += attackAllDebuffConversion[attack_all] * (seal + stun + att_debuff_on_att) + att_debuff_passive + multiple_enemy_buff + attack_all
+            self.sbr += attackAllDebuffConversion[attackAll] * (seal + stun + attDebuffOnAtt) + attDebuffPassive + multipleEnemyBuff + attackAll
 
     def turnBasedQuestionaire(self):
-        formTurnStarts = [1] # Every unit starts on their first turn
-        while(formTurnStarts[-1] != MAX_TURN+1):
-            formTurnStarts.append(clc.prompt(f"On what turn does the unit transform? Will keep asking until enter {MAX_TURN+1}", default=MAX_TURN+1))
-        for form in range(len(formTurnStarts)-1): # Don't do last one as that indicates end
-            start = formTurnStarts[form] - 1 # Get the first turn of 'form'. Subtract 1 to make indexing easier.
-            end = formTurnStarts[form + 1] - 1
+        start = 0
+        transformations = abilityQuestionaire(self, "How many transformations does the unit have?", Transformation, start)
+        numForms = len(transformations) + 1 # Plus 1 to account for base form
+        for form in range(numForms):
+            # First determine end turn for each form
+            if transformations:
+                end = (transformations[0]).activationTurn
+                transformations.pop(0)
+            else:
+                end = MAX_TURN
             formDuration = end - start
             self.constantKi[start:end][:] += [clc.prompt("What is the form's start of turn ki?", default=0)]
             self.p1Att[start:end][:] += [clc.prompt("What is the form's start of turn Attack?", default=2.0)]
             self.p1Def[start:end][:] += [clc.prompt("What is the form's start of turn Defence?", default=2.0)]
-            self.sa_mult_12[start:end] = [superAttackConversion[clc.prompt("What is the form's 12 ki super attack multiplier?", type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES), default='Immense')][superAttackLevelConversion[self.rarity][self.eza]]]*formDuration
-            self.sa_12_att_buff[start:end] = [clc.prompt("What is the form's 12 ki attack buff?", default=0.0)]*formDuration
-            if self.sa_12_att_buff[start] != 0:
-                self.sa_12_att_stacks[start:end] = [clc.prompt("How many turns does the form's 12 ki attack buff last for?", default=1)]*formDuration
-            self.sa_12_def_buff[start:end] = [clc.prompt("What is the form's 12 ki defense buff?", default=0.0)]*formDuration
-            if self.sa_12_def_buff[start] != 0:
-                self.sa_12_def_stacks[start:end] = [clc.prompt("How many turns does the form's 12 ki defense buff last for?", default=1)]*formDuration
+            self.saMult12[start:end] = [superAttackConversion[clc.prompt("What is the form's 12 ki super attack multiplier?", type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES), default='Immense')][superAttackLevelConversion[self.rarity][self.eza]]]*formDuration
+            self.sa12AttBuff[start:end] = [clc.prompt("What is the form's 12 ki attack buff?", default=0.0)]*formDuration
+            if self.sa12AttBuff[start] != 0:
+                self.sa12AttStacks[start:end] = [clc.prompt("How many turns does the form's 12 ki attack buff last for?", default=1)]*formDuration
+            self.sa12DefBuff[start:end] = [clc.prompt("What is the form's 12 ki defense buff?", default=0.0)]*formDuration
+            if self.sa12DefBuff[start] != 0:
+                self.sa12DefStacks[start:end] = [clc.prompt("How many turns does the form's 12 ki defense buff last for?", default=1)]*formDuration
             if self.rarity == 'LR':
-                self.sa_mult_18[start:end] = [superAttackConversion[clc.prompt("What is the form's 18 ki super attack multiplier?", type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES), default='Mega-Colossal')][superAttackLevelConversion[self.rarity][self.eza]]]*formDuration
-                self.sa_18_att_buff[start:end] = [clc.prompt("What is the form's 18 ki attack buff?", default=0.0)]*formDuration
-                if self.sa_18_att_buff[start] != 0:
-                    self.sa_18_att_stacks[start:end] = [clc.prompt("How many turns does the form's 18 ki attack buff last for?", default=1)]*formDuration
-                self.sa_18_def_buff[start:end] = [clc.prompt("What is the form's 18 ki defense buff?", default=0.0)]*formDuration
-                if self.sa_18_def_buff[start] != 0:
-                    self.sa_18_def_stacks[start:end] = [clc.prompt("How many turns does form's 18 ki defense buff last for?", default=1)]*formDuration
+                self.saMult18[start:end] = [superAttackConversion[clc.prompt("What is the form's 18 ki super attack multiplier?", type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES), default='Mega-Colossal')][superAttackLevelConversion[self.rarity][self.eza]]]*formDuration
+                self.sa18AttBuff[start:end] = [clc.prompt("What is the form's 18 ki attack buff?", default=0.0)]*formDuration
+                if self.sa18AttBuff[start] != 0:
+                    self.sa18AttStacks[start:end] = [clc.prompt("How many turns does the form's 18 ki attack buff last for?", default=1)]*formDuration
+                self.sa18DefBuff[start:end] = [clc.prompt("What is the form's 18 ki defense buff?", default=0.0)]*formDuration
+                if self.sa18DefBuff[start] != 0:
+                    self.sa18DefStacks[start:end] = [clc.prompt("How many turns does form's 18 ki defense buff last for?", default=1)]*formDuration
                 self.intentional12Ki[start:end] = [yesNo2Bool[clc.prompt("Should a 12 Ki be targetted for this form?", default='N')]]*formDuration
+            self.normalCounterMult[start:end][:] += [counterAttackConversion[clc.prompt("What is the unit's normal counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]]
+            self.saCounterMult[start:end][:] += [counterAttackConversion[clc.prompt("What is the unit's super attack counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]]
             for linkIndex in range(MAX_NUM_LINKS):
                 linkName = clc.prompt(f"What is the form's link # {linkIndex+1}", type = clc.Choice(LINKS, case_sensitive=False), default='Fierce Battle')
                 linkCommonality = clc.prompt("If has an ideal linking partner, what is the chance this link is active?", default=-1.0)
                 self.links[linkIndex][start:end] = [Link(linkName, linkCommonality)] * formDuration 
             self.getLinkEffects(start, end)
             #assert len(np.unique(self.links))==MAX_NUM_LINKS, 'Duplicate links'
-            abilityQuestionaire(self, start, end, "How many other unconditional buffs does the form have?", TurnDependentAbility, ["What is the value of the buff?"])
-            abilityQuestionaire(self, start, end, "How many turn dependent buffs does the form have?", TurnDependentAbility, ["What turn does the buff start from?", "What turn does the buff end on?"], [None, None], [start, end])
-            abilityQuestionaire(self, start, end, "How many different buffs does the form get on attacks received?", PerAttackReceived, ["How much is the buff per attack received?", "What is the maximum buff?"], [None, None], [0.2, 1.0])
-            abilityQuestionaire(self, start, end, "How many different buffs does the form get within the same turn after receiving an attack?", WithinSameTurnAfterReceivingAttack, ["How much is the buff upon receiving an attack?"], [None], [0.5])
+            abilityQuestionaire(self, "How many other unconditional buffs does the form have?", TurnDependent, start, end, ["What is the value of the buff?"])
+            abilityQuestionaire(self, "How many turn dependent buffs does the form have?", TurnDependent, start, end, ["What turn does the buff start from?", "What turn does the buff end on?"], [None, None], [start, end])
+            abilityQuestionaire(self, "How many different buffs does the form get on attacks received?", start, end, PerAttackReceived, ["How much is the buff per attack received?", "What is the maximum buff?"], [None, None], [0.2, 1.0])
+            abilityQuestionaire(self, "How many different buffs does the form get within the same turn after receiving an attack?", WithinSameTurnAfterReceivingAttack, start, end, ["How much is the buff upon receiving an attack?"], [None], [0.5])
             self.setRandomKi(start, end) # Compute the average ki each turn which has a random component because need to be able to compute how much ki the unit gets on average for ki dependent effects
-            abilityQuestionaire(self, start, end, "How many ki dependent buffs does the form have?", ["What is the required ki?"], KiDependentAbility)
-            abilityQuestionaire(self, start, end, "How many revive skills does the form have?", Revive, ["How much HP is revived with?", "Does the revive only apply to this unit?"], [None, None], [0.7, 'N'])
-            abilityQuestionaire(self, start, end, "How many active skill attacks does the form have?", ActiveSkillAttack, ["What is the attack multiplier?", "What is the additional attack buff when performing thes attack?"], [clc.Choice(specialAttackConversion.keys()), None], ['Ultimate', 0.0])
-
+            abilityQuestionaire(self, "How many ki dependent buffs does the form have?", KiDependent, start, end, ["What is the required ki?"], [None], [24])
+            abilityQuestionaire(self, "How many different nullification abilities does the form have?", Nullification, start, end, ["Does this nullification have counter?"], [YES_NO], ["N"])
+            abilityQuestionaire(self, "How many revive skills does the form have?", Revive, ["How much HP is revived with?", start, end, "Does the revive only apply to this unit?"], [None, None], [0.7, 'N'])
+            abilityQuestionaire(self, "How many active skill attacks does the form have?", ActiveSkillAttack, start, end, ["What is the attack multiplier?", "What is the additional attack buff when performing thes attack?"], [clc.Choice(specialAttackConversion.keys()), None], ['Ultimate', 0.0])
+            start = end # set this for next form
     def getKitFromUser(self):
         clc.echo(f'Hello! This program will guide you through inputting the data required to enter Dokkan unit ID={self.id} into the database')
         self.initialQuestionaire()
@@ -385,33 +442,45 @@ def ZTP_CDF(x,Lambda):
 def restrictionQuestionaire():
     numRestrictions = clc.prompt("How many different restrictions does this ability have?", default=0)
     totalRestrictionProbability = 0.0
+    turnRestriction = MAX_TURN
     for restriction in range(numRestrictions):
-        restrictionType = clc.prompt("What type of restriction is it?", type=clc.Choice(RESTRICTIONS,case_sensitive=False), default="Max HP")
-        match restrictionType:
-            case "Max HP":
-                restrictionProbability = 1.0 - maxHealthCDF(clc.prompt("What is the maximum HP restriction?", default=0.7))
-            case "Min HP":
-                restrictionProbability =  maxHealthCDF(clc.prompt("What is the minimum HP restriction?", default=0.7))
+        restrictionProbability = 0.0
+        restrictionType = clc.prompt("What type of restriction is it?", type=clc.Choice(RESTRICTIONS,case_sensitive=False), default="Turn")
+        if restrictionType == "Turn":
+            turnRestriction = min(clc.prompt("What is the turn restriction (relative to the character)?", default=3), turnRestriction)
+        elif restrictionType == "Max HP":
+            restrictionProbability = 1.0 - maxHealthCDF(clc.prompt("What is the maximum HP restriction?", default=0.7))
+        elif restrictionType == "Min HP":
+            restrictionProbability =  maxHealthCDF(clc.prompt("What is the minimum HP restriction?", default=0.7))
+        elif restrictionType == "Enemy Max HP":
+            restrictionProbability = 1.0 - clc.prompt("What is the maximum enemy HP restriction?", default=0.5)
+        elif restrictionType == "Enemy Min HP":
+            restrictionProbability = clc.prompt("What is the minimum enemy HP restriction?", default=0.5)
         # Assume independence
         totalRestrictionProbability = (1.0 - totalRestrictionProbability) * restrictionProbability + (1.0 - restrictionProbability) * totalRestrictionProbability
-    return 1.0 - totalRestrictionProbability
+    return 1.0 - totalRestrictionProbability, turnRestriction
 
-def abilityQuestionaire(kit, start, end, abilityPrompt, abilityClass, parameterPrompts=[], types=[], defaults=[]):
+def abilityQuestionaire(kit, abilityPrompt, abilityClass, start, end = [], parameterPrompts=[], types=[], defaults=[]):
     numAbilities = clc.prompt(abilityPrompt, default=0)
-    for ability in range(numAbilities):
+    abilities = []
+    for i in range(numAbilities):
         parameters = []
-        for i, parameterPrompt in enumerate(parameterPrompts):
-            if len(types[i]) == 0:
-                parameters.append(clc.prompt(parameterPrompt), default = defaults[i])
+        for j, parameterPrompt in enumerate(parameterPrompts):
+            if len(types[j]) == 0:
+                parameters.append(clc.prompt(parameterPrompt), default = defaults[j])
             else:
-                parameters.append(clc.prompt(parameterPrompt), type = types[i], default = defaults[i])
-        if issubclass(abilityClass, PassiveAbility):
+                parameters.append(clc.prompt(parameterPrompt), type = types[j], default = defaults[j])
+        if isinstance(abilityClass, Transformation):
+            abilities.append(abilityClass(kit, start))
+        elif issubclass(abilityClass, PassiveAbility):
             effect = clc.prompt("What type of buff does the unit get?",type=clc.Choice(EFFECTS, case_sensitive=False), default="Att")
             activationProbability = clc.prompt("What is the probability this ability activates?", default=1.0)
-            abilityClass(kit, start, end, activationProbability, effect, parameters).setEffect()
-        elif issubclass(abilityClass, SpecialAbility):
-            probabilityPerTurn = restrictionQuestionaire()
-            abilityClass(kit, start, end, probabilityPerTurn, parameters).setEffect()       
+            ability = abilityClass(kit, start, end, activationProbability, effect, parameters)
+            ability.setEffect()
+        elif issubclass(abilityClass, SingleTurnAbility):
+            ability = abilityClass(kit, start, parameters)
+            ability.setEffect()
+    return abilities
         
 
 if __name__ == '__main__':
