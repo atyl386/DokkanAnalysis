@@ -6,6 +6,8 @@ from scipy.stats import poisson
 # I think need a function/Questionaire for every type of passive ability, e.g. one for rainbow orbs, might be good to use classes here. I think this is the only way to cater for all the complexities of Dokkan passives in an automated way
 
 # TODO:
+# - Should put at may not be relevant tag onto end of the prompts that may not always be relevant.
+# - Should print out relavant parameters back to user, like activationTurn for special ability
 # - Group constants so easier to manage
 # - Still need to get stats out of links, but can mostly copy whats in dokkanUnit.py
 # - Should determine which slot is best for the unit
@@ -145,16 +147,16 @@ class Ability:
 
 
 class SpecialAbility(Ability):
-    def __init__(self, *args, **kwargs):
-        super().__init__(kit, *args, **kwargs)
+    def __init__(self, kit, start):
+        super().__init__(kit, start)
         self.activationProbability, self.maxTurnRestriction = restrictionQuestionaire()
     def setEffect(self):
         pass
 
 
 class Transformation(SpecialAbility):
-    def __init__(self, *args, **kwargs):
-        super().__init__(kit, *args, **kwargs)
+    def __init__(self, kit, start):
+        super().__init__(kit, start)
         self.activationTurn = int(min(self.start + round(1 / self.activationProbability), self.maxTurnRestriction)) # Mean of geometric distribution is 1/p
     def setEffect(self):
         pass
@@ -170,10 +172,10 @@ class SingleTurnAbility(SpecialAbility):
 
 
 class ActiveSkillAttack(SingleTurnAbility):
-    def __init__(self, kit, start, end, attackMultiplier, attackBuff):
+    def __init__(self, kit, start, end, args):
         super().__init__(kit, start, end)
-        self.attackMultiplier = attackMultiplier
-        self.attackBuff = attackBuff
+        self.attackMultiplier = args[0]
+        self.attackBuff = args[1]
     def setEffect(self):
         self.kit.activeAttackTurn = self.activationTurn
         self.kit.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
@@ -181,10 +183,10 @@ class ActiveSkillAttack(SingleTurnAbility):
 
 
 class Revive(SingleTurnAbility):
-    def __init__(self, kit, start, end, hpRegen, isThisCharacterOnly):
+    def __init__(self, kit, start, end, args):
         super().__init__(kit, start, end)
-        self.hpRegen = hpRegen
-        self.isThisCharacterOnly = isThisCharacterOnly
+        self.hpRegen = args[0]
+        self.isThisCharacterOnly = args[1]
     def setEffect(self):
         self.kit.healing[self.activationTurn + 1][:] += np.minimum([self.hpRegen] * NUM_SLOTS, 1.0)
         if self.isThisCharacterOnly:
@@ -209,7 +211,7 @@ class PassiveAbility(Ability):
 class TurnDependent(PassiveAbility):
     def __init__(self, kit, start, end, activationProbability, effect, buff, args):
         super().__init__(kit, start, end, activationProbability, effect, buff)
-        if args != None: # If called it with overwriting turns
+        if len(args) > 0: # If called it with overwriting turns
             self.start = args[0]
             self.end = args[1]
             self.duration = self.end - self.start
@@ -256,7 +258,7 @@ class PerAttackReceived(PassiveAbility):
         for i, turn in enumerate(range(self.start, self.end)):
             match self.effect:
                 case "Ki":
-                    self.kit.ki[turn][:] += np.minimum(self.buff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING + i * NUM_ATTACKS_RECEIVED), self.max)
+                    self.kit.constantKi[turn][:] += np.minimum(self.buff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING + i * NUM_ATTACKS_RECEIVED), self.max)
                 case "Att":
                     self.kit.p2Att[turn][:] += np.minimum(self.buff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING + i * NUM_ATTACKS_RECEIVED), self.max)
                 case "Def":
@@ -312,7 +314,7 @@ class Kit:
     def __init__(self, id):
         self.id = id
         # Initialise arrays
-        self.saMult12 = np.zeros(MAX_TURN); self.saMult18 = np.zeros(MAX_TURN); self.sa12AttBuff = np.zeros(MAX_TURN); self.sa12DefBuff = np.zeros(MAX_TURN); self.sa18AttBuff = np.zeros(MAX_TURN); self.sa18DefBuff = np.zeros(MAX_TURN); self.sa12AttStacks = np.zeros(MAX_TURN); self.sa12DefStacks = np.zeros(MAX_TURN); self.sa18AttStacks = np.zeros(MAX_TURN); self.sa18DefStacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = np.array([[None for x in range(MAX_TURN)] for y in range(MAX_NUM_LINKS)]); self.constantKi=LEADER_SKILL_KI*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerOtherTypeOrb = np.ones((MAX_TURN, NUM_SLOTS)); self.numRainbowOrbs = NUM_RAINBOW_ORBS_NO_ORB_CHANGING * np.ones((MAX_TURN, NUM_SLOTS)); self.numOtherTypeOrbs = NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB*np.ones((MAX_TURN, NUM_SLOTS)); self.numSameTypeOrbs = NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerRainbowKiSphere =np.ones((MAX_TURN, NUM_SLOTS)); self.randomKi = np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Att=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Att = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS)); self.support = np.zeros((MAX_TURN, NUM_SLOTS)); self.pNullify = np.zeros((MAX_TURN, NUM_SLOTS)); self.aaPSuper = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.aaPGuarantee = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.linkCommonality = np.zeros(MAX_TURN); self.linkKi= np.zeros(MAX_TURN); self.linkAtt_SoT= np.zeros(MAX_TURN); self.linkDef= np.zeros(MAX_TURN); self.linkCrit= np.zeros(MAX_TURN); self.linkAtt_OnSuper= np.zeros(MAX_TURN); self.linkDodge=np.zeros(MAX_TURN); self.linkDmgRed= np.zeros(MAX_TURN); self.linkHealing = np.zeros(MAX_TURN); self.dmgRedA = np.zeros((MAX_TURN, NUM_SLOTS)); self.dmgRedB = np.zeros((MAX_TURN, NUM_SLOTS)); self.normalCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.saCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.pCounterSA = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.saMult12 = np.zeros(MAX_TURN); self.saMult18 = np.zeros(MAX_TURN); self.sa12AttBuff = np.zeros(MAX_TURN); self.sa12DefBuff = np.zeros(MAX_TURN); self.sa18AttBuff = np.zeros(MAX_TURN); self.sa18DefBuff = np.zeros(MAX_TURN); self.sa12AttStacks = np.zeros(MAX_TURN); self.sa12DefStacks = np.zeros(MAX_TURN); self.sa18AttStacks = np.zeros(MAX_TURN); self.sa18DefStacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = np.array([[None for x in range(MAX_TURN)] for y in range(MAX_NUM_LINKS)]); self.constantKi=LEADER_SKILL_KI*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerOtherTypeOrb = np.ones((MAX_TURN, NUM_SLOTS)); self.numRainbowOrbs = NUM_RAINBOW_ORBS_NO_ORB_CHANGING * np.ones((MAX_TURN, NUM_SLOTS)); self.numOtherTypeOrbs = NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB*np.ones((MAX_TURN, NUM_SLOTS)); self.numSameTypeOrbs = NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerRainbowKiSphere =np.ones((MAX_TURN, NUM_SLOTS)); self.randomKi = np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Att=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Att = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); self.guard = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS)); self.support = np.zeros((MAX_TURN, NUM_SLOTS)); self.pNullify = np.zeros((MAX_TURN, NUM_SLOTS)); self.aaPSuper = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.aaPGuarantee = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.linkCommonality = np.zeros(MAX_TURN); self.linkKi= np.zeros(MAX_TURN); self.linkAtt_SoT= np.zeros(MAX_TURN); self.linkDef= np.zeros(MAX_TURN); self.linkCrit= np.zeros(MAX_TURN); self.linkAtt_OnSuper= np.zeros(MAX_TURN); self.linkDodge=np.zeros(MAX_TURN); self.linkDmgRed= np.zeros(MAX_TURN); self.linkHealing = np.zeros(MAX_TURN); self.dmgRedA = np.zeros((MAX_TURN, NUM_SLOTS)); self.dmgRedB = np.zeros((MAX_TURN, NUM_SLOTS)); self.normalCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.saCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.pCounterSA = np.zeros((MAX_TURN, NUM_SLOTS))
     
     def getLinkEffects(self, start, end):
         for turn in range(start, end):
@@ -415,14 +417,14 @@ class Kit:
                 self.links[linkIndex][start:end] = [Link(linkName, linkCommonality)] * formDuration 
             self.getLinkEffects(start, end)
             #assert len(np.unique(self.links))==MAX_NUM_LINKS, 'Duplicate links'
-            abilityQuestionaire(self, "How many other unconditional buffs does the form have?", TurnDependent, start, end, ["What is the value of the buff?"])
+            abilityQuestionaire(self, "How many other unconditional buffs does the form have?", TurnDependent, start, end)
             abilityQuestionaire(self, "How many turn dependent buffs does the form have?", TurnDependent, start, end, ["What turn does the buff start from?", "What turn does the buff end on?"], [None, None], [start, end])
-            abilityQuestionaire(self, "How many different buffs does the form get on attacks received?", start, end, PerAttackReceived, ["How much is the buff per attack received?", "What is the maximum buff?"], [None, None], [0.2, 1.0])
-            abilityQuestionaire(self, "How many different buffs does the form get within the same turn after receiving an attack?", WithinSameTurnAfterReceivingAttack, start, end, ["How much is the buff upon receiving an attack?"], [None], [0.5])
+            abilityQuestionaire(self, "How many different buffs does the form get on attacks received?", PerAttackReceived, start, end, ["What is the maximum buff?"], [None], [1.0])
+            abilityQuestionaire(self, "How many different buffs does the form get within the same turn after receiving an attack?", WithinSameTurnAfterReceivingAttack, start, end)
             self.setRandomKi(start, end) # Compute the average ki each turn which has a random component because need to be able to compute how much ki the unit gets on average for ki dependent effects
             abilityQuestionaire(self, "How many ki dependent buffs does the form have?", KiDependent, start, end, ["What is the required ki?"], [None], [24])
             abilityQuestionaire(self, "How many different nullification abilities does the form have?", Nullification, start, end, ["Does this nullification have counter?"], [YES_NO], ["N"])
-            abilityQuestionaire(self, "How many revive skills does the form have?", Revive, ["How much HP is revived with?", start, end, "Does the revive only apply to this unit?"], [None, None], [0.7, 'N'])
+            abilityQuestionaire(self, "How many revive skills does the form have?", Revive, start, end,  ["How much HP is revived with?", "Does the revive only apply to this unit?"], [None, None], [0.7, 'N'])
             abilityQuestionaire(self, "How many active skill attacks does the form have?", ActiveSkillAttack, start, end, ["What is the attack multiplier?", "What is the additional attack buff when performing thes attack?"], [clc.Choice(specialAttackConversion.keys()), None], ['Ultimate', 0.0])
             start = end # set this for next form
     def getKitFromUser(self):
@@ -466,20 +468,21 @@ def abilityQuestionaire(kit, abilityPrompt, abilityClass, start, end = [], param
     for i in range(numAbilities):
         parameters = []
         for j, parameterPrompt in enumerate(parameterPrompts):
-            if len(types[j]) == 0:
-                parameters.append(clc.prompt(parameterPrompt), default = defaults[j])
+            if len(types) == 0:
+                parameters.append(clc.prompt(parameterPrompt))
             else:
-                parameters.append(clc.prompt(parameterPrompt), type = types[j], default = defaults[j])
+                parameters.append(clc.prompt(parameterPrompt, type = types[j], default = defaults[j]))
         if isinstance(abilityClass, Transformation):
-            abilities.append(abilityClass(kit, start))
+            ability = abilityClass(kit, start)
         elif issubclass(abilityClass, PassiveAbility):
             effect = clc.prompt("What type of buff does the unit get?",type=clc.Choice(EFFECTS, case_sensitive=False), default="Att")
             activationProbability = clc.prompt("What is the probability this ability activates?", default=1.0)
-            ability = abilityClass(kit, start, end, activationProbability, effect, parameters)
-            ability.setEffect()
+            buff = clc.prompt("What is the value of the buff?", default=0.0)
+            ability = abilityClass(kit, start, end, activationProbability, effect, buff, parameters)
         elif issubclass(abilityClass, SingleTurnAbility):
-            ability = abilityClass(kit, start, parameters)
-            ability.setEffect()
+            ability = abilityClass(kit, start, end, parameters)
+        ability.setEffect()
+        abilities.append(ability)
     return abilities
         
 
