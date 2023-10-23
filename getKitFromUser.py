@@ -6,7 +6,6 @@ from scipy.stats import poisson
 # I think need a function/Questionaire for every type of passive ability, e.g. one for rainbow orbs, might be good to use classes here. I think this is the only way to cater for all the complexities of Dokkan passives in an automated way
 
 # TODO:
-# - Incorporate Super attack and SBR abilities into abilitQuestionaire format
 # - Should put at may not be relevant tag onto end of the prompts that may not always be relevant.
 # - Should print out relavant parameters back to user, like activationTurn for special ability
 # - Group constants so easier to manage
@@ -102,6 +101,8 @@ NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING = np.array([NUM_ATTACKS_PER_TURN / 4, 0.0,
 NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING = NUM_AOE_ATTACKS_BEFORE_ATTACKING + NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
 NUM_ATTACKS_DIRECTED_AFTER_ATTACKING = NUM_ATTACKS_DIRECTED - NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
 NUM_ATTACKS_RECEIVED = NUM_AOE_ATTACKS + NUM_ATTACKS_DIRECTED * (1.0 - PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS * NUM_ATTACKS_DIRECTED_AFTER_ATTACKING / NUM_ATTACKS_DIRECTED)
+P_NULLIFY_FROM_DISABLE_ACTIVE = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN
+P_NULLIFY_FROM_DISABLE_SUPER = (NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING) * P_NULLIFY_FROM_DISABLE_ACTIVE
 RESTRICTIONS = ["Turn", "Max HP", "Min HP", "Max Enemy HP", "Min Enemy HP"]
 REVIVE_UNIT_SUPPORT_BUFF = 0.75 # Just revives this unit
 REVIVE_ROTATION_SUPPORT_BUFF = 1.0 # Revive whole rotation
@@ -246,6 +247,8 @@ class SuperAttack(PassiveAbility):
             case "Raise DEF":
                 self.kit.sa12DefBuff[self.start:self.end] += self.buff
                 self.kit.sa12DefStacks[self.start:self.end] += self.effectDuration # Assuming this doesn't vary in a unit super attack
+            case "Disable Action":
+                self.kit.pNullify[self.start:self.end][:] = P_NULLIFY_FROM_DISABLE_SUPER * (1.0 - self.kit.pNullify[self.start:self.end]) + (1.0 - P_NULLIFY_FROM_DISABLE_SUPER) * self.kit.pNullify[self.start:self.end]
         numUnitSuperAttacks = clc.prompt("How many 12 ki unit super attacks does this form have?", default=0)
         for unitSuperAttack in range(numUnitSuperAttacks):
             abilityQuestionaire(self, "How many effects does this unit super attack have?", SuperAttack, ["How many turns does the effect last for?"], [None], [1])  
@@ -272,9 +275,8 @@ class TurnDependent(PassiveAbility):
                 self.kit.crit[self.start:self.end][:] += self.buff
             case "Evasion":
                 self.kit.pEvade[self.start:self.end][:] += self.buff 
-            case "Disable":
-                pNullify = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN * np.ones((self.duration, NUM_SLOTS))
-                self.kit.pNullify[self.start:self.end][:] = pNullify * (1.0 - self.kit.pNullify[self.start:self.end]) + (1.0 - pNullify) * self.kit.pNullify[self.start:self.end]
+            case "Disable Action":
+                self.kit.pNullify[self.start:self.end][:] = P_NULLIFY_FROM_DISABLE_ACTIVE * (1.0 - self.kit.pNullify[self.start:self.end]) + (1.0 - P_NULLIFY_FROM_DISABLE_ACTIVE) * self.kit.pNullify[self.start:self.end]
             case "Raise Ki (Type Ki Sphere)":
                 self.kit.kiPerTypeOrb[self.start:self.end][:] +=  self.buff
             case "AdditonalSuper":
@@ -387,7 +389,29 @@ class Kit:
     def __init__(self, id):
         self.id = id
         # Initialise arrays
-        self.saMult12 = np.zeros(MAX_TURN); self.saMult18 = np.zeros(MAX_TURN); self.sa12AtkBuff = np.zeros(MAX_TURN); self.sa12DefBuff = np.zeros(MAX_TURN); self.sa18AtkBuff = np.zeros(MAX_TURN); self.sa18DefBuff = np.zeros(MAX_TURN); self.sa12AtkStacks = np.zeros(MAX_TURN); self.sa12DefStacks = np.zeros(MAX_TURN); self.sa18AtkStacks = np.zeros(MAX_TURN); self.sa18DefStacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN); self.links = np.array([[None for x in range(MAX_TURN)] for y in range(MAX_NUM_LINKS)]); self.constantKi=LEADER_SKILL_KI*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerOtherTypeOrb = np.ones((MAX_TURN, NUM_SLOTS)); self.numRainbowOrbs = NUM_RAINBOW_ORBS_NO_ORB_CHANGING * np.ones((MAX_TURN, NUM_SLOTS)); self.numOtherTypeOrbs = NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB*np.ones((MAX_TURN, NUM_SLOTS)); self.numSameTypeOrbs = NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerRainbowKiSphere =np.ones((MAX_TURN, NUM_SLOTS)); self.randomKi = np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Atk=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Atk = np.zeros((MAX_TURN, NUM_SLOTS)); self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS)); self.guard = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS)); self.pEvade = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS)); self.support = np.zeros((MAX_TURN, NUM_SLOTS)); self.pNullify = np.zeros((MAX_TURN, NUM_SLOTS)); self.aaPSuper = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.aaPGuarantee = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.linkCommonality = np.zeros(MAX_TURN); self.linkKi= np.zeros(MAX_TURN); self.linkAtkSoT= np.zeros(MAX_TURN); self.linkDef= np.zeros(MAX_TURN); self.linkCrit= np.zeros(MAX_TURN); self.linkAtkOnSuper= np.zeros(MAX_TURN); self.linkDodge=np.zeros(MAX_TURN); self.linkDmgRed= np.zeros(MAX_TURN); self.linkHealing = np.zeros(MAX_TURN); self.dmgRedA = np.zeros((MAX_TURN, NUM_SLOTS)); self.dmgRedB = np.zeros((MAX_TURN, NUM_SLOTS)); self.normalCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.saCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.pCounterSA = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.sbr = 0.0; self.saMult12 = np.zeros(MAX_TURN); self.saMult18 = np.zeros(MAX_TURN); self.sa12AtkBuff = np.zeros(MAX_TURN)
+        self.sa12DefBuff = np.zeros(MAX_TURN); self.sa18AtkBuff = np.zeros(MAX_TURN); self.sa18DefBuff = np.zeros(MAX_TURN)
+        self.sa12AtkStacks = np.zeros(MAX_TURN); self.sa12DefStacks = np.zeros(MAX_TURN); self.sa18AtkStacks = np.zeros(MAX_TURN)
+        self.sa18DefStacks = np.zeros(MAX_TURN); self.intentional12Ki = np.zeros(MAX_TURN)
+        self.links = np.array([[None for x in range(MAX_TURN)] for y in range(MAX_NUM_LINKS)])
+        self.constantKi=LEADER_SKILL_KI*np.ones((MAX_TURN, NUM_SLOTS)); self.kiPerOtherTypeOrb = np.ones((MAX_TURN, NUM_SLOTS))
+        self.numRainbowOrbs = NUM_RAINBOW_ORBS_NO_ORB_CHANGING * np.ones((MAX_TURN, NUM_SLOTS))
+        self.numOtherTypeOrbs = NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS))
+        self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB*np.ones((MAX_TURN, NUM_SLOTS))
+        self.numSameTypeOrbs = NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING*np.ones((MAX_TURN, NUM_SLOTS))
+        self.kiPerRainbowKiSphere =np.ones((MAX_TURN, NUM_SLOTS)); self.randomKi = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.p1Atk=np.zeros((MAX_TURN, NUM_SLOTS)); self.p1Def=np.zeros((MAX_TURN, NUM_SLOTS)); self.p2Atk = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.p2DefA = np.zeros((MAX_TURN, NUM_SLOTS)); self.SEAAT = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.guard = np.zeros((MAX_TURN, NUM_SLOTS)); self.crit = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.pEvade = np.zeros((MAX_TURN, NUM_SLOTS)); self.healing = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.support = np.zeros((MAX_TURN, NUM_SLOTS)); self.pNullify = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.aaPSuper = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]
+        self.aaPGuarantee = [[[] for x in range(NUM_SLOTS)] for y in range(MAX_TURN)]; self.linkCommonality = np.zeros(MAX_TURN)
+        self.linkKi= np.zeros(MAX_TURN); self.linkAtkSoT= np.zeros(MAX_TURN); self.linkDef= np.zeros(MAX_TURN)
+        self.linkCrit= np.zeros(MAX_TURN); self.linkAtkOnSuper= np.zeros(MAX_TURN); self.linkDodge=np.zeros(MAX_TURN)
+        self.linkDmgRed= np.zeros(MAX_TURN); self.linkHealing = np.zeros(MAX_TURN); self.dmgRedA = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.dmgRedB = np.zeros((MAX_TURN, NUM_SLOTS)); self.normalCounterMult = np.zeros((MAX_TURN, NUM_SLOTS))
+        self.saCounterMult = np.zeros((MAX_TURN, NUM_SLOTS)); self.pCounterSA = np.zeros((MAX_TURN, NUM_SLOTS))
     
     def getLinkEffects(self, start, end):
         for turn in range(start, end):
@@ -426,8 +450,7 @@ class Kit:
         self.giantRageDuration = clc.prompt("How many turns does the unit's giant/rage mode last for?", type=clc.Choice(GIANT_RAGE_DURATION), default='0')
         
 
-    def sbrQuestionaire(self):
-        self.sbr = 0.0        
+    def sbrQuestionaire(self):      
         if yesNo2Bool[clc.prompt("Does the unit have any SBR abilities?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]:
             attackAll = attackAllConversion[clc.prompt("Does the unit attack all enemies on super?",type=clc.Choice(yesNo2Bool.keys(),case_sensitive=False), default='N')]
 
