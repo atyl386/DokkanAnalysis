@@ -464,9 +464,9 @@ class Kit:
                 end = MAX_TURN
             formDuration = end - start
             self.saMult12[start:end] = [superAttackConversion[clc.prompt("What is the form's 12 ki super attack multiplier?", type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES), default='Immense')][superAttackLevelConversion[self.rarity][self.eza]]]*formDuration
-            abilityQuestionaire(self, "How many effects does this unit's 12 ki super attack have?", SuperAttack, ["How many turns does the effect last for?"], [None], [1])
+            abilityQuestionaire(self, "How many effects does this unit's 12 ki super attack have?", SuperAttack, start, end, ["How many turns does the effect last for?"], [None], [1])
             if self.rarity == 'LR':
-                abilityQuestionaire(self, "How many effects does this unit's 18 ki super attack have?", SuperAttack, ["How many turns does the effect last for?"], [None], [1])
+                abilityQuestionaire(self, "How many effects does this unit's 18 ki super attack have?", SuperAttack, start, end, ["How many turns does the effect last for?"], [None], [1])
                 self.intentional12Ki[start:end] = [yesNo2Bool[clc.prompt("Should a 12 Ki be targetted for this form?", default='N')]]*formDuration
             self.normalCounterMult[start:end][:] += [counterAttackConversion[clc.prompt("What is the unit's normal counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]]
             self.saCounterMult[start:end][:] += [counterAttackConversion[clc.prompt("What is the unit's super attack counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]]
@@ -534,7 +534,7 @@ def abilityQuestionaire(kit, abilityPrompt, abilityClass, start, end = MAX_TURN,
         if isinstance(abilityClass, Transformation):
             ability = abilityClass(kit, start)
         elif issubclass(abilityClass, PassiveAbility):
-            effect = clc.prompt("What type of buff does the unit get?",type=clc.Choice(EFFECTS, case_sensitive=False), default="ATK")
+            effect = clc.prompt("What type of buff does the unit get?",type=clc.Choice(EFFECTS, case_sensitive=False), default="Raise ATK")
             activationProbability = clc.prompt("What is the probability this ability activates?", default=1.0)
             buff = clc.prompt("What is the value of the buff?", default=0.0)
             ability = abilityClass(kit, start, end, activationProbability, effect, buff, parameters)
