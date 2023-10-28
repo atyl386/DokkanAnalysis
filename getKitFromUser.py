@@ -6,6 +6,7 @@ from scipy.stats import poisson
 # I think need a function/Questionaire for every type of passive ability, e.g. one for rainbow orbs, might be good to use classes here. I think this is the only way to cater for all the complexities of Dokkan passives in an automated way
 
 # TODO:
+# - Instead of asking user how many of something, should ask until they enteran exit key aka while loop instead of for loop
 # - How are we dealing with unit-super attacks? I think this works if user specifies the correct activation probabilities
 # - Should read up on python optimisation techniques once is running and se how long it takes. But try be efficient you go.
 # - I think the 20x3 state matrix needs to be used to compute the best path
@@ -281,7 +282,7 @@ class Kit:
                 superAttackEffect.setSuperAttack()
             if self.rarity == "LR":
                 form.intentional12Ki = yesNo2Bool[clc.prompt("Should a 12 Ki be targetted for this form?", default='N')]
-                if not(form.intention12Ki):
+                if not(form.intentional12Ki):
                     ultraSuperAttackEffects = abilityQuestionaire(form, "How many effects does this unit's 18 ki super attack have?", SuperAttack, ["How many turns does the effect last for?"], [None], [1])
                     for ultraSuperAttackEffect in ultraSuperAttackEffects:
                         ultraSuperAttackEffect.setUltraSuperAttack()
@@ -422,7 +423,7 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.attackBuff = args[1]
         self.activeAttackTurn = self.activationTurn
         self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
-        self.form.abilities.extend(abilityQuestionaire(self.form, "How many additional single-turn buffs does this active skill attack have?", StartOfTurn, self.activationTurn, self.activationTurn + 1))
+        self.form.abilities.extend(abilityQuestionaire(self.form, "How many additional single-turn buffs does this active skill attack have?", TurnDependent, ["This is the activation turn. Please press enter to continue", "This is the form's next turn. Please press enter to continue"], [None, None], [self.activationTurn, self.activationTurn + RETURN_PERIOD_PER_SLOT[self.form.slot]]))
 
     def applyToState(self, state):
         #TODO
@@ -435,8 +436,8 @@ class Revive(SingleTurnAbility):
         super().__init__(form)
         self.hpRegen = args[0]
         self.isThisCharacterOnly = args[1]
-        self.form.abilities.extend(abilityQuestionaire(self.form, "How many additional constant buffs does this revive have?", StartOfTurn, self.activationTurn, self.form.endTurn))
-
+        self.form.abilities.extend(abilityQuestionaire(self.form, "How many additional constant buffs does this revive have?", TurnDependent, ["This is the activation turn. Please press enter to continue", "This is the form's end turn. Please press enter to continue"], [None, None], [self.activationTurn, self.form.endTurn]))
+        
     def applyToState(self, state):
         if state.turn == self.activationTurn:
             state.healing = np.min(state.healing + self.hpRegen, 1.0)
@@ -455,7 +456,7 @@ class PassiveAbility(Ability):
 
 
 class SuperAttack(PassiveAbility):
-    def __init__(self, form, activationProbability, effect, buff, args=[]):
+    def __init__(self, form, activationProbability, effect, buff, args):
         super().__init__(form, activationProbability, effect, buff)
         self.effectDuration = args[0]
 
@@ -498,7 +499,7 @@ class StartOfTurn(PassiveAbility):
         self.slots = slots
 
     def applyToState(self, state):
-        pHaveKi = 1.0 - ZTP_CDF(self.kiRequired - 1 - state.constantKi, state.randomKi)
+        pHaveKi = 1.0 - ZTP_CDF(self.ki - 1 - state.constantKi, state.randomKi)
         self.buff = self.buff * pHaveKi
         self.activationProbability *= pHaveKi
         if state.turn >= self.start and state.turn <= self.end and state.slot in self.slots:
@@ -567,7 +568,7 @@ class PerAttackReceived(PassiveAbility):
 
 
 class WithinSameTurnAfterReceivingAttack(PassiveAbility):
-    def __init__(self, form, activationProbability, effect, buff):
+    def __init__(self, form, activationProbability, effect, buff, args):
         super().__init__(form, activationProbability, effect, buff)
 
     def applyToState(self, state):
@@ -579,7 +580,7 @@ class WithinSameTurnAfterReceivingAttack(PassiveAbility):
 
 
 class PerRainbowOrb(PassiveAbility):
-    def __init__(self, form, activationProbability, effect, buff):
+    def __init__(self, form, activationProbability, effect, buff, args):
         super().__init__(form, activationProbability, effect, buff)
 
     def applyToState(self, state):
