@@ -79,6 +79,8 @@ class Banner:
             self.coin = 1
         elif coin == 'limited' or coin == 'yellow':
             self.coin = 0.8
+        else:
+            self.coin = 0.7
         if gFeatured:
             self.featuredRate = (1+9*SSR_rate*featuredSSR_rate)/(10*0.1*0.5)
         elif gFeaturedEvery3:
@@ -102,8 +104,14 @@ class Banner:
 #SummonRatings()
 #Turles = Banner([133,134,135,96,51,49,70],'red')
 #print(Turles.summonScore)
-TurlesMovieGoku = Banner([136, 65, 12, 50, 62, 62, 62, 62, 30, 62], 'limited',gFeaturedEvery3=True)
-print(TurlesMovieGoku.summonScore)
+""" Halloween = Banner([115, 116, 83, 68, 64, 5, 78, 63, 62, 20], 'red')
+HalloweenStep2 = Banner([64, 78, 63, 62, 20], 'red')
+HalloweenStep3A = Banner([127, 128, 118, 108, 107, 124, 74, 73, 50, 52], 'red')
+S1 = Halloween.summonScore*25/20
+S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
+S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
+Rotation = np.mean([S1,S2,S3])
+print(Rotation) """
 SSJ4Goku = Banner([139,4,54,55,8,9,15,138,32,35],'red',threePlus1=True)
 print(SSJ4Goku.summonScore)
 OmegaShenron = Banner([141,61,26,108,38,84,38,38,38,38],'cyan',SSR_rate=0.2)
