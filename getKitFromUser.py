@@ -167,88 +167,6 @@ def maxHealthCDF(maxHealth):
 def ZTP_CDF(x,Lambda):
     return (poisson.cdf(x,Lambda)-poisson.cdf(0,Lambda))/(1-poisson.cdf(0,Lambda))
 
-def getKitConstants():
-    exclusivity = clc.prompt("What is the unit's exclusivity?", type=clc.Choice(EXCLUSIVITIES, case_sensitive=False), default='DF')
-    rarity = exclusivity2Rarity[exclusivity]
-    name = clc.prompt("What is the unit's name?", default='Super Saiyan Goku')
-    _class = clc.prompt("What is the unit's class?", type=clc.Choice(CLASSES, case_sensitive=False), default='S')
-    _type = clc.prompt("What is the unit's type?", type=clc.Choice(TYPES, case_sensitive=False), default='AGL')
-    eza = yesNo2Bool[clc.prompt("Has the unit EZA'd?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]
-    jp_date = dt.datetime.strptime(clc.prompt("When did the unit release on the Japanse version of Dokkan? (MM/YY)", default='01/24'),'%m/%y')
-    gbl_date = dt.datetime.strptime(clc.prompt("When did the unit release on the Global version of Dokkan? (MM/YY)", default='01/24'),'%m/%y')
-    HP = clc.prompt("What is the unit's base HP stat?", default=0)
-    ATK = clc.prompt("What is the unit's base ATT stat?", default=0)
-    DEF = clc.prompt("What is the unit's base DEF stat?", default=0)
-    leader_skill = leaderSkillConversion[clc.prompt("How would you rate the unit's leader skill on a scale of 1-10?\n200% limited - e.g. LR Hatchiyak Goku\n 200% small - e.g. LR Metal Cooler\n 200% medium - e.g. PHY God Goku\n 200% large - e.g. LR Vegeta & Trunks\n", type=clc.Choice(leaderSkillConversion.keys(), case_sensitive=False), default='<150%')]
-    teams = clc.prompt("How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account.", default=1)
-    kiMod12 = float(clc.prompt("What is the unit's 12 ki attck modifer?", type=clc.Choice(KI_MODIFIERS_12), default='1.5'))
-    keepStacking = yesNo2Bool[clc.prompt("Does the unit have the ability to keep stacking before transforming?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]
-    giantRageDuration = clc.prompt("How many turns does the unit's giant/rage mode last for?", type=clc.Choice(GIANT_RAGE_DURATION), default='0')
-    return exclusivity, rarity, name, _class, _type, eza, jp_date, gbl_date, HP, ATK, DEF, leader_skill, teams, kiMod12, keepStacking, giantRageDuration
-
-def getSBR():
-    sbr = 0.0      
-    if yesNo2Bool[clc.prompt("Does the unit have any SBR abilities?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]:
-        attackAll = attackAllConversion[clc.prompt("Does the unit attack all enemies on super?",type=clc.Choice(yesNo2Bool.keys(),case_sensitive=False), default='N')]
-
-        seal = sealTurnConversion[clc.prompt("How many turns does the unit seal for?", type=clc.Choice(sealTurnConversion.keys()), default='0')]
-        if seal != 0:
-            seal *= clc.prompt("What is the unit's chance to seal?", default=0.0) # Scale by number of enemies for all enemy seal, same for stun
-
-        stun = stunTurnConversion[clc.prompt("How many turns does the unit stun for?", type=clc.Choice(stunTurnConversion.keys()), default='0')]
-        if stun != 0:
-            stun *= clc.prompt("What is the unit's chance to stun?", default=0.0)
-        
-        attDebuffOnAtk = attDebuffTurnConversion[clc.prompt("How many turns does the unit lower the enemy attack by attacking?", type=clc.Choice(attDebuffTurnConversion.keys()), default='0')]
-        if attDebuffOnAtk != 0:
-            attDebuffOnAtk *= attDebuffOnAttackConversion[clc.prompt("How much is attack lowered by on attack?", type=clc.Choice(attDebuffOnAttackConversion.keys(), case_sensitive=False), default='Lowers')]
-
-        attDebuffPassive = attDebuffTurnConversion[clc.prompt("How many turns does the unit lower the enemy attack passively?", type=clc.Choice(attDebuffTurnConversion.keys()), default='0')]
-        if attDebuffPassive != 0:
-            attDebuffPassive *= clc.prompt("How much is attack lowered passively?", default=0.3)
-        
-        multipleEnemyBuff = multipleEnemyBuffConversion[clc.prompt("How much of a buff does the unit get when facing multiple enemies?",type=clc.Choice(multipleEnemyBuffConversion.keys(), case_sensitive=False), default='None')]
-        
-        sbr = attackAllDebuffConversion[attackAll] * (seal + stun + attDebuffOnAtk) + attDebuffPassive + multipleEnemyBuff + attackAll
-    return sbr
-    
-def getForms(rarity, eza):
-    startTurn = 0
-    forms = []
-    numForms = clc.prompt("How many forms does the unit have?", default = 1)
-    for i in range(numForms):
-        slot = int(clc.prompt(f"Which slot is form # {i + 1} best suited for?", default = 2))
-        transformationProbabilityPerTurn, maxTransformationTurn = restrictionQuestionaire()
-        endTurn = startTurn + int(min(round(1 / transformationProbabilityPerTurn), maxTransformationTurn)) - 1 # Mean of geometric distribution is 1/p
-        forms.append(Form(startTurn, endTurn, slot))
-        startTurn = endTurn + 1
-    for form in forms:        
-        form.saMult12 = superAttackConversion[clc.prompt("What is the form's 12 ki super attack multiplier?", type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES), default='Immense')][superAttackLevelConversion[rarity][eza]]
-        superAttackEffects = abilityQuestionaire(form, "How many effects does this unit's 12 ki super attack have?", SuperAttack, ["How many turns does the effect last for?"], [None], [1])
-        for superAttackEffect in superAttackEffects:
-            superAttackEffect.setSuperAttack()
-        if rarity == "LR":
-            form.intentional12Ki = yesNo2Bool[clc.prompt("Should a 12 Ki be targetted for this form?", default='N')]
-            if not(form.intention12Ki):
-                ultraSuperAttackEffects = abilityQuestionaire(form, "How many effects does this unit's 18 ki super attack have?", SuperAttack, ["How many turns does the effect last for?"], [None], [1])
-                for ultraSuperAttackEffect in ultraSuperAttackEffects:
-                    ultraSuperAttackEffect.setUltraSuperAttack()
-        form.normalCounterMult = counterAttackConversion[clc.prompt("What is the unit's normal counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]
-        form.saCounterMult = counterAttackConversion[clc.prompt("What is the unit's super attack counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]
-        form.getLinks()
-        #assert len(np.unique(links))==MAX_NUM_LINKS, 'Duplicate links'
-        form.abilities.append(abilityQuestionaire(form, "How many unconditional buffs does the form have?", StartOfTurn))
-        form.abilities.append(abilityQuestionaire(form, "How many turn dependent buffs does the form have?", TurnDependent, ["What turn does the buff start from?", "What turn does the buff end on?"], [None, None], [form.startTurn, form.endTurn]))
-        form.abilities.append(abilityQuestionaire(form, "How many different buffs does the form get on attacks received?", PerAttackReceived, ["What is the maximum buff?"], [None], [1.0]))
-        form.abilities.append(abilityQuestionaire(form, "How many different buffs does the form get within the same turn after receiving an attack?", WithinSameTurnAfterReceivingAttack))
-        form.abilities.append(abilityQuestionaire(form, "How many slot specific buffs does the form have?", SlotDependent, ["Which slot is required?"], [None], [1]))
-        #form.updateRandomKi(start, end) # Compute the average ki each turn which has a random component because need to be able to compute how much ki the unit gets on average for ki dependent effects
-        form.abilities.append(abilityQuestionaire(form, "How many ki dependent buffs does the form have?", KiDependent, ["What is the required ki?"], [None], [24]))
-        form.abilities.append(abilityQuestionaire(form, "How many different nullification abilities does the form have?", Nullification, ["Does this nullification have counter?"], [YES_NO], ["N"]))
-        form.abilities.append(abilityQuestionaire(form, "How many revive skills does the form have?", Revive, ["How much HP is revived with?", "Does the revive only apply to this unit?"], [None, None], [0.7, 'N']))
-        form.abilities.append(abilityQuestionaire(form, "How many active skill attacks does the form have?", ActiveSkillAttack, ["What is the attack multiplier?", "What is the additional attack buff when performing thes attack?"], [clc.Choice(specialAttackConversion.keys()), None], ['Ultimate', 0.0]))
-    return forms
-
 def restrictionQuestionaire():
     numRestrictions = clc.prompt("How many different restrictions does this ability have?", default=0)
     totalRestrictionProbability = 0.0
@@ -294,10 +212,109 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
 class Kit:
     def __init__(self, id):
         self.id = id # unique ID for unit
-        (self.exclusivity, self.rarity, self.name, self._class, self._type, self.eza, self.jp_date, self.gbl_date, self.HP, self.ATK, self.DEF,
-        self.leader_skill, self.teams, self.kiMod12, self.keepStacking, self.giantRageDuration) = getKitConstants()
-        self.sbr = getSBR()
-        self.forms = getForms(self.rarity, self.eza)
+        self.getConstants()
+        self.getSBR()
+        self.getForms()
+        self.getStates()
+
+    def getConstants(self):
+        self.exclusivity = clc.prompt("What is the unit's exclusivity?", type=clc.Choice(EXCLUSIVITIES, case_sensitive=False), default='DF')
+        self.rarity = exclusivity2Rarity[self.exclusivity]
+        self.name = clc.prompt("What is the unit's name?", default='Super Saiyan Goku')
+        self._class = clc.prompt("What is the unit's class?", type=clc.Choice(CLASSES, case_sensitive=False), default='S')
+        self._type = clc.prompt("What is the unit's type?", type=clc.Choice(TYPES, case_sensitive=False), default='AGL')
+        self.eza = yesNo2Bool[clc.prompt("Has the unit EZA'd?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]
+        self.jp_date = dt.datetime.strptime(clc.prompt("When did the unit release on the Japanse version of Dokkan? (MM/YY)", default='01/24'),'%m/%y')
+        self.gbl_date = dt.datetime.strptime(clc.prompt("When did the unit release on the Global version of Dokkan? (MM/YY)", default='01/24'),'%m/%y')
+        self.HP = clc.prompt("What is the unit's base HP stat?", default=0)
+        self.ATK = clc.prompt("What is the unit's base ATT stat?", default=0)
+        self.DEF = clc.prompt("What is the unit's base DEF stat?", default=0)
+        self.leader_skill = leaderSkillConversion[clc.prompt("How would you rate the unit's leader skill on a scale of 1-10?\n200% limited - e.g. LR Hatchiyak Goku\n 200% small - e.g. LR Metal Cooler\n 200% medium - e.g. PHY God Goku\n 200% large - e.g. LR Vegeta & Trunks\n", type=clc.Choice(leaderSkillConversion.keys(), case_sensitive=False), default='<150%')]
+        self.teams = clc.prompt("How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account.", default=1)
+        self.kiMod12 = float(clc.prompt("What is the unit's 12 ki attck modifer?", type=clc.Choice(KI_MODIFIERS_12), default='1.5'))
+        self.keepStacking = yesNo2Bool[clc.prompt("Does the unit have the ability to keep stacking before transforming?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]
+        self.giantRageDuration = clc.prompt("How many turns does the unit's giant/rage mode last for?", type=clc.Choice(GIANT_RAGE_DURATION), default='0')
+
+    def getSBR(self):
+        self.sbr = 0.0      
+        if yesNo2Bool[clc.prompt("Does the unit have any SBR abilities?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default='N')]:
+            attackAll = attackAllConversion[clc.prompt("Does the unit attack all enemies on super?",type=clc.Choice(yesNo2Bool.keys(),case_sensitive=False), default='N')]
+
+            seal = sealTurnConversion[clc.prompt("How many turns does the unit seal for?", type=clc.Choice(sealTurnConversion.keys()), default='0')]
+            if seal != 0:
+                seal *= clc.prompt("What is the unit's chance to seal?", default=0.0) # Scale by number of enemies for all enemy seal, same for stun
+
+            stun = stunTurnConversion[clc.prompt("How many turns does the unit stun for?", type=clc.Choice(stunTurnConversion.keys()), default='0')]
+            if stun != 0:
+                stun *= clc.prompt("What is the unit's chance to stun?", default=0.0)
+            
+            attDebuffOnAtk = attDebuffTurnConversion[clc.prompt("How many turns does the unit lower the enemy attack by attacking?", type=clc.Choice(attDebuffTurnConversion.keys()), default='0')]
+            if attDebuffOnAtk != 0:
+                attDebuffOnAtk *= attDebuffOnAttackConversion[clc.prompt("How much is attack lowered by on attack?", type=clc.Choice(attDebuffOnAttackConversion.keys(), case_sensitive=False), default='Lowers')]
+
+            attDebuffPassive = attDebuffTurnConversion[clc.prompt("How many turns does the unit lower the enemy attack passively?", type=clc.Choice(attDebuffTurnConversion.keys()), default='0')]
+            if attDebuffPassive != 0:
+                attDebuffPassive *= clc.prompt("How much is attack lowered passively?", default=0.3)
+            
+            multipleEnemyBuff = multipleEnemyBuffConversion[clc.prompt("How much of a buff does the unit get when facing multiple enemies?",type=clc.Choice(multipleEnemyBuffConversion.keys(), case_sensitive=False), default='None')]
+            
+            self.sbr = attackAllDebuffConversion[attackAll] * (seal + stun + attDebuffOnAtk) + attDebuffPassive + multipleEnemyBuff + attackAll
+        return self.sbr
+    
+    def getForms(self):
+        startTurn = 1
+        self.forms = []
+        numForms = clc.prompt("How many forms does the unit have?", default = 1)
+        for i in range(numForms):
+            slot = int(clc.prompt(f"Which slot is form # {i + 1} best suited for?", default = 2))
+            if i == numForms - 1:
+                endTurn = MAX_TURN
+            else:
+                transformationProbabilityPerTurn, maxTransformationTurn = restrictionQuestionaire()
+                endTurn = startTurn + int(min(RETURN_PERIOD_PER_SLOT[slot - 1] * round(1 / transformationProbabilityPerTurn), maxTransformationTurn)) - 1 # Mean of geometric distribution is 1/p
+            self.forms.append(Form(startTurn, endTurn, slot))
+            startTurn = endTurn + 1
+        for form in self.forms:        
+            form.saMult12 = superAttackConversion[clc.prompt("What is the form's 12 ki super attack multiplier?", type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES), default='Immense')][superAttackLevelConversion[self.rarity][self.eza]]
+            superAttackEffects = abilityQuestionaire(form, "How many effects does this unit's 12 ki super attack have?", SuperAttack, ["How many turns does the effect last for?"], [None], [1])
+            for superAttackEffect in superAttackEffects:
+                superAttackEffect.setSuperAttack()
+            if self.rarity == "LR":
+                form.intentional12Ki = yesNo2Bool[clc.prompt("Should a 12 Ki be targetted for this form?", default='N')]
+                if not(form.intention12Ki):
+                    ultraSuperAttackEffects = abilityQuestionaire(form, "How many effects does this unit's 18 ki super attack have?", SuperAttack, ["How many turns does the effect last for?"], [None], [1])
+                    for ultraSuperAttackEffect in ultraSuperAttackEffects:
+                        ultraSuperAttackEffect.setUltraSuperAttack()
+            form.normalCounterMult = counterAttackConversion[clc.prompt("What is the unit's normal counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]
+            form.saCounterMult = counterAttackConversion[clc.prompt("What is the unit's super attack counter multiplier?", type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False), default='NA')]
+            form.getLinks()
+            #assert len(np.unique(links))==MAX_NUM_LINKS, 'Duplicate links'
+            form.abilities.extend(abilityQuestionaire(form, "How many unconditional buffs does the form have?", StartOfTurn))
+            form.abilities.extend(abilityQuestionaire(form, "How many turn dependent buffs does the form have?", TurnDependent, ["What turn does the buff start from?", "What turn does the buff end on?"], [None, None], [form.startTurn, form.endTurn]))
+            form.abilities.extend(abilityQuestionaire(form, "How many different buffs does the form get on attacks received?", PerAttackReceived, ["What is the maximum buff?"], [None], [1.0]))
+            form.abilities.extend(abilityQuestionaire(form, "How many different buffs does the form get within the same turn after receiving an attack?", WithinSameTurnAfterReceivingAttack))
+            form.abilities.extend(abilityQuestionaire(form, "How many slot specific buffs does the form have?", SlotDependent, ["Which slot is required?"], [None], [1]))
+            #form.updateRandomKi(start, end) # Compute the average ki each turn which has a random component because need to be able to compute how much ki the unit gets on average for ki dependent effects
+            form.abilities.extend(abilityQuestionaire(form, "How many ki dependent buffs does the form have?", KiDependent, ["What is the required ki?"], [None], [24]))
+            form.abilities.extend(abilityQuestionaire(form, "How many different nullification abilities does the form have?", Nullification, ["Does this nullification have counter?"], [YES_NO], ["N"]))
+            form.abilities.extend(abilityQuestionaire(form, "How many revive skills does the form have?", Revive, ["How much HP is revived with?", "Does the revive only apply to this unit?"], [None, None], [0.7, 'N']))
+            form.abilities.extend(abilityQuestionaire(form, "How many active skill attacks does the form have?", ActiveSkillAttack, ["What is the attack multiplier?", "What is the additional attack buff when performing thes attack?"], [clc.Choice(specialAttackConversion.keys()), None], ['Ultimate', 0.0]))
+
+    def getStates(self):
+        self.states = []
+        turn = 1
+        formIdx = 0
+        while turn <= MAX_TURN:
+            form = self.forms[formIdx]
+            slot = form.slot
+            state = State(slot, turn)
+            for ability in form.abilities:
+                ability.applyToState(state)
+            self.states.append(state)
+            turn += RETURN_PERIOD_PER_SLOT[slot - 1]
+            if turn > form.endTurn:
+                formIdx += 1
+            
 
 class Form:
     def __init__(self, startTurn, endTurn, slot):
@@ -316,9 +333,7 @@ class Form:
         self.sa12Deftacks = 0; self.sa18DefStacks = 0 # Super Attack DEF stacks
         self.intentional12Ki = False
         self.normalCounterMult = 0.0; self.saCounterMult = 0.0
-        self.states = []
         self.abilities = [] # This will be a list of Ability objects which will be iterated through each state to call applyToState.
-
 
     def getLinks(self):
         for linkIndex in range(MAX_NUM_LINKS):
@@ -407,7 +422,8 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.attackBuff = args[1]
         self.activeAttackTurn = self.activationTurn
         self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
-        self.form.abilities.append(abilityQuestionaire(self.form, "How many additional single-turn buffs does this active skill attack have?", StartOfTurn, self.activationTurn, self.activationTurn + 1))
+        self.form.abilities.extend(abilityQuestionaire(self.form, "How many additional single-turn buffs does this active skill attack have?", StartOfTurn, self.activationTurn, self.activationTurn + 1))
+
     def applyToState(self, state):
         #TODO
         # Should apply the apt for an active skill attack on the activation turn
@@ -419,7 +435,8 @@ class Revive(SingleTurnAbility):
         super().__init__(form)
         self.hpRegen = args[0]
         self.isThisCharacterOnly = args[1]
-        self.form.abilities.append(abilityQuestionaire(self.form, "How many additional constant buffs does this revive have?", StartOfTurn, self.activationTurn, self.form.endTurn))
+        self.form.abilities.extend(abilityQuestionaire(self.form, "How many additional constant buffs does this revive have?", StartOfTurn, self.activationTurn, self.form.endTurn))
+
     def applyToState(self, state):
         if state.turn == self.activationTurn:
             state.healing = np.min(state.healing + self.hpRegen, 1.0)
@@ -441,6 +458,7 @@ class SuperAttack(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff, args=[]):
         super().__init__(form, activationProbability, effect, buff)
         self.effectDuration = args[0]
+
     def setSuperAttack(self):
         match self.effect:
             case "Raise ATK":
@@ -478,6 +496,7 @@ class StartOfTurn(PassiveAbility):
         self.end = end
         self.ki = ki
         self.slots = slots
+
     def applyToState(self, state):
         pHaveKi = 1.0 - ZTP_CDF(self.kiRequired - 1 - state.constantKi, state.randomKi)
         self.buff = self.buff * pHaveKi
@@ -534,6 +553,7 @@ class PerAttackReceived(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff, args):
         super().__init__(form, activationProbability, effect, buff)
         self.max = args[0]
+
     def applyToState(self, state):
         match self.effect:
             case "Ki":
@@ -549,6 +569,7 @@ class PerAttackReceived(PassiveAbility):
 class WithinSameTurnAfterReceivingAttack(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff):
         super().__init__(form, activationProbability, effect, buff)
+
     def applyToState(self, state):
         match self.effect:
             case "DEF":
@@ -560,6 +581,7 @@ class WithinSameTurnAfterReceivingAttack(PassiveAbility):
 class PerRainbowOrb(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff):
         super().__init__(form, activationProbability, effect, buff)
+
     def applyToState(self, state):
         buffFromRainbowOrbs = self.buff * state.numRainbowOrbs
         match self.effect:
@@ -576,6 +598,7 @@ class Nullification(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff, args):
         super().__init__(form, activationProbability, effect, buff)
         self.hasCounter = args[0]
+
     def applyToState(self, state):
         pNullify = self.activationProbability * (1.0 - (1.0 - saFracConversion[self.effect]) ** 2)
         state.pNullify = (1.0 - state.pNullify) * pNullify + (1.0 - pNullify) * state.pNullify
