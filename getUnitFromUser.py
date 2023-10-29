@@ -4,8 +4,6 @@ import copy
 
 # TODO:
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
-#  - Want to move all the rest of the calculations from old Unit.__init__() to within State.
-#  - The stacking penality applies to all super attcks that stack more than one turn: Source Dokkan Wiki
 # - Make sure to include TYPE DEF BOOST correctly (HiPo & lowering Guard modifier)
 # - Instead of asking user how many of something, should ask until they enteran exit key aka while loop instead of for loop
 # - How are we dealing with unit-super attacks? I think this works if user specifies the correct activation probabilities
@@ -14,10 +12,6 @@ import copy
 # - Whilst the state matrix is the ideal way, for now just assume a user inputed slot for each form
 # - Should put at may not be relevant tag onto end of the prompts that may not always be relevant.
 # - Should print out relavant parameters back to user, like activationTurn for special ability
-# - Group constants so easier to manage
-# - Still need to get stats out of links, but can mostly copy whats in dokkanUnit.py
-# - Should determine which slot is best for the unit
-# - Make separate file where all constants and imports are stored
 # - Ideally would just pull data from database, but not up in time for new units. Would be amazing for old units though.
 # - Leader skill weight should decrease from 5 as new structure adds more variability between leader skills
 # - Make the outputted variables get saved to a file that can be modified later. Also record the inputs if transformed to unrecognizable form. Or can set defaults of quiz as previously input values.
