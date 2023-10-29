@@ -15,8 +15,8 @@ def logisticMap(x,x_max,L=100,d=1,x_min=-7):
     x_0=(x_min+x_max)/2
     k = 2*np.log((L-d)/d)/(x_max-x_min)
     return L/(1+np.exp(-k*(x-x_0)))
-HP_dupes = ['55%','69%','79%','90%','100%']
-HP_builds = [['ATT','ADD','CRT'],['ATT','ADD','DGE'],['ATT','CRT','DGE'],['ATT','CRT','ADD'],['DEF','ADD','CRT'],['DEF','ADD','DGE'],['DEF','CRT','DGE'],['DEF','CRT','ADD'],['DEF','DGE','CRT'],['DEF','DGE','ADD'],['ADD','ADD','CRT'],['ADD','ADD','DGE'],['CRT','CRT','DGE'],['CRT','CRT','ADD'],['DGE','DGE','CRT'],['ATT','DGE','ADD']]
+HiPo_dupes = ['55%','69%','79%','90%','100%']
+HiPo_builds = [['ATT','ADD','CRT'],['ATT','ADD','DGE'],['ATT','CRT','DGE'],['ATT','CRT','ADD'],['DEF','ADD','CRT'],['DEF','ADD','DGE'],['DEF','CRT','DGE'],['DEF','CRT','ADD'],['DEF','DGE','CRT'],['DEF','DGE','ADD'],['ADD','ADD','CRT'],['ADD','ADD','DGE'],['CRT','CRT','DGE'],['CRT','CRT','ADD'],['DGE','DGE','CRT'],['ATT','DGE','ADD']]
 attributes = ['LeaderSkill','SBR','Useability','Healing','Support','APT','normalDefence','saDefence','slot1Ability']
 def save_object(obj, filename):
     with open(filename, 'wb') as outp:  # Overwrites any existing file.
@@ -47,7 +47,7 @@ def normalizeUnit(unit,means,stds):
     for j in range(nAttributes):
         normalisedAttributes[:,j] = (unit.attributes[j]-means[:,j])/stds[:,j]
         unit.attributes[j] = normalisedAttributes[:,j]
-    save_object(unit,'C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/'+HP_dupes[unit.nCopies-1]+'/unit_'+unit.ID+'.pkl')
+    save_object(unit,'C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/'+HiPo_dupes[unit.nCopies-1]+'/unit_'+unit.ID+'.pkl')
     return normalisedAttributes
 def writeSummary(units,attributeValues,evaluations):
     # Create Attribute data frame for each turn
@@ -56,7 +56,7 @@ def writeSummary(units,attributeValues,evaluations):
         weightedSums = np.zeros((nUnits,nAttributes))
         for turn in range(turnMax):
             weightedSums = np.add(weightedSums,overallTurnWeights[turn]*attributeValues[:,turn,:,nCopies-1])
-        with pd.ExcelWriter('DokkanUnits/'+HP_dupes[nCopies-1]+'/unitSummary.xlsx') as writer:
+        with pd.ExcelWriter('DokkanUnits/'+HiPo_dupes[nCopies-1]+'/unitSummary.xlsx') as writer:
             df = (df1.join(pd.DataFrame(data=weightedSums,columns=attributes)).set_index('ID'))
             df.to_excel(writer, sheet_name='Overall')
             for turn in range(turnMax):
@@ -91,7 +91,7 @@ overallAttributeWeights = np.array([5,0.5,4,1.5,5,10,8,8,4])
 overallEvaluator = Evaluator(overallTurnWeights,overallAttributeWeights)
 
 reCalc = True
-analyseHP = False
+analyseHiPo = False
 if reCalc:
     attributeValues = np.zeros((nUnits,turnMax,nAttributes,copiesMax))
     units = [[None]*nUnits for i in range(copiesMax)]
@@ -104,21 +104,21 @@ if reCalc:
     for ID in range(1,nUnits+1):
         attributeValues[ID-1,:,:,-1] = normalizeUnit(units[-1][ID-1],rainbowMeans,rainbowStds)
         evaluations[ID-1][-1] = overallEvaluator.evaluate(units[-1][ID-1])
-    if analyseHP:
+    if analyseHiPo:
         for ID in range(1,nUnits+1):
-            best_HP = None
+            best_HiPo = None
             best_eval = evaluations[ID-1][-1]
-            for i,HP_build in enumerate(HP_builds):
-                HP_unit = Unit(ID,copiesMax,HP_build[0],HP_build[1],HP_build[2])
-                normalizeUnit(HP_unit,rainbowMeans,rainbowStds)
-                HP_evaluation = overallEvaluator.evaluate(HP_unit)
-                if HP_evaluation > best_eval:
-                    best_HP = i
-                    best_eval = HP_evaluation
-            if (best_HP == None):
-                print(ID,"default HP",HP_unit.kit.name)
+            for i,HiPo_build in enumerate(HiPo_builds):
+                HiPo_unit = Unit(ID,copiesMax,HiPo_build[0],HiPo_build[1],HiPo_build[2])
+                normalizeUnit(HiPo_unit,rainbowMeans,rainbowStds)
+                HiPo_evaluation = overallEvaluator.evaluate(HiPo_unit)
+                if HiPo_evaluation > best_eval:
+                    best_HiPo = i
+                    best_eval = HiPo_evaluation
+            if (best_HiPo == None):
+                print(ID,"default HiPo",HiPo_unit.kit.name)
             else:
-                print(ID,HP_builds[best_HP],HP_unit.kit.name)
+                print(ID,HiPo_builds[best_HiPo],HiPo_unit.kit.name)
     for ID in range(1,nUnits+1):
         print(ID)
         for nCopies in range(1,copiesMax):

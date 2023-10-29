@@ -5,7 +5,7 @@ import datetime as dt
 from dateutil.relativedelta import relativedelta
 import numpy as np
 copiesMax = 5
-HP_dupes = ['55%','69%','79%','90%','100%']
+HiPo_dupes = ['55%','69%','79%','90%','100%']
 nUnits = len(User)
 def SummonRating(ID):
     pkl = open('C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_'+str(ID)+'.pkl','rb')
@@ -44,7 +44,7 @@ def SummonRating(ID):
         globalEZADate=unit.kit.GLB_releaseDate + relativedelta(months=4*12)
         futureEZA = rarityScore**scalingPower*EZADiscountFactor**(relativedelta(globalEZADate,now).years)*EZADI
     for i in range(copiesMax):
-        df = pd.read_excel('DokkanUnits/'+HP_dupes[i]+'/unitSummary.xlsx')
+        df = pd.read_excel('DokkanUnits/'+HiPo_dupes[i]+'/unitSummary.xlsx')
         evals[i] = df.at[ID-1,'Evaluation']
     if nCopies == 5:
         dupeImprovement = 0

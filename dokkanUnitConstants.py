@@ -413,96 +413,52 @@ KI_PER_SAME_TYPE_ORB = 2.0
 # Support
 KI_SUPPORT = 1.0
 ATK_DEF_SUPPORT = 0.2
-
+USEABILITY_SUPPORT_FACTOR = 0.2
 # Hidden Potential + Equips
-HP_PHY = np.array(
+HIPO_PHY = np.array(
     [
         [2000, 4100, 4400, 4710, 5400],
         [2000, 3700, 4000, 4700, 5000],
         [2000, 3300, 3600, 3910, 4600],
     ]
 )
-HP_STR = np.array(
+HIPO_STR = np.array(
     [
         [2000, 3700, 4000, 4310, 5000],
         [2000, 4100, 4400, 5100, 5400],
         [2000, 3300, 3600, 3910, 4600],
     ]
 )
-HP_AGL = np.array(
+HIPO_AGL = np.array(
     [
         [2000, 3300, 3600, 3910, 4600],
         [2000, 3700, 4000, 4700, 5000],
         [2000, 4100, 4400, 4710, 5400],
     ]
 )
-HP_TEQ = np.array(
+HIPO_TEQ = np.array(
     [
         [2000, 3300, 3600, 3910, 4600],
         [2000, 4100, 4400, 5100, 5400],
         [2000, 3700, 4000, 4310, 5000],
     ]
 )
-HP_INT = np.array(
+HIPO_INT = np.array(
     [
         [2000, 3700, 4000, 4310, 5000],
         [2000, 3700, 4000, 4700, 5000],
         [2000, 3700, 4000, 4310, 5000],
     ]
 )
-HP_SA_BOOST = [6, 7, 8, 14, 15]
-HP_RECOVERY_BOOST = [7, 7, 8, 9, 15]
-HP_TYPE_DEF_BOOST = [5, 6, 7, 8, 10]
-HP_TYPE_ATK_BOOST = [5, 6, 7, 9, 10]
-BRZ_STAT = 600
-BRZ_HP = 0.02
-SLV_HP = 0.05
-GLD_HP1 = 0.05
-GLD_HP2 = 0.02
-# ATT,DEF,ADD,CRT,DGE
-HP_D0 = {
-    "AGL": [0, 0, 0.1, 0, 0],
-    "INT": [0, 0, 0, 0, 0.05],
-    "PHY": [0, 0, 0.1, 0, 0],
-    "STR": [0, 0, 0, 0.1, 0],
-    "TEQ": [0, 0, 0, 0.1, 0],
-}
-HP_D1 = {
-    ("ADD", "CRT"): [0, 0, 0.18, 0.06, 0],
-    ("ADD", "DGE"): [0, 0, 0.18, 0, 0.03],
-    ("CRT", "DGE"): [0, 0, 0, 0.18, 0.03],
-    ("CRT", "ADD"): [0, 0, 0.06, 0.18, 0],
-    ("DGE", "ADD"): [0, 0, 0.06, 0, 0.09],
-    ("DGE", "CRT"): [0, 0, 0, 0.06, 0.09],
-}
-HP_D2 = {
-    ("ADD", "CRT"): [0, 0, 0.12, 0.06, 0],
-    ("ADD", "DGE"): [0, 0, 0.12, 0, 0.03],
-    ("CRT", "DGE"): [0, 0, 0, 0.12, 0.03],
-    ("CRT", "ADD"): [0, 0, 0.06, 0.12, 0],
-    ("DGE", "ADD"): [0, 0, 0.06, 0, 0.06],
-    ("DGE", "CRT"): [0, 0, 0, 0.06, 0.06],
-}
-HP_BRZ = {
-    "ATT": [BRZ_STAT, 0, 0, 0, 0],
-    "DEF": [0, BRZ_STAT, 0, 0, 0],
-    "ADD": [0, 0, 2 * BRZ_HP, 0, 0],
-    "CRT": [0, 0, 0, 2 * BRZ_HP, 0],
-    "DGE": [0, 0, 0, 0, BRZ_HP],
-}
-HP_SLV = {
-    "ADD": [0, 0, 2 * SLV_HP, 0, 0],
-    "CRT": [0, 0, 0, 2 * SLV_HP, 0],
-    "DGE": [0, 0, 0, 0, SLV_HP],
-}
-HP_GLD = {
-    ("ADD", "CRT"): [0, 0, 2 * GLD_HP1, 2 * GLD_HP2, 0],
-    ("ADD", "DGE"): [0, 0, 2 * GLD_HP1, 0, GLD_HP2],
-    ("CRT", "DGE"): [0, 0, 0, 2 * GLD_HP1, GLD_HP2],
-    ("CRT", "ADD"): [0, 0, 2 * GLD_HP2, 2 * GLD_HP1, 0],
-    ("DGE", "ADD"): [0, 0, 2 * GLD_HP2, 0, GLD_HP1],
-    ("DGE", "CRT"): [0, 0, 0, 2 * GLD_HP2, GLD_HP1],
-}
+HIPO_SA_BOOST = [6, 7, 8, 14, 15]
+HIPO_RECOVERY_BOOST = [7, 7, 8, 9, 15]
+HIPO_TYPE_DEF_BOOST = [5, 6, 7, 8, 10]
+HIPO_TYPE_ATK_BOOST = [5, 6, 7, 9, 10]
+BRZ_STAT = 550
+BRZ_HIPO = 0.02
+SLV_HIPO = 0.05
+GLD_HIPO1 = 0.05
+GLD_HIPO2 = 0.02
 
 ###################################################### Dicts ##########################################################################
 
@@ -559,3 +515,50 @@ slot2ReturnPeriod = dict(zip(SLOTS, RETURN_PERIOD_PER_SLOT))
 saFracConversion = dict(
     zip(SUPER_ATTACK_NULLIFICATION_TYPES, PROBABILITY_SUPER_ATTACK_TYPE)
 )
+
+# Hidden-Potential + Equips
+hiddenPotentalStatsConverter = dict(zip(TYPES,[HIPO_AGL, HIPO_INT, HIPO_PHY, HIPO_STR, HIPO_TEQ]))
+# ATT, DEF, ADD, CRT, DGE
+HIPO_D0 = {
+    "AGL": [0, 0, 0.1, 0, 0],
+    "INT": [0, 0, 0, 0, 0.05],
+    "PHY": [0, 0, 0.1, 0, 0],
+    "STR": [0, 0, 0, 0.1, 0],
+    "TEQ": [0, 0, 0, 0.1, 0],
+}
+HIPO_D1 = {
+    ("ADD", "CRT"): [0, 0, 0.18, 0.06, 0],
+    ("ADD", "DGE"): [0, 0, 0.18, 0, 0.03],
+    ("CRT", "DGE"): [0, 0, 0, 0.18, 0.03],
+    ("CRT", "ADD"): [0, 0, 0.06, 0.18, 0],
+    ("DGE", "ADD"): [0, 0, 0.06, 0, 0.09],
+    ("DGE", "CRT"): [0, 0, 0, 0.06, 0.09],
+}
+HIPO_D2 = {
+    ("ADD", "CRT"): [0, 0, 0.12, 0.06, 0],
+    ("ADD", "DGE"): [0, 0, 0.12, 0, 0.03],
+    ("CRT", "DGE"): [0, 0, 0, 0.12, 0.03],
+    ("CRT", "ADD"): [0, 0, 0.06, 0.12, 0],
+    ("DGE", "ADD"): [0, 0, 0.06, 0, 0.06],
+    ("DGE", "CRT"): [0, 0, 0, 0.06, 0.06],
+}
+HIPO_BRZ = {
+    "ATT": [BRZ_STAT, 0, 0, 0, 0],
+    "DEF": [0, BRZ_STAT, 0, 0, 0],
+    "ADD": [0, 0, 2 * BRZ_HIPO, 0, 0],
+    "CRT": [0, 0, 0, 2 * BRZ_HIPO, 0],
+    "DGE": [0, 0, 0, 0, BRZ_HIPO],
+}
+HIPO_SLV = {
+    "ADD": [0, 0, 2 * SLV_HIPO, 0, 0],
+    "CRT": [0, 0, 0, 2 * SLV_HIPO, 0],
+    "DGE": [0, 0, 0, 0, SLV_HIPO],
+}
+HIPO_GLD = {
+    ("ADD", "CRT"): [0, 0, 2 * GLD_HIPO1, 2 * GLD_HIPO2, 0],
+    ("ADD", "DGE"): [0, 0, 2 * GLD_HIPO1, 0, GLD_HIPO2],
+    ("CRT", "DGE"): [0, 0, 0, 2 * GLD_HIPO1, GLD_HIPO2],
+    ("CRT", "ADD"): [0, 0, 2 * GLD_HIPO2, 2 * GLD_HIPO1, 0],
+    ("DGE", "ADD"): [0, 0, 2 * GLD_HIPO2, 0, GLD_HIPO1],
+    ("DGE", "CRT"): [0, 0, 0, 2 * GLD_HIPO2, GLD_HIPO1],
+}

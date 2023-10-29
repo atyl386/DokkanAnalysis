@@ -2,8 +2,9 @@ import datetime as dt
 from dokkanUnitHelperFunctions import *
 
 # TODO:
+#  - Want to move all the rest of the calculations from old Unit.__init__() to within State.
 #  - The stacking penality applies to all super attcks that stack more than one turn: Source Dokkan Wiki
-# - Make sure to include TYPE DEF BOOST correctly (HP & lowering Guard modifier) 
+# - Make sure to include TYPE DEF BOOST correctly (HiPo & lowering Guard modifier)
 # - Instead of asking user how many of something, should ask until they enteran exit key aka while loop instead of for loop
 # - How are we dealing with unit-super attacks? I think this works if user specifies the correct activation probabilities
 # - Should read up on python optimisation techniques once is running and se how long it takes. But try be efficient you go.
@@ -21,6 +22,7 @@ from dokkanUnitHelperFunctions import *
 # - Once calculate how many supers do on turn 1, use this in the SBR calculation for debuffs on super. i.e. SBR should be one of the last things to be calculated
 
 ##################################################### Helper Functions ############################################################################
+
 
 def restrictionQuestionaire():
     numRestrictions = clc.prompt(
@@ -100,15 +102,32 @@ def abilityQuestionaire(
         abilities.append(ability)
     return abilities
 
-######################################################### Classes #################################################################
 
-class Kit:
-    def __init__(self, id):
-        self.id = id  # unique ID for unit
+######################################################### Classes #################################################################
+        
+class Unit:
+    def __init__(self, id, nCopies, brz, HiPo1, HiPo2):
+        self.id = str(id)
+        self.nCopies = nCopies
+        self.brz = brz
+        self.HiPo1 = HiPo1
+        self.HiPo2 = HiPo2
         self.getConstants()
+        self.getHiPo()
         self.getSBR()
         self.getForms()
         self.getStates()
+        self.useability = self.teams / NUM_TEAMS_MAX * (1 + USEABILITY_SUPPORT_FACTOR * self.states[self.peakState].support + self.forms[self.peakForm].linkCommonality)
+
+    def getAvgDefMult(self):
+        if self.kit.rarity == "LR":  # If unit is a LR
+            avgDefMult = (
+                self.Pr_SA * self.kit.SA_12_Def + self.Pr_USA * self.kit.SA_18_Def
+            )
+        else:
+            avgDefMult = self.Pr_SA * self.kit.SA_12_Def
+        avgDefMult += self.stackedDef + self.avg_AA_SA * self.kit.SA_12_Def
+        return avgDefMult
 
     def getConstants(self):
         self.exclusivity = clc.prompt(
@@ -152,7 +171,7 @@ class Kit:
         self.HP = clc.prompt("What is the unit's base HP stat?", default=0)
         self.ATK = clc.prompt("What is the unit's base ATT stat?", default=0)
         self.DEF = clc.prompt("What is the unit's base DEF stat?", default=0)
-        self.leader_skill = leaderSkillConversion[
+        self.leaderSkill = leaderSkillConversion[
             clc.prompt(
                 "How would you rate the unit's leader skill on a scale of 1-10?\n200% limited - e.g. LR Hatchiyak Goku\n 200% small - e.g. LR Metal Cooler\n 200% medium - e.g. PHY God Goku\n 200% large - e.g. LR Vegeta & Trunks\n",
                 type=clc.Choice(leaderSkillConversion.keys(), case_sensitive=False),
@@ -182,6 +201,21 @@ class Kit:
             type=clc.Choice(GIANT_RAGE_DURATION),
             default="0",
         )
+    
+
+    def getHiPo(self):
+        HiPoStats = hiddenPotentalStatsConverter[self._type][self.nCopies - 1]
+        HiPoAbilities = np.array(HIPO_D0[self.kit.type]) + HIPO_BRZ[self.brz] + HIPO_SLV[self.HiPo1]
+        if self.nCopies > 1:
+            HiPoAbilities += HIPO_D1[(self.HiPo1, self.HiPo2)]
+        if self.nCopies > 2:
+            HiPoAbilities += np.array(HIPO_D2[(self.HiPo1, self.HiPo2)]) + HIPO_GLD[(self.HiPo1, self.HiPo2)]
+        self.HP += HiPoStats[0]
+        self.ATK += HiPoStats[1] + HiPoAbilities[0]
+        self.DEF += HiPoStats[2] + HiPoAbilities[1]
+        self.pHiPoAA = self.HiPo[2]
+        self.pHiPoCrit = self.HiPo[3]
+        self.pHiPoDodge = self.HiPo[4]
 
     def getSBR(self):
         self.sbr = 0.0
@@ -459,7 +493,11 @@ class Kit:
             for ability in form.abilities:
                 ability.applyToState(state)
             self.states.append(state)
-            turn += RETURN_PERIOD_PER_SLOT[slot - 1]
+            nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
+            if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN):
+                self.peakState = len(self.states) - 1
+                self.peakForm = formIdx
+            turn = nextTurn
             if turn > form.endTurn:
                 formIdx += 1
 
@@ -517,10 +555,10 @@ class Form:
             link = Link(self.linkNames[linkIndex], linkCommonality)
             self.linkCommonality += link.commonality
             self.linkKi += link.ki
-            self.linkAtkSoT += link.attSoT
+            self.linkAtkSoT += link.atkSoT
             self.linkDef += link.defence
             self.linkCrit += link.crit
-            self.linkAtkOnSuper += link.att_OnSuper
+            self.linkAtkOnSuper += link.atkOnSuper
             self.linkDodge += link.dodge
             self.linkDmgRed += link.dmgRed
             self.linkHealing += link.healing
@@ -532,7 +570,7 @@ class Link:
         self.name = name
         i = LINK_NAMES.index(self.name)
         self.ki = float(LINK_DATA[i, 10])
-        self.attSoT = float(LINK_DATA[i, 11])
+        self.atkSoT = float(LINK_DATA[i, 11])
         self.defence = float(LINK_DATA[i, 12])
         self.att_OnSuper = float(LINK_DATA[i, 13])
         self.crit = float(LINK_DATA[i, 14])
@@ -569,10 +607,8 @@ class State:
         self.healing = 0.0  # Fraction of health healed every turn
         self.support = 0.0  # Support score
         self.pNullify = 0.0  # Probability of nullifying all enemy super attacks
-        self.aaPSuper = []
-        self.aaPGuarantee = (
-            []
-        )  # Probabilities of doing additional super attacks and guaranteed additionals
+        self.aaPSuper = [] # Probabilities of doing additional super attacks and guaranteed additionals
+        self.aaPGuarantee = [] 
         self.dmgRedA = 0.0
         self.dmgRedB = 0.0  # Damage reduction before and after attacking
         self.pCounterSA = 0.0  # Probability of countering an enemy super attack
@@ -585,6 +621,532 @@ class State:
             + self.numRainbowOrbs * self.kiPerRainbowKiSphere
         )
         self.randomKi += kiCollect + form.linkKi
+    
+    """
+        self.dmgRed = np.minimum(self.kit.dmgRed + self.linkDmgRed, [1] * MAX_TURN)
+        self.dmgRedNormal = np.minimum(
+            self.kit.dmgRedNormal + self.dmgRed, [1] * MAX_TURN
+        )
+        self.constantKi = leaderSkillKi + self.kit.passiveKi
+        self.randomKi = self.links_Ki + self.kit.collectKi + avgKiSupport
+        self.healing = self.kit.healing + self.linkHealing
+        self.support = self.kit.support
+        
+        self.p1Att = np.maximum(self.kit.P1_Att + avgSupport, -1)
+        self.p2Att = self.kit.P2_Att + self.linkAtt_OnSuper
+        self.p1Def = self.kit.P1_Def + avgSupport
+        self.p2Def = self.kit.P2A_Def + self.kit.P2B_Def
+        self.p3Att = self.kit.P3_Att
+        self.p3Def = self.kit.P3_Def
+        self.P_Crit = self.kit.passiveCrit + (1 - self.kit.passiveCrit) * (
+            self.pHiPoCrit + (1 - self.pHiPoCrit) * self.linkCrit
+        )
+        self.P_SEaaT = self.kit.P_SEaaT
+        self.P_Dodge = self.kit.P_dodge + (1 - self.kit.P_dodge) * (
+            self.pHiPoDodge + (1 - self.pHiPoDodge) * self.linkDodge
+        )
+        self.P_guard = self.kit.P_guard
+        self.P_nullify = (
+            self.kit.P_nullify + (1 - self.kit.P_nullify) * self.kit.P_counterSA
+        )
+        if self.kit.GRLength != 0:
+            self.GRTurn = max(self.kit.activeTurn, peakTurn)
+            self.att_GR = self.kit.attack_GR + self.HiPo_Stats[0] + self.HiPo[0]
+            self.constantKi_GR = leaderSkillKi + self.kit.passiveKi_Active
+            self.randomKi_GR = self.kit.collectKi_Active
+            self.ki_GR = np.minimum(
+                (np.around(self.constantKi_GR + self.randomKi_GR)).astype("int32"), 24
+            )
+            [self.Pr_N_GR, self.Pr_SA_GR, self.Pr_USA_GR] = getAttackDistribution(
+                self.constantKi_GR, self.randomKi_GR, False, self.kit.rarity
+            )
+            self.normal_GR = getNormal(
+                self.kit.kiMod_12, self.ki_GR, self.att_GR, 0, 0, 0, 0, 0
+            )
+            self.sa_GR = getSA(
+                self.kit.kiMod_12,
+                self.att_GR,
+                0,
+                0,
+                0,
+                0,
+                0,
+                self.kit.SA_Mult_12_GR,
+                self.kit.EZA,
+                self.kit.exclusivity,
+                self.nCopies,
+                0,
+                self.kit.SA_12_Att_GR,
+            )
+            if self.kit.rarity == "LR":
+                self.usa_GR = getUSA(
+                    self.kit.kiMod_12,
+                    self.ki_GR,
+                    self.att_GR,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    self.kit.SA_Mult_18_GR,
+                    self.kit.EZA,
+                    self.kit.exclusivity,
+                    self.nCopies,
+                    0,
+                    self.kit.SA_18_Att_GR,
+                )
+                self.avgAtt_GR = getAvgAtt(
+                    self.kit.AA_P_super_Active,
+                    self.kit.SA_Mult_12_GR,
+                    self.kit.EZA,
+                    self.kit.exclusivity,
+                    self.nCopies,
+                    0,
+                    self.kit.SA_12_Att_GR,
+                    self.kit.SA_18_Att_GR,
+                    0,
+                    0,
+                    self.normal_GR,
+                    self.sa_GR,
+                    self.usa_GR,
+                    self.pHiPoAA,
+                    self.kit.AA_P_guarantee_Active,
+                    0,
+                    0,
+                    0,
+                    self.Pr_N_GR,
+                    self.Pr_SA_GR,
+                    self.Pr_USA_GR,
+                    self.kit.rarity,
+                )
+            else:
+                self.avgAtt_GR = getAvgAtt(
+                    self.kit.AA_P_super_Active,
+                    self.kit.SA_Mult_12_GR,
+                    self.kit.EZA,
+                    self.kit.exclusivity,
+                    self.nCopies,
+                    0,
+                    self.kit.SA_12_Att_GR,
+                    0,
+                    0,
+                    0,
+                    self.normal_GR,
+                    self.sa_GR,
+                    0,
+                    self.pHiPoAA,
+                    self.kit.AA_P_guarantee_Active,
+                    0,
+                    0,
+                    0,
+                    self.Pr_N_GR,
+                    self.Pr_SA_GR,
+                    0,
+                    self.kit.rarity,
+                )
+            self.P_Crit_GR = self.kit.passiveCrit_Active + (
+                1 - self.kit.passiveCrit_Active
+            ) * (self.pHiPoCrit)
+            self.avgAttModifer_GR = self.P_Crit_GR * CritMultiplier + (
+                1 - self.P_Crit_GR
+            ) * (
+                self.kit.P_SEaaT_Active * SEaaTMultiplier
+                + (1 - self.kit.P_SEaaT_Active) * avgTypeAdvantage
+            )
+            self.apt_GR = self.kit.GRLength * 3 * self.avgAtt_GR * self.avgAttModifer_GR
+            self.support_GR = 2  # Support for nullifying super attacks for a turn
+            # self.dpt_GR
+        if self.kit.activeTurn != 0:
+            self.SBR += SBR_df ** (self.kit.activeTurn - 1) * self.kit.SBR_Active
+            self.activeSkillTurn = int(max(self.kit.activeTurn, peakTurn))
+            self.dmgRed[self.activeSkillTurn - 1] += self.kit.dmgRed_Active
+            self.healing[self.activeSkillTurn - 1] += self.kit.healing_Active
+            self.support[self.activeSkillTurn - 1] += self.kit.support_Active
+            self.constantKi[self.activeSkillTurn - 1] += self.kit.passiveKi_Active
+            self.randomKi[self.activeSkillTurn - 1] = (
+                self.links_Ki[self.activeSkillTurn - 1]
+                + self.kit.collectKi_Active
+                + avgKiSupport
+            )
+            self.P_Dodge[self.activeSkillTurn - 1] = self.kit.P_dodge_Active + (
+                1 - self.kit.P_dodge_Active
+            ) * (
+                self.kit.P_dodge[self.activeSkillTurn - 1]
+                + (1 - self.kit.P_dodge[self.activeSkillTurn - 1])
+                * (
+                    self.pHiPoDodge
+                    + (1 - self.pHiPoDodge) * self.linkDodge[self.activeSkillTurn - 1]
+                )
+            )
+            self.P_guard[self.activeSkillTurn - 1] = (
+                self.kit.P_guard_Active
+                + (1 - self.kit.P_guard_Active)
+                * self.kit.P_guard[self.activeSkillTurn - 1]
+            )
+            self.P_nullify[self.activeSkillTurn - 1] = (
+                self.kit.P_nullify_Active
+                + (1 - self.kit.P_nullify_Active)
+                * self.kit.P_nullify[self.activeSkillTurn - 1]
+            )
+            self.P_Crit[self.activeSkillTurn - 1] = self.kit.passiveCrit_Active + (
+                1 - self.kit.passiveCrit_Active
+            ) * (
+                self.kit.passiveCrit[self.activeSkillTurn - 1]
+                + (1 - self.kit.passiveCrit[self.activeSkillTurn - 1])
+                * (
+                    self.pHiPoCrit
+                    + (1 - self.pHiPoCrit) * self.linkCrit[self.activeSkillTurn - 1]
+                )
+            )
+            self.P_SEaaT[self.activeSkillTurn - 1] = (
+                self.kit.P_SEaaT_Active
+                + (1 - self.kit.P_SEaaT_Active)
+                * self.kit.P_SEaaT[self.activeSkillTurn - 1]
+            )
+            self.kit.AA_P_super[self.activeSkillTurn - 1] = self.kit.AA_P_super_Active
+            self.kit.AA_P_guarantee[
+                self.activeSkillTurn - 1
+            ] = self.kit.AA_P_guarantee_Active
+            if self.kit.activeMult != 0:  # If active skill attack
+                self.p2Att[self.activeSkillTurn - 1] = self.kit.P2_Att_Active
+                self.p2Def[self.activeSkillTurn - 1] = (
+                    self.kit.P2A_Def[self.activeSkillTurn - 1] + self.kit.P2B_Def_Active
+                )
+                self.p3Att[self.activeSkillTurn - 1] += self.kit.P3_Att_Active
+                self.p3Def[self.activeSkillTurn - 1] += self.kit.P3_Def_Active
+        if self.kit.reviveTurn != 0:
+            self.reviveSkillTurn = int(max(self.kit.reviveTurn, peakTurn))
+            self.healing[self.reviveSkillTurn - 1] += self.kit.healing_Revive
+            self.support[self.reviveSkillTurn - 1] += self.kit.support_Revive
+        self.ki = np.minimum(
+            (np.around(self.constantKi + self.randomKi)).astype("int32"), [24] * MAX_TURN
+        )
+        (
+            self.Pr_N,
+            self.Pr_SA,
+            self.Pr_USA,
+            self.avg_AA_SA,
+            self.normal,
+            self.sa,
+            self.usa,
+            self.avgAtt,
+        ) = (
+            [0] * MAX_TURN,
+            [0] * MAX_TURN,
+            [0] * MAX_TURN,
+            [0] * MAX_TURN,
+            [0] * MAX_TURN,
+            [0] * MAX_TURN,
+            [0] * MAX_TURN,
+            [0] * MAX_TURN,
+        )
+        for i in range(MAX_TURN):
+            [self.Pr_N[i], self.Pr_SA[i], self.Pr_USA[i]] = getAttackDistribution(
+                self.constantKi[i],
+                self.randomKi[i],
+                self.kit.intentional12Ki[i],
+                self.kit.rarity,
+            )
+            self.avg_AA_SA[i] = branchAA(
+                -1,
+                len(self.kit.AA_P_super[i]),
+                self.pHiPoAA,
+                1,
+                self.kit.AA_P_super[i],
+                self.kit.AA_P_guarantee[i],
+                self.pHiPoAA,
+            )
+        [self.stackedAtt, self.stackedDef] = self.getStackedStats()
+        for i in range(MAX_TURN):
+            self.normal[i] = getNormal(
+                self.kit.kiMod_12,
+                self.ki[i],
+                self.ATK,
+                self.p1Att[i],
+                self.stackedAtt[i],
+                self.linkAtt_SoT[i],
+                self.p2Att[i],
+                self.p3Att[i],
+            )
+            self.sa[i] = getSA(
+                self.kit.kiMod_12,
+                self.ATK,
+                self.p1Att[i],
+                self.stackedAtt[i],
+                self.linkAtt_SoT[i],
+                self.p2Att[i],
+                self.p3Att[i],
+                self.kit.SA_Mult_12[i],
+                self.kit.EZA,
+                self.kit.exclusivity,
+                self.nCopies,
+                self.kit.SA_12_Att_Stacks[i],
+                self.kit.SA_12_Att[i],
+            )
+            if self.kit.rarity == "LR":
+                self.usa[i] = getUSA(
+                    self.kit.kiMod_12,
+                    self.ki[i],
+                    self.ATK,
+                    self.p1Att[i],
+                    self.stackedAtt[i],
+                    self.linkAtt_SoT[i],
+                    self.p2Att[i],
+                    self.p3Att[i],
+                    self.kit.SA_Mult_18[i],
+                    self.kit.EZA,
+                    self.kit.exclusivity,
+                    self.nCopies,
+                    self.kit.SA_18_Att_Stacks[i],
+                    self.kit.SA_18_Att[i],
+                )
+                self.avgAtt[i] = getAvgAtt(
+                    self.kit.AA_P_super[i],
+                    self.kit.SA_Mult_12[i],
+                    self.kit.EZA,
+                    self.kit.exclusivity,
+                    self.nCopies,
+                    self.kit.SA_12_Att_Stacks[i],
+                    self.kit.SA_12_Att[i],
+                    self.kit.SA_18_Att[i],
+                    self.stackedAtt[i],
+                    self.p1Att[i],
+                    self.normal[i],
+                    self.sa[i],
+                    self.usa[i],
+                    self.pHiPoAA,
+                    self.kit.AA_P_guarantee[i],
+                    self.kit.P_counterNormal[i],
+                    self.kit.P_counterSA[i],
+                    self.kit.counterMod,
+                    self.Pr_N[i],
+                    self.Pr_SA[i],
+                    self.Pr_USA[i],
+                    self.kit.rarity,
+                )
+                if self.kit.activeTurn != 0 and i == self.activeSkillTurn - 1:
+                    self.avgAtt[i] += getActiveAttack(
+                        self.kit.kiMod_12,
+                        24,
+                        self.ATK,
+                        self.p1Att[self.activeSkillTurn - 1],
+                        self.stackedAtt[self.activeSkillTurn - 1],
+                        self.linkAtt_SoT[self.activeSkillTurn - 1],
+                        self.p2Att[self.activeSkillTurn - 1],
+                        self.p3Att[self.activeSkillTurn - 1],
+                        self.kit.activeMult,
+                        self.nCopies,
+                    )
+            else:
+                self.avgAtt[i] = getAvgAtt(
+                    self.kit.AA_P_super[i],
+                    self.kit.SA_Mult_12[i],
+                    self.kit.EZA,
+                    self.kit.exclusivity,
+                    self.nCopies,
+                    self.kit.SA_12_Att_Stacks[i],
+                    self.kit.SA_12_Att[i],
+                    0,
+                    self.stackedAtt[i],
+                    self.p1Att[i],
+                    self.normal[i],
+                    self.sa[i],
+                    0,
+                    self.pHiPoAA,
+                    self.kit.AA_P_guarantee[i],
+                    self.kit.P_counterNormal[i],
+                    self.kit.P_counterSA[i],
+                    self.kit.counterMod,
+                    self.Pr_N[i],
+                    self.Pr_SA[i],
+                    self.Pr_USA[i],
+                    self.kit.rarity,
+                )
+                if self.kit.activeTurn != 0 and i == self.activeSkillTurn - 1:
+                    self.avgAtt[i] += getActiveAttack(
+                        self.kit.kiMod_12,
+                        12,
+                        self.ATK,
+                        self.p1Att[self.activeSkillTurn - 1],
+                        self.stackedAtt[self.activeSkillTurn - 1],
+                        self.linkAtt_SoT[self.activeSkillTurn - 1],
+                        self.p2Att[self.activeSkillTurn - 1],
+                        self.p3Att[self.activeSkillTurn - 1],
+                        self.kit.activeMult,
+                        self.nCopies,
+                    )
+        self.avgAttModifer = self.P_Crit * CritMultiplier + (1 - self.P_Crit) * (
+            self.P_SEaaT * SEaaTMultiplier + (1 - self.P_SEaaT) * avgTypeAdvantage
+        )
+        self.apt = self.avgAtt * self.avgAttModifer
+        if self.kit.GRLength != 0:
+            self.apt[self.activeSkillTurn - 1] += self.apt_GR
+            self.support[self.activeSkillTurn - 1] += self.support_GR
+        self.avgDefMult = self.getAvgDefMult()
+        self.avgDefPreSuper = (
+            self.DEF
+            * (1 + leaderSkillBuff)
+            * (1 + self.p1Def)
+            * (1 + self.linkDef)
+            * (1 + self.kit.P2A_Def)
+            * (1 + self.p3Def)
+            * (1 + self.stackedDef)
+        )
+        self.avgDefPostSuper = (
+            self.DEF
+            * (1 + leaderSkillBuff)
+            * (1 + self.p1Def)
+            * (1 + self.linkDef)
+            * (1 + self.p2Def)
+            * (1 + self.p3Def)
+            * (1 + self.avgDefMult)
+        )
+        self.normalDefencePreSuper = np.minimum(
+            -(1 - (1 - dodgeCancelFrac) * self.P_Dodge)
+            * (
+                self.P_guard
+                * GuardModifer(
+                    maxNormalDamage * avgGuardFactor * (1 - self.dmgRedNormal)
+                    - self.avgDefPreSuper,
+                    guardMod,
+                )
+                + (1 - self.P_guard)
+                * (
+                    maxNormalDamage * avgTypeFactor * (1 - self.dmgRedNormal)
+                    - self.avgDefPreSuper
+                )
+            )
+            / (maxNormalDamage * avgTypeFactor),
+            0.0,
+        )
+        self.normalDefencePostSuper = np.minimum(
+            -(1 - (1 - dodgeCancelFrac) * self.P_Dodge)
+            * (
+                self.P_guard
+                * GuardModifer(
+                    maxNormalDamage * avgGuardFactor * (1 - self.dmgRedNormal)
+                    - self.avgDefPostSuper,
+                    guardMod,
+                )
+                + (1 - self.P_guard)
+                * (
+                    maxNormalDamage * avgTypeFactor * (1 - self.dmgRedNormal)
+                    - self.avgDefPostSuper
+                )
+            )
+            / (maxNormalDamage * avgTypeFactor),
+            0.0,
+        )
+        self.saDefencePreSuper = np.minimum(
+            -(
+                1
+                - (
+                    self.P_nullify
+                    + (1 - self.P_nullify) * (1 - dodgeCancelFrac) * self.P_Dodge
+                )
+            )
+            * (
+                self.P_guard
+                * GuardModifer(
+                    maxSADamage * avgGuardFactor * (1 - self.dmgRed)
+                    - self.avgDefPreSuper,
+                    guardMod,
+                )
+                + (1 - self.P_guard)
+                * (
+                    maxSADamage * avgTypeFactor * (1 - self.dmgRed)
+                    - self.avgDefPreSuper
+                )
+            )
+            / (maxSADamage * avgTypeFactor),
+            0.0,
+        )
+        self.saDefencePostSuper = np.minimum(
+            -(
+                1
+                - (
+                    self.P_nullify
+                    + (1 - self.P_nullify) * (1 - dodgeCancelFrac) * self.P_Dodge
+                )
+            )
+            * (
+                self.P_guard
+                * GuardModifer(
+                    maxSADamage * avgGuardFactor * (1 - self.dmgRed)
+                    - self.avgDefPostSuper,
+                    guardMod,
+                )
+                + (1 - self.P_guard)
+                * (
+                    maxSADamage * avgTypeFactor * (1 - self.dmgRed)
+                    - self.avgDefPostSuper
+                )
+            )
+            / (maxSADamage * avgTypeFactor),
+            0.0,
+        )
+        self.slot1Ability = np.maximum(
+            self.normalDefencePreSuper + self.saDefencePreSuper, -0.5
+        )
+        self.healing += (
+            (0.03 + 0.0015 * HiPo_Recovery[self.nCopies - 1])
+            * self.avgDefPreSuper
+            * self.kit.collectKi
+            * STOrbPerKi
+            / avgHealth
+        )
+        self.attributes = [
+            self.leaderSkill,
+            self.SBR,
+            self.useability,
+            self.healing,
+            self.support,
+            self.apt,
+            self.normalDefencePostSuper,
+            self.saDefencePostSuper,
+            self.slot1Ability,
+        ]
+
+        def getStackedStats(self):
+        # Can make more efficient later by saving stacked attack for each turn and just add on next turn, rather than calculating the whole thing on each call
+        stackedAtt, stackedDef = [0] * MAX_TURN, [0] * MAX_TURN
+        for turn in range(
+            MAX_TURN - 1
+        ):  # For each turn < self.turn (i.e. turns which can affect how much defense have on self.turn)
+            if self.kit.keepStacking:
+                i = 0  # If want the stacking of initial turn and transform later
+            else:
+                i = turn
+            if (
+                self.kit.SA_18_Att_Stacks[i] > 1
+            ):  # If stack for long enough to last to turn self.turn
+                stackedAtt[turn + 1 : turn + self.kit.SA_18_Att_Stacks[i]] += (
+                    self.Pr_USA[i] * self.kit.SA_18_Att[i]
+                )  # add stacked atk
+            if (
+                self.kit.SA_18_Def_Stacks[i] > 1
+            ):  # If stack for long enough to last to turn self.turn
+                stackedDef[turn + 1 : turn + self.kit.SA_18_Def_Stacks[i]] += (
+                    self.Pr_USA[i] * self.kit.SA_18_Def[i]
+                )  # add stacked atk
+            if (
+                self.kit.SA_12_Att_Stacks[i] > 1
+            ):  # If stack for long enough to last to turn self.turn
+                stackedAtt[turn + 1 : turn + self.kit.SA_12_Att_Stacks[i]] += (
+                    self.Pr_SA[i] + self.avg_AA_SA[i]
+                ) * self.kit.SA_12_Att[
+                    i
+                ]  # add stacked atk
+            if (
+                self.kit.SA_12_Def_Stacks[i] > 1
+            ):  # If stack for long enough to last to turn self.turn
+                stackedDef[turn + 1 : turn + self.kit.SA_12_Def_Stacks[i]] += (
+                    self.Pr_SA[i] + self.avg_AA_SA[i]
+                ) * self.kit.SA_12_Def[
+                    i
+                ]  # add stacked atk
+        return [np.array(stackedAtt), np.array(stackedDef)]
+        """
 
 
 class Ability:
