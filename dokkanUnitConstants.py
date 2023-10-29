@@ -96,8 +96,8 @@ CRIT_MULTIPLIERS = 2.03
 EAAT_MULTIPLIERS = 1.624
 
 # Guard
-AVG_GUARD_FACTOR = 0.8 # https://www.reddit.com/r/DBZDokkanBattle/comments/weidle/how_damage_taken_works_dokkan_battle_complete/
-GUARD_MOD = 0.5 # https://www.reddit.com/r/DBZDokkanBattle/comments/weidle/how_damage_taken_works_dokkan_battle_complete/
+AVG_GUARD_FACTOR = 0.8  # https://www.reddit.com/r/DBZDokkanBattle/comments/weidle/how_damage_taken_works_dokkan_battle_complete/
+GUARD_MOD = 0.5  # https://www.reddit.com/r/DBZDokkanBattle/comments/weidle/how_damage_taken_works_dokkan_battle_complete/
 
 # Dodge
 DODGE_CANCEL_FACTOR = 0.05
@@ -183,7 +183,9 @@ P_NULLIFY_FROM_DISABLE_ACTIVE = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TUR
 P_NULLIFY_FROM_DISABLE_SUPER = (
     NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING
 ) * P_NULLIFY_FROM_DISABLE_ACTIVE
-NUM_SUPER_ATTACKS = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN * NUM_ATTACKS_DIRECTED
+NUM_SUPER_ATTACKS = (
+    NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN * NUM_ATTACKS_DIRECTED
+)
 
 # Enemy Damage
 # Want to know which units will be good in the future when enemies hit even harder
@@ -201,15 +203,23 @@ MAX_T1_SA_DAM = (
 MAX_SA_DAM = (
     1855000  # Not including divine wrath and mortal will as can just spam items
 )
-maxNormalDamage = LOOK_AHEAD_FACTOR * AVG_DAM_VARIANCE * np.append(
-    np.linspace(MAX_T1_NORMAL_DAM, MAX_NORMAL_DAM, PEAK_TURN),
-    [MAX_NORMAL_DAM] * (MAX_TURN - PEAK_TURN),
-    axis=0,
+maxNormalDamage = (
+    LOOK_AHEAD_FACTOR
+    * AVG_DAM_VARIANCE
+    * np.append(
+        np.linspace(MAX_T1_NORMAL_DAM, MAX_NORMAL_DAM, PEAK_TURN),
+        [MAX_NORMAL_DAM] * (MAX_TURN - PEAK_TURN),
+        axis=0,
+    )
 )
-maxSADamage = LOOK_AHEAD_FACTOR * AVG_DAM_VARIANCE * np.append(
-    np.linspace(MAX_T1_SA_DAM, MAX_SA_DAM, PEAK_TURN),
-    [MAX_SA_DAM] * (MAX_TURN - PEAK_TURN),
-    axis=0,
+maxSADamage = (
+    LOOK_AHEAD_FACTOR
+    * AVG_DAM_VARIANCE
+    * np.append(
+        np.linspace(MAX_T1_SA_DAM, MAX_SA_DAM, PEAK_TURN),
+        [MAX_SA_DAM] * (MAX_TURN - PEAK_TURN),
+        axis=0,
+    )
 )
 # maxDefence = LOOK_AHEAD_FACTOR* np.append(np.linspace(100000,110000,PEAK_TURN),[110000]*(MAX_TURN-PEAK_TURN),axis=0)
 
@@ -381,6 +391,7 @@ EFFECTS = [
     "Damage Reduction",
     "Damage Reduction Before Attacking",
     "Damage Reduction After Attacking",
+    "Damage Reduction against Normal Attacks",
     "Guard",
     "Disable Guard",
     "Forsee Super Attack",
@@ -517,7 +528,9 @@ saFracConversion = dict(
 )
 
 # Hidden-Potential + Equips
-hiddenPotentalStatsConverter = dict(zip(TYPES,[HIPO_AGL, HIPO_INT, HIPO_PHY, HIPO_STR, HIPO_TEQ]))
+hiddenPotentalStatsConverter = dict(
+    zip(TYPES, [HIPO_AGL, HIPO_INT, HIPO_PHY, HIPO_STR, HIPO_TEQ])
+)
 # ATT, DEF, ADD, CRT, DGE
 HIPO_D0 = {
     "AGL": [0, 0, 0.1, 0, 0],

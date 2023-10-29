@@ -4,21 +4,24 @@ from dokkanUnitConstants import *
 
 #################################################### Helper functions #######################################################################
 
+
 def maxHealthCDF(maxHealth):
-    """ Returns the probability that health is less than the input """
+    """Returns the probability that health is less than the input"""
     return 4 / 3 * maxHealth**3 - maxHealth**2 + 2 / 3 * maxHealth
 
 
 def ZTP_CDF(x, Lambda):
-    """ Returns the cdf(x) of a zero-truncated poisson distribution(lambda) """
+    """Returns the cdf(x) of a zero-truncated poisson distribution(lambda)"""
     return (poisson.cdf(x, Lambda) - poisson.cdf(0, Lambda)) / (
         1 - poisson.cdf(0, Lambda)
     )
 
 
 def SAMultiplier(multiplier, eza, rarity, nCopies, nStacks, saAtk):
-    """ Returns the super-attack multiplier of a form """
-    baseMultiplier = superAttackConversion[multiplier][superAttackLevelConversion[rarity][eza]]
+    """Returns the super-attack multiplier of a form"""
+    baseMultiplier = superAttackConversion[multiplier][
+        superAttackLevelConversion[rarity][eza]
+    ]
     stackingPenalty = 0
     if nStacks > 1:  # If stack attack
         stackingPenalty = saAtk
@@ -26,7 +29,7 @@ def SAMultiplier(multiplier, eza, rarity, nCopies, nStacks, saAtk):
 
 
 def KiModifier(base, ki):
-    """ Returns the ki modifier for a unit """
+    """Returns the ki modifier for a unit"""
     if ki <= 12:
         return 1
     else:
@@ -34,11 +37,13 @@ def KiModifier(base, ki):
 
 
 def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, N_0, a12_0, saMult, pHiPo):
-    """ Returns the total remaining ATK of a unit in a turn recursively """
+    """Returns the total remaining ATK of a unit in a turn recursively"""
     normal = mN * N_0
     additional12Ki = m12 * a12_0
     if i == nAA - 1:  # If no more additional attacks
-        return 0.5 * pAA * (additional12Ki + normal) # Add average hidden-potential attack damage
+        return (
+            0.5 * pAA * (additional12Ki + normal)
+        )  # Add average hidden-potential attack damage
     else:
         i += 1  # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
@@ -80,7 +85,7 @@ def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, N_0, a12_0, saMult, pHiPo):
 
 
 def branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo):
-    """ Returns the average number of remaining attacks in a turn recursively """
+    """Returns the average number of remaining attacks in a turn recursively"""
     if i == nAA - 1:  # If no more additional attacks
         return 0.5 * pAA  # Add average HiPo super chance
     else:
@@ -97,7 +102,7 @@ def branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo):
 
 
 def getAttackDistribution(constantKi, randomKi, intentional12Ki, rarity):
-    """ Returns the probability of normals, super-attacks and ultra-super-attacks """
+    """Returns the probability of normals, super-attacks and ultra-super-attacks"""
     pN = ZTP_CDF(max(11 - constantKi, 0), randomKi)
     if intentional12Ki or rarity != "LR":
         pSA = 1 - pN
@@ -109,7 +114,7 @@ def getAttackDistribution(constantKi, randomKi, intentional12Ki, rarity):
 
 
 def getNormal(kiMod12, ki, att, p1Atk, stackedAtk, linkAtkSoT, p2Atk, p3Atk):
-    """ Returns the ATK stat of a normal"""
+    """Returns the ATK stat of a normal"""
     kiMultiplier = KiModifier(kiMod12, ki)
     return (
         att
@@ -137,7 +142,7 @@ def getSA(
     sa12AtkStacks,
     sa12Atk,
 ):
-    """ Returns the ATK stat of a super-attack """
+    """Returns the ATK stat of a super-attack"""
     kiMultiplier = kiMod12
     SAmultiplier = SAMultiplier(
         saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk
@@ -170,7 +175,7 @@ def getUSA(
     sa18AtkStacks,
     sa18Atk,
 ):
-    """ Returns the ATK stat of an ultra-super-attack """
+    """Returns the ATK stat of an ultra-super-attack"""
     kiMultiplier = KiModifier(kiMod12, max(ki, 18))
     SAmultiplier = SAMultiplier(
         saMult18, eza, exclusivity, nCopies, sa18AtkStacks, sa18Atk
@@ -199,7 +204,7 @@ def getActiveAttack(
     saMultActive,
     nCopies,
 ):
-    """ Returns the ATK stat of an active-skill attack """
+    """Returns the ATK stat of an active-skill attack"""
     kiMultiplier = KiModifier(kiMod12, ki)
     SAmultiplier = saMultActive + 0.05 * HIPO_SA_BOOST[nCopies - 1]
     return (
@@ -238,9 +243,9 @@ def getAvgAtk(
     pSA,
     pUSA,
     rarity,
-    slot
+    slot,
 ):
-    """ Returns the average ATK stat of a unit in a turn """
+    """Returns the average ATK stat of a unit in a turn"""
     # Number of additional attacks from passive in each turn
     nAA = len(AApSuper)
     i = -1  # iteration counter
@@ -258,7 +263,14 @@ def getAvgAtk(
     pAA = HiPopAA  # Probability of doing an additional attack next
     pSA = AApSuper  # Probability of doing a super on inbuilt additional
     pG = aaPGuarantee  # Probability of inbuilt additional
-    counterAtk = (NUM_ATTACKS_RECEIVED[slot] * pCounterNormal + NUM_SUPER_ATTACKS[slot] * pCounterSA) * counterMod * normal
+    counterAtk = (
+        (
+            NUM_ATTACKS_RECEIVED[slot] * pCounterNormal
+            + NUM_SUPER_ATTACKS[slot] * pCounterSA
+        )
+        * counterMod
+        * normal
+    )
     avgAtk = pN * (
         normal
         + branchAtk(

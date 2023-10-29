@@ -104,7 +104,8 @@ def abilityQuestionaire(
 
 
 ######################################################### Classes #################################################################
-        
+
+
 class Unit:
     def __init__(self, id, nCopies, brz, HiPo1, HiPo2):
         self.id = str(id)
@@ -112,22 +113,20 @@ class Unit:
         self.brz = brz
         self.HiPo1 = HiPo1
         self.HiPo2 = HiPo2
-        self.getConstants()
+        self.getConstants()  # Requires user input, should make a version that loads from file
         self.getHiPo()
-        self.getSBR()
-        self.getForms()
+        self.getSBR()  # Requires user input, should make a version that loads from file
+        self.getForms()  # Requires user input, should make a version that loads from file
         self.getStates()
-        self.useability = self.teams / NUM_TEAMS_MAX * (1 + USEABILITY_SUPPORT_FACTOR * self.states[self.peakState].support + self.forms[self.peakForm].linkCommonality)
-
-    def getAvgDefMult(self):
-        if self.kit.rarity == "LR":  # If unit is a LR
-            avgDefMult = (
-                self.Pr_SA * self.kit.SA_12_Def + self.Pr_USA * self.kit.SA_18_Def
+        self.useability = (
+            self.teams
+            / NUM_TEAMS_MAX
+            * (
+                1
+                + USEABILITY_SUPPORT_FACTOR * self.states[self.peakState].support
+                + self.forms[self.peakForm].linkCommonality
             )
-        else:
-            avgDefMult = self.Pr_SA * self.kit.SA_12_Def
-        avgDefMult += self.stackedDef + self.avg_AA_SA * self.kit.SA_12_Def
-        return avgDefMult
+        )
 
     def getConstants(self):
         self.exclusivity = clc.prompt(
@@ -201,21 +200,25 @@ class Unit:
             type=clc.Choice(GIANT_RAGE_DURATION),
             default="0",
         )
-    
 
     def getHiPo(self):
         HiPoStats = hiddenPotentalStatsConverter[self._type][self.nCopies - 1]
-        HiPoAbilities = np.array(HIPO_D0[self.kit.type]) + HIPO_BRZ[self.brz] + HIPO_SLV[self.HiPo1]
+        HiPoAbilities = (
+            np.array(HIPO_D0[self._type]) + HIPO_BRZ[self.brz] + HIPO_SLV[self.HiPo1]
+        )
         if self.nCopies > 1:
             HiPoAbilities += HIPO_D1[(self.HiPo1, self.HiPo2)]
         if self.nCopies > 2:
-            HiPoAbilities += np.array(HIPO_D2[(self.HiPo1, self.HiPo2)]) + HIPO_GLD[(self.HiPo1, self.HiPo2)]
+            HiPoAbilities += (
+                np.array(HIPO_D2[(self.HiPo1, self.HiPo2)])
+                + HIPO_GLD[(self.HiPo1, self.HiPo2)]
+            )
         self.HP += HiPoStats[0]
         self.ATK += HiPoStats[1] + HiPoAbilities[0]
         self.DEF += HiPoStats[2] + HiPoAbilities[1]
-        self.pHiPoAA = self.HiPo[2]
-        self.pHiPoCrit = self.HiPo[3]
-        self.pHiPoDodge = self.HiPo[4]
+        self.pHiPoAA = HiPoAbilities[2]
+        self.pHiPoCrit = HiPoAbilities[3]
+        self.pHiPoDodge = HiPoAbilities[4]
 
     def getSBR(self):
         self.sbr = 0.0
@@ -492,6 +495,7 @@ class Unit:
             state = State(slot, turn)
             for ability in form.abilities:
                 ability.applyToState(state)
+            state.setState(self, form)
             self.states.append(state)
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
             if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN):
@@ -572,7 +576,7 @@ class Link:
         self.ki = float(LINK_DATA[i, 10])
         self.atkSoT = float(LINK_DATA[i, 11])
         self.defence = float(LINK_DATA[i, 12])
-        self.att_OnSuper = float(LINK_DATA[i, 13])
+        self.atkOnSuper = float(LINK_DATA[i, 13])
         self.crit = float(LINK_DATA[i, 14])
         self.dmgRed = float(LINK_DATA[i, 15])
         self.dodge = float(LINK_DATA[i, 16])
@@ -595,8 +599,10 @@ class State:
         self.numRainbowOrbs = NUM_RAINBOW_ORBS_NO_ORB_CHANGING
         self.numOtherTypeOrbs = NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING
         self.numSameTypeOrbs = NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING  # num of orbs
-        self.p1Atk = LEADER_SKILL_STATS
-        self.p1Def = LEADER_SKILL_STATS  # Start of turn stats (Phase 1)
+        self.p1Atk = LEADER_SKILL_STATS + ATK_DEF_SUPPORT
+        self.p1Def = (
+            LEADER_SKILL_STATS + ATK_DEF_SUPPORT
+        )  # Start of turn stats (Phase 1)
         self.p2Atk = 0.0  # Phase 2 ATK
         self.p2DefA = 0.0
         self.p2DefB = 0.0  # Phase 2 DEF (Before and after attacking)
@@ -607,12 +613,28 @@ class State:
         self.healing = 0.0  # Fraction of health healed every turn
         self.support = 0.0  # Support score
         self.pNullify = 0.0  # Probability of nullifying all enemy super attacks
-        self.aaPSuper = [] # Probabilities of doing additional super attacks and guaranteed additionals
-        self.aaPGuarantee = [] 
+        self.aaPSuper = (
+            []
+        )  # Probabilities of doing additional super attacks and guaranteed additionals
+        self.aaPGuarantee = []
         self.dmgRedA = 0.0
         self.dmgRedB = 0.0  # Damage reduction before and after attacking
+        self.dmgRedNormal = 0.0
         self.pCounterSA = 0.0  # Probability of countering an enemy super attack
         self.numAttacksReceived = 0  # Number of attacks received so far in this form. Assuming update the state.numAttacksReceievd after the abilities have been processed for that turn
+
+    def setState(self, unit, form):
+        self.healing += form.linkHealing
+        self.p1Atk = np.maximum(self.p1Atk, -1)
+        self.p2Att += form.linkAtkOnSuper
+        self.p2Def = self.p2DefA + self.p2DefB
+        self.crit = self.crit + (1 - self.crit) * (
+            unit.pHiPoCrit + (1 - unit.pHiPoCrit) * form.linkCrit
+        )
+        self.pDodge = self.pDodge + (1 - self.pDodge) * (
+            unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge
+        )
+        self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
 
     def updateRandomKi(self, form):
         kiCollect = (
@@ -621,34 +643,8 @@ class State:
             + self.numRainbowOrbs * self.kiPerRainbowKiSphere
         )
         self.randomKi += kiCollect + form.linkKi
-    
-    """
-        self.dmgRed = np.minimum(self.kit.dmgRed + self.linkDmgRed, [1] * MAX_TURN)
-        self.dmgRedNormal = np.minimum(
-            self.kit.dmgRedNormal + self.dmgRed, [1] * MAX_TURN
-        )
-        self.constantKi = leaderSkillKi + self.kit.passiveKi
-        self.randomKi = self.links_Ki + self.kit.collectKi + avgKiSupport
-        self.healing = self.kit.healing + self.linkHealing
-        self.support = self.kit.support
-        
-        self.p1Att = np.maximum(self.kit.P1_Att + avgSupport, -1)
-        self.p2Att = self.kit.P2_Att + self.linkAtt_OnSuper
-        self.p1Def = self.kit.P1_Def + avgSupport
-        self.p2Def = self.kit.P2A_Def + self.kit.P2B_Def
-        self.p3Att = self.kit.P3_Att
-        self.p3Def = self.kit.P3_Def
-        self.P_Crit = self.kit.passiveCrit + (1 - self.kit.passiveCrit) * (
-            self.pHiPoCrit + (1 - self.pHiPoCrit) * self.linkCrit
-        )
-        self.P_SEaaT = self.kit.P_SEaaT
-        self.P_Dodge = self.kit.P_dodge + (1 - self.kit.P_dodge) * (
-            self.pHiPoDodge + (1 - self.pHiPoDodge) * self.linkDodge
-        )
-        self.P_guard = self.kit.P_guard
-        self.P_nullify = (
-            self.kit.P_nullify + (1 - self.kit.P_nullify) * self.kit.P_counterSA
-        )
+
+    """        
         if self.kit.GRLength != 0:
             self.GRTurn = max(self.kit.activeTurn, peakTurn)
             self.att_GR = self.kit.attack_GR + self.HiPo_Stats[0] + self.HiPo[0]
@@ -1146,6 +1142,16 @@ class State:
                     i
                 ]  # add stacked atk
         return [np.array(stackedAtt), np.array(stackedDef)]
+
+    def getAvgDefMult(self):
+        if self.kit.rarity == "LR":  # If unit is a LR
+            avgDefMult = (
+                self.Pr_SA * self.kit.SA_12_Def + self.Pr_USA * self.kit.SA_18_Def
+            )
+        else:
+            avgDefMult = self.Pr_SA * self.kit.SA_12_Def
+        avgDefMult += self.stackedDef + self.avg_AA_SA * self.kit.SA_12_Def
+        return avgDefMult
         """
 
 
@@ -1339,6 +1345,8 @@ class StartOfTurn(PassiveAbility):
                     state.p1Def += self.buff
                 case "Guard":
                     state.guard += self.buff
+                case "Damage Reduction Against Normal Attacks":
+                    state.dmgRedNormal += self.buff
                 case "Critical Hit":
                     state.crit += self.buff
                 case "Evasion":
@@ -1462,6 +1470,7 @@ class PerRainbowOrb(PassiveAbility):
             case "Damage Reduction":
                 state.dmgRedA += buffFromRainbowOrbs
                 state.dmgRedB += buffFromRainbowOrbs
+                state.dmgRedNormal += buffFromRainbowOrbs
             case "Evasion":
                 state.pEvade += buffFromRainbowOrbs
 
@@ -1485,4 +1494,4 @@ class Nullification(PassiveAbility):
 
 
 if __name__ == "__main__":
-    kit = Kit(1)
+    kit = Unit(1, 1, "DEF", "ADD", "DGE")
