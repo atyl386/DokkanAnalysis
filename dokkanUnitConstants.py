@@ -14,9 +14,7 @@ TYPES = ["AGL", "INT", "PHY", "STR", "TEQ"]
 YES_NO = ["Y", "N"]
 
 # SBR
-ATT_DEBUFF_PASSIVE_CONVERSION_GRADIENT = (
-    10  # 10% attack down for 2 turns = SBR score of +1
-)
+ATT_DEBUFF_PASSIVE_CONVERSION_GRADIENT = 10  # 10% attack down for 2 turns = SBR score of +1
 DEBUFF_DURATIONS = ["0", "1", "2"]  # [turns]
 SEAL_SCORE_PER_TURN = [0, 0.25, 0.75]  # [SBR metric/chance to seal]
 STUN_SCORE_PER_TURN = [0, 0.5, 1.5]  # [SBR metric/chance to stun]
@@ -81,7 +79,7 @@ SPECIAL_ATTACK_MULTIPLIERS = [0.0, 1.0, 5.0, 5.4, 6.5, 7.5]
 
 # Giant/Rage Form
 GIANT_RAGE_DURATION = ["0", "1", "2"]  # Turns
-GIANT_RAGE_SUPPORT = 2 # Support for nullifying super attacks for a turn
+GIANT_RAGE_SUPPORT = 2  # Support for nullifying super attacks for a turn
 # Turns
 MAX_TURN = 20
 PEAK_TURN = 5  # Most important turn
@@ -96,8 +94,12 @@ CRIT_MULTIPLIERS = 2.03
 EAAT_MULTIPLIERS = 1.624
 
 # Guard
-AVG_GUARD_FACTOR = 0.8  # https://www.reddit.com/r/DBZDokkanBattle/comments/weidle/how_damage_taken_works_dokkan_battle_complete/
-GUARD_MOD = 0.5  # https://www.reddit.com/r/DBZDokkanBattle/comments/weidle/how_damage_taken_works_dokkan_battle_complete/
+AVG_GUARD_FACTOR = (
+    0.8  # https://www.reddit.com/r/DBZDokkanBattle/comments/weidle/how_damage_taken_works_dokkan_battle_complete/
+)
+GUARD_MOD = (
+    0.5  # https://www.reddit.com/r/DBZDokkanBattle/comments/weidle/how_damage_taken_works_dokkan_battle_complete/
+)
 
 # Dodge
 DODGE_CANCEL_FACTOR = 0.05
@@ -123,9 +125,7 @@ PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS = np.array(
         PROBABILITY_KILL_ENEMY_PER_TURN,
     ]
 )
-NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING = (
-    1.0 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING
-) * np.array(
+NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING = (1.0 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING) * np.array(
     [
         NUM_ATTACKS_PER_TURN / 4,
         NUM_ATTACKS_PER_TURN / 2,
@@ -144,9 +144,7 @@ PROBABILITY_SUPER_ATTACK_TYPE = [
     1.0,
 ]
 SUPER_ATTACK_TYPES = ["Physical", "Melee", "Ki-Blast", "Other", "Any"]
-SUPER_ATTACK_NULLIFICATION_TYPES = [
-    "Nullify " + superAttackType for superAttackType in SUPER_ATTACK_TYPES
-]
+SUPER_ATTACK_NULLIFICATION_TYPES = ["Nullify " + superAttackType for superAttackType in SUPER_ATTACK_TYPES]
 AOE_PROBABILITY_PER_ATTACK = 0.01  # Complete guess
 NUM_AOE_ATTACKS_BEFORE_ATTACKING = (
     AOE_PROBABILITY_PER_ATTACK * NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING
@@ -159,50 +157,32 @@ NUM_ATTACKS_NOT_DIRECTED = np.array(
     ]
 )
 NUM_AOE_ATTACKS = (
-    AOE_PROBABILITY_PER_ATTACK
-    * NUM_ATTACKS_NOT_DIRECTED
-    * (1.0 - PROBABILITY_KILL_ENEMY_AFTER_ATTACKING)
+    AOE_PROBABILITY_PER_ATTACK * NUM_ATTACKS_NOT_DIRECTED * (1.0 - PROBABILITY_KILL_ENEMY_AFTER_ATTACKING)
 )
 NUM_ATTACKS_DIRECTED = np.array(
     [NUM_ATTACKS_PER_TURN / 2, NUM_ATTACKS_PER_TURN / 4, NUM_ATTACKS_PER_TURN / 4]
 )  # Average number of attacks recieved per turn. 3 elements correspons to slot 1, 2 and 3.
 NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING = np.array([NUM_ATTACKS_PER_TURN / 4, 0.0, 0.0])
-NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING = (
-    NUM_AOE_ATTACKS_BEFORE_ATTACKING + NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
-)
-NUM_ATTACKS_DIRECTED_AFTER_ATTACKING = (
-    NUM_ATTACKS_DIRECTED - NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
-)
+NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING = NUM_AOE_ATTACKS_BEFORE_ATTACKING + NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
+NUM_ATTACKS_DIRECTED_AFTER_ATTACKING = NUM_ATTACKS_DIRECTED - NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
 NUM_ATTACKS_RECEIVED = NUM_AOE_ATTACKS + NUM_ATTACKS_DIRECTED * (
     1.0
-    - PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS
-    * NUM_ATTACKS_DIRECTED_AFTER_ATTACKING
-    / NUM_ATTACKS_DIRECTED
+    - PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS * NUM_ATTACKS_DIRECTED_AFTER_ATTACKING / NUM_ATTACKS_DIRECTED
 )
 P_NULLIFY_FROM_DISABLE_ACTIVE = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN
 P_NULLIFY_FROM_DISABLE_SUPER = (
     NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING
 ) * P_NULLIFY_FROM_DISABLE_ACTIVE
-NUM_SUPER_ATTACKS = (
-    NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN * NUM_ATTACKS_DIRECTED
-)
+NUM_SUPER_ATTACKS = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN * NUM_ATTACKS_DIRECTED
 
 # Enemy Damage
 # Want to know which units will be good in the future when enemies hit even harder
 LOOK_AHEAD_FACTOR = 1.2
 AVG_DAM_VARIANCE = 1.015
-MAX_T1_NORMAL_DAM = (
-    550000  # Not including divine wrath and mortal will as can just spam items
-)
-MAX_NORMAL_DAM = (
-    700000  # Not including divine wrath and mortal will as can just spam items
-)
-MAX_T1_SA_DAM = (
-    1540000  # Not including divine wrath and mortal will as can just spam items
-)
-MAX_SA_DAM = (
-    1855000  # Not including divine wrath and mortal will as can just spam items
-)
+MAX_T1_NORMAL_DAM = 550000  # Not including divine wrath and mortal will as can just spam items
+MAX_NORMAL_DAM = 700000  # Not including divine wrath and mortal will as can just spam items
+MAX_T1_SA_DAM = 1540000  # Not including divine wrath and mortal will as can just spam items
+MAX_SA_DAM = 1855000  # Not including divine wrath and mortal will as can just spam items
 maxNormalDamage = (
     LOOK_AHEAD_FACTOR
     * AVG_DAM_VARIANCE
@@ -485,24 +465,16 @@ leaderSkillConversion = dict(zip(LEADER_SKILL_TIERS, LEADER_SKILL_SCORES))
 sealTurnConversion = dict(zip(DEBUFF_DURATIONS, SEAL_SCORE_PER_TURN))
 stunTurnConversion = dict(zip(DEBUFF_DURATIONS, STUN_SCORE_PER_TURN))
 attDebuffTurnConversion = dict(zip(DEBUFF_DURATIONS, ATT_DEBUFF_SCORE_PER_TURN))
-attDebuffOnAttackConversion = dict(
-    zip(ATT_DEBUFF_ON_ATT_NAMES, ATT_DEBUFF_ON_ATT_SCORE)
-)
-multipleEnemyBuffConversion = dict(
-    zip(MULTIPLE_ENEMY_BUFF_TIERS, MULTIPLE_ENEMY_BUFF_SCORES)
-)
+attDebuffOnAttackConversion = dict(zip(ATT_DEBUFF_ON_ATT_NAMES, ATT_DEBUFF_ON_ATT_SCORE))
+multipleEnemyBuffConversion = dict(zip(MULTIPLE_ENEMY_BUFF_TIERS, MULTIPLE_ENEMY_BUFF_SCORES))
 attackAllConversion = dict(zip(YES_NO, ATTACK_ALL_SCORE))
 attackAllDebuffConversion = dict(zip(ATTACK_ALL_SCORE, ATTACK_ALL_DEBUFF_FACTOR))
 
 # Counters
-counterAttackConversion = dict(
-    zip(COUNTER_ATTACK_MULTIPLIER_NAMES, COUNTER_ATTACK_MULTIPLIERS)
-)
+counterAttackConversion = dict(zip(COUNTER_ATTACK_MULTIPLIER_NAMES, COUNTER_ATTACK_MULTIPLIERS))
 
 # Super Attacks
-specialAttackConversion = dict(
-    zip(SPECIAL_ATTACK_MULTIPLIER_NAMES, SPECIAL_ATTACK_MULTIPLIERS)
-)
+specialAttackConversion = dict(zip(SPECIAL_ATTACK_MULTIPLIER_NAMES, SPECIAL_ATTACK_MULTIPLIERS))
 superAttackEZALevels = [
     dict(zip([False, True], TUR_SUPER_ATTACK_LEVELS)),
     dict(zip([False, True], LR_SUPER_ATTACK_LEVELS)),
@@ -515,22 +487,16 @@ superAttackMultiplerConversion = [
     dict(zip(SUPER_ATTACK_LEVELS, MEGA_COLOSSAL_MULTIPLIERS)),
 ]
 superAttackLevelConversion = dict(zip(UNIQUE_RARITIES, superAttackEZALevels))
-superAttackConversion = dict(
-    zip(SUPER_ATTACK_MULTIPLIER_NAMES, superAttackMultiplerConversion)
-)
+superAttackConversion = dict(zip(SUPER_ATTACK_MULTIPLIER_NAMES, superAttackMultiplerConversion))
 
 # Slot
 slot2ReturnPeriod = dict(zip(SLOTS, RETURN_PERIOD_PER_SLOT))
 
 # Enemy Attacks
-saFracConversion = dict(
-    zip(SUPER_ATTACK_NULLIFICATION_TYPES, PROBABILITY_SUPER_ATTACK_TYPE)
-)
+saFracConversion = dict(zip(SUPER_ATTACK_NULLIFICATION_TYPES, PROBABILITY_SUPER_ATTACK_TYPE))
 
 # Hidden-Potential + Equips
-hiddenPotentalStatsConverter = dict(
-    zip(TYPES, [HIPO_AGL, HIPO_INT, HIPO_PHY, HIPO_STR, HIPO_TEQ])
-)
+hiddenPotentalStatsConverter = dict(zip(TYPES, [HIPO_AGL, HIPO_INT, HIPO_PHY, HIPO_STR, HIPO_TEQ]))
 # ATT, DEF, ADD, CRT, DGE
 HIPO_D0 = {
     "AGL": [0, 0, 0.1, 0, 0],

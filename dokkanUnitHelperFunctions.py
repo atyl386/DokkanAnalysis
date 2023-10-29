@@ -12,16 +12,12 @@ def maxHealthCDF(maxHealth):
 
 def ZTP_CDF(x, Lambda):
     """Returns the cdf(x) of a zero-truncated poisson distribution(lambda)"""
-    return (poisson.cdf(x, Lambda) - poisson.cdf(0, Lambda)) / (
-        1 - poisson.cdf(0, Lambda)
-    )
+    return (poisson.cdf(x, Lambda) - poisson.cdf(0, Lambda)) / (1 - poisson.cdf(0, Lambda))
 
 
 def SAMultiplier(multiplier, eza, rarity, nCopies, nStacks, saAtk):
     """Returns the super-attack multiplier of a form"""
-    baseMultiplier = superAttackConversion[multiplier][
-        superAttackLevelConversion[rarity][eza]
-    ]
+    baseMultiplier = superAttackConversion[multiplier][superAttackLevelConversion[rarity][eza]]
     stackingPenalty = 0
     if nStacks > 1:  # If stack attack
         stackingPenalty = saAtk
@@ -41,16 +37,12 @@ def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, N_0, a12_0, saMult, pHiPo):
     normal = mN * N_0
     additional12Ki = m12 * a12_0
     if i == nAA - 1:  # If no more additional attacks
-        return (
-            0.5 * pAA * (additional12Ki + normal)
-        )  # Add average hidden-potential attack damage
+        return 0.5 * pAA * (additional12Ki + normal)  # Add average hidden-potential attack damage
     else:
         i += 1  # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
         # Add damage if don't get any additional attacks
-        tempAtk0 = branchAtk(
-            i, nAA, m12, mN, pAA, nProcs, pSA, pG, N_0, a12_0, saMult, pHiPo
-        )
+        tempAtk0 = branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, N_0, a12_0, saMult, pHiPo)
         tempAtk1 = branchAtk(
             i,
             nAA,
@@ -93,12 +85,8 @@ def branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo):
         # Calculate extra attack if get additional super and subsequent addditional attacks
         # Add damage if don't get any additional attacks
         tempAA0 = branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo)
-        tempAA1 = branchAA(
-            i, nAA, pAA + pHiPo * (1 - pHiPo) ** nProcs, nProcs + 1, pSA, pG, pHiPo
-        )
-        return pSA[i] * (1 + tempAA1) + (1 - pSA[i]) * (
-            pG[i] * tempAA1 + (1 - pG[i]) * tempAA0
-        )
+        tempAA1 = branchAA(i, nAA, pAA + pHiPo * (1 - pHiPo) ** nProcs, nProcs + 1, pSA, pG, pHiPo)
+        return pSA[i] * (1 + tempAA1) + (1 - pSA[i]) * (pG[i] * tempAA1 + (1 - pG[i]) * tempAA0)
 
 
 def getAttackDistribution(constantKi, randomKi, intentional12Ki, rarity):
@@ -144,9 +132,7 @@ def getSA(
 ):
     """Returns the ATK stat of a super-attack"""
     kiMultiplier = kiMod12
-    SAmultiplier = SAMultiplier(
-        saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk
-    )
+    SAmultiplier = SAMultiplier(saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk)
     return (
         att
         * (1 + LEADER_SKILL_STATS)
@@ -177,9 +163,7 @@ def getUSA(
 ):
     """Returns the ATK stat of an ultra-super-attack"""
     kiMultiplier = KiModifier(kiMod12, max(ki, 18))
-    SAmultiplier = SAMultiplier(
-        saMult18, eza, exclusivity, nCopies, sa18AtkStacks, sa18Atk
-    )
+    SAmultiplier = SAMultiplier(saMult18, eza, exclusivity, nCopies, sa18AtkStacks, sa18Atk)
     return (
         att
         * (1 + LEADER_SKILL_STATS)
@@ -250,9 +234,7 @@ def getAvgAtk(
     nAA = len(AApSuper)
     i = -1  # iteration counter
     nProcs = 1  # Initialise number of HiPo procs
-    SAmultiplier = SAMultiplier(
-        saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk
-    )
+    SAmultiplier = SAMultiplier(saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk)
     m12 = SAmultiplier + sa12Atk + stackedAtk  # 12 ki multiplier after SA effect
     a12_0 = sa / m12  # Get 12 ki SA attack stat without multiplier
     if 1 + p1Atk + stackedAtk <= 0:
@@ -264,12 +246,7 @@ def getAvgAtk(
     pSA = AApSuper  # Probability of doing a super on inbuilt additional
     pG = aaPGuarantee  # Probability of inbuilt additional
     counterAtk = (
-        (
-            NUM_ATTACKS_RECEIVED[slot] * pCounterNormal
-            + NUM_SUPER_ATTACKS[slot] * pCounterSA
-        )
-        * counterMod
-        * normal
+        (NUM_ATTACKS_RECEIVED[slot] * pCounterNormal + NUM_SUPER_ATTACKS[slot] * pCounterSA) * counterMod * normal
     )
     avgAtk = pN * (
         normal
