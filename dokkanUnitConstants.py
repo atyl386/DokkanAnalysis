@@ -81,7 +81,7 @@ SPECIAL_ATTACK_MULTIPLIERS = [0.0, 1.0, 5.0, 5.4, 6.5, 7.5]
 
 # Giant/Rage Form
 GIANT_RAGE_DURATION = ["0", "1", "2"]  # Turns
-
+GIANT_RAGE_SUPPORT = 2 # Support for nullifying super attacks for a turn
 # Turns
 MAX_TURN = 20
 PEAK_TURN = 5  # Most important turn

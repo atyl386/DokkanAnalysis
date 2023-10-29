@@ -1,7 +1,9 @@
 import datetime as dt
 from dokkanUnitHelperFunctions import *
+import copy
 
 # TODO:
+# - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
 #  - Want to move all the rest of the calculations from old Unit.__init__() to within State.
 #  - The stacking penality applies to all super attcks that stack more than one turn: Source Dokkan Wiki
 # - Make sure to include TYPE DEF BOOST correctly (HiPo & lowering Guard modifier)
@@ -494,7 +496,7 @@ class Unit:
             slot = form.slot
             state = State(slot, turn)
             for ability in form.abilities:
-                ability.applyToState(state)
+                ability.applyToState(state, self)
             state.setState(self, form)
             self.states.append(state)
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
@@ -626,7 +628,7 @@ class State:
     def setState(self, unit, form):
         self.healing += form.linkHealing
         self.p1Atk = np.maximum(self.p1Atk, -1)
-        self.p2Att += form.linkAtkOnSuper
+        self.p2Atk += form.linkAtkOnSuper
         self.p2Def = self.p2DefA + self.p2DefB
         self.crit = self.crit + (1 - self.crit) * (
             unit.pHiPoCrit + (1 - unit.pHiPoCrit) * form.linkCrit
@@ -645,113 +647,6 @@ class State:
         self.randomKi += kiCollect + form.linkKi
 
     """        
-        if self.kit.GRLength != 0:
-            self.GRTurn = max(self.kit.activeTurn, peakTurn)
-            self.att_GR = self.kit.attack_GR + self.HiPo_Stats[0] + self.HiPo[0]
-            self.constantKi_GR = leaderSkillKi + self.kit.passiveKi_Active
-            self.randomKi_GR = self.kit.collectKi_Active
-            self.ki_GR = np.minimum(
-                (np.around(self.constantKi_GR + self.randomKi_GR)).astype("int32"), 24
-            )
-            [self.Pr_N_GR, self.Pr_SA_GR, self.Pr_USA_GR] = getAttackDistribution(
-                self.constantKi_GR, self.randomKi_GR, False, self.kit.rarity
-            )
-            self.normal_GR = getNormal(
-                self.kit.kiMod_12, self.ki_GR, self.att_GR, 0, 0, 0, 0, 0
-            )
-            self.sa_GR = getSA(
-                self.kit.kiMod_12,
-                self.att_GR,
-                0,
-                0,
-                0,
-                0,
-                0,
-                self.kit.SA_Mult_12_GR,
-                self.kit.EZA,
-                self.kit.exclusivity,
-                self.nCopies,
-                0,
-                self.kit.SA_12_Att_GR,
-            )
-            if self.kit.rarity == "LR":
-                self.usa_GR = getUSA(
-                    self.kit.kiMod_12,
-                    self.ki_GR,
-                    self.att_GR,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    self.kit.SA_Mult_18_GR,
-                    self.kit.EZA,
-                    self.kit.exclusivity,
-                    self.nCopies,
-                    0,
-                    self.kit.SA_18_Att_GR,
-                )
-                self.avgAtt_GR = getAvgAtt(
-                    self.kit.AA_P_super_Active,
-                    self.kit.SA_Mult_12_GR,
-                    self.kit.EZA,
-                    self.kit.exclusivity,
-                    self.nCopies,
-                    0,
-                    self.kit.SA_12_Att_GR,
-                    self.kit.SA_18_Att_GR,
-                    0,
-                    0,
-                    self.normal_GR,
-                    self.sa_GR,
-                    self.usa_GR,
-                    self.pHiPoAA,
-                    self.kit.AA_P_guarantee_Active,
-                    0,
-                    0,
-                    0,
-                    self.Pr_N_GR,
-                    self.Pr_SA_GR,
-                    self.Pr_USA_GR,
-                    self.kit.rarity,
-                )
-            else:
-                self.avgAtt_GR = getAvgAtt(
-                    self.kit.AA_P_super_Active,
-                    self.kit.SA_Mult_12_GR,
-                    self.kit.EZA,
-                    self.kit.exclusivity,
-                    self.nCopies,
-                    0,
-                    self.kit.SA_12_Att_GR,
-                    0,
-                    0,
-                    0,
-                    self.normal_GR,
-                    self.sa_GR,
-                    0,
-                    self.pHiPoAA,
-                    self.kit.AA_P_guarantee_Active,
-                    0,
-                    0,
-                    0,
-                    self.Pr_N_GR,
-                    self.Pr_SA_GR,
-                    0,
-                    self.kit.rarity,
-                )
-            self.P_Crit_GR = self.kit.passiveCrit_Active + (
-                1 - self.kit.passiveCrit_Active
-            ) * (self.pHiPoCrit)
-            self.avgAttModifer_GR = self.P_Crit_GR * CritMultiplier + (
-                1 - self.P_Crit_GR
-            ) * (
-                self.kit.P_SEaaT_Active * SEaaTMultiplier
-                + (1 - self.kit.P_SEaaT_Active) * avgTypeAdvantage
-            )
-            self.apt_GR = self.kit.GRLength * 3 * self.avgAtt_GR * self.avgAttModifer_GR
-            self.support_GR = 2  # Support for nullifying super attacks for a turn
-            # self.dpt_GR
         if self.kit.activeTurn != 0:
             self.SBR += SBR_df ** (self.kit.activeTurn - 1) * self.kit.SBR_Active
             self.activeSkillTurn = int(max(self.kit.activeTurn, peakTurn))
@@ -1177,12 +1072,39 @@ class SingleTurnAbility(SpecialAbility):
         )  # Mean of geometric distribution is 1/p
 
 
+class GiantRageMode(SingleTurnAbility):
+    def __init__(self, form, args):
+        super().__init__(form)
+        self.ATK = args[0]
+        self.support = GIANT_RAGE_SUPPORT
+        slot = 1 # Arbitarary choice, could also be 2 or 3
+        self.giantRageForm = Form(self.activationTurn, self.activationTurn, slot) # Create a form so can get access to abilityQuestionaire to ask user questions
+        self.giantRageForm.abilities.extend(
+            abilityQuestionaire(
+                self.giantRageForm,
+                "How many buffs does this giant/rage mode have?",
+                StartOfTurn
+            )
+        )
+        self.giantRageModeState = State(slot, self.activationTurn) # Create a State so can get access to setState for damage calc
+        self.giantRageModeState.ATK = args[0]
+        for ability in self.giantRageForm.abilities: # Apply the giant/form abilities
+            ability.applyToState(self.giantRageModeState)
+
+    def applyToState(self, state, unit=None):
+        # TODO
+        # Should apply the apt for a giant/rage mode attack on the activation turn
+        giantRageUnit = copy(unit)
+        giantRageUnit.ATK = self.ATK
+        self.giantRageModeState.setState(self.giantRageForm, giantRageUnit) # Calculate the APT of the state
+        state.APT += self.giantRageModeState.APT * NUM_SLOTS * giantRageUnit.giantRageDuration
+        state.support += self.support
+
+
 class ActiveSkillAttack(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        self.attackMultiplier = args[0]
-        self.attackBuff = args[1]
-        self.activeAttackTurn = self.activationTurn
+        self.attackMultiplier, self.attackBuff = args
         self.activeMult = (
             specialAttackConversion[self.attackMultiplier] + self.attackBuff
         )
@@ -1203,7 +1125,7 @@ class ActiveSkillAttack(SingleTurnAbility):
             )
         )
 
-    def applyToState(self, state):
+    def applyToState(self, state, unit=None):
         # TODO
         # Should apply the apt for an active skill attack on the activation turn
         pass
@@ -1212,8 +1134,7 @@ class ActiveSkillAttack(SingleTurnAbility):
 class Revive(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        self.hpRegen = args[0]
-        self.isThisCharacterOnly = args[1]
+        self.hpRegen, self.isThisCharacterOnly = args
         self.form.abilities.extend(
             abilityQuestionaire(
                 self.form,
@@ -1228,7 +1149,7 @@ class Revive(SingleTurnAbility):
             )
         )
 
-    def applyToState(self, state):
+    def applyToState(self, state, unit = None):
         if state.turn == self.activationTurn:
             state.healing = np.min(state.healing + self.hpRegen, 1.0)
         if self.isThisCharacterOnly:
@@ -1327,7 +1248,7 @@ class StartOfTurn(PassiveAbility):
         self.ki = ki
         self.slots = slots
 
-    def applyToState(self, state):
+    def applyToState(self, state, unit = None):
         pHaveKi = 1.0 - ZTP_CDF(self.ki - 1 - state.constantKi, state.randomKi)
         self.buff = self.buff * pHaveKi
         self.activationProbability *= pHaveKi
@@ -1374,8 +1295,7 @@ class StartOfTurn(PassiveAbility):
 
 class TurnDependent(StartOfTurn):
     def __init__(self, form, activationProbability, effect, buff, args):
-        start = args[0]
-        end = args[1]
+        start, end = args
         super().__init__(
             form, activationProbability, effect, buff, start=start, end=end
         )
@@ -1398,7 +1318,7 @@ class PerAttackReceived(PassiveAbility):
         super().__init__(form, activationProbability, effect, buff)
         self.max = args[0]
 
-    def applyToState(self, state):
+    def applyToState(self, state, unit = None):
         match self.effect:
             case "Ki":
                 state.constantKi += np.minimum(
@@ -1444,7 +1364,7 @@ class WithinSameTurnAfterReceivingAttack(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff, args):
         super().__init__(form, activationProbability, effect, buff)
 
-    def applyToState(self, state):
+    def applyToState(self, state, unit = None):
         match self.effect:
             case "DEF":
                 state.p2DefA += (
@@ -1462,7 +1382,7 @@ class PerRainbowOrb(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff, args):
         super().__init__(form, activationProbability, effect, buff)
 
-    def applyToState(self, state):
+    def applyToState(self, state, unit=None):
         buffFromRainbowOrbs = self.buff * state.numRainbowOrbs
         match self.effect:
             case "Critical Hit":
@@ -1480,7 +1400,7 @@ class Nullification(PassiveAbility):
         super().__init__(form, activationProbability, effect, buff)
         self.hasCounter = args[0]
 
-    def applyToState(self, state):
+    def applyToState(self, state, unit=None):
         pNullify = self.activationProbability * (
             1.0 - (1.0 - saFracConversion[self.effect]) ** 2
         )
