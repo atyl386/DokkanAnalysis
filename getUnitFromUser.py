@@ -93,9 +93,9 @@ class Unit:
         self.HiPo2 = HiPo2
         self.getConstants()  # Requires user input, should make a version that loads from file
         self.getHiPo()
-        self.getSBR()  # Requires user input, should make a version that loads from file
         self.getForms()  # Requires user input, should make a version that loads from file
         self.getStates()
+        self.getSBR()  # Requires user input, should make a version that loads from file
         self.useability = (
             self.teams
             / NUM_TEAMS_MAX
@@ -265,12 +265,21 @@ class Unit:
                     default="None",
                 )
             ]
+            sbrActiveSkillBuff = 0.0
+            if yesNo2Bool[clc.prompt("Does the unit have an active skill that has SBR effects?",
+                    type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False),
+                    default="N",
+                )]: 
+                sbrActiveSkillTurn = clc.prompt("What turn can it be activated?", default=1)
+                sbrActiveSkillEffect = self.getSBR()
+                sbrActiveSkillBuff += SBR_DF ** (sbrActiveSkillTurn - 1) * sbrActiveSkillEffect
 
             self.sbr = (
                 attackAllDebuffConversion[attackAll] * (seal + stun + attDebuffOnAtk)
                 + attDebuffPassive
                 + multipleEnemyBuff
                 + attackAll
+                + sbrActiveSkillBuff
             )
         return self.sbr
 
@@ -506,9 +515,8 @@ class Form:
         self.intentional12Ki = False
         self.normalCounterMult = 0.0
         self.saCounterMult = 0.0
-        self.abilities = (
-            []
-        )  # This will be a list of Ability objects which will be iterated through each state to call applyToState.
+        # This will be a list of Ability objects which will be iterated through each state to call applyToState.
+        self.abilities = []
 
     def getLinks(self):
         for linkIndex in range(MAX_NUM_LINKS):
@@ -1000,28 +1008,7 @@ class GiantRageMode(SingleTurnAbility):
         state.support += self.support
 
 
-class ActiveSkill(SingleTurnAbility):
-    def __init__(self, form, args):
-        super().__init__(form)
-        self.form.abilities.extend(
-            abilityQuestionaire(
-                self.form,
-                "How many additional single-turn buffs does this active skill attack have?",
-                TurnDependent,
-                [
-                    "This is the activation turn. Please press enter to continue",
-                    "This is the form's next turn. Please press enter to continue",
-                ],
-                [None, None],
-                [
-                    self.activationTurn,
-                    self.activationTurn + 1,
-                ],
-            )
-        )
-
-
-class ActiveSkillBuff(ActiveSkill):
+class ActiveSkillBuff(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.numActivations = args[0]
@@ -1044,7 +1031,7 @@ class ActiveSkillBuff(ActiveSkill):
             )
 
 
-class ActiveSkillAttack(ActiveSkill):
+class ActiveSkillAttack(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.attackMultiplier, self.attackBuff = args
@@ -1056,7 +1043,6 @@ class ActiveSkillAttack(ActiveSkill):
         pass
         """
          if self.kit.activeTurn != 0:
-            self.SBR += SBR_df ** (self.kit.activeTurn - 1) * self.kit.SBR_Active
             self.activeSkillTurn = int(max(self.kit.activeTurn, peakTurn))
             self.dmgRed[self.activeSkillTurn - 1] += self.kit.dmgRed_Active
             self.healing[self.activeSkillTurn - 1] += self.kit.healing_Active
