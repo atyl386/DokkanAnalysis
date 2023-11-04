@@ -14,14 +14,14 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',1], # PHY Goku Youth
     ['DEF','ADD','CRT',2], # AGLLR SSs
     ['DEF','CRT','ADD',4], # STR LR Final Form Cooler
-    ['DEF','ADD','CRT',3], # STR Gamma 1
+    ['DEF','ADD','CRT',4], # STR Gamma 1
     ['ATT','ADD','CRT',0], # AGL Gamma 2
     ['DEF','CRT','DGE',1], # PHYLR Metal Cooler
     ['DEF','ADD','CRT',3], # TEQ Androids 17&18
     ['DEF','CRT','ADD',1], # AGL LR Golden Frieza
     ['DEF','DGE','ADD',5], # AGL LR MUI Goku
     ['DEF','ADD','CRT',2], # STR SS Goku/Gohan
-    ['DEF','ADD','CRT',0], # TEQ Pan
+    ['DEF','ADD','CRT',1], # TEQ Pan
     ['ATT','ADD','CRT',0], # INT LR Fusion Zamasu
     ['DEF','DGE','ADD',1], # INT Cheelai
     ['DEF','ADD','DGE',5], # STR Cooler
@@ -58,7 +58,7 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',0], # INT Yamcha
     ['DEF','ADD','DGE',0], # TEQ Yajirobe
     ['DEF','DGE','ADD',0], # TEQ Bardock
-    ['DEF','DGE','ADD',1], # INT Tora
+    ['DEF','DGE','ADD',2], # INT Tora
     ['DEF','DGE','ADD',2], # AGL Goku Black
     ['DEF','DGE','ADD',1], # TEQ LR Gogeta
     ['DEF','DGE','ADD',2], # PHY LR Blu Bois
@@ -145,7 +145,7 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','CRT','DGE',0], # LR Spirit Bomb Goku
     ['DEF','ADD','CRT',3], # PHY Beerus
     ['DEF','DGE','ADD',0], # TEQ Baby
-    ['DEF','ADD','CRT',0], # INT Super Saiyan 4 Goku
+    ['DEF','ADD','CRT',1], # INT Super Saiyan 4 Goku
     ['DEF','DGE','ADD',5], # PHYLR Super Gogeta
     ['DEF','ADD','CRT',0], # LR Omega Shenron
     ['DEF','ADD','DGE',2], # LR Super Baby 2 (Giant Ape)

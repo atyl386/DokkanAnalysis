@@ -1,5 +1,6 @@
 import datetime as dt
 from dokkanUnitHelperFunctions import *
+from scipy.stats import geom
 import copy
 
 # TODO:
@@ -72,7 +73,8 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
             )
             activationProbability = clc.prompt("What is the probability this ability activates?", default=1.0)
             buff = clc.prompt("What is the value of the buff?", default=0.0)
-            ability = abilityClass(form, activationProbability, effect, buff, parameters)
+            effectDuration = clc.prompt("How many turns does it last for?", default=1)
+            ability = abilityClass(form, activationProbability, effect, buff, effectDuration, parameters)
         elif issubclass(abilityClass, SingleTurnAbility):
             ability = abilityClass(form, parameters)
         abilities.append(ability)
@@ -305,31 +307,27 @@ class Unit:
                     default="Immense",
                 )
             ][superAttackLevelConversion[self.rarity][self.eza]]
-            superAttackEffects = abilityQuestionaire(
+            abilityQuestionaire(
                 form,
                 "How many effects does this unit's 12 ki super attack have?",
                 SuperAttack,
-                ["How many turns does the effect last for?"],
+                ["Please press enter to continue"],
                 [None],
-                [1],
+                [False],
             )
-            for superAttackEffect in superAttackEffects:
-                superAttackEffect.setSuperAttack()
             if self.rarity == "LR":
                 form.intentional12Ki = yesNo2Bool[
                     clc.prompt("Should a 12 Ki be targetted for this form?", default="N")
                 ]
                 if not (form.intentional12Ki):
-                    ultraSuperAttackEffects = abilityQuestionaire(
+                    abilityQuestionaire(
                         form,
                         "How many effects does this unit's 18 ki super attack have?",
                         SuperAttack,
-                        ["How many turns does the effect last for?"],
+                        ["Please press enter to continue"],
                         [None],
-                        [1],
+                        [True],
                     )
-                    for ultraSuperAttackEffect in ultraSuperAttackEffects:
-                        ultraSuperAttackEffect.setUltraSuperAttack()
             form.normalCounterMult = counterAttackConversion[
                 clc.prompt(
                     "What is the unit's normal counter multiplier?",
@@ -379,8 +377,8 @@ class Unit:
             form.abilities.extend(
                 abilityQuestionaire(
                     form,
-                    "How many different buffs does the form get within the same turn after receiving an attack?",
-                    WithinSameTurnAfterReceivingAttack,
+                    "How many different buffs does the form get after receiving an attack?",
+                    AfterAttackReceived,
                 )
             )
             form.abilities.extend(
@@ -438,6 +436,18 @@ class Unit:
                     ],
                     [clc.Choice(specialAttackConversion.keys()), None],
                     ["Ultimate", 0.0],
+                )
+            )
+            form.abilities.extend(
+                abilityQuestionaire(
+                    form,
+                    "How many active skill buffs does the form have?",
+                    ActiveSkillBuff,
+                    [
+                        "How many times can the active skill be activated?",
+                    ],
+                    [None],
+                    [1],
                 )
             )
 
@@ -581,7 +591,7 @@ class State:
         self.p2Atk += form.linkAtkOnSuper
         self.p2Def = self.p2DefA + self.p2DefB
         self.crit = self.crit + (1 - self.crit) * (unit.pHiPoCrit + (1 - unit.pHiPoCrit) * form.linkCrit)
-        self.pDodge = self.pDodge + (1 - self.pDodge) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
+        self.pEvade = self.pEvade + (1 - self.pEvade) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
         self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
 
     def updateRandomKi(self, form):
@@ -592,65 +602,7 @@ class State:
         )
         self.randomKi += kiCollect + form.linkKi
 
-    """        
-        if self.kit.activeTurn != 0:
-            self.SBR += SBR_df ** (self.kit.activeTurn - 1) * self.kit.SBR_Active
-            self.activeSkillTurn = int(max(self.kit.activeTurn, peakTurn))
-            self.dmgRed[self.activeSkillTurn - 1] += self.kit.dmgRed_Active
-            self.healing[self.activeSkillTurn - 1] += self.kit.healing_Active
-            self.support[self.activeSkillTurn - 1] += self.kit.support_Active
-            self.constantKi[self.activeSkillTurn - 1] += self.kit.passiveKi_Active
-            self.randomKi[self.activeSkillTurn - 1] = (
-                self.links_Ki[self.activeSkillTurn - 1]
-                + self.kit.collectKi_Active
-                + avgKiSupport
-            )
-            self.P_Dodge[self.activeSkillTurn - 1] = self.kit.P_dodge_Active + (
-                1 - self.kit.P_dodge_Active
-            ) * (
-                self.kit.P_dodge[self.activeSkillTurn - 1]
-                + (1 - self.kit.P_dodge[self.activeSkillTurn - 1])
-                * (
-                    self.pHiPoDodge
-                    + (1 - self.pHiPoDodge) * self.linkDodge[self.activeSkillTurn - 1]
-                )
-            )
-            self.P_guard[self.activeSkillTurn - 1] = (
-                self.kit.P_guard_Active
-                + (1 - self.kit.P_guard_Active)
-                * self.kit.P_guard[self.activeSkillTurn - 1]
-            )
-            self.P_nullify[self.activeSkillTurn - 1] = (
-                self.kit.P_nullify_Active
-                + (1 - self.kit.P_nullify_Active)
-                * self.kit.P_nullify[self.activeSkillTurn - 1]
-            )
-            self.P_Crit[self.activeSkillTurn - 1] = self.kit.passiveCrit_Active + (
-                1 - self.kit.passiveCrit_Active
-            ) * (
-                self.kit.passiveCrit[self.activeSkillTurn - 1]
-                + (1 - self.kit.passiveCrit[self.activeSkillTurn - 1])
-                * (
-                    self.pHiPoCrit
-                    + (1 - self.pHiPoCrit) * self.linkCrit[self.activeSkillTurn - 1]
-                )
-            )
-            self.P_SEaaT[self.activeSkillTurn - 1] = (
-                self.kit.P_SEaaT_Active
-                + (1 - self.kit.P_SEaaT_Active)
-                * self.kit.P_SEaaT[self.activeSkillTurn - 1]
-            )
-            self.kit.AA_P_super[self.activeSkillTurn - 1] = self.kit.AA_P_super_Active
-            self.kit.AA_P_guarantee[
-                self.activeSkillTurn - 1
-            ] = self.kit.AA_P_guarantee_Active
-            if self.kit.activeMult != 0:  # If active skill attack
-                self.p2Att[self.activeSkillTurn - 1] = self.kit.P2_Att_Active
-                self.p2Def[self.activeSkillTurn - 1] = (
-                    self.kit.P2A_Def[self.activeSkillTurn - 1] + self.kit.P2B_Def_Active
-                )
-                self.p3Att[self.activeSkillTurn - 1] += self.kit.P3_Att_Active
-                self.p3Def[self.activeSkillTurn - 1] += self.kit.P3_Def_Active
+    """
         if self.kit.reviveTurn != 0:
             self.reviveSkillTurn = int(max(self.kit.reviveTurn, peakTurn))
             self.healing[self.reviveSkillTurn - 1] += self.kit.healing_Revive
@@ -1042,8 +994,6 @@ class GiantRageMode(SingleTurnAbility):
             ability.applyToState(self.giantRageModeState)
 
     def applyToState(self, state, unit=None):
-        # TODO
-        # Should apply the apt for a giant/rage mode attack on the activation turn
         giantRageUnit = copy(unit)
         giantRageUnit.ATK = self.ATK
         self.giantRageModeState.setState(self.giantRageForm, giantRageUnit)  # Calculate the APT of the state
@@ -1051,11 +1001,9 @@ class GiantRageMode(SingleTurnAbility):
         state.support += self.support
 
 
-class ActiveSkillAttack(SingleTurnAbility):
+class ActiveSkill(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        self.attackMultiplier, self.attackBuff = args
-        self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
         self.form.abilities.extend(
             abilityQuestionaire(
                 self.form,
@@ -1068,15 +1016,105 @@ class ActiveSkillAttack(SingleTurnAbility):
                 [None, None],
                 [
                     self.activationTurn,
-                    self.activationTurn + RETURN_PERIOD_PER_SLOT[self.form.slot],
+                    self.activationTurn + 1,
                 ],
             )
         )
+
+
+class ActiveSkillBuff(ActiveSkill):
+    def __init__(self, form, args):
+        super().__init__(form)
+        self.numActivations = args[0]
+        for activation in range(self.numActivations):
+            self.form.abilities.extend(
+                abilityQuestionaire(
+                    self.form,
+                    "How many different buffs does this active skill attack have?",
+                    TurnDependent,
+                    [
+                        "This is the activation turn. Please press enter to continue",
+                        "This is the form's next turn. Please press enter to continue",
+                    ],
+                    [None, None],
+                    [
+                        self.activationTurn + activation * RETURN_PERIOD_PER_SLOT[self.form.slot],
+                        self.activationTurn + activation * RETURN_PERIOD_PER_SLOT[self.form.slot] + 1,
+                    ],
+                )
+            )
+
+
+class ActiveSkillAttack(ActiveSkill):
+    def __init__(self, form, args):
+        super().__init__(form)
+        self.attackMultiplier, self.attackBuff = args
+        self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
 
     def applyToState(self, state, unit=None):
         # TODO
         # Should apply the apt for an active skill attack on the activation turn
         pass
+        """
+         if self.kit.activeTurn != 0:
+            self.SBR += SBR_df ** (self.kit.activeTurn - 1) * self.kit.SBR_Active
+            self.activeSkillTurn = int(max(self.kit.activeTurn, peakTurn))
+            self.dmgRed[self.activeSkillTurn - 1] += self.kit.dmgRed_Active
+            self.healing[self.activeSkillTurn - 1] += self.kit.healing_Active
+            self.support[self.activeSkillTurn - 1] += self.kit.support_Active
+            self.constantKi[self.activeSkillTurn - 1] += self.kit.passiveKi_Active
+            self.randomKi[self.activeSkillTurn - 1] = (
+                self.links_Ki[self.activeSkillTurn - 1]
+                + self.kit.collectKi_Active
+                + avgKiSupport
+            )
+            self.P_Dodge[self.activeSkillTurn - 1] = self.kit.P_dodge_Active + (
+                1 - self.kit.P_dodge_Active
+            ) * (
+                self.kit.P_dodge[self.activeSkillTurn - 1]
+                + (1 - self.kit.P_dodge[self.activeSkillTurn - 1])
+                * (
+                    self.pHiPoDodge
+                    + (1 - self.pHiPoDodge) * self.linkDodge[self.activeSkillTurn - 1]
+                )
+            )
+            self.P_guard[self.activeSkillTurn - 1] = (
+                self.kit.P_guard_Active
+                + (1 - self.kit.P_guard_Active)
+                * self.kit.P_guard[self.activeSkillTurn - 1]
+            )
+            self.P_nullify[self.activeSkillTurn - 1] = (
+                self.kit.P_nullify_Active
+                + (1 - self.kit.P_nullify_Active)
+                * self.kit.P_nullify[self.activeSkillTurn - 1]
+            )
+            self.P_Crit[self.activeSkillTurn - 1] = self.kit.passiveCrit_Active + (
+                1 - self.kit.passiveCrit_Active
+            ) * (
+                self.kit.passiveCrit[self.activeSkillTurn - 1]
+                + (1 - self.kit.passiveCrit[self.activeSkillTurn - 1])
+                * (
+                    self.pHiPoCrit
+                    + (1 - self.pHiPoCrit) * self.linkCrit[self.activeSkillTurn - 1]
+                )
+            )
+            self.P_SEaaT[self.activeSkillTurn - 1] = (
+                self.kit.P_SEaaT_Active
+                + (1 - self.kit.P_SEaaT_Active)
+                * self.kit.P_SEaaT[self.activeSkillTurn - 1]
+            )
+            self.kit.AA_P_super[self.activeSkillTurn - 1] = self.kit.AA_P_super_Active
+            self.kit.AA_P_guarantee[
+                self.activeSkillTurn - 1
+            ] = self.kit.AA_P_guarantee_Active
+            if self.kit.activeMult != 0:  # If active skill attack
+                self.p2Att[self.activeSkillTurn - 1] = self.kit.P2_Att_Active
+                self.p2Def[self.activeSkillTurn - 1] = (
+                    self.kit.P2A_Def[self.activeSkillTurn - 1] + self.kit.P2B_Def_Active
+                )
+                self.p3Att[self.activeSkillTurn - 1] += self.kit.P3_Att_Active
+                self.p3Def[self.activeSkillTurn - 1] += self.kit.P3_Def_Active
+    """
 
 
 class Revive(SingleTurnAbility):
@@ -1107,179 +1145,174 @@ class Revive(SingleTurnAbility):
 
 
 class PassiveAbility(Ability):
-    def __init__(self, form, activationProbability, effect, buff):
+    def __init__(self, form, activationProbability, effect, buff, effectDuration):
         super().__init__(form)
         self.activationProbability = activationProbability
         self.effect = effect
-        self.buff = buff * activationProbability
+        self.effectDuration = effectDuration
+        self.effectiveBuff = buff * activationProbability
 
 
 class SuperAttack(PassiveAbility):
-    def __init__(self, form, activationProbability, effect, buff, args):
-        super().__init__(form, activationProbability, effect, buff)
-        self.effectDuration = args[0]
-
-    def setSuperAttack(self):
-        match self.effect:
-            case "Raise ATK":
-                self.form.sa12AtkBuff += self.buff  # += here for unit super attack probability weightings
-                self.form.sa12AtkStacks = self.effectDuration  # Assuming this doesn't vary in a unit super attack
-            case "Raise DEF":
-                self.form.sa12DefBuff += self.buff  # += here for unit super attack probability weightings
-                self.form.sa12DefStacks = self.effectDuration  # Assuming this doesn't vary in a unit super attack
-            case "Critical Hit":
-                self.form.sa12Crit += self.buff  # += here for unit super attack probability weightings
-        numUnitSuperAttacks = clc.prompt("How many 12 ki unit super attacks does this form have?", default=0)
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
+        super().__init__(form, activationProbability, effect, buff, effectDuration)
+        self.is18Ki = args[0]
+        if self.is18Ki:
+            superAttackVars = [[form.sa18AtkBuff, form.sa18AtkStacks], [form.sa18DefBuff, form.sa18DefStacks], form.sa18Crit, form.sa18Disable]
+        else:
+            superAttackVars = [[form.sa12AtkBuff, form.sa12AtkStacks], [form.sa12DefBuff, form.sa12DefStacks], form.sa12Crit, form.sa12Disable]
+        
+        self.effectToVar = dict(zip(SUPER_ATTACK_EFFECTS, superAttackVars))
+        if self.effect in ["Raise ATK", "Raise DEF"]:
+            self.effectToVar[self.effect][0] += self.effectiveBuff  # += here for unit super attack probability weightings
+            self.effectToVar[self.effect][1] = self.effectDuration  # Assuming this doesn't vary in a unit super attack
+        elif self.effect == "Disable Action": 
+            self.effectToVar[self.effect] = bool(self.effectiveBuff)
+        else:
+            self.effectToVar[self.effect] += self.effectiveBuff  # += here for unit super attack probability weightings
+        numUnitSuperAttacks = clc.prompt("How many unit super attacks does this form have?", default=0)
         for unitSuperAttack in range(numUnitSuperAttacks):
             unitSuperAttackEffects = abilityQuestionaire(
-                self.form,
+                form,
                 "How many effects does this unit super attack have?",
                 SuperAttack,
-                ["How many turns does the effect last for?"],
+                ["Please press enter to continue"],
                 [None],
-                [1],
+                [self.is18Ki],
             )
-            for unitSuperAttackEffect in unitSuperAttackEffects:
-                unitSuperAttackEffect.setSuperAttack()
-
-    def setUltraSuperAttack(self):
-        match self.effect:
-            case "Raise ATK":
-                self.form.sa18AtkBuff += self.buff  # += here for unit super attack probability weightings
-                self.form.sa18AtkStacks = self.effectDuration  # Assuming this doesn't vary in a unit super attack
-            case "Raise DEF":
-                self.form.sa18DefBuff += self.buff  # += here for unit super attack probability weightings
-                self.form.sa18DefStacks = self.effectDuration  # Assuming this doesn't vary in a unit super attack
-            case "Disable Action":
-                self.form.sa18Disable = bool(self.buff)
-            case "Critical Hit":
-                self.form.sa18Crit += self.buff  # += here for unit super attack probability weightings
 
 
 class StartOfTurn(PassiveAbility):
     def __init__(
-        self,
-        form,
-        activationProbability,
-        effect,
-        buff,
-        start=0,
-        end=MAX_TURN,
-        ki=0,
-        slots=SLOTS,
+        self, form, activationProbability, effect, buff, effectDuration, start=0, end=MAX_TURN, ki=0, slots=SLOTS
     ):
-        super().__init__(form, activationProbability, effect, buff)
+        super().__init__(form, activationProbability, effect, buff, effectDuration)
         self.start = start
         self.end = end
         self.ki = ki
         self.slots = slots
+        self.effectiveBuff = buff * activationProbability * effectDuration
 
     def applyToState(self, state, unit=None):
         pHaveKi = 1.0 - ZTP_CDF(self.ki - 1 - state.constantKi, state.randomKi)
-        self.buff = self.buff * pHaveKi
+        self.effectiveBuff = self.effectiveBuff * pHaveKi
         self.activationProbability *= pHaveKi
+        # Check if state is elligible for ability
         if state.turn >= self.start and state.turn <= self.end and state.slot in self.slots:
-            match self.effect:
-                case "Ki":
-                    state.constantKi += self.buff
-                case "ATK":
-                    state.p1Atk += self.buff
-                case "DEF":
-                    state.p1Def += self.buff
-                case "Guard":
-                    state.guard += self.buff
-                case "Damage Reduction Against Normal Attacks":
-                    state.dmgRedNormal += self.buff
-                case "Critical Hit":
-                    state.crit += self.buff
-                case "Evasion":
-                    state.pEvade += self.buff
-                case "Disable Action":
-                    state.pNullify = (
-                        P_NULLIFY_FROM_DISABLE_ACTIVE * (1.0 - state.pNullify)
-                        + (1.0 - P_NULLIFY_FROM_DISABLE_ACTIVE) * state.pNullify
-                    )
-                case "Raise Ki (Type Ki Sphere)":
-                    state.kiPerTypeOrb += self.buff
-                case "AdditonalSuper":
-                    state.aaPSuper.append(self.activationProbability)
-                    state.aaPGuarantee.append(0.0)
-                case "AAWithChanceToSuper":
-                    chanceToSuper = clc.prompt(
-                        "What is the chance to super given the additional triggered?",
-                        default=0,
-                    )
-                    state.aaPSuper.append(chanceToSuper)
-                    state.aaPGuarantee.append(self.activationProbability)
-                case "Attack Effective to All":
-                    state.AEAAT += self.activationProbability
+            # If not a support ability
+            if self.effect not in SUPPORT_EFFECTS:
+                # First try edge cases
+                match self.effect:
+                    case "Disable Action":
+                        state.pNullify = (
+                            P_NULLIFY_FROM_DISABLE_ACTIVE * (1.0 - state.pNullify)
+                            + (1.0 - P_NULLIFY_FROM_DISABLE_ACTIVE) * state.pNullify
+                        )
+                    case "AdditonalSuper":
+                        state.aaPSuper.append(self.activationProbability)
+                        state.aaPGuarantee.append(0.0)
+                    case "AAWithChanceToSuper":
+                        chanceToSuper = clc.prompt(
+                            "What is the chance to super given the additional triggered?",
+                            default=0,
+                        )
+                        state.aaPSuper.append(chanceToSuper)
+                        state.aaPGuarantee.append(self.activationProbability)
+                    # Otherwise try regular cases
+                    case _:
+                        effectToVar = {
+                            "Raise Ki": state.constantKi,
+                            "Raise ATK": state.p1Atk,
+                            "Raise DEF": state.p1Def,
+                            "Guard": state.guard,
+                            "DamageReduction Against Normal Attacks": state.dmgRedNormal,
+                            "Critical Hit": state.crit,
+                            "Evasion": state.pEvade,
+                            "Attack Effective to All": state.AEAAT,
+                            "Raise Ki (Type Ki Sphere)": state.kiPerTypeOrb,
+                        }
+                        effectToVar[self.effect] += self.effectiveBuff
+            else: # If a support ability
+                state.support += SUPPORT_FACTOR_DICT[self.effect] * self.effectiveBuff
 
 
 class TurnDependent(StartOfTurn):
-    def __init__(self, form, activationProbability, effect, buff, args):
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
         start, end = args
-        super().__init__(form, activationProbability, effect, buff, start=start, end=end)
+        super().__init__(form, activationProbability, effect, buff, effectDuration, start=start, end=end)
 
 
 class KiDependent(StartOfTurn):
-    def __init__(self, form, activationProbability, effect, buff, args):
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
         ki = args[0]
-        super().__init__(form, activationProbability, effect, buff, ki=ki)
+        super().__init__(form, activationProbability, effect, buff, effectDuration, ki=ki)
 
 
 class SlotDependent(StartOfTurn):
-    def __init__(self, form, activationProbability, effect, buff, args):
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
         slots = args[0]
-        super().__init__(form, activationProbability, effect, buff, slots=slots)
+        super().__init__(form, activationProbability, effect, buff, effectDuration, slots=slots)
 
 
 class PerAttackReceived(PassiveAbility):
-    def __init__(self, form, activationProbability, effect, buff, args):
-        super().__init__(form, activationProbability, effect, buff)
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
+        super().__init__(form, activationProbability, effect, buff, effectDuration)
         self.max = args[0]
 
     def applyToState(self, state, unit=None):
         match self.effect:
             case "Ki":
                 state.constantKi += np.minimum(
-                    self.buff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                     self.max,
                 )
             case "ATK":
                 state.p2Atk += np.minimum(
-                    self.buff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                     self.max,
                 )
             case "DEF":
                 state.p2DefA += np.minimum(
-                    (2 * state.numAttacksReceived + NUM_ATTACKS_RECEIVED[state.slot] - 1) * self.buff / 2,
+                    (2 * state.numAttacksReceived + NUM_ATTACKS_RECEIVED[state.slot] - 1) * self.effectiveBuff / 2,
                     self.max,
                 )
             case "Critical Hit":
                 state.crit += np.minimum(
-                    self.buff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                     self.max,
                 )
 
 
-class WithinSameTurnAfterReceivingAttack(PassiveAbility):
-    def __init__(self, form, activationProbability, effect, buff, args):
-        super().__init__(form, activationProbability, effect, buff)
+class AfterAttackReceived(PassiveAbility):
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, turnsSinceActivated = 0):
+        super().__init__(form, activationProbability, effect, buff, effectDuration)
+        self.turnsSinceActivated = turnsSinceActivated
 
     def applyToState(self, state, unit=None):
+        # state.attacksReceiving is how many attacks the state is expected to recieve not including evades/nullified attacks
+        # If buff is a defensive one
+        hitFactor = 1.0
+        if self.turnsSinceActivated == 0:
+            if self.effect in ["Raise DEF", "Damage Reduction"]:
+                hitFactor = (state.attacksReceiving - 1) / state.attacksReceiving # Factor to account for not having the buff on the fist hit
+            else:
+                hitFactor = np.min(state.attacksReceivingBeforeAttacking, 1.0)
         match self.effect:
             case "DEF":
-                state.p2DefA += self.buff * (NUM_ATTACKS_RECEIVED[state.slot] - 1) / NUM_ATTACKS_RECEIVED[state.slot]
+                state.p2DefA += self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability) # This should return self.activationProbabiltiy if self.turnsActivated = 0
             case "Attack Effective to All":
-                state.AEAAT = self.buff * np.minimum(NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot], 1.0)
+                state.AEAAT = self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
+        self.turnsSinceActivated += 1
+        if self.effectDuration > self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:
+            self.form.abilities.extend(AfterAttackReceived(self.form, self.activationProbability, self.effect, self.buff, self.effectDuration, self.turnsSinceActivated))
 
 
 class PerRainbowOrb(PassiveAbility):
-    def __init__(self, form, activationProbability, effect, buff, args):
-        super().__init__(form, activationProbability, effect, buff)
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
+        super().__init__(form, activationProbability, effect, buff, effectDuration)
 
     def applyToState(self, state, unit=None):
-        buffFromRainbowOrbs = self.buff * state.numRainbowOrbs
+        buffFromRainbowOrbs = self.effectiveBuff * state.numRainbowOrbs
         match self.effect:
             case "Critical Hit":
                 state.crit += buffFromRainbowOrbs
@@ -1292,8 +1325,8 @@ class PerRainbowOrb(PassiveAbility):
 
 
 class Nullification(PassiveAbility):
-    def __init__(self, form, activationProbability, effect, buff, args):
-        super().__init__(form, activationProbability, effect, buff)
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
+        super().__init__(form, activationProbability, effect, buff, effectDuration)
         self.hasCounter = args[0]
 
     def applyToState(self, state, unit=None):
