@@ -266,10 +266,13 @@ class Unit:
                 )
             ]
             sbrActiveSkillBuff = 0.0
-            if yesNo2Bool[clc.prompt("Does the unit have an active skill that has SBR effects?",
+            if yesNo2Bool[
+                clc.prompt(
+                    "Does the unit have an active skill that has SBR effects?",
                     type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False),
                     default="N",
-                )]: 
+                )
+            ]:
                 sbrActiveSkillTurn = clc.prompt("What turn can it be activated?", default=1)
                 sbrActiveSkillEffect = self.getSBR()
                 sbrActiveSkillBuff += SBR_DF ** (sbrActiveSkillTurn - 1) * sbrActiveSkillEffect
@@ -1038,8 +1041,20 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
 
     def applyToState(self, state, unit=None):
-        state.attacksPerformed += 1 # Parameter should be used to determine buffs from per attack performed buffs
-        state.avgAtk += getActiveAttack(unit.kiMod12, state.ki, unit.ATK, state.p1Atk, state.stackedAtk, self.form.linkAtkSoT, state.p2Atk, state.p3Atk, self.activeMult, unit.nCopies)
+        state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
+        state.avgAtk += getActiveAttack(
+            unit.kiMod12,
+            state.ki,
+            unit.ATK,
+            state.p1Atk,
+            state.stackedAtk,
+            self.form.linkAtkSoT,
+            state.p2Atk,
+            state.p3Atk,
+            self.activeMult,
+            unit.nCopies,
+        )
+
 
 class Revive(SingleTurnAbility):
     def __init__(self, form, args):
