@@ -355,7 +355,15 @@ NUM_SLOTS = len(SLOTS)
 RETURN_PERIOD_PER_SLOT = [2, 2, 3]
 
 # Effects
-SUPPORT_EFFECTS = ["Delay Target", "Forsee Super Attack", "Change Ki Spheres to Same Type", "Change Double Ki Spheres to Same Type", "Change Ki Spheres to Rainbow", "Remove Status Effects", "Survive K.O. Attack"]
+SUPPORT_EFFECTS = [
+    "Delay Target",
+    "Forsee Super Attack",
+    "Change Ki Spheres to Same Type",
+    "Change Double Ki Spheres to Same Type",
+    "Change Ki Spheres to Rainbow",
+    "Remove Status Effects",
+    "Survive K.O. Attack",
+]
 EFFECTS = [
     "None",
     "Raise ATK",
@@ -382,7 +390,7 @@ EFFECTS = [
 ]
 EFFECTS.extend(SUPPORT_EFFECTS)
 EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)
-SUPER_ATTACK_EFFECTS =  ["Raise ATK", "Raise DEF", "Critical Hit", "Disable Action"]
+SUPER_ATTACK_EFFECTS = ["Raise ATK", "Raise DEF", "Critical Hit", "Disable Action"]
 
 # Restrictions
 RESTRICTIONS = ["Turn", "Max HP", "Min HP", "Max Enemy HP", "Min Enemy HP"]
@@ -401,7 +409,7 @@ KI_PER_SAME_TYPE_ORB = 2.0
 KI_SUPPORT = 1.0
 ATK_DEF_SUPPORT = 0.2
 USEABILITY_SUPPORT_FACTOR = 0.2
-KI_SUPPORT_FACTOR = 0.25 # Guess
+KI_SUPPORT_FACTOR = 0.25  # Guess
 SUPPORT_FACTORS = [6.0, 1.0, 0.125, 0.25, 0.5, 0.125, 0.25]
 SUPPORT_FACTOR_DICT = dict(zip(SUPPORT_EFFECTS, SUPPORT_FACTORS))
 

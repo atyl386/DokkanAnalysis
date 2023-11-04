@@ -391,7 +391,6 @@ class Unit:
                     [1],
                 )
             )
-            # form.updateRandomKi(start, end) # Compute the average ki each turn which has a random component because need to be able to compute how much ki the unit gets on average for ki dependent effects
             form.abilities.extend(
                 abilityQuestionaire(
                     form,
@@ -1158,15 +1157,27 @@ class SuperAttack(PassiveAbility):
         super().__init__(form, activationProbability, effect, buff, effectDuration)
         self.is18Ki = args[0]
         if self.is18Ki:
-            superAttackVars = [[form.sa18AtkBuff, form.sa18AtkStacks], [form.sa18DefBuff, form.sa18DefStacks], form.sa18Crit, form.sa18Disable]
+            superAttackVars = [
+                [form.sa18AtkBuff, form.sa18AtkStacks],
+                [form.sa18DefBuff, form.sa18DefStacks],
+                form.sa18Crit,
+                form.sa18Disable,
+            ]
         else:
-            superAttackVars = [[form.sa12AtkBuff, form.sa12AtkStacks], [form.sa12DefBuff, form.sa12DefStacks], form.sa12Crit, form.sa12Disable]
-        
+            superAttackVars = [
+                [form.sa12AtkBuff, form.sa12AtkStacks],
+                [form.sa12DefBuff, form.sa12DefStacks],
+                form.sa12Crit,
+                form.sa12Disable,
+            ]
+
         self.effectToVar = dict(zip(SUPER_ATTACK_EFFECTS, superAttackVars))
         if self.effect in ["Raise ATK", "Raise DEF"]:
-            self.effectToVar[self.effect][0] += self.effectiveBuff  # += here for unit super attack probability weightings
+            self.effectToVar[self.effect][
+                0
+            ] += self.effectiveBuff  # += here for unit super attack probability weightings
             self.effectToVar[self.effect][1] = self.effectDuration  # Assuming this doesn't vary in a unit super attack
-        elif self.effect == "Disable Action": 
+        elif self.effect == "Disable Action":
             self.effectToVar[self.effect] = bool(self.effectiveBuff)
         else:
             self.effectToVar[self.effect] += self.effectiveBuff  # += here for unit super attack probability weightings
@@ -1232,7 +1243,7 @@ class StartOfTurn(PassiveAbility):
                             "Raise Ki (Type Ki Sphere)": state.kiPerTypeOrb,
                         }
                         effectToVar[self.effect] += self.effectiveBuff
-            else: # If a support ability
+            else:  # If a support ability
                 state.support += SUPPORT_FACTOR_DICT[self.effect] * self.effectiveBuff
 
 
@@ -1263,12 +1274,14 @@ class PerAttackReceived(PassiveAbility):
         match self.effect:
             case "Ki":
                 state.constantKi += np.minimum(
-                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                    self.effectiveBuff
+                    * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                     self.max,
                 )
             case "ATK":
                 state.p2Atk += np.minimum(
-                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                    self.effectiveBuff
+                    * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                     self.max,
                 )
             case "DEF":
@@ -1278,13 +1291,14 @@ class PerAttackReceived(PassiveAbility):
                 )
             case "Critical Hit":
                 state.crit += np.minimum(
-                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                    self.effectiveBuff
+                    * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                     self.max,
                 )
 
 
 class AfterAttackReceived(PassiveAbility):
-    def __init__(self, form, activationProbability, effect, buff, effectDuration, turnsSinceActivated = 0):
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, turnsSinceActivated=0):
         super().__init__(form, activationProbability, effect, buff, effectDuration)
         self.turnsSinceActivated = turnsSinceActivated
 
@@ -1294,17 +1308,33 @@ class AfterAttackReceived(PassiveAbility):
         hitFactor = 1.0
         if self.turnsSinceActivated == 0:
             if self.effect in ["Raise DEF", "Damage Reduction"]:
-                hitFactor = (state.attacksReceiving - 1) / state.attacksReceiving # Factor to account for not having the buff on the fist hit
+                hitFactor = (
+                    state.attacksReceiving - 1
+                ) / state.attacksReceiving  # Factor to account for not having the buff on the fist hit
             else:
                 hitFactor = np.min(state.attacksReceivingBeforeAttacking, 1.0)
         match self.effect:
             case "DEF":
-                state.p2DefA += self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability) # This should return self.activationProbabiltiy if self.turnsActivated = 0
+                state.p2DefA += (
+                    self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
+                )  # This should return self.activationProbabiltiy if self.turnsActivated = 0
             case "Attack Effective to All":
-                state.AEAAT = self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
+                state.AEAAT = (
+                    self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
+                )
         self.turnsSinceActivated += 1
+        # If buff lasts till unit's next turn
         if self.effectDuration > self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:
-            self.form.abilities.extend(AfterAttackReceived(self.form, self.activationProbability, self.effect, self.buff, self.effectDuration, self.turnsSinceActivated))
+            self.form.abilities.extend(
+                AfterAttackReceived(
+                    self.form,
+                    self.activationProbability,
+                    self.effect,
+                    self.buff,
+                    self.effectDuration,
+                    self.turnsSinceActivated,
+                )
+            )
 
 
 class PerRainbowOrb(PassiveAbility):
