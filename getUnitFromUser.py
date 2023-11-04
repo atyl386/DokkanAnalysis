@@ -1038,69 +1038,8 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
 
     def applyToState(self, state, unit=None):
-        # TODO
-        # Should apply the apt for an active skill attack on the activation turn
-        pass
-        """
-         if self.kit.activeTurn != 0:
-            self.activeSkillTurn = int(max(self.kit.activeTurn, peakTurn))
-            self.dmgRed[self.activeSkillTurn - 1] += self.kit.dmgRed_Active
-            self.healing[self.activeSkillTurn - 1] += self.kit.healing_Active
-            self.support[self.activeSkillTurn - 1] += self.kit.support_Active
-            self.constantKi[self.activeSkillTurn - 1] += self.kit.passiveKi_Active
-            self.randomKi[self.activeSkillTurn - 1] = (
-                self.links_Ki[self.activeSkillTurn - 1]
-                + self.kit.collectKi_Active
-                + avgKiSupport
-            )
-            self.P_Dodge[self.activeSkillTurn - 1] = self.kit.P_dodge_Active + (
-                1 - self.kit.P_dodge_Active
-            ) * (
-                self.kit.P_dodge[self.activeSkillTurn - 1]
-                + (1 - self.kit.P_dodge[self.activeSkillTurn - 1])
-                * (
-                    self.pHiPoDodge
-                    + (1 - self.pHiPoDodge) * self.linkDodge[self.activeSkillTurn - 1]
-                )
-            )
-            self.P_guard[self.activeSkillTurn - 1] = (
-                self.kit.P_guard_Active
-                + (1 - self.kit.P_guard_Active)
-                * self.kit.P_guard[self.activeSkillTurn - 1]
-            )
-            self.P_nullify[self.activeSkillTurn - 1] = (
-                self.kit.P_nullify_Active
-                + (1 - self.kit.P_nullify_Active)
-                * self.kit.P_nullify[self.activeSkillTurn - 1]
-            )
-            self.P_Crit[self.activeSkillTurn - 1] = self.kit.passiveCrit_Active + (
-                1 - self.kit.passiveCrit_Active
-            ) * (
-                self.kit.passiveCrit[self.activeSkillTurn - 1]
-                + (1 - self.kit.passiveCrit[self.activeSkillTurn - 1])
-                * (
-                    self.pHiPoCrit
-                    + (1 - self.pHiPoCrit) * self.linkCrit[self.activeSkillTurn - 1]
-                )
-            )
-            self.P_SEaaT[self.activeSkillTurn - 1] = (
-                self.kit.P_SEaaT_Active
-                + (1 - self.kit.P_SEaaT_Active)
-                * self.kit.P_SEaaT[self.activeSkillTurn - 1]
-            )
-            self.kit.AA_P_super[self.activeSkillTurn - 1] = self.kit.AA_P_super_Active
-            self.kit.AA_P_guarantee[
-                self.activeSkillTurn - 1
-            ] = self.kit.AA_P_guarantee_Active
-            if self.kit.activeMult != 0:  # If active skill attack
-                self.p2Att[self.activeSkillTurn - 1] = self.kit.P2_Att_Active
-                self.p2Def[self.activeSkillTurn - 1] = (
-                    self.kit.P2A_Def[self.activeSkillTurn - 1] + self.kit.P2B_Def_Active
-                )
-                self.p3Att[self.activeSkillTurn - 1] += self.kit.P3_Att_Active
-                self.p3Def[self.activeSkillTurn - 1] += self.kit.P3_Def_Active
-    """
-
+        state.attacksPerformed += 1 # Parameter should be used to determine buffs from per attack performed buffs
+        state.avgAtk += getActiveAttack(unit.kiMod12, state.ki, unit.ATK, state.p1Atk, state.stackedAtk, self.form.linkAtkSoT, state.p2Atk, state.p3Atk, self.activeMult, unit.nCopies)
 
 class Revive(SingleTurnAbility):
     def __init__(self, form, args):
