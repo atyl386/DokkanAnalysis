@@ -90,11 +90,11 @@ NUM_TEAMS_MAX = 21
 # Attacking factors
 AVG_ENEMY_DEF = 100000
 AVG_ATK_STAT = 5000000
-BYPASS_DEFENSE_FACTOR = 1 + AVG_ENEMY_DEF/AVG_ATK_STAT
-CRIT_MULTIPLIER = 1.875 # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
-AEAAT_MULTIPLIER = 1.5 # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
-DISABLE_GUARD_MULTIPLIER = 1.12 # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
-AVG_TYPE_ADVANATGE = 1.11 # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
+BYPASS_DEFENSE_FACTOR = 1 + AVG_ENEMY_DEF / AVG_ATK_STAT
+CRIT_MULTIPLIER = 1.875  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
+AEAAT_MULTIPLIER = 1.5  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
+DISABLE_GUARD_MULTIPLIER = 1.12  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
+AVG_TYPE_ADVANATGE = 1.11  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
 
 # Guard
 AVG_GUARD_FACTOR = (
@@ -353,7 +353,7 @@ LINK_DATA = np.genfromtxt(
 LINK_NAMES = list(LINK_DATA[:, 0])
 
 # Ki
-MAX_KI = [12, 24] 
+MAX_KI = [12, 24]
 
 # Slots
 SLOTS = [1, 2, 3]
