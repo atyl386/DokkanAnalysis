@@ -436,7 +436,7 @@ class Unit:
                     [0.7, "N"],
                 )
             )
-            form.abilities.extend(
+            form.specialAttacks.extend(
                 abilityQuestionaire(
                     form,
                     "How many active skill attacks does the form have?",
@@ -470,8 +470,6 @@ class Unit:
             form = self.forms[formIdx]
             slot = form.slot
             state = State(slot, turn)
-            for ability in form.abilities:
-                ability.applyToState(state, self)
             state.setState(self, form)
             self.states.append(state)
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
@@ -520,6 +518,8 @@ class Form:
         self.saCounterMult = 0.0
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
+        # This will list active skill attacks and finish skills (as have to be applied after state.setState())
+        self.specialAttacks = []
 
     def getLinks(self):
         for linkIndex in range(MAX_NUM_LINKS):
@@ -578,8 +578,10 @@ class State:
         self.p1Atk = LEADER_SKILL_STATS + ATK_DEF_SUPPORT
         self.p1Def = LEADER_SKILL_STATS + ATK_DEF_SUPPORT  # Start of turn stats (Phase 1)
         self.p2Atk = 0.0  # Phase 2 ATK
+        self.p3Atk = 0.0
         self.p2DefA = 0.0
         self.p2DefB = 0.0  # Phase 2 DEF (Before and after attacking)
+        self.p3Def = 0.0
         self.AEAAT = 0.0  # Probability for attacks effective against all types
         self.guard = 0.0  # Probability of guarding
         self.crit = 0.0  # Probability of performing a critical hit
@@ -594,8 +596,11 @@ class State:
         self.dmgRedNormal = 0.0
         self.pCounterSA = 0.0  # Probability of countering an enemy super attack
         self.numAttacksReceived = 0  # Number of attacks received so far in this form. Assuming update the state.numAttacksReceievd after the abilities have been processed for that turn
+        self.avgAtt = 0.0 # Average total ATK stat
 
     def setState(self, unit, form):
+        for ability in form.abilities:
+            ability.applyToState(self, unit)
         self.healing += form.linkHealing
         self.p1Atk = np.maximum(self.p1Atk, -1)
         self.p2Atk += form.linkAtkOnSuper
@@ -603,177 +608,22 @@ class State:
         self.crit = self.crit + (1 - self.crit) * (unit.pHiPoCrit + (1 - unit.pHiPoCrit) * form.linkCrit)
         self.pEvade = self.pEvade + (1 - self.pEvade) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
         self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
-
-    def updateRandomKi(self, form):
-        kiCollect = (
-            self.kiPerOtherTypeOrb * self.numOtherTypeOrbs
-            + self.kiPerSameTypeOrb * self.numSameTypeOrbs
-            + self.numRainbowOrbs * self.kiPerRainbowKiSphere
-        )
-        self.randomKi += kiCollect + form.linkKi
-
+        self.randomKi += self.kiPerOtherTypeOrb * self.numOtherTypeOrbs + self.kiPerSameTypeOrb * self.numSameTypeOrbs + self.numRainbowOrbs * self.kiPerRainbowKiSphere + form.linkKi
+        self.ki = np.min(int(np.around(self.constantKi + self.randomKi)), MAX_KI)
+        self.Pr_N, self.Pr_SA, self.Pr_USA = getAttackDistribution(self.constantKi, self.randomKi, form.intentional12Ki, unit.rarity)
+        self.avg_AA_SA = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
+        self.stackedAtk, self.stackedDef = self.getStackedStats()
+        self.normal = getNormal(unit.kiMod_12, self.ki, unit.ATK, self.p1Atk, self.stackedAtk, form.linkAtt_SoT, self.p2Atk, self.p3Atk)
+        self.sa = getSA(unit.kiMod_12, unit.ATK, self.p1Atk, self.stackedAtk, form.linkAtt_SoT, self.p2Atk, self.p3Atk, form.saMult12, unit.EZA, unit.exclusivity, unit.nCopies, form.sa12AtkStacks, form.sa12AtkBuff)
+        if unit.rarity == "LR":
+            self.usa = getUSA(unit.kiMod_12, self.ki, unit.ATK, self.p1Atk, self.stackedAtk, form.linkAtt_SoT, self.p2Atk, self.p3Atk, self.saMult18, unit.EZA, unit.exclusivity, unit.nCopies, form.sa18AtkStacks, form.sa18AtkBuff)
+            self.avgAtt = getAvgAtk(self.aaPSuper, form.saMult12, unit.EZA, unit.exclusivity, unit.nCopies, form.sa12AtkStacks, form.sa12AtkBuff, form.sa18AtkBuff, self.stackedAtk, self.p1Atk, self.normal, self.sa, self.usa, unit.pHiPoAA, self.aaPGuarantee, self.pCounterSA, form.normalCounterMult, form.saCounterMult, self.Pr_N, self.Pr_SA, self.Pr_USA, unit.rarity)
+        else:
+            self.avgAtt = getAvgAtk(self.aaPSuper, form.saMult12, unit.EZA, unit.exclusivity, unit.nCopies, form.sa12AtkStacks, form.sa12AtkBuff, 0, self.stackedAtk, self.p1Atk, self.normal, self.sa, 0, unit.pHiPoAA, self.aaPGuarantee, form.pCounterNormal, self.pCounterSA, form.normalCounterMult, form.saCounterMult, self.Pr_N, self.Pr_SA, self.Pr_USA, unit.rarity)
+        # Apply active skill and finish skill attacks
+        for specialAttack in form.specialAttacks:
+            specialAttack.applyToState(self, unit)
     """
-        if self.kit.reviveTurn != 0:
-            self.reviveSkillTurn = int(max(self.kit.reviveTurn, peakTurn))
-            self.healing[self.reviveSkillTurn - 1] += self.kit.healing_Revive
-            self.support[self.reviveSkillTurn - 1] += self.kit.support_Revive
-        self.ki = np.minimum(
-            (np.around(self.constantKi + self.randomKi)).astype("int32"), [24] * MAX_TURN
-        )
-        (
-            self.Pr_N,
-            self.Pr_SA,
-            self.Pr_USA,
-            self.avg_AA_SA,
-            self.normal,
-            self.sa,
-            self.usa,
-            self.avgAtt,
-        ) = (
-            [0] * MAX_TURN,
-            [0] * MAX_TURN,
-            [0] * MAX_TURN,
-            [0] * MAX_TURN,
-            [0] * MAX_TURN,
-            [0] * MAX_TURN,
-            [0] * MAX_TURN,
-            [0] * MAX_TURN,
-        )
-        for i in range(MAX_TURN):
-            [self.Pr_N[i], self.Pr_SA[i], self.Pr_USA[i]] = getAttackDistribution(
-                self.constantKi[i],
-                self.randomKi[i],
-                self.kit.intentional12Ki[i],
-                self.kit.rarity,
-            )
-            self.avg_AA_SA[i] = branchAA(
-                -1,
-                len(self.kit.AA_P_super[i]),
-                self.pHiPoAA,
-                1,
-                self.kit.AA_P_super[i],
-                self.kit.AA_P_guarantee[i],
-                self.pHiPoAA,
-            )
-        [self.stackedAtt, self.stackedDef] = self.getStackedStats()
-        for i in range(MAX_TURN):
-            self.normal[i] = getNormal(
-                self.kit.kiMod_12,
-                self.ki[i],
-                self.ATK,
-                self.p1Att[i],
-                self.stackedAtt[i],
-                self.linkAtt_SoT[i],
-                self.p2Att[i],
-                self.p3Att[i],
-            )
-            self.sa[i] = getSA(
-                self.kit.kiMod_12,
-                self.ATK,
-                self.p1Att[i],
-                self.stackedAtt[i],
-                self.linkAtt_SoT[i],
-                self.p2Att[i],
-                self.p3Att[i],
-                self.kit.SA_Mult_12[i],
-                self.kit.EZA,
-                self.kit.exclusivity,
-                self.nCopies,
-                self.kit.SA_12_Att_Stacks[i],
-                self.kit.SA_12_Att[i],
-            )
-            if self.kit.rarity == "LR":
-                self.usa[i] = getUSA(
-                    self.kit.kiMod_12,
-                    self.ki[i],
-                    self.ATK,
-                    self.p1Att[i],
-                    self.stackedAtt[i],
-                    self.linkAtt_SoT[i],
-                    self.p2Att[i],
-                    self.p3Att[i],
-                    self.kit.SA_Mult_18[i],
-                    self.kit.EZA,
-                    self.kit.exclusivity,
-                    self.nCopies,
-                    self.kit.SA_18_Att_Stacks[i],
-                    self.kit.SA_18_Att[i],
-                )
-                self.avgAtt[i] = getAvgAtt(
-                    self.kit.AA_P_super[i],
-                    self.kit.SA_Mult_12[i],
-                    self.kit.EZA,
-                    self.kit.exclusivity,
-                    self.nCopies,
-                    self.kit.SA_12_Att_Stacks[i],
-                    self.kit.SA_12_Att[i],
-                    self.kit.SA_18_Att[i],
-                    self.stackedAtt[i],
-                    self.p1Att[i],
-                    self.normal[i],
-                    self.sa[i],
-                    self.usa[i],
-                    self.pHiPoAA,
-                    self.kit.AA_P_guarantee[i],
-                    self.kit.P_counterNormal[i],
-                    self.kit.P_counterSA[i],
-                    self.kit.counterMod,
-                    self.Pr_N[i],
-                    self.Pr_SA[i],
-                    self.Pr_USA[i],
-                    self.kit.rarity,
-                )
-                if self.kit.activeTurn != 0 and i == self.activeSkillTurn - 1:
-                    self.avgAtt[i] += getActiveAttack(
-                        self.kit.kiMod_12,
-                        24,
-                        self.ATK,
-                        self.p1Att[self.activeSkillTurn - 1],
-                        self.stackedAtt[self.activeSkillTurn - 1],
-                        self.linkAtt_SoT[self.activeSkillTurn - 1],
-                        self.p2Att[self.activeSkillTurn - 1],
-                        self.p3Att[self.activeSkillTurn - 1],
-                        self.kit.activeMult,
-                        self.nCopies,
-                    )
-            else:
-                self.avgAtt[i] = getAvgAtt(
-                    self.kit.AA_P_super[i],
-                    self.kit.SA_Mult_12[i],
-                    self.kit.EZA,
-                    self.kit.exclusivity,
-                    self.nCopies,
-                    self.kit.SA_12_Att_Stacks[i],
-                    self.kit.SA_12_Att[i],
-                    0,
-                    self.stackedAtt[i],
-                    self.p1Att[i],
-                    self.normal[i],
-                    self.sa[i],
-                    0,
-                    self.pHiPoAA,
-                    self.kit.AA_P_guarantee[i],
-                    self.kit.P_counterNormal[i],
-                    self.kit.P_counterSA[i],
-                    self.kit.counterMod,
-                    self.Pr_N[i],
-                    self.Pr_SA[i],
-                    self.Pr_USA[i],
-                    self.kit.rarity,
-                )
-                if self.kit.activeTurn != 0 and i == self.activeSkillTurn - 1:
-                    self.avgAtt[i] += getActiveAttack(
-                        self.kit.kiMod_12,
-                        12,
-                        self.ATK,
-                        self.p1Att[self.activeSkillTurn - 1],
-                        self.stackedAtt[self.activeSkillTurn - 1],
-                        self.linkAtt_SoT[self.activeSkillTurn - 1],
-                        self.p2Att[self.activeSkillTurn - 1],
-                        self.p3Att[self.activeSkillTurn - 1],
-                        self.kit.activeMult,
-                        self.nCopies,
-                    )
         self.avgAttModifer = self.P_Crit * CritMultiplier + (1 - self.P_Crit) * (
             self.P_SEaaT * SEaaTMultiplier + (1 - self.P_SEaaT) * avgTypeAdvantage
         )
@@ -1004,11 +854,12 @@ class GiantRageMode(SingleTurnAbility):
             ability.applyToState(self.giantRageModeState)
 
     def applyToState(self, state, unit=None):
-        giantRageUnit = copy(unit)
-        giantRageUnit.ATK = self.ATK
-        self.giantRageModeState.setState(self.giantRageForm, giantRageUnit)  # Calculate the APT of the state
-        state.APT += self.giantRageModeState.APT * NUM_SLOTS * giantRageUnit.giantRageDuration
-        state.support += self.support
+        if state.turn == self.activationTurn:
+            giantRageUnit = copy(unit)
+            giantRageUnit.ATK = self.ATK
+            self.giantRageModeState.setState(self.giantRageForm, giantRageUnit)  # Calculate the APT of the state
+            state.APT += self.giantRageModeState.APT * NUM_SLOTS * giantRageUnit.giantRageDuration
+            state.support += self.support
 
 
 class ActiveSkillBuff(SingleTurnAbility):
@@ -1041,19 +892,20 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
 
     def applyToState(self, state, unit=None):
-        state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
-        state.avgAtk += getActiveAttack(
-            unit.kiMod12,
-            state.ki,
-            unit.ATK,
-            state.p1Atk,
-            state.stackedAtk,
-            self.form.linkAtkSoT,
-            state.p2Atk,
-            state.p3Atk,
-            self.activeMult,
-            unit.nCopies,
-        )
+        if state.turn == self.activationTurn:
+            state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
+            state.avgAtk += getActiveAttack(
+                unit.kiMod12,
+                rarity2MaxKi[unit.rarity],
+                unit.ATK,
+                state.p1Atk,
+                state.stackedAtk,
+                self.form.linkAtkSoT,
+                state.p2Atk,
+                state.p3Atk,
+                state.activeMult,
+                unit.nCopies,
+                    )
 
 
 class Revive(SingleTurnAbility):

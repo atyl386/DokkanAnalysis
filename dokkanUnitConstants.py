@@ -349,6 +349,9 @@ LINK_DATA = np.genfromtxt(
 )
 LINK_NAMES = list(LINK_DATA[:, 0])
 
+# Ki
+MAX_KI = [12, 24] 
+
 # Slots
 SLOTS = [1, 2, 3]
 NUM_SLOTS = len(SLOTS)
@@ -465,6 +468,9 @@ GLD_HIPO2 = 0.02
 yesNo2Bool = dict(zip(YES_NO, [True, False]))
 bool2Binary = dict(zip([True, False], [1, 0]))
 exclusivity2Rarity = dict(zip(EXCLUSIVITIES, RARITIES))
+
+# Ki
+rarity2MaxKi = dict(zip(UNIQUE_RARITIES, MAX_KI))
 
 # Leader skill
 leaderSkillConversion = dict(zip(LEADER_SKILL_TIERS, LEADER_SKILL_SCORES))
