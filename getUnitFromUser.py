@@ -192,6 +192,8 @@ class Unit:
         self.pHiPoAA = HiPoAbilities[2]
         self.pHiPoCrit = HiPoAbilities[3]
         self.pHiPoDodge = HiPoAbilities[4]
+        self.TAB = HIPO_TYPE_ATK_BOOST[self.nCopies - 1]
+        self.TDB = HIPO_TYPE_DEF_BOOST[self.nCopies - 1]
 
     def getSBR(self):
         self.sbr = 0.0
@@ -585,6 +587,7 @@ class State:
         self.AEAAT = 0.0  # Probability for attacks effective against all types
         self.guard = 0.0  # Probability of guarding
         self.crit = 0.0  # Probability of performing a critical hit
+        self.disableGuard = 0.0
         self.pEvade = 0.0  # Probability of evading
         self.healing = 0.0  # Fraction of health healed every turn
         self.support = 0.0  # Support score
@@ -709,11 +712,18 @@ class State:
         # Apply active skill and finish skill attacks
         for specialAttack in form.specialAttacks:
             specialAttack.applyToState(self, unit)
+        self.avgAttModifer = self.crit * (CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR + (
+            1 - self.crit
+        ) * (
+            self.AEAAT * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
+            + (1 - self.AEAAT)
+            * (
+                self.disableGuard * (DISABLE_GUARD_MULTIPLIER + unit.TAB * DISABLE_GUARD_TAB_INC)
+                + (1 - self.disableGuard) * (AVG_TYPE_ADVANATGE + unit.TAB * DEFAULT_TAB_INC)
+            )
+        )
 
     """
-        self.avgAttModifer = self.P_Crit * CritMultiplier + (1 - self.P_Crit) * (
-            self.P_SEaaT * SEaaTMultiplier + (1 - self.P_SEaaT) * avgTypeAdvantage
-        )
         self.apt = self.avgAtt * self.avgAttModifer
         if self.kit.GRLength != 0:
             self.apt[self.activeSkillTurn - 1] += self.apt_GR

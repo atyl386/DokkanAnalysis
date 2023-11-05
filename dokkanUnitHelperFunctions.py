@@ -21,7 +21,7 @@ def SAMultiplier(multiplier, eza, rarity, nCopies, nStacks, saAtk):
     stackingPenalty = 0
     if nStacks > 1:  # If stack attack
         stackingPenalty = saAtk
-    return baseMultiplier + 0.05 * HIPO_SA_BOOST[nCopies - 1] - stackingPenalty
+    return baseMultiplier + SA_BOOST_INC * HIPO_SA_BOOST[nCopies - 1] - stackingPenalty
 
 
 def KiModifier(base, ki):
@@ -190,7 +190,7 @@ def getActiveAttack(
 ):
     """Returns the ATK stat of an active-skill attack"""
     kiMultiplier = KiModifier(kiMod12, ki)
-    SAmultiplier = saMultActive + 0.05 * HIPO_SA_BOOST[nCopies - 1]
+    SAmultiplier = saMultActive + SA_BOOST_INC * HIPO_SA_BOOST[nCopies - 1]
     return (
         att
         * (1 + LEADER_SKILL_STATS)
