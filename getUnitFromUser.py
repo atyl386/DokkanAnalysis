@@ -596,7 +596,6 @@ class State:
         self.dmgRedNormal = 0.0
         self.pCounterSA = 0.0  # Probability of countering an enemy super attack
         self.numAttacksReceived = 0  # Number of attacks received so far in this form. Assuming update the state.numAttacksReceievd after the abilities have been processed for that turn
-        self.avgAtt = 0.0 # Average total ATK stat
 
     def setState(self, unit, form):
         for ability in form.abilities:
@@ -608,21 +607,109 @@ class State:
         self.crit = self.crit + (1 - self.crit) * (unit.pHiPoCrit + (1 - unit.pHiPoCrit) * form.linkCrit)
         self.pEvade = self.pEvade + (1 - self.pEvade) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
         self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
-        self.randomKi += self.kiPerOtherTypeOrb * self.numOtherTypeOrbs + self.kiPerSameTypeOrb * self.numSameTypeOrbs + self.numRainbowOrbs * self.kiPerRainbowKiSphere + form.linkKi
+        self.randomKi += (
+            self.kiPerOtherTypeOrb * self.numOtherTypeOrbs
+            + self.kiPerSameTypeOrb * self.numSameTypeOrbs
+            + self.numRainbowOrbs * self.kiPerRainbowKiSphere
+            + form.linkKi
+        )
         self.ki = np.min(int(np.around(self.constantKi + self.randomKi)), MAX_KI)
-        self.Pr_N, self.Pr_SA, self.Pr_USA = getAttackDistribution(self.constantKi, self.randomKi, form.intentional12Ki, unit.rarity)
-        self.avg_AA_SA = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
+        self.Pr_N, self.Pr_SA, self.Pr_USA = getAttackDistribution(
+            self.constantKi, self.randomKi, form.intentional12Ki, unit.rarity
+        )
+        self.avg_AA_SA = branchAA(
+            -1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA
+        )
         self.stackedAtk, self.stackedDef = self.getStackedStats()
-        self.normal = getNormal(unit.kiMod_12, self.ki, unit.ATK, self.p1Atk, self.stackedAtk, form.linkAtt_SoT, self.p2Atk, self.p3Atk)
-        self.sa = getSA(unit.kiMod_12, unit.ATK, self.p1Atk, self.stackedAtk, form.linkAtt_SoT, self.p2Atk, self.p3Atk, form.saMult12, unit.EZA, unit.exclusivity, unit.nCopies, form.sa12AtkStacks, form.sa12AtkBuff)
+        self.normal = getNormal(
+            unit.kiMod_12, self.ki, unit.ATK, self.p1Atk, self.stackedAtk, form.linkAtt_SoT, self.p2Atk, self.p3Atk
+        )
+        self.sa = getSA(
+            unit.kiMod_12,
+            unit.ATK,
+            self.p1Atk,
+            self.stackedAtk,
+            form.linkAtt_SoT,
+            self.p2Atk,
+            self.p3Atk,
+            form.saMult12,
+            unit.EZA,
+            unit.exclusivity,
+            unit.nCopies,
+            form.sa12AtkStacks,
+            form.sa12AtkBuff,
+        )
         if unit.rarity == "LR":
-            self.usa = getUSA(unit.kiMod_12, self.ki, unit.ATK, self.p1Atk, self.stackedAtk, form.linkAtt_SoT, self.p2Atk, self.p3Atk, self.saMult18, unit.EZA, unit.exclusivity, unit.nCopies, form.sa18AtkStacks, form.sa18AtkBuff)
-            self.avgAtt = getAvgAtk(self.aaPSuper, form.saMult12, unit.EZA, unit.exclusivity, unit.nCopies, form.sa12AtkStacks, form.sa12AtkBuff, form.sa18AtkBuff, self.stackedAtk, self.p1Atk, self.normal, self.sa, self.usa, unit.pHiPoAA, self.aaPGuarantee, self.pCounterSA, form.normalCounterMult, form.saCounterMult, self.Pr_N, self.Pr_SA, self.Pr_USA, unit.rarity)
+            self.usa = getUSA(
+                unit.kiMod_12,
+                self.ki,
+                unit.ATK,
+                self.p1Atk,
+                self.stackedAtk,
+                form.linkAtt_SoT,
+                self.p2Atk,
+                self.p3Atk,
+                self.saMult18,
+                unit.EZA,
+                unit.exclusivity,
+                unit.nCopies,
+                form.sa18AtkStacks,
+                form.sa18AtkBuff,
+            )
+            self.avgAtt = getAvgAtk(
+                self.aaPSuper,
+                form.saMult12,
+                unit.EZA,
+                unit.exclusivity,
+                unit.nCopies,
+                form.sa12AtkStacks,
+                form.sa12AtkBuff,
+                form.sa18AtkBuff,
+                self.stackedAtk,
+                self.p1Atk,
+                self.normal,
+                self.sa,
+                self.usa,
+                unit.pHiPoAA,
+                self.aaPGuarantee,
+                self.pCounterSA,
+                form.normalCounterMult,
+                form.saCounterMult,
+                self.Pr_N,
+                self.Pr_SA,
+                self.Pr_USA,
+                unit.rarity,
+            )
         else:
-            self.avgAtt = getAvgAtk(self.aaPSuper, form.saMult12, unit.EZA, unit.exclusivity, unit.nCopies, form.sa12AtkStacks, form.sa12AtkBuff, 0, self.stackedAtk, self.p1Atk, self.normal, self.sa, 0, unit.pHiPoAA, self.aaPGuarantee, form.pCounterNormal, self.pCounterSA, form.normalCounterMult, form.saCounterMult, self.Pr_N, self.Pr_SA, self.Pr_USA, unit.rarity)
+            self.avgAtt = getAvgAtk(
+                self.aaPSuper,
+                form.saMult12,
+                unit.EZA,
+                unit.exclusivity,
+                unit.nCopies,
+                form.sa12AtkStacks,
+                form.sa12AtkBuff,
+                0,
+                self.stackedAtk,
+                self.p1Atk,
+                self.normal,
+                self.sa,
+                0,
+                unit.pHiPoAA,
+                self.aaPGuarantee,
+                form.pCounterNormal,
+                self.pCounterSA,
+                form.normalCounterMult,
+                form.saCounterMult,
+                self.Pr_N,
+                self.Pr_SA,
+                self.Pr_USA,
+                unit.rarity,
+            )
         # Apply active skill and finish skill attacks
         for specialAttack in form.specialAttacks:
             specialAttack.applyToState(self, unit)
+
     """
         self.avgAttModifer = self.P_Crit * CritMultiplier + (1 - self.P_Crit) * (
             self.P_SEaaT * SEaaTMultiplier + (1 - self.P_SEaaT) * avgTypeAdvantage
@@ -905,7 +992,7 @@ class ActiveSkillAttack(SingleTurnAbility):
                 state.p3Atk,
                 state.activeMult,
                 unit.nCopies,
-                    )
+            )
 
 
 class Revive(SingleTurnAbility):

@@ -246,8 +246,8 @@ def getAvgAtk(
     pSA = AApSuper  # Probability of doing a super on inbuilt additional
     pG = aaPGuarantee  # Probability of inbuilt additional
     counterAtk = (
-        (NUM_ATTACKS_RECEIVED[slot] * normalCounterMult + NUM_SUPER_ATTACKS[slot] * pCounterSA * saCounterMult) * normal
-    )
+        NUM_ATTACKS_RECEIVED[slot] * normalCounterMult + NUM_SUPER_ATTACKS[slot] * pCounterSA * saCounterMult
+    ) * normal
     avgAtk = pN * (
         normal
         + branchAtk(
