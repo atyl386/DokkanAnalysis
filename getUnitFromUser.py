@@ -5,7 +5,6 @@ import copy
 
 # TODO:
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
-# - Make sure to include TYPE DEF BOOST correctly (HiPo & lowering Guard modifier)
 # - Instead of asking user how many of something, should ask until they enteran exit key aka while loop instead of for loop
 # - How are we dealing with unit-super attacks? I think this works if user specifies the correct activation probabilities
 # - Should read up on python optimisation techniques once is running and se how long it takes. But try be efficient you go.
@@ -146,7 +145,7 @@ class Unit:
             "%m/%y",
         )
         self.HP = clc.prompt("What is the unit's base HP stat?", default=0)
-        self.ATK = clc.prompt("What is the unit's base ATT stat?", default=0)
+        self.ATK = clc.prompt("What is the unit's base ATK stat?", default=0)
         self.DEF = clc.prompt("What is the unit's base DEF stat?", default=0)
         self.leaderSkill = leaderSkillConversion[
             clc.prompt(
@@ -625,14 +624,14 @@ class State:
         )
         self.stackedAtk, self.stackedDef = self.getStackedStats()
         self.normal = getNormal(
-            unit.kiMod_12, self.ki, unit.ATK, self.p1Atk, self.stackedAtk, form.linkAtt_SoT, self.p2Atk, self.p3Atk
+            unit.kiMod_12, self.ki, unit.ATK, self.p1Atk, self.stackedAtk, form.linkAtkSoT, self.p2Atk, self.p3Atk
         )
         self.sa = getSA(
             unit.kiMod_12,
             unit.ATK,
             self.p1Atk,
             self.stackedAtk,
-            form.linkAtt_SoT,
+            form.linkAtkSoT,
             self.p2Atk,
             self.p3Atk,
             form.saMult12,
@@ -642,77 +641,50 @@ class State:
             form.sa12AtkStacks,
             form.sa12AtkBuff,
         )
-        if unit.rarity == "LR":
-            self.usa = getUSA(
-                unit.kiMod_12,
-                self.ki,
-                unit.ATK,
-                self.p1Atk,
-                self.stackedAtk,
-                form.linkAtt_SoT,
-                self.p2Atk,
-                self.p3Atk,
-                self.saMult18,
-                unit.EZA,
-                unit.exclusivity,
-                unit.nCopies,
-                form.sa18AtkStacks,
-                form.sa18AtkBuff,
-            )
-            self.avgAtt = getAvgAtk(
-                self.aaPSuper,
-                form.saMult12,
-                unit.EZA,
-                unit.exclusivity,
-                unit.nCopies,
-                form.sa12AtkStacks,
-                form.sa12AtkBuff,
-                form.sa18AtkBuff,
-                self.stackedAtk,
-                self.p1Atk,
-                self.normal,
-                self.sa,
-                self.usa,
-                unit.pHiPoAA,
-                self.aaPGuarantee,
-                self.pCounterSA,
-                form.normalCounterMult,
-                form.saCounterMult,
-                self.Pr_N,
-                self.Pr_SA,
-                self.Pr_USA,
-                unit.rarity,
-            )
-        else:
-            self.avgAtt = getAvgAtk(
-                self.aaPSuper,
-                form.saMult12,
-                unit.EZA,
-                unit.exclusivity,
-                unit.nCopies,
-                form.sa12AtkStacks,
-                form.sa12AtkBuff,
-                0,
-                self.stackedAtk,
-                self.p1Atk,
-                self.normal,
-                self.sa,
-                0,
-                unit.pHiPoAA,
-                self.aaPGuarantee,
-                form.pCounterNormal,
-                self.pCounterSA,
-                form.normalCounterMult,
-                form.saCounterMult,
-                self.Pr_N,
-                self.Pr_SA,
-                self.Pr_USA,
-                unit.rarity,
-            )
+        self.usa = getUSA(
+            unit.kiMod_12,
+            self.ki,
+            unit.ATK,
+            self.p1Atk,
+            self.stackedAtk,
+            form.linkAtkSoT,
+            self.p2Atk,
+            self.p3Atk,
+            self.saMult18,
+            unit.EZA,
+            unit.exclusivity,
+            unit.nCopies,
+            form.sa18AtkStacks,
+            form.sa18AtkBuff,
+        )
+        self.avgAtk = getAvgAtk(
+            self.aaPSuper,
+            form.saMult12,
+            unit.EZA,
+            unit.exclusivity,
+            unit.nCopies,
+            form.sa12AtkStacks,
+            form.sa12AtkBuff,
+            form.sa18AtkBuff,
+            self.stackedAtk,
+            self.p1Atk,
+            self.normal,
+            self.sa,
+            self.usa,
+            unit.pHiPoAA,
+            self.aaPGuarantee,
+            self.pCounterSA,
+            form.normalCounterMult,
+            form.saCounterMult,
+            self.Pr_N,
+            self.Pr_SA,
+            self.Pr_USA,
+            unit.rarity,
+        )
         # Apply active skill and finish skill attacks
         for specialAttack in form.specialAttacks:
             specialAttack.applyToState(self, unit)
-        self.avgAttModifer = self.crit * (CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR + (
+        self.avgAtkModifer = self.crit * (CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR + (
             1 - self.crit
         ) * (
             self.AEAAT * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
@@ -722,67 +694,28 @@ class State:
                 + (1 - self.disableGuard) * (AVG_TYPE_ADVANATGE + unit.TAB * DEFAULT_TAB_INC)
             )
         )
+        self.apt = self.avgAtk * self.avgAtkModifer
+        self.avgDefMult = self.getAvgDefMult()
+        self.avgDefPreSuper = getDefStat(self.DEF, self.p1Atk, self.linkDef, self.p2DefA, self.p3Def, self.stackedDef)
+        self.avgDefPostSuper = getDefStat(self.DEF, self.p1Atk, self.linkDef, self.p2Def, self.p3Def, self.avgDefMult)
+        self.normalDamageTakenPreSuper = getDamageTaken(
+            self.pEvade,
+            self.guard,
+            MAX_NORMAL_DAM_PER_TURN[self.slot - 1],
+            unit.TDB,
+            self.dmgRedNormal,
+            self.avgDefPreSuper,
+        )
+        self.normalDamageTakenPostSuper = getDamageTaken(
+            self.pEvade,
+            self.guard,
+            MAX_NORMAL_DAM_PER_TURN[self.slot - 1],
+            unit.TDB,
+            self.dmgRedNormal,
+            self.avgDefPostSuper,
+        )
 
     """
-        self.apt = self.avgAtt * self.avgAttModifer
-        if self.kit.GRLength != 0:
-            self.apt[self.activeSkillTurn - 1] += self.apt_GR
-            self.support[self.activeSkillTurn - 1] += self.support_GR
-        self.avgDefMult = self.getAvgDefMult()
-        self.avgDefPreSuper = (
-            self.DEF
-            * (1 + leaderSkillBuff)
-            * (1 + self.p1Def)
-            * (1 + self.linkDef)
-            * (1 + self.kit.P2A_Def)
-            * (1 + self.p3Def)
-            * (1 + self.stackedDef)
-        )
-        self.avgDefPostSuper = (
-            self.DEF
-            * (1 + leaderSkillBuff)
-            * (1 + self.p1Def)
-            * (1 + self.linkDef)
-            * (1 + self.p2Def)
-            * (1 + self.p3Def)
-            * (1 + self.avgDefMult)
-        )
-        self.normalDefencePreSuper = np.minimum(
-            -(1 - (1 - dodgeCancelFrac) * self.P_Dodge)
-            * (
-                self.P_guard
-                * GuardModifer(
-                    maxNormalDamage * avgGuardFactor * (1 - self.dmgRedNormal)
-                    - self.avgDefPreSuper,
-                    guardMod,
-                )
-                + (1 - self.P_guard)
-                * (
-                    maxNormalDamage * avgTypeFactor * (1 - self.dmgRedNormal)
-                    - self.avgDefPreSuper
-                )
-            )
-            / (maxNormalDamage * avgTypeFactor),
-            0.0,
-        )
-        self.normalDefencePostSuper = np.minimum(
-            -(1 - (1 - dodgeCancelFrac) * self.P_Dodge)
-            * (
-                self.P_guard
-                * GuardModifer(
-                    maxNormalDamage * avgGuardFactor * (1 - self.dmgRedNormal)
-                    - self.avgDefPostSuper,
-                    guardMod,
-                )
-                + (1 - self.P_guard)
-                * (
-                    maxNormalDamage * avgTypeFactor * (1 - self.dmgRedNormal)
-                    - self.avgDefPostSuper
-                )
-            )
-            / (maxNormalDamage * avgTypeFactor),
-            0.0,
-        )
         self.saDefencePreSuper = np.minimum(
             -(
                 1

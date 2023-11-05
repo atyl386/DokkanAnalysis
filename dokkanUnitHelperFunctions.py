@@ -101,23 +101,34 @@ def getAttackDistribution(constantKi, randomKi, intentional12Ki, rarity):
     return [pN, pSA, pUSA]
 
 
-def getNormal(kiMod12, ki, att, p1Atk, stackedAtk, linkAtkSoT, p2Atk, p3Atk):
-    """Returns the ATK stat of a normal"""
-    kiMultiplier = KiModifier(kiMod12, ki)
+def getAtkStat(ATK, p1Atk, linkAtk, p2Atk, p3Atk, kiMultiplier, saMultiplier):
     return (
-        att
+        ATK
         * (1 + LEADER_SKILL_STATS)
-        * (1 + p1Atk + stackedAtk)
-        * (1 + linkAtkSoT)
+        * (1 + p1Atk)
+        * (1 + linkAtk)
         * (1 + p2Atk)
         * (1 + p3Atk)
         * kiMultiplier
+        * saMultiplier
     )
+
+
+def getDefStat(DEF, p1Def, linkDef, p2DefA, p3Def, defMultiplier):
+    return (
+        DEF * (1 + LEADER_SKILL_STATS) * (1 + p1Def) * (1 + linkDef) * (1 + p2DefA) * (1 + p3Def) * (1 + defMultiplier)
+    )
+
+
+def getNormal(kiMod12, ki, ATK, p1Atk, stackedAtk, linkAtkSoT, p2Atk, p3Atk):
+    """Returns the ATK stat of a normal"""
+    kiMultiplier = KiModifier(kiMod12, ki)
+    return getAtkStat(ATK, p1Atk + stackedAtk, linkAtkSoT, p2Atk, p3Atk, kiMultiplier, 1)
 
 
 def getSA(
     kiMod12,
-    att,
+    ATK,
     p1Atk,
     stackedAtk,
     linkAtkSoT,
@@ -132,23 +143,14 @@ def getSA(
 ):
     """Returns the ATK stat of a super-attack"""
     kiMultiplier = kiMod12
-    SAmultiplier = SAMultiplier(saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk)
-    return (
-        att
-        * (1 + LEADER_SKILL_STATS)
-        * (1 + p1Atk)
-        * (1 + linkAtkSoT)
-        * (1 + p2Atk)
-        * (1 + p3Atk)
-        * kiMultiplier
-        * (SAmultiplier + sa12Atk + stackedAtk)
-    )
+    saMultiplier = SAMultiplier(saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk)
+    return getAtkStat(ATK, p1Atk, linkAtkSoT, p2Atk, p3Atk, kiMultiplier, saMultiplier + sa12Atk + stackedAtk)
 
 
 def getUSA(
     kiMod12,
     ki,
-    att,
+    ATK,
     p1Atk,
     stackedAtk,
     linkAtkSoT,
@@ -163,23 +165,14 @@ def getUSA(
 ):
     """Returns the ATK stat of an ultra-super-attack"""
     kiMultiplier = KiModifier(kiMod12, max(ki, 18))
-    SAmultiplier = SAMultiplier(saMult18, eza, exclusivity, nCopies, sa18AtkStacks, sa18Atk)
-    return (
-        att
-        * (1 + LEADER_SKILL_STATS)
-        * (1 + p1Atk)
-        * (1 + linkAtkSoT)
-        * (1 + p2Atk)
-        * (1 + p3Atk)
-        * kiMultiplier
-        * (SAmultiplier + sa18Atk + stackedAtk)
-    )
+    saMultiplier = SAMultiplier(saMult18, eza, exclusivity, nCopies, sa18AtkStacks, sa18Atk)
+    return getAtkStat(ATK, p1Atk, linkAtkSoT, p2Atk, p3Atk, kiMultiplier, saMultiplier + sa18Atk + stackedAtk)
 
 
 def getActiveAttack(
     kiMod12,
     ki,
-    att,
+    ATK,
     p1Atk,
     stackedAtk,
     linkAtkSoT,
@@ -190,18 +183,8 @@ def getActiveAttack(
 ):
     """Returns the ATK stat of an active-skill attack"""
     kiMultiplier = KiModifier(kiMod12, ki)
-    SAmultiplier = saMultActive + SA_BOOST_INC * HIPO_SA_BOOST[nCopies - 1]
-    return (
-        att
-        * (1 + LEADER_SKILL_STATS)
-        * (1 + p1Atk)
-        * (1 + linkAtkSoT)
-        * (1 + p2Atk)
-        * (1 + p3Atk)
-        * kiMultiplier
-        * (1 + stackedAtk)
-        * SAmultiplier
-    )
+    saMultiplier = saMultActive + SA_BOOST_INC * HIPO_SA_BOOST[nCopies - 1]
+    return getAtkStat(ATK, p1Atk, linkAtkSoT, p2Atk, p3Atk, kiMultiplier, saMultiplier * (1 + stackedAtk))
 
 
 def getAvgAtk(
@@ -234,8 +217,8 @@ def getAvgAtk(
     nAA = len(AApSuper)
     i = -1  # iteration counter
     nProcs = 1  # Initialise number of HiPo procs
-    SAmultiplier = SAMultiplier(saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk)
-    m12 = SAmultiplier + sa12Atk + stackedAtk  # 12 ki multiplier after SA effect
+    saMultiplier = SAMultiplier(saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk)
+    m12 = saMultiplier + sa12Atk + stackedAtk  # 12 ki multiplier after SA effect
     a12_0 = sa / m12  # Get 12 ki SA attack stat without multiplier
     if 1 + p1Atk + stackedAtk <= 0:
         N_0 = 0
@@ -301,3 +284,15 @@ def getAvgAtk(
         )
     avgAtk += counterAtk
     return avgAtk
+
+
+def getDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
+    return min(
+        -(1 - (1 - DODGE_CANCEL_FACTOR) * pEvade)
+        * (
+            guard * GUARD_MOD * (maxDamage * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
+            + (1 - guard) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
+        )
+        / (maxDamage * AVG_TYPE_ADVANATGE),
+        0.0,
+    )

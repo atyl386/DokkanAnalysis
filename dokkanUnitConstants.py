@@ -186,7 +186,7 @@ MAX_T1_NORMAL_DAM = 550000  # Not including divine wrath and mortal will as can 
 MAX_NORMAL_DAM = 700000  # Not including divine wrath and mortal will as can just spam items
 MAX_T1_SA_DAM = 1540000  # Not including divine wrath and mortal will as can just spam items
 MAX_SA_DAM = 1855000  # Not including divine wrath and mortal will as can just spam items
-maxNormalDamage = (
+MAX_NORMAL_DAM_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * AVG_DAM_VARIANCE
     * np.append(
@@ -195,7 +195,7 @@ maxNormalDamage = (
         axis=0,
     )
 )
-maxSADamage = (
+MAX_SA_DAM_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * AVG_DAM_VARIANCE
     * np.append(
@@ -464,6 +464,7 @@ CRIT_TAB_INC = 0.0125
 AEAAT_TAB_INC = 0.01
 DISABLE_GUARD_TAB_INC = 0.01
 DEFAULT_TAB_INC = 0.005
+TDB_INC = 0.02
 BRZ_STAT = 550
 BRZ_HIPO = 0.02
 SLV_HIPO = 0.05
