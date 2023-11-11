@@ -15,9 +15,8 @@ def ZTP_CDF(x, Lambda):
     return (poisson.cdf(x, Lambda) - poisson.cdf(0, Lambda)) / (1 - poisson.cdf(0, Lambda))
 
 
-def SAMultiplier(multiplier, eza, rarity, nCopies, nStacks, saAtk):
+def SAMultiplier(baseMultiplier, nCopies, nStacks, saAtk):
     """Returns the super-attack multiplier of a form"""
-    baseMultiplier = superAttackConversion[multiplier][superAttackLevelConversion[rarity][eza]]
     stackingPenalty = 0
     if nStacks > 1:  # If stack attack
         stackingPenalty = saAtk
@@ -32,9 +31,9 @@ def KiModifier(base, ki):
         return (np.linspace(base, 2, 12))[ki - 13]
 
 
-def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, N_0, a12_0, saMult, pHiPo):
+def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo):
     """Returns the total remaining ATK of a unit in a turn recursively"""
-    normal = mN * N_0
+    normal = mN * n_0
     additional12Ki = m12 * a12_0
     if i == nAA - 1:  # If no more additional attacks
         return 0.5 * pAA * (additional12Ki + normal)  # Add average hidden-potential attack damage
@@ -42,7 +41,7 @@ def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, N_0, a12_0, saMult, pHiPo):
         i += 1  # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
         # Add damage if don't get any additional attacks
-        tempAtk0 = branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, N_0, a12_0, saMult, pHiPo)
+        tempAtk0 = branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo)
         tempAtk1 = branchAtk(
             i,
             nAA,
@@ -52,7 +51,7 @@ def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, N_0, a12_0, saMult, pHiPo):
             nProcs + 1,
             pSA,
             pG,
-            N_0,
+            n_0,
             a12_0,
             saMult,
             pHiPo,
@@ -66,7 +65,7 @@ def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, N_0, a12_0, saMult, pHiPo):
             nProcs + 1,
             pSA,
             pG,
-            N_0,
+            n_0,
             a12_0,
             saMult,
             pHiPo,
@@ -135,15 +134,13 @@ def getSA(
     p2Atk,
     p3Atk,
     saMult12,
-    eza,
-    exclusivity,
     nCopies,
     sa12AtkStacks,
     sa12Atk,
 ):
     """Returns the ATK stat of a super-attack"""
     kiMultiplier = kiMod12
-    saMultiplier = SAMultiplier(saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk)
+    saMultiplier = SAMultiplier(saMult12, nCopies, sa12AtkStacks, sa12Atk)
     return getAtkStat(ATK, p1Atk, linkAtkSoT, p2Atk, p3Atk, kiMultiplier, saMultiplier + sa12Atk + stackedAtk)
 
 
@@ -157,15 +154,13 @@ def getUSA(
     p2Atk,
     p3Atk,
     saMult18,
-    eza,
-    exclusivity,
     nCopies,
     sa18AtkStacks,
     sa18Atk,
 ):
     """Returns the ATK stat of an ultra-super-attack"""
     kiMultiplier = KiModifier(kiMod12, max(ki, 18))
-    saMultiplier = SAMultiplier(saMult18, eza, exclusivity, nCopies, sa18AtkStacks, sa18Atk)
+    saMultiplier = SAMultiplier(saMult18, nCopies, sa18AtkStacks, sa18Atk)
     return getAtkStat(ATK, p1Atk, linkAtkSoT, p2Atk, p3Atk, kiMultiplier, saMultiplier + sa18Atk + stackedAtk)
 
 
@@ -190,8 +185,6 @@ def getActiveAttack(
 def getAvgAtk(
     AApSuper,
     saMult12,
-    eza,
-    exclusivity,
     nCopies,
     sa12AtkStacks,
     sa12Atk,
@@ -217,19 +210,19 @@ def getAvgAtk(
     nAA = len(AApSuper)
     i = -1  # iteration counter
     nProcs = 1  # Initialise number of HiPo procs
-    saMultiplier = SAMultiplier(saMult12, eza, exclusivity, nCopies, sa12AtkStacks, sa12Atk)
+    saMultiplier = SAMultiplier(saMult12, nCopies, sa12AtkStacks, sa12Atk)
     m12 = saMultiplier + sa12Atk + stackedAtk  # 12 ki multiplier after SA effect
     a12_0 = sa / m12  # Get 12 ki SA attack stat without multiplier
     if 1 + p1Atk + stackedAtk <= 0:
-        N_0 = 0
+        n_0 = 0
     else:
         # Get normal attack stat without SoT attack
-        N_0 = normal / (1 + p1Atk + stackedAtk)
+        n_0 = normal / (1 + p1Atk + stackedAtk)
     pAA = HiPopAA  # Probability of doing an additional attack next
-    pSA = AApSuper  # Probability of doing a super on inbuilt additional
+    pAASA = AApSuper  # Probability of doing a super on inbuilt additional
     pG = aaPGuarantee  # Probability of inbuilt additional
     counterAtk = (
-        NUM_ATTACKS_RECEIVED[slot] * normalCounterMult + NUM_SUPER_ATTACKS[slot] * pCounterSA * saCounterMult
+        NUM_ATTACKS_RECEIVED[slot] * normalCounterMult + NUM_SUPER_ATTACKS_RECEIVED[slot] * pCounterSA * saCounterMult
     ) * normal
     avgAtk = pN * (
         normal
@@ -240,9 +233,9 @@ def getAvgAtk(
             p1Atk + stackedAtk,
             pAA,
             nProcs,
-            pSA,
+            pAASA,
             pG,
-            N_0,
+            n_0,
             a12_0,
             sa12Atk,
             HiPopAA,
@@ -256,9 +249,9 @@ def getAvgAtk(
             p1Atk + stackedAtk + sa18Atk,
             pAA,
             nProcs,
-            pSA,
+            pAASA,
             pG,
-            N_0,
+            n_0,
             a12_0,
             sa12Atk,
             HiPopAA,
@@ -274,9 +267,9 @@ def getAvgAtk(
                 p1Atk + stackedAtk + sa18Atk,
                 pAA,
                 nProcs,
-                pSA,
+                pAASA,
                 pG,
-                N_0,
+                n_0,
                 a12_0,
                 sa12Atk,
                 HiPopAA,
