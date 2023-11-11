@@ -9,6 +9,7 @@ RARITIES = ["TUR", "LR", "LR", "LR", "TUR", "TUR", "LR", "TUR"]
 UNIQUE_RARITIES = ["TUR", "LR"]
 CLASSES = ["S", "E"]
 TYPES = ["AGL", "INT", "PHY", "STR", "TEQ"]
+HIPO_DUPES = ['55%','69%','79%','90%','100%']
 
 # Misc
 YES_NO = ["Y", "N"]

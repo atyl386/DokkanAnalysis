@@ -2,12 +2,12 @@ import datetime as dt
 from dokkanUnitHelperFunctions import *
 from scipy.stats import geom
 import copy
+import os
+import pickle
 
 # TODO:
-# - Fix functions which take heaps of arguments which can be condensed down to state, form, unit
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
 # - Instead of asking user how many of something, should ask until they enteran exit key aka while loop instead of for loop
-# - How are we dealing with unit-super attacks? I think this works if user specifies the correct activation probabilities
 # - Should read up on python optimisation techniques once is running and se how long it takes. But try be efficient you go.
 # - I think the 20x3 state matrix needs to be used to compute the best path
 # - Whilst the state matrix is the ideal way, for now just assume a user inputed slot for each form
@@ -85,18 +85,23 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
 
 
 class Unit:
-    def __init__(self, id, nCopies, brz, HiPo1, HiPo2):
-        self.id = str(id)
-        self.nCopies = nCopies
-        self.brz = brz
-        self.HiPo1 = HiPo1
-        self.HiPo2 = HiPo2
-        self.getConstants()  # Requires user input, should make a version that loads from file
-        self.getHiPo()
-        self.getSBR()  # Requires user input, should make a version that loads from file
-        self.getForms()  # Requires user input, should make a version that loads from file
-        self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
-        self.getStates()
+    def __init__(self, id, nCopies, brz, HiPo1, HiPo2, loadPickle = False):
+        self.picklePath = os.getcwd() + "/DokkanUnits/" + HIPO_DUPES[nCopies - 1] + "/unit_" + str(id) + ".pkl"
+        if loadPickle:
+            self = pickle.load(self.picklePath)
+        else:
+            self.id = str(id)
+            self.nCopies = nCopies
+            self.brz = brz
+            self.HiPo1 = HiPo1
+            self.HiPo2 = HiPo2
+            self.getConstants()  # Requires user input, should make a version that loads from file
+            self.getHiPo()
+            self.getSBR()  # Requires user input, should make a version that loads from file
+            self.getForms()  # Requires user input, should make a version that loads from file
+            self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
+            self.getStates()
+            self.saveUnit()
 
     def getConstants(self):
         self.exclusivity = clc.prompt(
@@ -454,6 +459,11 @@ class Unit:
             turn = nextTurn
             if turn > form.endTurn:
                 formIdx += 1
+
+    def saveUnit(self):
+        with open(self.picklePath, "wb") as outp:  # Overwrites any existing file.
+            pickle.dump(self, outp, pickle.HIGHEST_PROTOCOL)
+        outp.close()
 
 
 class Form:
