@@ -95,7 +95,7 @@ class Unit:
         self.getHiPo()
         self.getSBR()  # Requires user input, should make a version that loads from file
         self.getForms()  # Requires user input, should make a version that loads from file
-        self.stacks = dict(zip(STACK_EFFECTS, [[], []])) # Dict mapping STACK_EFFECTS to list of Stack objects
+        self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
         self.getStates()
 
     def getConstants(self):
@@ -330,7 +330,7 @@ class Unit:
             ]
             form.getLinks()
             # assert len(np.unique(links))==MAX_NUM_LINKS, 'Duplicate links'
-            form.getSuperAttacks(self.rarity) 
+            form.getSuperAttacks(self.rarity)
             form.abilities.extend(
                 abilityQuestionaire(
                     form,
@@ -477,7 +477,7 @@ class Form:
         self.intentional12Ki = False
         self.normalCounterMult = 0.0
         self.saCounterMult = 0.0
-        self.superAttacks = {} # Will be a list of SuperAttack objects
+        self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
         # This will list active skill attacks and finish skills (as have to be applied after state.setState())
@@ -507,22 +507,30 @@ class Form:
         self.linkCommonality /= MAX_NUM_LINKS
 
     def getSuperAttacks(self, rarity):
-        superAttackTypes = ['12 Ki', '18 Ki']
+        superAttackTypes = ["12 Ki", "18 Ki"]
         for superAttackType in superAttackTypes:
             avgSuperAttack = SuperAttack(superAttackType)
-            if superAttackType == "12 Ki" or (rarity == "LR" and not(self.intentional12Ki)):
-                numSuperAttacks = clc.prompt(f"How many different {superAttackType} super attacks does this form have?", default=1)
+            if superAttackType == "12 Ki" or (rarity == "LR" and not (self.intentional12Ki)):
+                numSuperAttacks = clc.prompt(
+                    f"How many different {superAttackType} super attacks does this form have?", default=1
+                )
                 superFracTotal = 0.0
                 for i in range(numSuperAttacks):
-                    superFrac  = clc.prompt(f"What is the probability of this super attack variant from occuring?", default=1.0)
-                    numEffects = clc.prompt(f"How many effects does this form's {superAttackType} super attack have?", default=0)
+                    superFrac = clc.prompt(
+                        f"What is the probability of this super attack variant from occuring?", default=1.0
+                    )
+                    numEffects = clc.prompt(
+                        f"How many effects does this form's {superAttackType} super attack have?", default=0
+                    )
                     for j in range(numEffects):
                         effectType = clc.prompt(
                             "What type of effect does the unit get on super?",
                             type=clc.Choice(SUPER_ATTACK_EFFECTS, case_sensitive=False),
                             default="ATK",
                         )
-                        activationProbability = clc.prompt("What is the probability this effect activates when supering?", default=1.0)
+                        activationProbability = clc.prompt(
+                            "What is the probability this effect activates when supering?", default=1.0
+                        )
                         buff = clc.prompt("What is the value of the buff?", default=0.0)
                         duration = clc.prompt("How many turns does it last for?", default=99)
                         avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
@@ -552,16 +560,19 @@ class Link:
 class SuperAttack:
     def __init__(self, superAttackType):
         self.superAttackType = superAttackType
-        self.effects = dict(zip(SUPER_ATTACK_EFFECTS, [SuperAttackEffectParams() for i in range(len(SUPER_ATTACK_EFFECTS))]))
+        self.effects = dict(
+            zip(SUPER_ATTACK_EFFECTS, [SuperAttackEffectParams() for i in range(len(SUPER_ATTACK_EFFECTS))])
+        )
+
     def addEffect(self, effectType, activationProbability, buff, duration, superFrac):
         self.effects[effectType].updateParams(activationProbability, buff, duration, superFrac)
 
-       
+
 class SuperAttackEffectParams:
     def __init__(self):
         self.buff = 0.0
         self.duration = 0.0
-    
+
     def updateParams(self, activationProbability, buff, duration, superFrac):
         # superFrac accounts for unit supers
         self.buff += activationProbability * buff * superFrac
@@ -622,12 +633,17 @@ class State:
         self.pN, self.pSA, self.pUSA = getAttackDistribution(
             self.constantKi, self.randomKi, form.intentional12Ki, unit.rarity
         )
-        self.aaSA = branchAA(
-            -1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA
-        )
+        self.aaSA = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
         self.updateStackedStats(form, unit)
         self.normal = getNormal(
-            unit.kiMod12, self.ki, unit.ATK, self.p1Atk, self.stackedStats["ATK"], form.linkAtkSoT, self.p2Atk, self.p3Atk
+            unit.kiMod12,
+            self.ki,
+            unit.ATK,
+            self.p1Atk,
+            self.stackedStats["ATK"],
+            form.linkAtkSoT,
+            self.p2Atk,
+            self.p3Atk,
         )
         self.sa = getSA(
             unit.kiMod12,
@@ -640,7 +656,7 @@ class State:
             form.saMult12,
             unit.nCopies,
             form.superAttacks["12 Ki"].effects["ATK"].duration,
-            form.superAttacks["12 Ki"].effects["ATK"].buff
+            form.superAttacks["12 Ki"].effects["ATK"].buff,
         )
         self.usa = getUSA(
             unit.kiMod12,
@@ -654,7 +670,7 @@ class State:
             form.saMult18,
             unit.nCopies,
             form.superAttacks["18 Ki"].effects["ATK"].duration,
-            form.superAttacks["18 Ki"].effects["ATK"].buff
+            form.superAttacks["18 Ki"].effects["ATK"].buff,
         )
         self.avgAtk = getAvgAtk(
             self.aaPSuper,
@@ -677,7 +693,7 @@ class State:
             self.pSA,
             self.pUSA,
             unit.rarity,
-            self.slot
+            self.slot,
         )
         # Apply active skill and finish skill attacks
         for specialAttack in form.specialAttacks:
@@ -694,7 +710,9 @@ class State:
         )
         self.apt = self.avgAtk * self.avgAtkModifer
         self.getAvgDefMult(form, unit)
-        self.avgDefPreSuper = getDefStat(unit.DEF, self.p1Atk, form.linkDef, self.p2DefA, self.p3Def, self.stackedStats['DEF'])
+        self.avgDefPreSuper = getDefStat(
+            unit.DEF, self.p1Atk, form.linkDef, self.p2DefA, self.p3Def, self.stackedStats["DEF"]
+        )
         self.avgDefPostSuper = getDefStat(unit.DEF, self.p1Atk, form.linkDef, self.p2Def, self.p3Def, self.avgDefMult)
         self.normalDamageTakenPreSuper = getDamageTaken(
             self.pEvade,
@@ -712,13 +730,31 @@ class State:
             self.dmgRedNormal,
             self.avgDefPostSuper,
         )
-        self.saDamageTakenPreSuper = getDamageTaken(self.pEvade, self.guard, MAX_SA_DAM_PER_TURN[self.turn - 1], unit.TDB, self.dmgRedA, self.avgDefPreSuper)
-        self.saDamageTakenPostSuper = getDamageTaken(self.pEvade, self.guard, MAX_SA_DAM_PER_TURN[self.turn - 1], unit.TDB, self.dmgRedB, self.avgDefPostSuper)
-        self.healing += form.linkHealing + (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * self.avgDefPreSuper * self.numSameTypeOrbs / AVG_HEALTH
-        self.normalDamageTaken = (NUM_NORMAL_ATTACKS_RECEIVED_BEFORE_ATTACKING[self.slot - 1] * self.normalDamageTakenPreSuper + NUM_NORMAL_ATTACKS_RECEIVED_AFTER_ATTACKING[self.slot -1] * self.normalDamageTakenPostSuper) / (NUM_NORMAL_ATTACKS_RECEIVED[self.slot - 1])
-        self.saDamageTaken = (NUM_SUPER_ATTACKS_RECEIVED_BEFORE_ATTACKING[self.slot - 1] * self.saDamageTakenPreSuper + NUM_SUPER_ATTACKS_RECEIVED_AFTER_ATTACKING[self.slot -1] * self.saDamageTakenPostSuper) / (NUM_SUPER_ATTACKS_RECEIVED[self.slot - 1])
-        self.slotFactor = self.slot ** SLOT_FACTOR_POWER
-        self.useability = unit.teams/ NUM_TEAMS_MAX * (1 + USEABILITY_SUPPORT_FACTOR * self.support + form.linkCommonality)
+        self.saDamageTakenPreSuper = getDamageTaken(
+            self.pEvade, self.guard, MAX_SA_DAM_PER_TURN[self.turn - 1], unit.TDB, self.dmgRedA, self.avgDefPreSuper
+        )
+        self.saDamageTakenPostSuper = getDamageTaken(
+            self.pEvade, self.guard, MAX_SA_DAM_PER_TURN[self.turn - 1], unit.TDB, self.dmgRedB, self.avgDefPostSuper
+        )
+        self.healing += (
+            form.linkHealing
+            + (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1])
+            * self.avgDefPreSuper
+            * self.numSameTypeOrbs
+            / AVG_HEALTH
+        )
+        self.normalDamageTaken = (
+            NUM_NORMAL_ATTACKS_RECEIVED_BEFORE_ATTACKING[self.slot - 1] * self.normalDamageTakenPreSuper
+            + NUM_NORMAL_ATTACKS_RECEIVED_AFTER_ATTACKING[self.slot - 1] * self.normalDamageTakenPostSuper
+        ) / (NUM_NORMAL_ATTACKS_RECEIVED[self.slot - 1])
+        self.saDamageTaken = (
+            NUM_SUPER_ATTACKS_RECEIVED_BEFORE_ATTACKING[self.slot - 1] * self.saDamageTakenPreSuper
+            + NUM_SUPER_ATTACKS_RECEIVED_AFTER_ATTACKING[self.slot - 1] * self.saDamageTakenPostSuper
+        ) / (NUM_SUPER_ATTACKS_RECEIVED[self.slot - 1])
+        self.slotFactor = self.slot**SLOT_FACTOR_POWER
+        self.useability = (
+            unit.teams / NUM_TEAMS_MAX * (1 + USEABILITY_SUPPORT_FACTOR * self.support + form.linkCommonality)
+        )
         self.attributes = [
             unit.leaderSkill,
             unit.SBR,
@@ -729,7 +765,7 @@ class State:
             self.apt,
             self.normalDamageTaken,
             self.saDamageTaken,
-            self.slotFactor
+            self.slotFactor,
         ]
 
     def updateStackedStats(self, form, unit):
@@ -748,27 +784,42 @@ class State:
             # Remove them if expired
             unit.stacks[stat] = [stack for stack in unit.stacks[stat] if stack.duration > 0]
             # Add new stacks
-            if unit.rarity == 'LR':
+            if unit.rarity == "LR":
                 # If stack for long enough to last to next turn
-                if (form.superAttacks['18 Ki'].effects[stat].duration > RETURN_PERIOD_PER_SLOT[state.slot - 1]):
-                    unit.stacks[stat].append(Stack(stat, state.pUSA * form.superAttacks['18 Ki'].effects[stat].buff, form.superAttacks['18 Ki'].effects[stat].duration))
-            if (form.superAttacks['12 Ki'].effects[stat].duration > RETURN_PERIOD_PER_SLOT[state.slot - 1]):
-                unit.stacks[stat].append(Stack(stat, (state.pSA + state.aaSA) * form.superAttacks['12 Ki'].effects[stat].buff, form.superAttacks['12 Ki'].effects[stat].duration))
+                if form.superAttacks["18 Ki"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+                    unit.stacks[stat].append(
+                        Stack(
+                            stat,
+                            state.pUSA * form.superAttacks["18 Ki"].effects[stat].buff,
+                            form.superAttacks["18 Ki"].effects[stat].duration,
+                        )
+                    )
+            if form.superAttacks["12 Ki"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+                unit.stacks[stat].append(
+                    Stack(
+                        stat,
+                        (state.pSA + state.aaSA) * form.superAttacks["12 Ki"].effects[stat].buff,
+                        form.superAttacks["12 Ki"].effects[stat].duration,
+                    )
+                )
             # Apply stacks
             for stack in unit.stacks[stat]:
                 self.stackedStats[stat] += stack.buff
 
     def getAvgDefMult(self, form, unit):
-        self.avgDefMult = self.stackedStats['DEF'] + (self.pSA + self.aaSA) * form.superAttacks['12 Ki'].effects['DEF'].buff
+        self.avgDefMult = (
+            self.stackedStats["DEF"] + (self.pSA + self.aaSA) * form.superAttacks["12 Ki"].effects["DEF"].buff
+        )
         if unit.rarity == "LR":  # If unit is a LR
-            self.avgDefMult += self.pUSA * form.superAttacks['18 Ki'].effects['DEF'].buff           
-    
+            self.avgDefMult += self.pUSA * form.superAttacks["18 Ki"].effects["DEF"].buff
+
 
 class Stack:
     def __init__(self, stat, buff, duration):
         self.stat = stat
         self.buff = buff
         self.duration = duration
+
 
 class Ability:
     def __init__(self, form):
@@ -987,14 +1038,12 @@ class PerAttackReceived(PassiveAbility):
         match self.effect:
             case "Ki":
                 state.constantKi += np.minimum(
-                    self.effectiveBuff
-                    * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                     self.max,
                 )
             case "ATK":
                 state.p2Atk += np.minimum(
-                    self.effectiveBuff
-                    * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                     self.max,
                 )
             case "DEF":
@@ -1004,8 +1053,7 @@ class PerAttackReceived(PassiveAbility):
                 )
             case "Critical Hit":
                 state.crit += np.minimum(
-                    self.effectiveBuff
-                    * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                     self.max,
                 )
 
@@ -1032,9 +1080,7 @@ class AfterAttackReceived(PassiveAbility):
                     self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
                 )  # This should return self.activationProbabiltiy if self.turnsActivated = 0
             case "Attack Effective to All":
-                state.AEAAT = (
-                    self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
-                )
+                state.AEAAT = self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
         self.turnsSinceActivated += 1
         # If buff lasts till unit's next turn
         if self.effectDuration > self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:
