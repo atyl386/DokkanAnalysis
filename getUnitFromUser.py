@@ -1011,12 +1011,12 @@ class StartOfTurn(PassiveAbility):
         super().__init__(form, activationProbability, effect, buff, effectDuration)
         self.start = start
         self.end = end
-        self.buff["Ki"] = ki
+        self.ki = ki
         self.slots = slots
         self.effectiveBuff = buff * activationProbability * effectDuration
 
     def applyToState(self, state, unit=None):
-        pHaveKi = 1 - ZTP_CDF(self.buff["Ki"] - 1 - state.constantKi, state.randomKi)
+        pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
         self.effectiveBuff = self.effectiveBuff * pHaveKi
         self.activationProbability *= pHaveKi
         # Check if state is elligible for ability
@@ -1074,27 +1074,23 @@ class PerAttackReceived(PassiveAbility):
         self.max = args[0]
 
     def applyToState(self, state, unit=None):
-        match self.effect:
-            case "Ki":
-                state.constantKi += np.minimum(
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += np.minimum(
                     self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                     self.max,
                 )
-            case "ATK":
-                state.p2Buff["ATK"] += np.minimum(
-                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
-                    self.max,
-                )
-            case "DEF":
-                state.p2DefA += np.minimum(
-                    (2 * state.numAttacksReceived + NUM_ATTACKS_RECEIVED[state.slot] - 1) * self.effectiveBuff / 2,
-                    self.max,
-                )
-            case "Crit":
-                state.buff["Crit"] += np.minimum(
-                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
-                    self.max,
-                )
+        else:
+            match self.effect:
+                case "ATK":
+                    state.p2Buff["ATK"] += np.minimum(
+                        self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                        self.max,
+                    )
+                case "DEF":
+                    state.p2DefA += np.minimum(
+                        (2 * state.numAttacksReceived + NUM_ATTACKS_RECEIVED[state.slot] - 1) * self.effectiveBuff / 2,
+                        self.max,
+                    )
 
 
 class AfterAttackReceived(PassiveAbility):
@@ -1113,15 +1109,14 @@ class AfterAttackReceived(PassiveAbility):
                 ) / state.attacksReceiving  # Factor to account for not having the buff on the fist hit
             else:
                 hitFactor = np.min(state.attacksReceivingBeforeAttacking, 1)
-        match self.effect:
-            case "DEF":
-                state.p2DefA += (
-                    self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
-                )  # This should return self.activationProbabiltiy if self.turnsActivated = 0
-            case "AEAAT":
-                state.buff["AEAAT"] = (
-                    self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
-                )
+        # This should return self.activationProbabiltiy if self.turnsActivated = 0
+        effectiveBuff = self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += effectiveBuff
+        else:
+            match self.effect:
+                case "DEF":
+                    state.p2DefA += effectiveBuff
         self.turnsSinceActivated += 1
         # If buff lasts till unit's next turn
         if self.effectDuration > self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:
@@ -1130,7 +1125,7 @@ class AfterAttackReceived(PassiveAbility):
                     self.form,
                     self.activationProbability,
                     self.effect,
-                    self.buff,
+                    self.effectiveBuff,
                     self.effectDuration,
                     self.turnsSinceActivated,
                 )
@@ -1143,15 +1138,14 @@ class PerRainbowOrb(PassiveAbility):
 
     def applyToState(self, state, unit=None):
         buffFromRainbowOrbs = self.effectiveBuff * state.numRainbowOrbs
-        match self.effect:
-            case "Crit":
-                state.buff["Crit"] += buffFromRainbowOrbs
-            case "Dmg Red":
-                state.dmgRedA += buffFromRainbowOrbs
-                state.dmgRedB += buffFromRainbowOrbs
-                state.buff["Dmg Red against Normals"] += buffFromRainbowOrbs
-            case "Evasion":
-                state.buff["Evade"] += buffFromRainbowOrbs
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += buffFromRainbowOrbs
+        else:
+            match self.effect:
+                case "Dmg Red":
+                    state.dmgRedA += buffFromRainbowOrbs
+                    state.dmgRedB += buffFromRainbowOrbs
+                    state.buff["Dmg Red against Normals"] += buffFromRainbowOrbs
 
 
 class Nullification(PassiveAbility):
