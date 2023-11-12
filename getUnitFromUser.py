@@ -1076,14 +1076,15 @@ class PerAttackReceived(PassiveAbility):
     def applyToState(self, state, unit=None):
         if self.effect in state.buff.keys():
             state.buff[self.effect] += np.minimum(
-                    self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
-                    self.max,
-                )
+                self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                self.max,
+            )
         else:
             match self.effect:
                 case "ATK":
                     state.p2Buff["ATK"] += np.minimum(
-                        self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                        self.effectiveBuff
+                        * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
                         self.max,
                     )
                 case "DEF":
