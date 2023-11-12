@@ -85,7 +85,7 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
 
 
 class Unit:
-    def __init__(self, id, nCopies, brz, HiPo1, HiPo2, loadPickle = False):
+    def __init__(self, id, nCopies, brz, HiPo1, HiPo2, loadPickle=False):
         self.picklePath = os.getcwd() + "/DokkanUnits/" + HIPO_DUPES[nCopies - 1] + "/unit_" + str(id) + ".pkl"
         if loadPickle:
             self = pickle.load(self.picklePath)
@@ -311,13 +311,6 @@ class Unit:
             self.forms.append(Form(startTurn, endTurn, slot))
             startTurn = endTurn + 1
         for form in self.forms:
-            form.saMult12 = superAttackConversion[
-                clc.prompt(
-                    "What is the form's 12 ki super attack multiplier?",
-                    type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES),
-                    default="Immense",
-                )
-            ][superAttackLevelConversion[self.rarity][self.EZA]]
             form.intentional12Ki = yesNo2Bool[clc.prompt("Should a 12 Ki be targetted for this form?", default="N")]
             form.normalCounterMult = counterAttackConversion[
                 clc.prompt(
@@ -335,7 +328,7 @@ class Unit:
             ]
             form.getLinks()
             # assert len(np.unique(links))==MAX_NUM_LINKS, 'Duplicate links'
-            form.getSuperAttacks(self.rarity)
+            form.getSuperAttacks(self.rarity, self.EZA)
             form.abilities.extend(
                 abilityQuestionaire(
                     form,
@@ -481,9 +474,6 @@ class Form:
         self.linkDodge = 0.0
         self.linkDmgRed = 0.0
         self.linkHealing = 0.0
-        # Super Attack Multipliers
-        self.saMult12 = 0.0
-        self.saMult18 = 0.0
         self.intentional12Ki = False
         self.normalCounterMult = 0.0
         self.saCounterMult = 0.0
@@ -516,10 +506,17 @@ class Form:
             self.linkHealing += link.healing
         self.linkCommonality /= MAX_NUM_LINKS
 
-    def getSuperAttacks(self, rarity):
+    def getSuperAttacks(self, rarity, eza):
         superAttackTypes = ["12 Ki", "18 Ki"]
         for superAttackType in superAttackTypes:
-            avgSuperAttack = SuperAttack(superAttackType)
+            multiplier = superAttackConversion[
+                clc.prompt(
+                    f"What is the form's {superAttackType} super attack multiplier?",
+                    type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES),
+                    default="Immense",
+                )
+            ][superAttackLevelConversion[rarity][eza]]
+            avgSuperAttack = SuperAttack(superAttackType, multiplier)
             if superAttackType == "12 Ki" or (rarity == "LR" and not (self.intentional12Ki)):
                 numSuperAttacks = clc.prompt(
                     f"How many different {superAttackType} super attacks does this form have?", default=1
@@ -568,8 +565,9 @@ class Link:
 
 
 class SuperAttack:
-    def __init__(self, superAttackType):
+    def __init__(self, superAttackType, multiplier):
         self.superAttackType = superAttackType
+        self.multiplier = multiplier
         self.effects = dict(
             zip(SUPER_ATTACK_EFFECTS, [SuperAttackEffectParams() for i in range(len(SUPER_ATTACK_EFFECTS))])
         )
@@ -663,7 +661,7 @@ class State:
             form.linkAtkSoT,
             self.p2Atk,
             self.p3Atk,
-            form.saMult12,
+            form.superAttacks["12 Ki"].multiplier,
             unit.nCopies,
             form.superAttacks["12 Ki"].effects["ATK"].duration,
             form.superAttacks["12 Ki"].effects["ATK"].buff,
@@ -677,14 +675,14 @@ class State:
             form.linkAtkSoT,
             self.p2Atk,
             self.p3Atk,
-            form.saMult18,
+            form.superAttacks["18 Ki"].multiplier,
             unit.nCopies,
             form.superAttacks["18 Ki"].effects["ATK"].duration,
             form.superAttacks["18 Ki"].effects["ATK"].buff,
         )
         self.avgAtk = getAvgAtk(
             self.aaPSuper,
-            form.saMult12,
+            form.superAttacks["12 Ki"].multiplier,
             unit.nCopies,
             form.superAttacks["12 Ki"].effects["ATK"].duration,
             form.superAttacks["12 Ki"].effects["ATK"].buff,
