@@ -452,6 +452,7 @@ class Unit:
             slot = form.slot
             state = State(slot, turn)
             state.setState(self, form)
+            form.numAttacksReceived += NUM_ATTACKS_RECEIVED[slot - 1]
             self.states.append(state)
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
             if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN):
@@ -485,6 +486,7 @@ class Form:
         self.intentional12Ki = False
         self.normalCounterMult = 0
         self.saCounterMult = 0
+        self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
@@ -633,7 +635,6 @@ class State:
         self.dmgRedA = 0
         self.dmgRedB = 0  # Dmg Red before and after attacking
         self.pCounterSA = 0  # Probability of countering an enemy super attack
-        self.numAttacksReceived = 0  # Number of attacks received so far in this form. Assuming update the state.numAttacksReceievd after the abilities have been processed for that turn
 
     def setState(self, unit, form):
         for ability in form.abilities:
@@ -1075,21 +1076,23 @@ class PerAttackReceived(PassiveAbility):
 
     def applyToState(self, state, unit=None):
         if self.effect in state.buff.keys():
-            state.buff[self.effect] += np.minimum(
-                self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+            state.buff[self.effect] += min(
+                self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot - 1] + state.numAttacksReceived),
                 self.max,
             )
         else:
             match self.effect:
                 case "ATK":
-                    state.p2Buff["ATK"] += np.minimum(
+                    state.p2Buff["ATK"] += min(
                         self.effectiveBuff
-                        * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot] + state.numAttacksReceived),
+                        * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot - 1] + state.numAttacksReceived),
                         self.max,
                     )
                 case "DEF":
                     state.p2DefA += np.minimum(
-                        (2 * state.numAttacksReceived + NUM_ATTACKS_RECEIVED[state.slot] - 1) * self.effectiveBuff / 2,
+                        (2 * state.numAttacksReceived + NUM_ATTACKS_RECEIVED[state.slot - 1] - 1)
+                        * self.effectiveBuff
+                        / 2,
                         self.max,
                     )
 
@@ -1162,4 +1165,4 @@ class Nullification(PassiveAbility):
 
 
 if __name__ == "__main__":
-    kit = Unit(1, 1, "DEF", "ADD", "DGE", loadPickle=False)
+    kit = Unit(1, 1, "DEF", "ADD", "DGE", loadPickle=True)
