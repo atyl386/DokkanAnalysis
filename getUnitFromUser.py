@@ -23,10 +23,9 @@ import pickle
 
 def restrictionQuestionaire():
     numRestrictions = clc.prompt("How many different restrictions does this ability have?", default=0)
-    totalRestrictionProbability = 0.0
+    totalRestrictionProbability = 1.0
     turnRestriction = MAX_TURN
     for restriction in range(numRestrictions):
-        restrictionProbability = 0.0
         restrictionType = clc.prompt(
             "What type of restriction is it?",
             type=clc.Choice(RESTRICTIONS, case_sensitive=False),
@@ -36,23 +35,26 @@ def restrictionQuestionaire():
             turnRestriction = min(
                 clc.prompt(
                     "What is the turn restriction (relative to the form's starting turn)?",
-                    default=3,
+                    default=5,
                 ),
                 turnRestriction,
             )
-        elif restrictionType == "Max HP":
-            restrictionProbability = 1.0 - maxHealthCDF(clc.prompt("What is the maximum HP restriction?", default=0.7))
-        elif restrictionType == "Min HP":
-            restrictionProbability = maxHealthCDF(clc.prompt("What is the minimum HP restriction?", default=0.7))
-        elif restrictionType == "Enemy Max HP":
-            restrictionProbability = 1.0 - clc.prompt("What is the maximum enemy HP restriction?", default=0.5)
-        elif restrictionType == "Enemy Min HP":
-            restrictionProbability = clc.prompt("What is the minimum enemy HP restriction?", default=0.5)
-        # Assume independence
-        totalRestrictionProbability = (1.0 - totalRestrictionProbability) * restrictionProbability + (
-            1.0 - restrictionProbability
-        ) * totalRestrictionProbability
-    return 1.0 - totalRestrictionProbability, turnRestriction
+        else:
+            if restrictionType == "Max HP":
+                restrictionProbability = 1.0 - maxHealthCDF(
+                    clc.prompt("What is the maximum HP restriction?", default=0.7)
+                )
+            elif restrictionType == "Min HP":
+                restrictionProbability = maxHealthCDF(clc.prompt("What is the minimum HP restriction?", default=0.7))
+            elif restrictionType == "Enemy Max HP":
+                restrictionProbability = 1.0 - clc.prompt("What is the maximum enemy HP restriction?", default=0.5)
+            elif restrictionType == "Enemy Min HP":
+                restrictionProbability = clc.prompt("What is the minimum enemy HP restriction?", default=0.5)
+            # Assume independence
+            totalRestrictionProbability = (1.0 - totalRestrictionProbability) * restrictionProbability + (
+                1.0 - restrictionProbability
+            ) * totalRestrictionProbability
+    return max(1.0 - totalRestrictionProbability, 1 / MAX_TURN), turnRestriction
 
 
 def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], types=[], defaults=[]):
@@ -73,7 +75,9 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
             )
             activationProbability = clc.prompt("What is the probability this ability activates?", default=1.0)
             buff = clc.prompt("What is the value of the buff?", default=0.0)
-            effectDuration = clc.prompt("How many turns does it last for?", default=1)
+            effectDuration = clc.prompt(
+                "How many turns does it last for? Only applicable to abilities with a time limit.", default=1
+            )
             ability = abilityClass(form, activationProbability, effect, buff, effectDuration, parameters)
         elif issubclass(abilityClass, SingleTurnAbility):
             ability = abilityClass(form, parameters)
@@ -142,9 +146,9 @@ class Unit:
             ),
             "%m/%y",
         )
-        self.HP = clc.prompt("What is the unit's base HP stat?", default=0)
-        self.ATK = clc.prompt("What is the unit's base ATK stat?", default=0)
-        self.DEF = clc.prompt("What is the unit's base DEF stat?", default=0)
+        self.HP = clc.prompt("What is the unit's Max Level HP stat?", default=0)
+        self.ATK = clc.prompt("What is the unit's Max Level ATK stat?", default=0)
+        self.DEF = clc.prompt("What is the unit's Max Level DEF stat?", default=0)
         self.leaderSkill = leaderSkillConversion[
             clc.prompt(
                 "How would you rate the unit's leader skill on a scale of 1-10?\n200% limited - e.g. LR Hatchiyak Goku\n 200% small - e.g. LR Metal Cooler\n 200% medium - e.g. PHY God Goku\n 200% large - e.g. LR Vegeta & Trunks\n",
@@ -418,7 +422,7 @@ class Unit:
                         "What is the attack multiplier?",
                         "What is the additional attack buff when performing thes attack?",
                     ],
-                    [clc.Choice(specialAttackConversion.keys()), None],
+                    [clc.Choice(specialAttackConversion.keys(), case_sensitive=False), None],
                     ["Ultimate", 0.0],
                 )
             )
@@ -512,7 +516,7 @@ class Form:
             multiplier = superAttackConversion[
                 clc.prompt(
                     f"What is the form's {superAttackType} super attack multiplier?",
-                    type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES),
+                    type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
                     default="Immense",
                 )
             ][superAttackLevelConversion[rarity][eza]]
@@ -539,7 +543,7 @@ class Form:
                             "What is the probability this effect activates when supering?", default=1.0
                         )
                         buff = clc.prompt("What is the value of the buff?", default=0.0)
-                        duration = clc.prompt("How many turns does it last for?", default=99)
+                        duration = clc.prompt("How many turns does it last for?", default=MAX_TURN)
                         avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
                     superFracTotal += superFrac
                 assert superFracTotal == 1.0, "Invald super attack variant proabilities entered"
@@ -846,7 +850,7 @@ class SingleTurnAbility(SpecialAbility):
         self.activationTurn = int(
             max(
                 min(round(1 / self.activationProbability), self.maxTurnRestriction),
-                PEAK_TURN - 1,
+                PEAK_TURN,
             )
         )  # Mean of geometric distribution is 1/p
 
@@ -891,7 +895,7 @@ class ActiveSkillBuff(SingleTurnAbility):
             self.form.abilities.extend(
                 abilityQuestionaire(
                     self.form,
-                    "How many different buffs does this active skill attack have?",
+                    "How many different buffs does this active skill have?",
                     TurnDependent,
                     [
                         "This is the activation turn. Please press enter to continue",
