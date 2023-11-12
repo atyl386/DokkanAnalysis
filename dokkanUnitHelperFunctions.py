@@ -12,7 +12,7 @@ def maxHealthCDF(maxHealth):
 
 def ZTP_CDF(x, Lambda):
     """Returns the cdf(x) of a zero-truncated poisson distribution(lambda)"""
-    return (poisson.cdf(x, Lambda) - poisson.cdf(0, Lambda)) / (1 - poisson.cdf(0, Lambda))
+    return max((poisson.cdf(x, Lambda) - poisson.cdf(0, Lambda)) / (1 - poisson.cdf(0, Lambda)), 0)
 
 
 def SAMultiplier(baseMultiplier, nCopies, nStacks, saAtk):
@@ -287,5 +287,5 @@ def getDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
             + (1 - guard) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
         )
         / (maxDamage * AVG_TYPE_ADVANATGE),
-        0.0,
+        0,
     )
