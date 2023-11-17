@@ -6,6 +6,7 @@ import os
 import pickle
 
 # TODO:
+# - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - Should save all the user inputs to a .txt file and read them back in (up to one before end) to quickly catch the user back up to where they were before they inputted an error
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
 # - Instead of asking user how many of something, should ask until they enteran exit key aka while loop instead of for loop
@@ -360,11 +361,11 @@ class Unit:
             form.abilities.extend(
                 abilityQuestionaire(
                     form,
-                    "How many different buffs does the form get on attacks received?",
-                    PerAttackReceived,
-                    ["What is the maximum buff?"],
+                    "How many slot specific buffs does the form have?",
+                    SlotDependent,
+                    ["Which slot is required?"],
                     [None],
-                    [1.0],
+                    [1],
                 )
             )
             form.abilities.extend(
@@ -377,11 +378,11 @@ class Unit:
             form.abilities.extend(
                 abilityQuestionaire(
                     form,
-                    "How many slot specific buffs does the form have?",
-                    SlotDependent,
-                    ["Which slot is required?"],
+                    "How many different buffs does the form get on attacks received?",
+                    PerAttackReceived,
+                    ["What is the maximum buff?"],
                     [None],
-                    [1],
+                    [1.0],
                 )
             )
             form.abilities.extend(
@@ -450,9 +451,9 @@ class Unit:
         while turn <= MAX_TURN:
             form = self.forms[formIdx]
             slot = form.slot
-            state = State(slot, turn)
+            state = State(self, form, slot, turn)
             state.setState(self, form)
-            form.numAttacksReceived += NUM_ATTACKS_RECEIVED[slot - 1]
+            form.numAttacksReceived += state.numAttacksReceived
             self.states.append(state)
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
             if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN):
@@ -486,7 +487,7 @@ class Form:
         self.intentional12Ki = False
         self.normalCounterMult = 0
         self.saCounterMult = 0
-        self.numAttacksReceived = 0  # Number of attacks received so far in this form.
+        self.numAttacksReceived = 0 # Number of attacks received so far in this form.
         self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
@@ -602,7 +603,7 @@ class SuperAttackEffectParams:
 
 
 class State:
-    def __init__(self, slot, turn):
+    def __init__(self, unit, form, slot, turn):
         self.slot = slot  # Slot no.
         self.turn = turn
         self.randomKi = KI_SUPPORT  # Constant and Random ki
@@ -611,13 +612,13 @@ class State:
             "Ki": LEADER_SKILL_KI,
             "AEAAT": 0,
             "Guard": 0,
-            "Crit": 0,
+            "Crit": unit.pHiPoCrit + (1 - unit.pHiPoCrit) * form.linkCrit,
             "Disable Guard": 0,
-            "Evade": 0,
+            "Evade": unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge,
             "Dmg Red against Normals": 0,
         }
         self.p1Buff = {"ATK": LEADER_SKILL_STATS + ATK_DEF_SUPPORT, "DEF": LEADER_SKILL_STATS + ATK_DEF_SUPPORT}
-        self.p2Buff = {"ATK": 0, "DEF": 0}
+        self.p2Buff = {"ATK": form.linkAtkOnSuper, "DEF": 0}
         self.p3Buff = {"ATK": 0, "DEF": 0}
         self.kiPerOtherTypeOrb = 1
         self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB
@@ -635,19 +636,15 @@ class State:
         self.dmgRedA = 0
         self.dmgRedB = 0  # Dmg Red before and after attacking
         self.pCounterSA = 0  # Probability of countering an enemy super attack
+        # Initialising these here, but will need to be updated everytime self.buff["Evade"] is increased, best to make a function to update evade
+        self.numAttacksReceived = NUM_ATTACKS_DIRECTED[self.slot - 1] * self.buff["Evade"]
+        self.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * (1 - self.buff['Evade'])
 
     def setState(self, unit, form):
         for ability in form.abilities:
-            ability.applyToState(self, unit)
+            ability.applyToState(self, unit, form)
         self.p1Buff["ATK"] = np.maximum(self.p1Buff["ATK"], -1)
-        self.p2Buff["ATK"] += form.linkAtkOnSuper
         self.p2Buff["DEF"] = self.p2DefA + self.p2DefB
-        self.buff["Crit"] = self.buff["Crit"] + (1 - self.buff["Crit"]) * (
-            unit.pHiPoCrit + (1 - unit.pHiPoCrit) * form.linkCrit
-        )
-        self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (
-            unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge
-        )
         self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
         self.randomKi += (
             self.kiPerOtherTypeOrb * self.numOtherTypeOrbs
@@ -782,13 +779,13 @@ class State:
             / AVG_HEALTH
         )
         self.normalDamageTaken = (
-            NUM_NORMAL_ATTACKS_RECEIVED_BEFORE_ATTACKING[self.slot - 1] * self.normalDamageTakenPreSuper
-            + NUM_NORMAL_ATTACKS_RECEIVED_AFTER_ATTACKING[self.slot - 1] * self.normalDamageTakenPostSuper
-        ) / (NUM_NORMAL_ATTACKS_RECEIVED[self.slot - 1])
+            NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.normalDamageTakenPreSuper
+            + NUM_NORMAL_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.normalDamageTakenPostSuper
+        ) / (NUM_NORMAL_ATTACKS_DIRECTED[self.slot - 1])
         self.saDamageTaken = (
-            NUM_SUPER_ATTACKS_RECEIVED_BEFORE_ATTACKING[self.slot - 1] * self.saDamageTakenPreSuper
-            + NUM_SUPER_ATTACKS_RECEIVED_AFTER_ATTACKING[self.slot - 1] * self.saDamageTakenPostSuper
-        ) / (NUM_SUPER_ATTACKS_RECEIVED[self.slot - 1])
+            NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.saDamageTakenPreSuper
+            + NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.saDamageTakenPostSuper
+        ) / (NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1])
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
         self.useability = (
             unit.teams / NUM_TEAMS_MAX * (1 + USEABILITY_SUPPORT_FACTOR * self.support + form.linkCommonality)
@@ -897,15 +894,13 @@ class GiantRageMode(SingleTurnAbility):
                 StartOfTurn,
             )
         )
-        self.giantRageModeState = State(
-            slot, self.activationTurn
-        )  # Create a State so can get access to setState for damage calc
-        self.giantRageModeState.ATK = args[0]
-        for ability in self.giantRageForm.abilities:  # Apply the giant/form abilities
-            ability.applyToState(self.giantRageModeState)
 
-    def applyToState(self, state, unit=None):
+    def applyToState(self, state, unit=None, form=None):
         if state.turn == self.activationTurn:
+            # Create a State so can get access to setState for damage calc
+            self.giantRageModeState = State(unit, form, state.slot, self.activationTurn)
+            for ability in self.giantRageForm.abilities:  # Apply the giant/form abilities
+                ability.applyToState(self.giantRageModeState)
             giantRageUnit = copy(unit)
             giantRageUnit.ATK = self.ATK
             self.giantRageModeState.setState(self.giantRageForm, giantRageUnit)  # Calculate the APT of the state
@@ -942,7 +937,7 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.attackMultiplier, self.attackBuff = args
         self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
 
-    def applyToState(self, state, unit=None):
+    def applyToState(self, state, unit=None, form=None):
         if state.turn == self.activationTurn:
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.avgAtk += getActiveAttack(
@@ -977,7 +972,7 @@ class Revive(SingleTurnAbility):
             )
         )
 
-    def applyToState(self, state, unit=None):
+    def applyToState(self, state, unit=None, form=None):
         if state.turn == self.activationTurn:
             state.healing = np.min(state.healing + self.hpRegen, 1)
         if self.isThisCharacterOnly:
@@ -1016,7 +1011,7 @@ class StartOfTurn(PassiveAbility):
         self.slots = slots
         self.effectiveBuff = buff * activationProbability * effectDuration
 
-    def applyToState(self, state, unit=None):
+    def applyToState(self, state, unit=None, form=None):
         pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
         self.effectiveBuff = self.effectiveBuff * pHaveKi
         self.activationProbability *= pHaveKi
@@ -1074,10 +1069,10 @@ class PerAttackReceived(PassiveAbility):
         super().__init__(form, activationProbability, effect, buff, effectDuration)
         self.max = args[0]
 
-    def applyToState(self, state, unit=None):
+    def applyToState(self, state, unit=None, form=None):
         if self.effect in state.buff.keys():
             state.buff[self.effect] += min(
-                self.effectiveBuff * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot - 1] + state.numAttacksReceived),
+                self.effectiveBuff * (state.numAttacksReceivedBeforeAttacking + form.numAttacksReceived),
                 self.max,
             )
         else:
@@ -1085,12 +1080,12 @@ class PerAttackReceived(PassiveAbility):
                 case "ATK":
                     state.p2Buff["ATK"] += min(
                         self.effectiveBuff
-                        * (NUM_ATTACKS_RECEIVED_BEFORE_ATTACKING[state.slot - 1] + state.numAttacksReceived),
+                        * (state.numAttacksReceivedBeforeAttacking + form.numAttacksReceived),
                         self.max,
                     )
                 case "DEF":
-                    state.p2DefA += np.minimum(
-                        (2 * state.numAttacksReceived + NUM_ATTACKS_RECEIVED[state.slot - 1] - 1)
+                    state.p2DefA += min(
+                        (2 * form.numAttacksReceived + state.numAttacksReceivedBeforeAttacking - 1)
                         * self.effectiveBuff
                         / 2,
                         self.max,
@@ -1102,7 +1097,7 @@ class AfterAttackReceived(PassiveAbility):
         super().__init__(form, activationProbability, effect, buff, effectDuration)
         self.turnsSinceActivated = turnsSinceActivated
 
-    def applyToState(self, state, unit=None):
+    def applyToState(self, state, unit=None, form=None):
         # state.attacksReceiving is how many attacks the state is expected to recieve not including evades/nullified attacks
         # If buff is a defensive one
         hitFactor = 1
@@ -1140,7 +1135,7 @@ class PerRainbowOrb(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff, effectDuration, args=[]):
         super().__init__(form, activationProbability, effect, buff, effectDuration)
 
-    def applyToState(self, state, unit=None):
+    def applyToState(self, state, unit=None, form=None):
         buffFromRainbowOrbs = self.effectiveBuff * state.numRainbowOrbs
         if self.effect in state.buff.keys():
             state.buff[self.effect] += buffFromRainbowOrbs
@@ -1157,7 +1152,7 @@ class Nullification(PassiveAbility):
         super().__init__(form, activationProbability, effect, buff, effectDuration)
         self.hasCounter = args[0]
 
-    def applyToState(self, state, unit=None):
+    def applyToState(self, state, unit=None, form=None):
         pNullify = self.activationProbability * (1 - (1 - saFracConversion[self.effect]) ** 2)
         state.pNullify = (1 - state.pNullify) * pNullify + (1 - pNullify) * state.pNullify
         if self.hasCounter:
