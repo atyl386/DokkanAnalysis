@@ -128,7 +128,7 @@ def KiMultiplier(base,ki):
     if ki<=12:
         return 1
     else:
-        return (np.linspace(base,2,12))[ki-13]
+        return (np.linspace(base,2,13))[ki-12]
 def branchAtt(i,nAA,M_12,M_N,P_AA,nProcs,P_SA,P_g,N_0,A_12_0,SA_mult,P_HP):
     N = M_N * N_0
     A_12 = M_12 * A_12_0
