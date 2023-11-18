@@ -1,13 +1,11 @@
 import datetime as dt
 from dokkanUnitHelperFunctions import *
-from scipy.stats import geom
 import copy
 import os
 import pickle
 
 # TODO:
-# - Bugs: APT seems to keep increasing for TEQ LR Goku, probably buff on hit recieved not capped for some reason. The max for the atk buff is the same for the ki buff i.e. 5 for some reason
-#       : Defense metric don't seem to be increasing with stacked defense 
+# - Bugs: Defense metric don't seem to be increasing with stacked defense
 # - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - Should save all the user inputs to a .txt file and read them back in (up to one before end) to quickly catch the user back up to where they were before they inputted an error
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
@@ -657,7 +655,10 @@ class State:
         )
         self.aaSA = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
         # Assume Binomial distribution for aaSA
-        form.attacksPerformed += (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + self.aaSA * (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK)
+        form.attacksPerformed += (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + self.aaSA * (
+            1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
+        )
+        self.updateStackedStats(form, unit)
         self.normal = getNormal(
             unit.kiMod12,
             self.buff["Ki"],
@@ -734,12 +735,11 @@ class State:
         self.apt = self.avgAtk * self.avgAtkModifer
         self.getAvgDefMult(form, unit)
         self.avgDefPreSuper = getDefStat(
-            unit.DEF, self.p1Buff["ATK"], form.linkDef, self.p2DefA, self.p3Buff["DEF"], self.stackedStats["DEF"]
+            unit.DEF, self.p1Buff["DEF"], form.linkDef, self.p2DefA, self.p3Buff["DEF"], self.stackedStats["DEF"]
         )
         self.avgDefPostSuper = getDefStat(
-            unit.DEF, self.p1Buff["ATK"], form.linkDef, self.p2Buff["DEF"], self.p3Buff["DEF"], self.avgDefMult
+            unit.DEF, self.p1Buff["DEF"], form.linkDef, self.p2Buff["DEF"], self.p3Buff["DEF"], self.avgDefMult
         )
-        self.updateStackedStats(form, unit)
         self.normalDamageTakenPreSuper = getDamageTaken(
             self.buff["Evade"],
             self.buff["Guard"],
@@ -818,7 +818,10 @@ class State:
                 stack.duration -= RETURN_PERIOD_PER_SLOT[unit.states[-1].slot]
             # Remove them if expired
             unit.stacks[stat] = [stack for stack in unit.stacks[stat] if stack.duration > 0]
-            # Add new stacks
+            # Apply stacks
+            for stack in unit.stacks[stat]:
+                self.stackedStats[stat] += stack.buff
+            # Add new stacks. Has to be after apply otherwise will double count the stacks in each turn
             if unit.rarity == "LR":
                 # If stack for long enough to last to next turn
                 if form.superAttacks["18 Ki"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
@@ -837,9 +840,6 @@ class State:
                         form.superAttacks["12 Ki"].effects[stat].duration,
                     )
                 )
-            # Apply stacks
-            for stack in unit.stacks[stat]:
-                self.stackedStats[stat] += stack.buff
 
     def getAvgDefMult(self, form, unit):
         self.avgDefMult = (
@@ -898,7 +898,7 @@ class GiantRageMode(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn >= self.activationTurn and unit.fightPeak and not(self.activated):
+        if state.turn >= self.activationTurn and unit.fightPeak and not (self.activated):
             self.activated = True
             # Create a State so can get access to setState for damage calc
             self.giantRageModeState = State(unit, form, state.slot, self.activationTurn)
@@ -941,7 +941,7 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn >= self.activationTurn and unit.fightPeak and not(self.activated):
+        if state.turn >= self.activationTurn and unit.fightPeak and not (self.activated):
             self.activated = True
             form.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.avgAtk += getActiveAttack(
@@ -977,7 +977,7 @@ class Revive(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn >= self.activationTurn and unit.fightPeak and not(self.activated):
+        if state.turn >= self.activationTurn and unit.fightPeak and not (self.activated):
             self.activated = True
             state.healing = min(state.healing + self.hpRegen, 1)
             if self.isThisCharacterOnly:
@@ -1134,6 +1134,7 @@ class AfterAttackReceived(PassiveAbility):
             # Reset it to not be active
             self.turnsSinceActivated = 0
 
+
 class PerRainbowOrb(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff, effectDuration, args=[]):
         super().__init__(form, activationProbability, effect, buff, effectDuration)
@@ -1163,4 +1164,4 @@ class Nullification(PassiveAbility):
 
 
 if __name__ == "__main__":
-    kit = Unit(1, 1, "DEF", "ADD", "DGE", loadPickle=False)
+    kit = Unit(1, 1, "DEF", "ADD", "DGE", loadPickle=True)
