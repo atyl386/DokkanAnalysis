@@ -6,7 +6,8 @@ import os
 import pickle
 
 # TODO:
-# - Bugs:
+# - Bugs: APT seems to keep increasing for TEQ LR Goku, probably buff on hit recieved not capped for some reason. The max for the atk buff is the same for the ki buff i.e. 5 for some reason
+#       : Defense metric don't seem to be increasing with stacked defense 
 # - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - Should save all the user inputs to a .txt file and read them back in (up to one before end) to quickly catch the user back up to where they were before they inputted an error
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
@@ -655,7 +656,7 @@ class State:
             self.buff["Ki"], self.randomKi, form.intentional12Ki, unit.rarity
         )
         self.aaSA = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
-        # Assume Binomial
+        # Assume Binomial distribution for aaSA
         form.attacksPerformed += (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + self.aaSA * (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK)
         self.normal = getNormal(
             unit.kiMod12,
@@ -869,12 +870,14 @@ class SpecialAbility(Ability):
 class SingleTurnAbility(SpecialAbility):
     def __init__(self, form):
         super().__init__(form)
+        # Mean of geometric distribution is 1/p
         self.activationTurn = int(
             max(
                 min(round(1 / self.activationProbability), self.maxTurnRestriction),
                 PEAK_TURN,
             )
-        )  # Mean of geometric distribution is 1/p
+        )
+        self.activated = False
 
 
 class GiantRageMode(SingleTurnAbility):
@@ -895,7 +898,8 @@ class GiantRageMode(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn == self.activationTurn and unit.fightPeak:
+        if state.turn >= self.activationTurn and unit.fightPeak and not(self.activated):
+            self.activated = True
             # Create a State so can get access to setState for damage calc
             self.giantRageModeState = State(unit, form, state.slot, self.activationTurn)
             for ability in self.giantRageForm.abilities:  # Apply the giant/form abilities
@@ -937,7 +941,8 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn == self.activationTurn and unit.fightPeak:
+        if state.turn >= self.activationTurn and unit.fightPeak and not(self.activated):
+            self.activated = True
             form.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.avgAtk += getActiveAttack(
                 unit.kiMod12,
@@ -972,7 +977,8 @@ class Revive(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn == self.activationTurn and unit.fightPeak:
+        if state.turn >= self.activationTurn and unit.fightPeak and not(self.activated):
+            self.activated = True
             state.healing = min(state.healing + self.hpRegen, 1)
             if self.isThisCharacterOnly:
                 state.support += REVIVE_UNIT_SUPPORT_BUFF
@@ -1123,19 +1129,10 @@ class AfterAttackReceived(PassiveAbility):
                 case "DEF":
                     state.p2DefA += effectiveBuff
         self.turnsSinceActivated += 1
-        # If buff lasts till unit's next turn
-        if self.effectDuration > self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:
-            self.form.abilities.extend(
-                AfterAttackReceived(
-                    self.form,
-                    self.activationProbability,
-                    self.effect,
-                    self.effectiveBuff,
-                    self.effectDuration,
-                    self.turnsSinceActivated,
-                )
-            )
-
+        # If not still going to be active next turn
+        if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:
+            # Reset it to not be active
+            self.turnsSinceActivated = 0
 
 class PerRainbowOrb(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff, effectDuration, args=[]):
