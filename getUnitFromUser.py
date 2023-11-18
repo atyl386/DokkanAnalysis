@@ -488,7 +488,7 @@ class Form:
         self.intentional12Ki = False
         self.normalCounterMult = 0
         self.saCounterMult = 0
-        self.numAttacksReceived = 0 # Number of attacks received so far in this form.
+        self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
@@ -638,7 +638,9 @@ class State:
         self.pCounterSA = 0  # Probability of countering an enemy super attack
         # Initialising these here, but will need to be updated everytime self.buff["Evade"] is increased, best to make a function to update evade
         self.numAttacksReceived = NUM_ATTACKS_DIRECTED[self.slot - 1] * (1 - self.buff["Evade"])
-        self.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * (1 - self.buff['Evade'])
+        self.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * (
+            1 - self.buff["Evade"]
+        )
 
     def setState(self, unit, form):
         for ability in form.abilities:
@@ -1006,7 +1008,13 @@ class StartOfTurn(PassiveAbility):
         self.effectiveBuff = buff * activationProbability * effectDuration
 
     def applyToState(self, state, unit=None, form=None):
-        state.randomKi = KI_SUPPORT + state.kiPerOtherTypeOrb * state.numOtherTypeOrbs + state.kiPerSameTypeOrb * state.numSameTypeOrbs + state.numRainbowOrbs * state.kiPerRainbowKiSphere + form.linkKi
+        state.randomKi = (
+            KI_SUPPORT
+            + state.kiPerOtherTypeOrb * state.numOtherTypeOrbs
+            + state.kiPerSameTypeOrb * state.numSameTypeOrbs
+            + state.numRainbowOrbs * state.kiPerRainbowKiSphere
+            + form.linkKi
+        )
         pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
         self.effectiveBuff = self.effectiveBuff * pHaveKi
         self.activationProbability *= pHaveKi
@@ -1074,8 +1082,7 @@ class PerAttackReceived(PassiveAbility):
             match self.effect:
                 case "ATK":
                     state.p2Buff["ATK"] += min(
-                        self.effectiveBuff
-                        * (state.numAttacksReceivedBeforeAttacking + form.numAttacksReceived),
+                        self.effectiveBuff * (state.numAttacksReceivedBeforeAttacking + form.numAttacksReceived),
                         self.max,
                     )
                 case "DEF":
@@ -1103,7 +1110,9 @@ class AfterAttackReceived(PassiveAbility):
             else:
                 hitFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
         # geometric cdf
-        effectiveBuff = self.effectiveBuff * hitFactor * (1 - (1 - self.activationProbability) ** (self.turnsSinceActivated + 1))
+        effectiveBuff = (
+            self.effectiveBuff * hitFactor * (1 - (1 - self.activationProbability) ** (self.turnsSinceActivated + 1))
+        )
         if self.effect in state.buff.keys():
             state.buff[self.effect] += effectiveBuff
         else:

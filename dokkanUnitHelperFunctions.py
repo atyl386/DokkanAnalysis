@@ -24,11 +24,9 @@ def SAMultiplier(baseMultiplier, nCopies, nStacks, saAtk):
 
 
 def KiModifier(base, ki):
-    """Returns the ki modifier for a unit"""
-    if ki < 12:
+    """Returns the ki modifier for a unit (only used for normals and Ultras)"""
+    if ki <= 12:
         return 1
-    elif ki == 12:
-        return base
     else:
         return np.linspace(base, 2, 13)[ki - 12]
 
