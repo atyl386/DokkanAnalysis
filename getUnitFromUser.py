@@ -186,7 +186,7 @@ class Unit:
         )
 
     def getHiPo(self):
-        HiPoStats = hiddenPotentalStatsConverter[self._type][self.nCopies - 1]
+        HiPoStats = hiddenPotentalStatsConverter[self._type][:, self.nCopies - 1]
         HiPoAbilities = np.array(HIPO_D0[self._type]) + HIPO_BRZ[self.brz] + HIPO_SLV[self.HiPo1]
         if self.nCopies > 1:
             HiPoAbilities += HIPO_D1[(self.HiPo1, self.HiPo2)]
