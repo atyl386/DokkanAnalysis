@@ -62,10 +62,10 @@ def restrictionQuestionaire():
 
 
 def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], types=[], defaults=[]):
-    parameters = []
     numAbilities = clc.prompt(abilityPrompt, default=0)
     abilities = []
     for i in range(numAbilities):
+        parameters = []
         for j, parameterPrompt in enumerate(parameterPrompts):
             if len(types) == 0:  # If don't care about prompt choices
                 parameters.append(clc.prompt(parameterPrompt))
@@ -1163,4 +1163,4 @@ class Nullification(PassiveAbility):
 
 
 if __name__ == "__main__":
-    kit = Unit(1, 1, "DEF", "ADD", "DGE", loadPickle=True)
+    kit = Unit(1, 1, "DEF", "ADD", "DGE", loadPickle=False)
