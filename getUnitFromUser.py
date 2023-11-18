@@ -637,7 +637,7 @@ class State:
         self.dmgRedB = 0  # Dmg Red before and after attacking
         self.pCounterSA = 0  # Probability of countering an enemy super attack
         # Initialising these here, but will need to be updated everytime self.buff["Evade"] is increased, best to make a function to update evade
-        self.numAttacksReceived = NUM_ATTACKS_DIRECTED[self.slot - 1] * self.buff["Evade"]
+        self.numAttacksReceived = NUM_ATTACKS_DIRECTED[self.slot - 1] * (1 - self.buff["Evade"])
         self.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * (1 - self.buff['Evade'])
 
     def setState(self, unit, form):
@@ -974,11 +974,11 @@ class Revive(SingleTurnAbility):
 
     def applyToState(self, state, unit=None, form=None):
         if state.turn == self.activationTurn:
-            state.healing = np.min(state.healing + self.hpRegen, 1)
-        if self.isThisCharacterOnly:
-            state.support += REVIVE_UNIT_SUPPORT_BUFF
-        else:
-            state.support += REVIVE_ROTATION_SUPPORT_BUFF
+            state.healing = min(state.healing + self.hpRegen, 1)
+            if self.isThisCharacterOnly:
+                state.support += REVIVE_UNIT_SUPPORT_BUFF
+            else:
+                state.support += REVIVE_ROTATION_SUPPORT_BUFF
 
 
 class PassiveAbility(Ability):
@@ -1098,18 +1098,17 @@ class AfterAttackReceived(PassiveAbility):
         self.turnsSinceActivated = turnsSinceActivated
 
     def applyToState(self, state, unit=None, form=None):
-        # state.attacksReceiving is how many attacks the state is expected to recieve not including evades/nullified attacks
-        # If buff is a defensive one
         hitFactor = 1
         if self.turnsSinceActivated == 0:
+            # If buff is a defensive one
             if self.effect in ["DEF", "Dmg Red"]:
                 hitFactor = (
-                    state.attacksReceiving - 1
-                ) / state.attacksReceiving  # Factor to account for not having the buff on the fist hit
+                    state.numAttacksReceived - 1
+                ) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
             else:
-                hitFactor = np.min(state.attacksReceivingBeforeAttacking, 1)
-        # This should return self.activationProbabiltiy if self.turnsActivated = 0
-        effectiveBuff = self.buff * hitFactor * geom.cdf(self.turnsSinceActivated + 1, self.activationProbability)
+                hitFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
+        # geometric cdf
+        effectiveBuff = self.effectiveBuff * hitFactor * (1 - (1 - self.activationProbability) ** (self.turnsSinceActivated + 1))
         if self.effect in state.buff.keys():
             state.buff[self.effect] += effectiveBuff
         else:
