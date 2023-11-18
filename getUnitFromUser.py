@@ -449,17 +449,17 @@ class Unit:
         self.states = []
         turn = 1
         formIdx = 0
+        self.fightPeak = False
         while turn <= MAX_TURN:
             form = self.forms[formIdx]
             slot = form.slot
+            nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
+            if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN):
+                self.fightPeak = True
             state = State(self, form, slot, turn)
             state.setState(self, form)
             form.numAttacksReceived += state.numAttacksReceived
             self.states.append(state)
-            nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
-            if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN):
-                self.peakState = len(self.states) - 1
-                self.peakForm = formIdx
             turn = nextTurn
             if turn > form.endTurn:
                 formIdx += 1
@@ -489,6 +489,7 @@ class Form:
         self.normalCounterMult = 0
         self.saCounterMult = 0
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
+        self.attacksPerformed = 0
         self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
@@ -641,6 +642,7 @@ class State:
         self.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * (
             1 - self.buff["Evade"]
         )
+        self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
 
     def setState(self, unit, form):
         for ability in form.abilities:
@@ -653,6 +655,8 @@ class State:
             self.buff["Ki"], self.randomKi, form.intentional12Ki, unit.rarity
         )
         self.aaSA = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
+        # Assume Binomial
+        form.attacksPerformed += (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + self.aaSA * (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK)
         self.normal = getNormal(
             unit.kiMod12,
             self.buff["Ki"],
@@ -801,7 +805,6 @@ class State:
 
     def updateStackedStats(self, form, unit):
         # Needs to do two things, remove stacked attack from previous states if worn out and apply new buffs
-        self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
         # If want the stacking of initial turn and transform later
         if unit.keepStacking:
             form = unit.forms[0]
@@ -892,7 +895,7 @@ class GiantRageMode(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn == self.activationTurn:
+        if state.turn == self.activationTurn and unit.fightPeak:
             # Create a State so can get access to setState for damage calc
             self.giantRageModeState = State(unit, form, state.slot, self.activationTurn)
             for ability in self.giantRageForm.abilities:  # Apply the giant/form abilities
@@ -934,18 +937,18 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn == self.activationTurn:
-            state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
+        if state.turn == self.activationTurn and unit.fightPeak:
+            form.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.avgAtk += getActiveAttack(
                 unit.kiMod12,
                 rarity2MaxKi[unit.rarity],
                 unit.ATK,
-                state.p1Atk,
+                state.p1Buff["ATK"],
                 state.stackedStats["ATK"],
                 self.form.linkAtkSoT,
                 state.p2Buff["ATK"],
                 state.p3Buff["ATK"],
-                state.activeMult,
+                self.activeMult,
                 unit.nCopies,
             )
 
@@ -969,7 +972,7 @@ class Revive(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn == self.activationTurn:
+        if state.turn == self.activationTurn and unit.fightPeak:
             state.healing = min(state.healing + self.hpRegen, 1)
             if self.isThisCharacterOnly:
                 state.support += REVIVE_UNIT_SUPPORT_BUFF

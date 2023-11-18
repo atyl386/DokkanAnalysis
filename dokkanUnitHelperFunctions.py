@@ -113,9 +113,9 @@ def getAtkStat(ATK, p1Atk, linkAtk, p2Atk, p3Atk, kiMultiplier, saMultiplier):
     )
 
 
-def getDefStat(DEF, p1Def, linkDef, p2DefA, p3Def, defMultiplier):
+def getDefStat(DEF, p1Def, linkDef, p2Def, p3Def, defMultiplier):
     return (
-        DEF * (1 + LEADER_SKILL_STATS) * (1 + p1Def) * (1 + linkDef) * (1 + p2DefA) * (1 + p3Def) * (1 + defMultiplier)
+        DEF * (1 + LEADER_SKILL_STATS) * (1 + p1Def) * (1 + linkDef) * (1 + p2Def) * (1 + p3Def) * (1 + defMultiplier)
     )
 
 
