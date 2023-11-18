@@ -653,7 +653,6 @@ class State:
             self.buff["Ki"], self.randomKi, form.intentional12Ki, unit.rarity
         )
         self.aaSA = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
-        self.updateStackedStats(form, unit)
         self.normal = getNormal(
             unit.kiMod12,
             self.buff["Ki"],
@@ -735,6 +734,7 @@ class State:
         self.avgDefPostSuper = getDefStat(
             unit.DEF, self.p1Buff["ATK"], form.linkDef, self.p2Buff["DEF"], self.p3Buff["DEF"], self.avgDefMult
         )
+        self.updateStackedStats(form, unit)
         self.normalDamageTakenPreSuper = getDamageTaken(
             self.buff["Evade"],
             self.buff["Guard"],

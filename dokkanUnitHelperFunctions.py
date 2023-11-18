@@ -213,11 +213,12 @@ def getAvgAtk(
     saMultiplier = SAMultiplier(saMult12, nCopies, sa12AtkStacks, sa12Atk)
     m12 = saMultiplier + sa12Atk + stackedAtk  # 12 ki multiplier after SA effect
     a12_0 = sa / m12  # Get 12 ki SA attack stat without multiplier
-    if 1 + p1Atk + stackedAtk <= 0:
+    baseAtk = 1 + p1Atk + stackedAtk
+    if baseAtk <= 0:
         n_0 = 0
     else:
         # Get normal attack stat without SoT attack
-        n_0 = normal / (1 + p1Atk + stackedAtk)
+        n_0 = normal / baseAtk
     pAA = HiPopAA  # Probability of doing an additional attack next
     pAASA = AApSuper  # Probability of doing a super on inbuilt additional
     pG = aaPGuarantee  # Probability of inbuilt additional
@@ -230,7 +231,7 @@ def getAvgAtk(
             i,
             nAA,
             m12,
-            p1Atk + stackedAtk,
+            baseAtk,
             pAA,
             nProcs,
             pAASA,
@@ -246,7 +247,7 @@ def getAvgAtk(
             i,
             nAA,
             m12 + sa12Atk,
-            p1Atk + stackedAtk + sa18Atk,
+            baseAtk + sa18Atk,
             pAA,
             nProcs,
             pAASA,
@@ -264,7 +265,7 @@ def getAvgAtk(
                 i,
                 nAA,
                 m12 + sa18Atk,
-                p1Atk + stackedAtk + sa18Atk,
+                1 + p1Atk + stackedAtk + sa18Atk,
                 pAA,
                 nProcs,
                 pAASA,
