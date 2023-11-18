@@ -6,6 +6,7 @@ import os
 import pickle
 
 # TODO:
+# - Bugs:
 # - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - Should save all the user inputs to a .txt file and read them back in (up to one before end) to quickly catch the user back up to where they were before they inputted an error
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
@@ -606,7 +607,6 @@ class State:
     def __init__(self, unit, form, slot, turn):
         self.slot = slot  # Slot no.
         self.turn = turn
-        self.randomKi = KI_SUPPORT  # Constant and Random ki
         # Dictionary for variables which have a 1-1 relationship with StartOfTurn EFFECTS
         self.buff = {
             "Ki": LEADER_SKILL_KI,
@@ -617,7 +617,7 @@ class State:
             "Evade": unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge,
             "Dmg Red against Normals": 0,
         }
-        self.p1Buff = {"ATK": LEADER_SKILL_STATS + ATK_DEF_SUPPORT, "DEF": LEADER_SKILL_STATS + ATK_DEF_SUPPORT}
+        self.p1Buff = {"ATK": ATK_DEF_SUPPORT, "DEF": ATK_DEF_SUPPORT}
         self.p2Buff = {"ATK": form.linkAtkOnSuper, "DEF": 0}
         self.p3Buff = {"ATK": 0, "DEF": 0}
         self.kiPerOtherTypeOrb = 1
@@ -646,12 +646,6 @@ class State:
         self.p1Buff["ATK"] = np.maximum(self.p1Buff["ATK"], -1)
         self.p2Buff["DEF"] = self.p2DefA + self.p2DefB
         self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
-        self.randomKi += (
-            self.kiPerOtherTypeOrb * self.numOtherTypeOrbs
-            + self.kiPerSameTypeOrb * self.numSameTypeOrbs
-            + self.numRainbowOrbs * self.kiPerRainbowKiSphere
-            + form.linkKi
-        )
         self.buff["Ki"] = min(round(self.buff["Ki"] + self.randomKi), rarity2MaxKi[unit.rarity])
         self.pN, self.pSA, self.pUSA = getAttackDistribution(
             self.buff["Ki"], self.randomKi, form.intentional12Ki, unit.rarity
@@ -720,7 +714,7 @@ class State:
         )
         # Apply active skill and finish skill attacks
         for specialAttack in form.specialAttacks:
-            specialAttack.applyToState(self, unit)
+            specialAttack.applyToState(self, unit, form)
         self.avgAtkModifer = self.buff["Crit"] * (CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR + (
             1 - self.buff["Crit"]
         ) * (
@@ -1012,6 +1006,7 @@ class StartOfTurn(PassiveAbility):
         self.effectiveBuff = buff * activationProbability * effectDuration
 
     def applyToState(self, state, unit=None, form=None):
+        state.randomKi = KI_SUPPORT + state.kiPerOtherTypeOrb * state.numOtherTypeOrbs + state.kiPerSameTypeOrb * state.numSameTypeOrbs + state.numRainbowOrbs * state.kiPerRainbowKiSphere + form.linkKi
         pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
         self.effectiveBuff = self.effectiveBuff * pHaveKi
         self.activationProbability *= pHaveKi

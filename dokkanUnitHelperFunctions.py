@@ -26,9 +26,9 @@ def SAMultiplier(baseMultiplier, nCopies, nStacks, saAtk):
 def KiModifier(base, ki):
     """Returns the ki modifier for a unit"""
     if ki <= 12:
-        return 1
+        return base
     else:
-        return (np.linspace(base, 2, 12))[ki - 13]
+        return np.linspace(base, 2, 13)[ki - 12]
 
 
 def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo):
