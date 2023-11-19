@@ -5,20 +5,6 @@ from dokkanUnitConstants import *
 #################################################### Helper functions #######################################################################
 
 
-def getAndSaveUserInput(inputMode, file, prompt, type=None, default=None):
-    if inputMode == "fromTxt":
-        response = next(file, "")
-    if response == "":
-        if type == None and default == None:
-            response = clc.prompt(prompt)
-        elif type == None:
-            response = clc.prompt(prompt, default=default)
-        else:
-            response = clc.prompt(prompt, type=type, default=default)
-        file.write(response + "\n")
-    return response
-
-
 def maxHealthCDF(maxHealth):
     """Returns the probability that health is less than the input"""
     return 4 / 3 * maxHealth**3 - maxHealth**2 + 2 / 3 * maxHealth

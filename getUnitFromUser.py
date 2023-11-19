@@ -22,46 +22,39 @@ import pickle
 ##################################################### Helper Functions ############################################################################
 
 
-def restrictionQuestionaire(inputMode, inputFile):
-    numRestrictions = getAndSaveUserInput(
-        inputMode, inputFile, "How many different restrictions does this ability have?", default=0
+def restrictionQuestionaire(inputHelper):
+    numRestrictions = inputHelper.getAndSaveUserInput(
+        "How many different restrictions does this ability have?", default=0
     )
     totalRestrictionProbability = 1
     turnRestriction = MAX_TURN
     for restriction in range(numRestrictions):
-        restrictionType = getAndSaveUserInput(
-            inputMode,
-            inputFile,
-            "What type of restriction is it?",
-            type=clc.Choice(RESTRICTIONS, case_sensitive=False),
-            default="Turn",
+        restrictionType = inputHelper.getAndSaveUserInput(
+            "What type of restriction is it?", type=clc.Choice(RESTRICTIONS, case_sensitive=False), default="Turn"
         )
         if restrictionType == "Turn":
             turnRestriction = min(
-                getAndSaveUserInput(
-                    inputMode,
-                    inputFile,
-                    "What is the turn restriction (relative to the form's starting turn)?",
-                    default=5,
+                inputHelper.getAndSaveUserInput(
+                    "What is the turn restriction (relative to the form's starting turn)?", default=5
                 ),
                 turnRestriction,
             )
         else:
             if restrictionType == "Max HP":
                 restrictionProbability = 1 - maxHealthCDF(
-                    getAndSaveUserInput(inputMode, inputFile, "What is the maximum HP restriction?", default=0.7)
+                    inputHelper.getAndSaveUserInput("What is the maximum HP restriction?", default=0.7)
                 )
             elif restrictionType == "Min HP":
                 restrictionProbability = maxHealthCDF(
-                    getAndSaveUserInput(inputMode, inputFile, "What is the minimum HP restriction?", default=0.7)
+                    inputHelper.getAndSaveUserInput("What is the minimum HP restriction?", default=0.7)
                 )
             elif restrictionType == "Enemy Max HP":
-                restrictionProbability = 1 - getAndSaveUserInput(
-                    inputMode, inputFile, "What is the maximum enemy HP restriction?", default=0.5
+                restrictionProbability = 1 - inputHelper.getAndSaveUserInput(
+                    "What is the maximum enemy HP restriction?", default=0.5
                 )
             elif restrictionType == "Enemy Min HP":
-                restrictionProbability = getAndSaveUserInput(
-                    inputMode, inputFile, "What is the minimum enemy HP restriction?", default=0.5
+                restrictionProbability = inputHelper.getAndSaveUserInput(
+                    "What is the minimum enemy HP restriction?", default=0.5
                 )
             # Assume independence
             totalRestrictionProbability = (1 - totalRestrictionProbability) * restrictionProbability + (
@@ -70,37 +63,26 @@ def restrictionQuestionaire(inputMode, inputFile):
     return max(1 - totalRestrictionProbability, 1 / MAX_TURN), turnRestriction
 
 
-def abilityQuestionaire(
-    inputMode, inputFile, form, abilityPrompt, abilityClass, parameterPrompts=[], types=[], defaults=[]
-):
-    numAbilities = getAndSaveUserInput(inputMode, inputFile, abilityPrompt, default=0)
+def abilityQuestionaire(inputHelper, form, abilityPrompt, abilityClass, parameterPrompts=[], types=[], defaults=[]):
+    numAbilities = inputHelper.getAndSaveUserInput(abilityPrompt, default=0)
     abilities = []
     for i in range(numAbilities):
         parameters = []
         for j, parameterPrompt in enumerate(parameterPrompts):
             if len(types) == 0:  # If don't care about prompt choices
-                parameters.append(getAndSaveUserInput(inputMode, inputFile, parameterPrompt))
+                parameters.append(inputHelper.getAndSaveUserInput(parameterPrompt))
             else:
-                parameters.append(
-                    getAndSaveUserInput(inputMode, inputFile, parameterPrompt, type=types[j], default=defaults[j])
-                )
+                parameters.append(inputHelper.getAndSaveUserInput(parameterPrompt, type=types[j], default=defaults[j]))
         if issubclass(abilityClass, PassiveAbility):
-            effect = getAndSaveUserInput(
-                inputMode,
-                inputFile,
-                "What type of buff does the unit get?",
-                type=clc.Choice(EFFECTS, case_sensitive=False),
-                default="ATK",
+            effect = inputHelper.getAndSaveUserInput(
+                "What type of buff does the unit get?", type=clc.Choice(EFFECTS, case_sensitive=False), default="ATK"
             )
-            activationProbability = getAndSaveUserInput(
-                inputMode, inputFile, "What is the probability this ability activates?", default=1.0
+            activationProbability = inputHelper.getAndSaveUserInput(
+                "What is the probability this ability activates?", default=1.0
             )
-            buff = getAndSaveUserInput(inputMode, inputFile, "What is the value of the buff?", default=1.0)
-            effectDuration = getAndSaveUserInput(
-                inputMode,
-                inputFile,
-                "How many turns does it last for? Only applicable to abilities with a time limit.",
-                default=1,
+            buff = inputHelper.getAndSaveUserInput("What is the value of the buff?", default=1.0)
+            effectDuration = inputHelper.getAndSaveUserInput(
+                "How many turns does it last for? Only applicable to abilities with a time limit.", default=1
             )
             ability = abilityClass(form, activationProbability, effect, buff, effectDuration, args=parameters)
         elif issubclass(abilityClass, SingleTurnAbility):
@@ -112,6 +94,37 @@ def abilityQuestionaire(
 ######################################################### Classes #################################################################
 
 
+class InputHelper:
+    def __init__(self, mode, id):
+        self.mode = mode
+        self.filePath = os.path.join(CWD, "DokkanKits", id + ".txt")
+
+    def setInputFile(self, finishedReading=False):
+        if self.inputMode == "manual":
+            specifier = "w"
+        elif self.inputMode == "fromTxt":
+            if finishedReading:
+                specifier = "a"
+            else:
+                specifier = "r"
+        self.file = open(self.filePath, specifier, 1)
+
+    def getAndSaveUserInput(self, prompt, type=None, default=None):
+        if self.mode == "fromTxt":
+            response = next(self.file, "")
+            if response == "":
+                self.setInputFile(finishedReading=True)
+        if self.mode == "manual" or response == "":
+            if type == None and default == None:
+                response = clc.prompt(prompt)
+            elif type == None:
+                response = clc.prompt(prompt, default=default)
+            else:
+                response = clc.prompt(prompt, type=type, default=default)
+            self.file.write(str(response) + "\n")
+        return response
+
+
 class Unit:
     def __init__(self, id, nCopies, brz, HiPo1, HiPo2, inputMode=False):
         self.id = str(id)
@@ -121,17 +134,14 @@ class Unit:
         self.HiPo2 = HiPo2
         self.inputMode = inputMode
         self.picklePath = CWD + "\\DokkanUnits\\" + HIPO_DUPES[nCopies - 1] + "\\unit_" + self.id + ".pkl"
-        inputFilePath = os.path.join(CWD, "DokkanKits", self.id + ".txt")
+        self.inputHelper = InputHelper(inputMode, self.id)
         if inputMode == "manual" or inputMode == "fromTxt":
-            if inputMode == "manual":  # Only want to write
-                self.inputFile = open(inputFilePath, "w", 1)
-            else:  # if fromTxt then want to read and append
-                self.inputFile = open(inputFilePath, "a+", 1)
+            self.inputHelper.setInputFile()
             self.getConstants()  # Requires user input, should make a version that loads from file
             self.getHiPo()  # Requires user input, should make a version that loads from file
             self.getSBR()  # Requires user input, should make a version that loads from file
             self.getForms()  # Requires user input, should make a version that loads from file
-            self.inputFile.close()
+            self.inputHelper.file.close()
         elif inputMode == "fromPickle":
             self = pickle.load(open(self.picklePath, "rb"))
         elif inputMode == "fromWeb":
@@ -142,69 +152,39 @@ class Unit:
         self.saveUnit()
 
     def getConstants(self):
-        self.exclusivity = getAndSaveUserInput(
-            self.inputMode,
-            self.inputFile,
-            "What is the unit's exclusivity?",
-            type=clc.Choice(EXCLUSIVITIES, case_sensitive=False),
-            default="DF",
+        self.exclusivity = self.inputHelper.getAndSaveUserInput(
+            "What is the unit's exclusivity?", type=clc.Choice(EXCLUSIVITIES, case_sensitive=False), default="DF"
         )
         self.rarity = exclusivity2Rarity[self.exclusivity]
-        self.name = getAndSaveUserInput(
-            self.inputMode, self.inputFile, "What is the unit's name?", default="Super Saiyan Goku"
+        self.name = self.inputHelper.getAndSaveUserInput("What is the unit's name?", default="Super Saiyan Goku")
+        self._class = self.inputHelper.getAndSaveUserInput(
+            "What is the unit's class?", type=clc.Choice(CLASSES, case_sensitive=False), default="S"
         )
-        self._class = getAndSaveUserInput(
-            self.inputMode,
-            self.inputFile,
-            "What is the unit's class?",
-            type=clc.Choice(CLASSES, case_sensitive=False),
-            default="S",
-        )
-        self._type = getAndSaveUserInput(
-            self.inputMode,
-            self.inputFile,
-            "What is the unit's type?",
-            type=clc.Choice(TYPES, case_sensitive=False),
-            default="AGL",
+        self._type = self.inputHelper.getAndSaveUserInput(
+            "What is the unit's type?", type=clc.Choice(TYPES, case_sensitive=False), default="AGL"
         )
         self.EZA = yesNo2Bool[
-            getAndSaveUserInput(
-                self.inputMode,
-                self.inputFile,
-                "Has the unit EZA'd?",
-                type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False),
-                default="N",
+            self.inputHelper.getAndSaveUserInput(
+                "Has the unit EZA'd?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default="N"
             )
         ]
         self.jp_date = dt.datetime.strptime(
-            getAndSaveUserInput(
-                self.inputMode,
-                self.inputFile,
-                "When did the unit release on the Japanse version of Dokkan? (MM/YY)",
-                default="01/24",
+            self.inputHelper.getAndSaveUserInput(
+                "When did the unit release on the Japanse version of Dokkan? (MM/YY)", default="01/24"
             ),
             "%m/%y",
         )
         self.gbl_date = dt.datetime.strptime(
-            getAndSaveUserInput(
-                self.inputMode,
-                self.inputFile,
-                "When did the unit release on the Global version of Dokkan? (MM/YY)",
-                default="01/24",
+            self.inputHelper.getAndSaveUserInput(
+                "When did the unit release on the Global version of Dokkan? (MM/YY)", default="01/24"
             ),
             "%m/%y",
         )
-        self.HP = getAndSaveUserInput(
-            self.inputMode, self.inputFile, "What is the unit's Max Level HP stat?", default=0
-        )
-        self.ATK = getAndSaveUserInput(
-            self.inputMode, self.inputFile, "What is the unit's Max Level ATK stat?", default=0
-        )
-        self.DEF = getAndSaveUserInput(
-            self.inputMode, self.inputFile, "What is the unit's Max Level DEF stat?", default=0
-        )
+        self.HP = self.inputHelper.getAndSaveUserInput("What is the unit's Max Level HP stat?", default=0)
+        self.ATK = self.inputHelper.getAndSaveUserInput("What is the unit's Max Level ATK stat?", default=0)
+        self.DEF = self.inputHelper.getAndSaveUserInput("What is the unit's Max Level DEF stat?", default=0)
         self.leaderSkill = leaderSkillConversion[
-            getAndSaveUserInput(
+            self.inputHelper.getAndSaveUserInput(
                 self.inputMode,
                 self.inputFile,
                 "How would you rate the unit's leader skill on a scale of 1-10?\n200% limited - e.g. LR Hatchiyak Goku\n 200% small - e.g. LR Metal Cooler\n 200% medium - e.g. PHY God Goku\n 200% large - e.g. LR Vegeta & Trunks\n",
@@ -212,14 +192,14 @@ class Unit:
                 default="<150%",
             )
         ]
-        self.teams = getAndSaveUserInput(
+        self.teams = self.inputHelper.getAndSaveUserInput(
             self.inputMode,
             self.inputFile,
             "How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account.",
             default=1,
         )
         self.kiMod12 = float(
-            getAndSaveUserInput(
+            self.inputHelper.getAndSaveUserInput(
                 self.inputMode,
                 self.inputFile,
                 "What is the unit's 12 ki attck modifer?",
@@ -228,7 +208,7 @@ class Unit:
             )
         )
         self.keepStacking = yesNo2Bool[
-            getAndSaveUserInput(
+            self.inputHelper.getAndSaveUserInput(
                 self.inputMode,
                 self.inputFile,
                 "Does the unit have the ability to keep stacking before transforming?",
@@ -236,7 +216,7 @@ class Unit:
                 default="N",
             )
         ]
-        self.giantRageDuration = getAndSaveUserInput(
+        self.giantRageDuration = self.inputHelper.getAndSaveUserInput(
             self.inputMode,
             self.inputFile,
             "How many turns does the unit's giant/rage mode last for?",
@@ -262,7 +242,7 @@ class Unit:
     def getSBR(self):
         self.SBR = 0
         if yesNo2Bool[
-            getAndSaveUserInput(
+            self.inputHelper.getAndSaveUserInput(
                 self.inputMode,
                 self.inputFile,
                 "Does the unit have any SBR abilities?",
@@ -271,7 +251,7 @@ class Unit:
             )
         ]:
             attackAll = attackAllConversion[
-                getAndSaveUserInput(
+                self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     "Does the unit attack all enemies on super?",
@@ -281,7 +261,7 @@ class Unit:
             ]
 
             seal = sealTurnConversion[
-                getAndSaveUserInput(
+                self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     "How many turns does the unit seal for?",
@@ -290,12 +270,12 @@ class Unit:
                 )
             ]
             if seal != 0:
-                seal *= getAndSaveUserInput(
-                    self.inputMode, self.inputFile, "What is the unit's chance to seal?", default=0.0
+                seal *= self.inputHelper.getAndSaveUserInput(
+                    "What is the unit's chance to seal?", default=0.0
                 )  # Scale by number of enemies for all enemy seal, same for stun
 
             stun = stunTurnConversion[
-                getAndSaveUserInput(
+                self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     "How many turns does the unit stun for?",
@@ -304,12 +284,10 @@ class Unit:
                 )
             ]
             if stun != 0:
-                stun *= getAndSaveUserInput(
-                    self.inputMode, self.inputFile, "What is the unit's chance to stun?", default=0.0
-                )
+                stun *= self.inputHelper.getAndSaveUserInput("What is the unit's chance to stun?", default=0.0)
 
             attDebuffOnAtk = attDebuffTurnConversion[
-                getAndSaveUserInput(
+                self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     "How many turns does the unit lower the enemy attack by attacking?",
@@ -319,7 +297,7 @@ class Unit:
             ]
             if attDebuffOnAtk != 0:
                 attDebuffOnAtk *= attDebuffOnAttackConversion[
-                    getAndSaveUserInput(
+                    self.inputHelper.getAndSaveUserInput(
                         self.inputMode,
                         self.inputFile,
                         "How much is attack lowered by on attack?",
@@ -329,7 +307,7 @@ class Unit:
                 ]
 
             attDebuffPassive = attDebuffTurnConversion[
-                getAndSaveUserInput(
+                self.inputHelper.self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     "How many turns does the unit lower the enemy attack passively?",
@@ -338,12 +316,12 @@ class Unit:
                 )
             ]
             if attDebuffPassive != 0:
-                attDebuffPassive *= getAndSaveUserInput(
-                    self.inputMode, self.inputFile, "How much is attack lowered passively?", default=0.3
+                attDebuffPassive *= self.inputHelper.getAndSaveUserInput(
+                    "How much is attack lowered passively?", default=0.3
                 )
 
             multipleEnemyBuff = multipleEnemyBuffConversion[
-                getAndSaveUserInput(
+                self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     "How much of a buff does the unit get when facing multiple enemies?",
@@ -353,7 +331,7 @@ class Unit:
             ]
             sbrActiveSkillBuff = 0
             if yesNo2Bool[
-                getAndSaveUserInput(
+                self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     "Does the unit have an active skill that has SBR effects?",
@@ -361,9 +339,7 @@ class Unit:
                     default="N",
                 )
             ]:
-                sbrActiveSkillTurn = getAndSaveUserInput(
-                    self.inputMode, self.inputFile, "What turn can it be activated?", default=1
-                )
+                sbrActiveSkillTurn = self.inputHelper.getAndSaveUserInput("What turn can it be activated?", default=1)
                 sbrActiveSkillEffect = self.getSBR()
                 sbrActiveSkillBuff += SBR_DF ** (sbrActiveSkillTurn - 1) * sbrActiveSkillEffect
 
@@ -379,12 +355,10 @@ class Unit:
     def getForms(self):
         startTurn = 1
         self.forms = []
-        numForms = getAndSaveUserInput(self.inputMode, self.inputFile, "How many forms does the unit have?", default=1)
+        numForms = self.inputHelper.getAndSaveUserInput("How many forms does the unit have?", default=1)
         for i in range(numForms):
             slot = int(
-                getAndSaveUserInput(
-                    self.inputMode, self.inputFile, f"Which slot is form # {i + 1} best suited for?", default=2
-                )
+                self.inputHelper.getAndSaveUserInput(f"Which slot is form # {i + 1} best suited for?", default=2)
             )
             if i == numForms - 1:
                 endTurn = MAX_TURN
@@ -403,16 +377,14 @@ class Unit:
                     )
                     - 1
                 )  # Mean of geometric distribution is 1/p
-            self.forms.append(Form(self.inputMode, self.inputFile, startTurn, endTurn, slot))
+            self.forms.append(Form(self.inputHelper, startTurn, endTurn, slot))
             startTurn = endTurn + 1
         for form in self.forms:
             form.intentional12Ki = yesNo2Bool[
-                getAndSaveUserInput(
-                    self.inputMode, self.inputFile, "Should a 12 Ki be targetted for this form?", default="N"
-                )
+                self.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
             ]
             form.normalCounterMult = counterAttackConversion[
-                getAndSaveUserInput(
+                self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     "What is the unit's normal counter multiplier?",
@@ -421,7 +393,7 @@ class Unit:
                 )
             ]
             form.saCounterMult = counterAttackConversion[
-                getAndSaveUserInput(
+                self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     "What is the unit's super attack counter multiplier?",
@@ -430,7 +402,7 @@ class Unit:
                 )
             ]
             form.getLinks()
-            # assert len(np.unique(links))==MAX_NUM_LINKS, 'Duplicate links'
+            assert len(np.unique(form.linkNames)) == MAX_NUM_LINKS, "Duplicate links"
             form.getSuperAttacks(self.rarity, self.EZA)
             form.abilities.extend(
                 abilityQuestionaire(
@@ -564,9 +536,8 @@ class Unit:
 
 
 class Form:
-    def __init__(self, inputMode, inputFile, startTurn, endTurn, slot):
-        self.inputMode = inputMode
-        self.inputFile = inputFile
+    def __init__(self, inputHelper, startTurn, endTurn, slot):
+        self.inputHelper = inputHelper
         self.startTurn = startTurn
         self.endTurn = endTurn
         self.slot = slot
@@ -593,14 +564,14 @@ class Form:
 
     def getLinks(self):
         for linkIndex in range(MAX_NUM_LINKS):
-            self.linkNames[linkIndex] = getAndSaveUserInput(
+            self.linkNames[linkIndex] = self.inputHelper.getAndSaveUserInput(
                 self.inputMode,
                 self.inputFile,
                 f"What is the form's link # {linkIndex+1}",
                 type=clc.Choice(LINKS, case_sensitive=False),
                 default="Fierce Battle",
             )
-            linkCommonality = getAndSaveUserInput(
+            linkCommonality = self.inputHelper.getAndSaveUserInput(
                 self.inputMode,
                 self.inputFile,
                 "If has an ideal linking partner, what is the chance this link is active?",
@@ -622,7 +593,7 @@ class Form:
         superAttackTypes = ["12 Ki", "18 Ki"]
         for superAttackType in superAttackTypes:
             multiplier = superAttackConversion[
-                getAndSaveUserInput(
+                self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     f"What is the form's {superAttackType} super attack multiplier?",
@@ -632,7 +603,7 @@ class Form:
             ][superAttackLevelConversion[rarity][eza]]
             avgSuperAttack = SuperAttack(superAttackType, multiplier)
             if superAttackType == "12 Ki" or (rarity == "LR" and not (self.intentional12Ki)):
-                numSuperAttacks = getAndSaveUserInput(
+                numSuperAttacks = self.inputHelper.getAndSaveUserInput(
                     self.inputMode,
                     self.inputFile,
                     f"How many different {superAttackType} super attacks does this form have?",
@@ -641,7 +612,7 @@ class Form:
                 superFracTotal = 0
                 for i in range(numSuperAttacks):
                     if numSuperAttacks > 1:
-                        superFrac = getAndSaveUserInput(
+                        superFrac = self.inputHelper.getAndSaveUserInput(
                             self.inputMode,
                             self.inputFile,
                             f"What is the probability of this {superAttackType} super attack variant from occuring?",
@@ -649,31 +620,29 @@ class Form:
                         )
                     else:
                         superFrac = 1
-                    numEffects = getAndSaveUserInput(
+                    numEffects = self.inputHelper.getAndSaveUserInput(
                         self.inputMode,
                         self.inputFile,
                         f"How many effects does this form's {superAttackType} super attack have?",
                         default=1,
                     )
                     for j in range(numEffects):
-                        effectType = getAndSaveUserInput(
+                        effectType = self.inputHelper.getAndSaveUserInput(
                             self.inputMode,
                             self.inputFile,
                             "What type of effect does the unit get on super?",
                             type=clc.Choice(SUPER_ATTACK_EFFECTS, case_sensitive=False),
                             default="ATK",
                         )
-                        activationProbability = getAndSaveUserInput(
+                        activationProbability = self.inputHelper.getAndSaveUserInput(
                             self.inputMode,
                             self.inputFile,
                             "What is the probability this effect activates when supering?",
                             default=1.0,
                         )
-                        buff = getAndSaveUserInput(
-                            self.inputMode, self.inputFile, "What is the value of the buff?", default=0.0
-                        )
-                        duration = getAndSaveUserInput(
-                            self.inputMode, self.inputFile, "How many turns does it last for?", default=MAX_TURN
+                        buff = self.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=0.0)
+                        duration = self.inputHelper.getAndSaveUserInput(
+                            "How many turns does it last for?", default=MAX_TURN
                         )
                         avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
                     superFracTotal += superFrac
@@ -1006,7 +975,7 @@ class GiantRageMode(SingleTurnAbility):
         self.support = GIANT_RAGE_SUPPORT
         slot = 1  # Arbitarary choice, could also be 2 or 3
         self.giantRageForm = Form(
-            form.inputMode, form.inputFile, self.activationTurn, self.activationTurn, slot
+            form.inputHelper, self.activationTurn, self.activationTurn, slot
         )  # Create a form so can get access to abilityQuestionaire to ask user questions
         self.giantRageForm.abilities.extend(
             abilityQuestionaire(
@@ -1167,7 +1136,7 @@ class StartOfTurn(PassiveAbility):
                         state.aaPSuper.append(self.activationProbability)
                         state.aaPGuarantee.append(0)
                     case "AAWithChanceToSuper":
-                        chanceToSuper = getAndSaveUserInput(
+                        chanceToSuper = self.inputHelper.getAndSaveUserInput(
                             self.inputMode,
                             self.inputFile,
                             "What is the chance to super given the additional triggered?",
@@ -1287,4 +1256,4 @@ class Nullification(PassiveAbility):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="manual")
+    kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
