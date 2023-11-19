@@ -7,17 +7,14 @@ import pickle
 # - Bugs:
 # - Might be good to have the prompts in the .txt file too
 # - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
-# - Should save all the user inputs to a .txt file and read them back in (up to one before end) to quickly catch the user back up to where they were before they inputted an error
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
 # - Instead of asking user how many of something, should ask until they enteran exit key aka while loop instead of for loop
 # - Should read up on python optimisation techniques once is running and se how long it takes. But try be efficient you go.
 # - I think the 20x3 state matrix needs to be used to compute the best path
 # - Whilst the state matrix is the ideal way, for now just assume a user inputed slot for each form
 # - Should put at may not be relevant tag onto end of the prompts that may not always be relevant.
-# - Should print out relavant parameters back to user, like activationTurn for special ability
 # - Ideally would just pull data from database, but not up in time for new units. Would be amazing for old units though.
 # - Leader skill weight should decrease from 5 as new structure adds more variability between leader skills
-# - Make the outputted variables get saved to a file that can be modified later. Also record the inputs if transformed to unrecognizable form. Or can set defaults of quiz as previously input values.
 # - Once calculate how many supers do on turn 1, use this in the SBR calculation for debuffs on super. i.e. SBR should be one of the last things to be calculated
 
 ##################################################### Helper Functions ############################################################################
@@ -114,17 +111,24 @@ class InputHelper:
 
     def getAndSaveUserInput(self, prompt, type=None, default=None):
         if self.mode == "fromTxt":
-            response = simplest_type(next(self.file, "").rstrip())
-            if response == "":
+            response = simplest_type(next(self.file, END_OF_FILE_STRING).rstrip())
+            # Ignore lines with COMMENT_CHAR
+            try:
+                if response[0] == COMMENT_CHAR:
+                    return self.getAndSaveUserInput(self, prompt, type=type, default=default)
+            except:
+                pass
+            if response == END_OF_FILE_STRING:
                 self.mode = "manual"
                 self.setInputFile(finishedReading=True)
-        if self.mode == "manual" or response == "":
+        if self.mode == "manual" or response == END_OF_FILE_STRING:
             if type == None and default == None:
                 response = clc.prompt(prompt)
             elif type == None:
                 response = clc.prompt(prompt, default=default)
             else:
                 response = clc.prompt(prompt, type=type, default=default)
+            self.file.write(COMMENT_CHAR + ": " + prompt + "\n")
             self.file.write(str(response) + "\n")
         return response
 
@@ -502,6 +506,7 @@ class Unit:
                 formIdx += 1
 
     def saveUnit(self):
+        # Can't pickle this for some reason, but ok as only needed for inputting data.
         self.inputHelper.file = None
         with open(self.picklePath, "wb") as outp:  # Overwrites any existing file.
             pickle.dump(self, outp, pickle.HIGHEST_PROTOCOL)

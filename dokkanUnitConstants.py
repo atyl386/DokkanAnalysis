@@ -6,6 +6,8 @@ import os
 # IO
 
 CWD = os.getcwd()
+COMMENT_CHAR = "#"
+END_OF_FILE_STRING = ""
 
 # High-level Unit constants
 EXCLUSIVITIES = ["DF", "DFLR", "LR", "CLR", "BU", "F2P", "F2PLR", "Super Strike"]
