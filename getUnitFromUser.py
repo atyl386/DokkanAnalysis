@@ -111,7 +111,7 @@ class InputHelper:
 
     def getAndSaveUserInput(self, prompt, type=None, default=None):
         if self.mode == "fromTxt":
-            response = next(self.file, "")
+            response = next(self.file, "").rstrip()
             if response == "":
                 self.setInputFile(finishedReading=True)
         if self.mode == "manual" or response == "":
@@ -185,23 +185,17 @@ class Unit:
         self.DEF = self.inputHelper.getAndSaveUserInput("What is the unit's Max Level DEF stat?", default=0)
         self.leaderSkill = leaderSkillConversion[
             self.inputHelper.getAndSaveUserInput(
-                self.inputMode,
-                self.inputFile,
                 "How would you rate the unit's leader skill on a scale of 1-10?\n200% limited - e.g. LR Hatchiyak Goku\n 200% small - e.g. LR Metal Cooler\n 200% medium - e.g. PHY God Goku\n 200% large - e.g. LR Vegeta & Trunks\n",
                 type=clc.Choice(leaderSkillConversion.keys(), case_sensitive=False),
                 default="<150%",
             )
         ]
         self.teams = self.inputHelper.getAndSaveUserInput(
-            self.inputMode,
-            self.inputFile,
             "How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account.",
             default=1,
         )
         self.kiMod12 = float(
             self.inputHelper.getAndSaveUserInput(
-                self.inputMode,
-                self.inputFile,
                 "What is the unit's 12 ki attck modifer?",
                 type=clc.Choice(KI_MODIFIERS_12),
                 default="1.5",
@@ -209,16 +203,12 @@ class Unit:
         )
         self.keepStacking = yesNo2Bool[
             self.inputHelper.getAndSaveUserInput(
-                self.inputMode,
-                self.inputFile,
                 "Does the unit have the ability to keep stacking before transforming?",
                 type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False),
                 default="N",
             )
         ]
         self.giantRageDuration = self.inputHelper.getAndSaveUserInput(
-            self.inputMode,
-            self.inputFile,
             "How many turns does the unit's giant/rage mode last for?",
             default=0,
         )
@@ -243,8 +233,6 @@ class Unit:
         self.SBR = 0
         if yesNo2Bool[
             self.inputHelper.getAndSaveUserInput(
-                self.inputMode,
-                self.inputFile,
                 "Does the unit have any SBR abilities?",
                 type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False),
                 default="N",
@@ -252,8 +240,6 @@ class Unit:
         ]:
             attackAll = attackAllConversion[
                 self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     "Does the unit attack all enemies on super?",
                     type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False),
                     default="N",
@@ -262,8 +248,6 @@ class Unit:
 
             seal = sealTurnConversion[
                 self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     "How many turns does the unit seal for?",
                     type=clc.Choice(sealTurnConversion.keys()),
                     default="0",
@@ -276,8 +260,6 @@ class Unit:
 
             stun = stunTurnConversion[
                 self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     "How many turns does the unit stun for?",
                     type=clc.Choice(stunTurnConversion.keys()),
                     default="0",
@@ -288,8 +270,6 @@ class Unit:
 
             attDebuffOnAtk = attDebuffTurnConversion[
                 self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     "How many turns does the unit lower the enemy attack by attacking?",
                     type=clc.Choice(attDebuffTurnConversion.keys()),
                     default="0",
@@ -298,8 +278,6 @@ class Unit:
             if attDebuffOnAtk != 0:
                 attDebuffOnAtk *= attDebuffOnAttackConversion[
                     self.inputHelper.getAndSaveUserInput(
-                        self.inputMode,
-                        self.inputFile,
                         "How much is attack lowered by on attack?",
                         type=clc.Choice(attDebuffOnAttackConversion.keys(), case_sensitive=False),
                         default="Lowers",
@@ -308,8 +286,6 @@ class Unit:
 
             attDebuffPassive = attDebuffTurnConversion[
                 self.inputHelper.self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     "How many turns does the unit lower the enemy attack passively?",
                     type=clc.Choice(attDebuffTurnConversion.keys()),
                     default="0",
@@ -322,8 +298,6 @@ class Unit:
 
             multipleEnemyBuff = multipleEnemyBuffConversion[
                 self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     "How much of a buff does the unit get when facing multiple enemies?",
                     type=clc.Choice(multipleEnemyBuffConversion.keys(), case_sensitive=False),
                     default="None",
@@ -332,8 +306,6 @@ class Unit:
             sbrActiveSkillBuff = 0
             if yesNo2Bool[
                 self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     "Does the unit have an active skill that has SBR effects?",
                     type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False),
                     default="N",
@@ -385,8 +357,6 @@ class Unit:
             ]
             form.normalCounterMult = counterAttackConversion[
                 self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     "What is the unit's normal counter multiplier?",
                     type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
                     default="NA",
@@ -394,8 +364,6 @@ class Unit:
             ]
             form.saCounterMult = counterAttackConversion[
                 self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     "What is the unit's super attack counter multiplier?",
                     type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
                     default="NA",
@@ -565,15 +533,11 @@ class Form:
     def getLinks(self):
         for linkIndex in range(MAX_NUM_LINKS):
             self.linkNames[linkIndex] = self.inputHelper.getAndSaveUserInput(
-                self.inputMode,
-                self.inputFile,
                 f"What is the form's link # {linkIndex+1}",
                 type=clc.Choice(LINKS, case_sensitive=False),
                 default="Fierce Battle",
             )
             linkCommonality = self.inputHelper.getAndSaveUserInput(
-                self.inputMode,
-                self.inputFile,
                 "If has an ideal linking partner, what is the chance this link is active?",
                 default=-1,
             )
@@ -594,8 +558,6 @@ class Form:
         for superAttackType in superAttackTypes:
             multiplier = superAttackConversion[
                 self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     f"What is the form's {superAttackType} super attack multiplier?",
                     type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
                     default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
@@ -604,8 +566,6 @@ class Form:
             avgSuperAttack = SuperAttack(superAttackType, multiplier)
             if superAttackType == "12 Ki" or (rarity == "LR" and not (self.intentional12Ki)):
                 numSuperAttacks = self.inputHelper.getAndSaveUserInput(
-                    self.inputMode,
-                    self.inputFile,
                     f"How many different {superAttackType} super attacks does this form have?",
                     default=1,
                 )
@@ -613,30 +573,22 @@ class Form:
                 for i in range(numSuperAttacks):
                     if numSuperAttacks > 1:
                         superFrac = self.inputHelper.getAndSaveUserInput(
-                            self.inputMode,
-                            self.inputFile,
                             f"What is the probability of this {superAttackType} super attack variant from occuring?",
                             default=1.0,
                         )
                     else:
                         superFrac = 1
                     numEffects = self.inputHelper.getAndSaveUserInput(
-                        self.inputMode,
-                        self.inputFile,
                         f"How many effects does this form's {superAttackType} super attack have?",
                         default=1,
                     )
                     for j in range(numEffects):
                         effectType = self.inputHelper.getAndSaveUserInput(
-                            self.inputMode,
-                            self.inputFile,
                             "What type of effect does the unit get on super?",
                             type=clc.Choice(SUPER_ATTACK_EFFECTS, case_sensitive=False),
                             default="ATK",
                         )
                         activationProbability = self.inputHelper.getAndSaveUserInput(
-                            self.inputMode,
-                            self.inputFile,
                             "What is the probability this effect activates when supering?",
                             default=1.0,
                         )
@@ -1137,8 +1089,6 @@ class StartOfTurn(PassiveAbility):
                         state.aaPGuarantee.append(0)
                     case "AAWithChanceToSuper":
                         chanceToSuper = self.inputHelper.getAndSaveUserInput(
-                            self.inputMode,
-                            self.inputFile,
                             "What is the chance to super given the additional triggered?",
                             default=0.0,
                         )
