@@ -1,6 +1,11 @@
 import numpy as np
+import os
 
 #################################################### CONSTANTS ##############################################################################
+
+# IO
+
+CWD = os.getcwd()
 
 # High-level Unit constants
 EXCLUSIVITIES = ["DF", "DFLR", "LR", "CLR", "BU", "F2P", "F2PLR", "Super Strike"]
