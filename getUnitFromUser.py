@@ -120,7 +120,7 @@ class Unit:
             self.HiPo1 = HiPo1
             self.HiPo2 = HiPo2
             inputFilePath = os.path.join(CWD, "DokkanKits", self.id + ".txt")
-            self.inputFile = open(inputFilePath, "w")
+            self.inputFile = open(inputFilePath, "w", 1)
             self.getConstants()  # Requires user input, should make a version that loads from file
             self.getHiPo()
             self.getSBR()  # Requires user input, should make a version that loads from file
