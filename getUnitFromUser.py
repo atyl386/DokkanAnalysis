@@ -115,7 +115,7 @@ class InputHelper:
             # Ignore lines with COMMENT_CHAR
             try:
                 if response[0] == COMMENT_CHAR:
-                    return self.getAndSaveUserInput(self, prompt, type=type, default=default)
+                    return self.getAndSaveUserInput(prompt, type=type, default=default)
             except:
                 pass
             if response == END_OF_FILE_STRING:
@@ -128,7 +128,7 @@ class InputHelper:
                 response = clc.prompt(prompt, default=default)
             else:
                 response = clc.prompt(prompt, type=type, default=default)
-            self.file.write(COMMENT_CHAR + ": " + prompt + "\n")
+            self.file.write(COMMENT_CHAR + " " + prompt.replace("\n", "") + "\n")
             self.file.write(str(response) + "\n")
         return response
 
@@ -154,6 +154,9 @@ class Unit:
         # self = pickle.load(open(self.picklePath, "rb"))
         elif inputMode == "fromWeb":
             print(f"inputMode: {inputMode} not implemented yet. Bailing out.")
+            exit()
+        else:
+            print("Incorrect inputMode: {inputMpde} given. Bailing out.")
             exit()
         self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
         self.getStates()
