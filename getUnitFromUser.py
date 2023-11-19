@@ -105,30 +105,30 @@ def abilityQuestionaire(inputFile, form, abilityPrompt, abilityClass, parameterP
 
 
 class Unit:
-    def __init__(self, id, nCopies, brz, HiPo1, HiPo2, loadPickle=False):
-        self.picklePath = CWD + "\\DokkanUnits\\" + HIPO_DUPES[nCopies - 1] + "\\unit_" + str(id) + ".pkl"
-        # For debugging
-        if loadPickle:
-            self = pickle.load(open(self.picklePath, "rb"))
-            self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
-            self.getStates()
-            self.saveUnit()
-        else:
-            self.id = str(id)
-            self.nCopies = nCopies
-            self.brz = brz
-            self.HiPo1 = HiPo1
-            self.HiPo2 = HiPo2
-            inputFilePath = os.path.join(CWD, "DokkanKits", self.id + ".txt")
-            self.inputFile = open(inputFilePath, "w", 1)
-            self.getConstants()  # Requires user input, should make a version that loads from file
-            self.getHiPo()
-            self.getSBR()  # Requires user input, should make a version that loads from file
-            self.getForms()  # Requires user input, should make a version that loads from file
-            self.inputFile.close()
-            self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
-            self.getStates()
-            self.saveUnit()
+    def __init__(self, id, nCopies, brz, HiPo1, HiPo2, inputMode=False):
+        self.id = str(id)
+        self.nCopies = nCopies
+        self.brz = brz
+        self.HiPo1 = HiPo1
+        self.HiPo2 = HiPo2
+        self.picklePath = CWD + "\\DokkanUnits\\" + HIPO_DUPES[nCopies - 1] + "\\unit_" + self.id + ".pkl"
+        inputFilePath = os.path.join(CWD, "DokkanKits", self.id + ".txt")
+        match inputMode:
+            case "manual":
+                self.inputFile = open(inputFilePath, "w", 1)
+                self.getConstants()  # Requires user input, should make a version that loads from file
+                self.getHiPo()  # Requires user input, should make a version that loads from file
+                self.getSBR()  # Requires user input, should make a version that loads from file
+                self.getForms()  # Requires user input, should make a version that loads from file
+                self.inputFile.close()
+            case "fromTxt":
+                pass
+            # For debugging
+            case "fromPickle":
+                self = pickle.load(open(self.picklePath, "rb"))
+        self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
+        self.getStates()
+        self.saveUnit()
 
     def getConstants(self):
         self.exclusivity = getAndSaveUserInput(
@@ -1223,4 +1223,5 @@ class Nullification(PassiveAbility):
 
 
 if __name__ == "__main__":
-    kit = Unit(1, 1, "DEF", "ADD", "DGE", loadPickle=False)
+    # InputModes = {manual, fromTxt, fromPickle, fromWeb}
+    kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="manual")
