@@ -5,14 +5,17 @@ from dokkanUnitConstants import *
 #################################################### Helper functions #######################################################################
 
 
-def getAndSaveUserInput(file, prompt, type=None, default=None):
-    if type == None and default == None:
-        response = clc.prompt(prompt)
-    elif type == None:
-        response = clc.prompt(prompt, default=default)
-    else:
-        response = clc.prompt(prompt, type=type, default=default)
-    file.write(response + "\n")
+def getAndSaveUserInput(inputMode, file, prompt, type=None, default=None):
+    if inputMode == "fromTxt":
+        response = next(file, "")
+    if response == "":
+        if type == None and default == None:
+            response = clc.prompt(prompt)
+        elif type == None:
+            response = clc.prompt(prompt, default=default)
+        else:
+            response = clc.prompt(prompt, type=type, default=default)
+        file.write(response + "\n")
     return response
 
 
