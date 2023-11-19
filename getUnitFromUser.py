@@ -100,9 +100,9 @@ class InputHelper:
         self.filePath = os.path.join(CWD, "DokkanKits", id + ".txt")
 
     def setInputFile(self, finishedReading=False):
-        if self.inputMode == "manual":
+        if self.mode == "manual":
             specifier = "w"
-        elif self.inputMode == "fromTxt":
+        elif self.mode == "fromTxt":
             if finishedReading:
                 specifier = "a"
             else:
