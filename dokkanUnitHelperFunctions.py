@@ -1,8 +1,16 @@
 import click as clc
 from scipy.stats import poisson
 from dokkanUnitConstants import *
+from ast import literal_eval
 
 #################################################### Helper functions #######################################################################
+
+
+def simplest_type(s):
+    try:
+        return literal_eval(s)
+    except:
+        return s
 
 
 def maxHealthCDF(maxHealth):

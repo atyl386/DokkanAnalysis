@@ -5,6 +5,7 @@ import pickle
 
 # TODO:
 # - Bugs:
+# - Might be good to have the prompts in the .txt file too
 # - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - Should save all the user inputs to a .txt file and read them back in (up to one before end) to quickly catch the user back up to where they were before they inputted an error
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
@@ -63,25 +64,27 @@ def restrictionQuestionaire(inputHelper):
     return max(1 - totalRestrictionProbability, 1 / MAX_TURN), turnRestriction
 
 
-def abilityQuestionaire(inputHelper, form, abilityPrompt, abilityClass, parameterPrompts=[], types=[], defaults=[]):
-    numAbilities = inputHelper.getAndSaveUserInput(abilityPrompt, default=0)
+def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], types=[], defaults=[]):
+    numAbilities = form.inputHelper.getAndSaveUserInput(abilityPrompt, default=0)
     abilities = []
     for i in range(numAbilities):
         parameters = []
         for j, parameterPrompt in enumerate(parameterPrompts):
             if len(types) == 0:  # If don't care about prompt choices
-                parameters.append(inputHelper.getAndSaveUserInput(parameterPrompt))
+                parameters.append(form.inputHelper.getAndSaveUserInput(parameterPrompt))
             else:
-                parameters.append(inputHelper.getAndSaveUserInput(parameterPrompt, type=types[j], default=defaults[j]))
+                parameters.append(
+                    form.inputHelper.getAndSaveUserInput(parameterPrompt, type=types[j], default=defaults[j])
+                )
         if issubclass(abilityClass, PassiveAbility):
-            effect = inputHelper.getAndSaveUserInput(
+            effect = form.inputHelper.getAndSaveUserInput(
                 "What type of buff does the unit get?", type=clc.Choice(EFFECTS, case_sensitive=False), default="ATK"
             )
-            activationProbability = inputHelper.getAndSaveUserInput(
+            activationProbability = form.inputHelper.getAndSaveUserInput(
                 "What is the probability this ability activates?", default=1.0
             )
-            buff = inputHelper.getAndSaveUserInput("What is the value of the buff?", default=1.0)
-            effectDuration = inputHelper.getAndSaveUserInput(
+            buff = form.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=1.0)
+            effectDuration = form.inputHelper.getAndSaveUserInput(
                 "How many turns does it last for? Only applicable to abilities with a time limit.", default=1
             )
             ability = abilityClass(form, activationProbability, effect, buff, effectDuration, args=parameters)
@@ -101,18 +104,19 @@ class InputHelper:
 
     def setInputFile(self, finishedReading=False):
         if self.mode == "manual":
-            specifier = "w"
-        elif self.mode == "fromTxt":
             if finishedReading:
                 specifier = "a"
             else:
-                specifier = "r"
+                specifier = "w"
+        elif self.mode == "fromTxt":
+            specifier = "r"
         self.file = open(self.filePath, specifier, 1)
 
     def getAndSaveUserInput(self, prompt, type=None, default=None):
         if self.mode == "fromTxt":
-            response = next(self.file, "").rstrip()
+            response = simplest_type(next(self.file, "").rstrip())
             if response == "":
+                self.mode = "manual"
                 self.setInputFile(finishedReading=True)
         if self.mode == "manual" or response == "":
             if type == None and default == None:
@@ -142,8 +146,8 @@ class Unit:
             self.getSBR()  # Requires user input, should make a version that loads from file
             self.getForms()  # Requires user input, should make a version that loads from file
             self.inputHelper.file.close()
-        elif inputMode == "fromPickle":
-            self = pickle.load(open(self.picklePath, "rb"))
+        # elif inputMode == "fromPickle":
+        # self = pickle.load(open(self.picklePath, "rb"))
         elif inputMode == "fromWeb":
             print(f"inputMode: {inputMode} not implemented yet. Bailing out.")
             exit()
@@ -338,7 +342,7 @@ class Unit:
                 (
                     transformationProbabilityPerTurn,
                     maxTransformationTurn,
-                ) = restrictionQuestionaire()
+                ) = restrictionQuestionaire(self.inputHelper)
                 endTurn = (
                     startTurn
                     + int(
@@ -498,6 +502,7 @@ class Unit:
                 formIdx += 1
 
     def saveUnit(self):
+        self.inputHelper.file = None
         with open(self.picklePath, "wb") as outp:  # Overwrites any existing file.
             pickle.dump(self, outp, pickle.HIGHEST_PROTOCOL)
         outp.close()
@@ -904,7 +909,7 @@ class Ability:
 class SpecialAbility(Ability):
     def __init__(self, form):
         super().__init__(form)
-        self.activationProbability, self.maxTurnRestriction = restrictionQuestionaire()
+        self.activationProbability, self.maxTurnRestriction = restrictionQuestionaire(form.inputHelper)
 
 
 class SingleTurnAbility(SpecialAbility):
