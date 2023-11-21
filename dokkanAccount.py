@@ -170,4 +170,9 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','ADD','DGE',1], # LR Goku Black
     ['DEF','CRT','DGE',0], # Zirloin, Rabanra & Zarbuto
     ['DEF','DGE','ADD',0], # Android 17 & Android 18
+    ['DEF','DGE','ADD',0], # Dark King Fu
+    ['DEF','DGE','ADD',0], # Limit Breaker SS4 Broly
+    ['DEF','DGE','ADD',0], # Berserk Controlled SSGSS Vegeta
+    ['ATT','CRT','ADD',0], # SS3 Rose Crimom Masked Saiyan
+    ['ATT','ADD','DGE',0], # Limit Breaker SS4 Vegito
 ]
