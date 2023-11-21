@@ -5,7 +5,7 @@ import pickle
 
 # TODO:
 # - Bugs:
-# - Might be good to have the prompts in the .txt file too
+# - Need to incorporate standby skills
 # - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
 # - Instead of asking user how many of something, should ask until they enteran exit key aka while loop instead of for loop
@@ -488,6 +488,18 @@ class Unit:
                     [1],
                 )
             )
+            form.abilities.extend(
+                abilityQuestionaire(
+                    form,
+                    "How many standby skills does the form have?",
+                    StandbySkill,
+                    [
+                        "What is the ",
+                    ],
+                    [None],
+                    [1],
+                )
+            )
 
     def getStates(self):
         self.states = []
@@ -506,7 +518,7 @@ class Unit:
             self.states.append(state)
             turn = nextTurn
             if turn > form.endTurn:
-                formIdx += 1
+                formIdx += form.nextFormDelta
 
     def saveUnit(self):
         # Can't pickle this for some reason, but ok as only needed for inputting data.
@@ -537,6 +549,7 @@ class Form:
         self.saCounterMult = 0
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.attacksPerformed = 0
+        self.nextFormDelta = 1
         self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
@@ -1219,4 +1232,6 @@ class Nullification(PassiveAbility):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    #kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    kit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="manual")
+
