@@ -112,7 +112,7 @@ Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
 #SSJ4Goku = Banner([139,4,54,55,8,9,15,138,32,35],'red',threePlus1=True, discount=150/(30+35+45))
 #print(SSJ4Goku.summonScore)
-Heroes2023 = Banner([39, 40, 164, 165, 166, 167, 168], 'blue', gFeatured=True)
+Heroes2023 = Banner([39, 40, 164, 165, 166, 167, 168], 'blue', gFeatured=True, featuredSSR_rate=0.7)
 print(Heroes2023.summonScore)
 OmegaShenron = Banner([141,61,26,108,38,84,38,38,38,38],'cyan',SSR_rate=0.2)
 print(OmegaShenron.summonScore)

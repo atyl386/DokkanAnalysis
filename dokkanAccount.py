@@ -45,8 +45,8 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',5], # STR SS4 Bardock
     ['DEF','DGE','ADD',5], # STR Supreme Kai of Time (Brainwashed)
     ['DEF','DGE','ADD',5], # Robelu
-    ['DEF','DGE','ADD',0], # Golden Metal Cooler
-    ['DEF','DGE','ADD',0], # Janemba (Reconstructed)
+    ['DEF','DGE','ADD',3], # Golden Metal Cooler
+    ['DEF','DGE','ADD',1], # Janemba (Reconstructed)
     ['DEF','DGE','ADD',1], # PHY Super Saiyan Cumber
     ['DEF','DGE','ADD',0], # TEQ Supreme Opai of Time
     ['DEF','DGE','ADD',0], # PHY SS3 Vegeta (Xeno)
@@ -172,7 +172,7 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',0], # Android 17 & Android 18
     ['DEF','DGE','ADD',0], # Dark King Fu
     ['DEF','DGE','ADD',0], # Limit Breaker SS4 Broly
-    ['DEF','DGE','ADD',0], # Berserk Controlled SSGSS Vegeta
-    ['ATT','CRT','ADD',0], # SS3 Rose Crimom Masked Saiyan
-    ['ATT','ADD','DGE',0], # Limit Breaker SS4 Vegito
+    ['DEF','DGE','ADD',2], # Berserk Controlled SSGSS Vegeta
+    ['ATT','CRT','ADD',1], # SS3 Rose Crimom Masked Saiyan
+    ['ATT','ADD','DGE',2], # Limit Breaker SS4 Vegito
 ]
