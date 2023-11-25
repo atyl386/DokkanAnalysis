@@ -175,4 +175,5 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',2], # Berserk Controlled SSGSS Vegeta
     ['ATT','CRT','ADD',1], # SS3 Rose Crimom Masked Saiyan
     ['ATT','ADD','DGE',2], # Limit Breaker SS4 Vegito
+    ['ATT','CRT','ADD',5], # SS4 Vegito
 ]
