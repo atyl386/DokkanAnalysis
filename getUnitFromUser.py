@@ -5,6 +5,8 @@ import pickle
 
 # TODO:
 # - Bugs:
+# - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
+# - Add some functionality that can update existing input .txt files with new questions (assuming not relevant to exisiting unit)
 # - Need to incorporate standby skills
 # - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
@@ -18,47 +20,6 @@ import pickle
 # - Once calculate how many supers do on turn 1, use this in the SBR calculation for debuffs on super. i.e. SBR should be one of the last things to be calculated
 
 ##################################################### Helper Functions ############################################################################
-
-
-def restrictionQuestionaire(inputHelper):
-    numRestrictions = inputHelper.getAndSaveUserInput(
-        "How many different restrictions does this ability have?", default=0
-    )
-    totalRestrictionProbability = 1
-    turnRestriction = MAX_TURN
-    for restriction in range(numRestrictions):
-        restrictionType = inputHelper.getAndSaveUserInput(
-            "What type of restriction is it?", type=clc.Choice(RESTRICTIONS, case_sensitive=False), default="Turn"
-        )
-        if restrictionType == "Turn":
-            turnRestriction = min(
-                inputHelper.getAndSaveUserInput(
-                    "What is the turn restriction (relative to the form's starting turn)?", default=5
-                ),
-                turnRestriction,
-            )
-        else:
-            if restrictionType == "Max HP":
-                restrictionProbability = 1 - maxHealthCDF(
-                    inputHelper.getAndSaveUserInput("What is the maximum HP restriction?", default=0.7)
-                )
-            elif restrictionType == "Min HP":
-                restrictionProbability = maxHealthCDF(
-                    inputHelper.getAndSaveUserInput("What is the minimum HP restriction?", default=0.7)
-                )
-            elif restrictionType == "Enemy Max HP":
-                restrictionProbability = 1 - inputHelper.getAndSaveUserInput(
-                    "What is the maximum enemy HP restriction?", default=0.5
-                )
-            elif restrictionType == "Enemy Min HP":
-                restrictionProbability = inputHelper.getAndSaveUserInput(
-                    "What is the minimum enemy HP restriction?", default=0.5
-                )
-            # Assume independence
-            totalRestrictionProbability = (1 - totalRestrictionProbability) * restrictionProbability + (
-                1 - restrictionProbability
-            ) * totalRestrictionProbability
-    return max(1 - totalRestrictionProbability, 1 / MAX_TURN), turnRestriction
 
 
 def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], types=[], defaults=[]):
@@ -89,6 +50,51 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
             ability = abilityClass(form, parameters)
         abilities.append(ability)
     return abilities
+
+
+def getConditions(inputHelper):
+    """
+    Askes the user questions to determine which Condition class(es) apply and returns them. Only want once per condition set.
+    """
+    numConditions = inputHelper.getAndSaveUserInput(
+        "How many conditions have to met before changing into the next form?", default=0
+    )
+    conditions = [None] * numConditions
+    operator = None
+    if numConditions > 1:
+        operator = inputHelper.getAndSaveUserInput(
+            "Are the condtions ORs or ANDs?", type=clc.Choice(OR_AND), default="AND"
+        )
+    for i in range(numConditions):
+        conditionType = inputHelper.getAndSaveUserInput(
+            f"What type of condition is #{i}?", type=clc.Choice(CONDITIONS), default="Turn"
+        )
+        match conditionType:
+            case "Turn":
+                turnCondition = inputHelper.getAndSaveUserInput(
+                    "What is the turn condition (relative to the form's starting turn)?", default=5
+                )
+                conditions[i] = TurnCondition(turnCondition)
+            case "Max HP":
+                maxHpCondition = inputHelper.getAndSaveUserInput("What is the maximum HP condition?", default=0.7)
+                conditions[i] = MaxHpCondition(maxHpCondition)
+            case "Min HP":
+                minHpCondition = inputHelper.getAndSaveUserInput("What is the minimum HP condition?", default=0.7)
+                conditions[i] = MinHpCondition(minHpCondition)
+            case "Enemy Max HP":
+                enemyMaxHpCondition = inputHelper.getAndSaveUserInput(
+                    "What is the maximum enemy HP condition?", default=0.5
+                )
+                conditions[i] = EnemyMaxHpCondition(enemyMaxHpCondition)
+            case "Enemy Min HP":
+                enemyMinHpCondition = inputHelper.getAndSaveUserInput(
+                    "What is the minimum enemy HP condition?", default=0.5
+                )
+                conditions[i] = EnemyMinHpCondition(enemyMinHpCondition)
+            case "Num Attacks":
+                numAttacksCondition = inputHelper.getAndSaveUserInput("How many attacks are required?", default=6)
+                conditions[i] = NumAttacksCondition(numAttacksCondition)
+    return operator, conditions
 
 
 ######################################################### Classes #################################################################
@@ -148,7 +154,7 @@ class Unit:
             self.getConstants()  # Requires user input, should make a version that loads from file
             self.getHiPo()  # Requires user input, should make a version that loads from file
             self.getSBR()  # Requires user input, should make a version that loads from file
-            self.getForms()  # Requires user input, should make a version that loads from file
+            self.getStates()
             self.inputHelper.file.close()
         # elif inputMode == "fromPickle":
         # self = pickle.load(open(self.picklePath, "rb"))
@@ -158,8 +164,6 @@ class Unit:
         else:
             print("Incorrect inputMode: {inputMpde} given. Bailing out.")
             exit()
-        self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
-        self.getStates()
         self.saveUnit()
 
     def getConstants(self):
@@ -335,190 +339,175 @@ class Unit:
             )
         return self.SBR
 
-    def getForms(self):
-        startTurn = 1
-        self.forms = []
-        numForms = self.inputHelper.getAndSaveUserInput("How many forms does the unit have?", default=1)
-        for i in range(numForms):
-            slot = int(
-                self.inputHelper.getAndSaveUserInput(f"Which slot is form # {i + 1} best suited for?", default=2)
+    def getForm(self, formIdx, turn):
+        slot = int(
+            self.inputHelper.getAndSaveUserInput(f"Which slot is form # {formIdx + 1} best suited for?", default=2)
+        )
+        form = Form(self.inputHelper, slot, turn)
+        form.intentional12Ki = yesNo2Bool[
+            self.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
+        ]
+        form.normalCounterMult = counterAttackConversion[
+            self.inputHelper.getAndSaveUserInput(
+                "What is the unit's normal counter multiplier?",
+                type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
+                default="NA",
             )
-            if i == numForms - 1:
-                endTurn = MAX_TURN
-            else:
-                (
-                    transformationProbabilityPerTurn,
-                    maxTransformationTurn,
-                ) = restrictionQuestionaire(self.inputHelper)
-                endTurn = (
-                    startTurn
-                    + int(
-                        min(
-                            RETURN_PERIOD_PER_SLOT[slot - 1] * round(1 / transformationProbabilityPerTurn),
-                            maxTransformationTurn,
-                        )
-                    )
-                    - 1
-                )  # Mean of geometric distribution is 1/p
-            self.forms.append(Form(self.inputHelper, startTurn, endTurn, slot))
-            startTurn = endTurn + 1
-        for form in self.forms:
-            form.intentional12Ki = yesNo2Bool[
-                self.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
-            ]
-            form.normalCounterMult = counterAttackConversion[
-                self.inputHelper.getAndSaveUserInput(
-                    "What is the unit's normal counter multiplier?",
-                    type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
-                    default="NA",
-                )
-            ]
-            form.saCounterMult = counterAttackConversion[
-                self.inputHelper.getAndSaveUserInput(
-                    "What is the unit's super attack counter multiplier?",
-                    type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
-                    default="NA",
-                )
-            ]
-            form.getLinks()
-            assert len(np.unique(form.linkNames)) == MAX_NUM_LINKS, "Duplicate links"
-            form.getSuperAttacks(self.rarity, self.EZA)
-            form.abilities.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many unconditional buffs does the form have?",
-                    StartOfTurn,
-                )
+        ]
+        form.saCounterMult = counterAttackConversion[
+            self.inputHelper.getAndSaveUserInput(
+                "What is the unit's super attack counter multiplier?",
+                type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
+                default="NA",
             )
-            form.abilities.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many turn dependent buffs does the form have?",
-                    TurnDependent,
-                    [
-                        "What turn does the buff start from?",
-                        "What turn does the buff end on?",
-                    ],
-                    [None, None],
-                    [form.startTurn, form.endTurn],
-                )
+        ]
+        form.getLinks()
+        assert len(np.unique(form.linkNames)) == MAX_NUM_LINKS, "Duplicate links"
+        form.getSuperAttacks(self.rarity, self.EZA)
+        form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many unconditional buffs does the form have?",
+                StartOfTurn,
             )
-            form.abilities.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many slot specific buffs does the form have?",
-                    SlotDependent,
-                    ["Which slot is required?"],
-                    [None],
-                    [1],
-                )
+        )
+        form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many turn dependent buffs does the form have?",
+                TurnDependent,
+                [
+                    "What turn does the buff start from?",
+                    "What turn does the buff end on?",
+                ],
+                [None, None],
+                [form.startTurn, form.endTurn],
             )
-            form.abilities.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many different buffs does the form get after receiving an attack?",
-                    AfterAttackReceived,
-                )
+        )
+        form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many slot specific buffs does the form have?",
+                SlotDependent,
+                ["Which slot is required?"],
+                [None],
+                [1],
             )
-            form.abilities.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many different buffs does the form get on attacks received?",
-                    PerAttackReceived,
-                    ["What is the maximum buff?"],
-                    [None],
-                    [1.0],
-                )
+        )
+        form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many different buffs does the form get after receiving an attack?",
+                AfterAttackReceived,
             )
-            form.abilities.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many ki dependent buffs does the form have?",
-                    KiDependent,
-                    ["What is the required ki?"],
-                    [None],
-                    [24],
-                )
+        )
+        form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many different buffs does the form get on attacks received?",
+                PerAttackReceived,
+                ["What is the maximum buff?"],
+                [None],
+                [1.0],
             )
-            form.abilities.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many different nullification abilities does the form have?",
-                    Nullification,
-                    ["Does this nullification have counter?"],
-                    [YES_NO],
-                    ["N"],
-                )
+        )
+        form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many ki dependent buffs does the form have?",
+                KiDependent,
+                ["What is the required ki?"],
+                [None],
+                [24],
             )
-            form.abilities.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many revive skills does the form have?",
-                    Revive,
-                    [
-                        "How much HP is revived with?",
-                        "Does the revive only apply to this unit?",
-                    ],
-                    [None, None],
-                    [0.7, "N"],
-                )
+        )
+        form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many different nullification abilities does the form have?",
+                Nullification,
+                ["Does this nullification have counter?"],
+                [YES_NO],
+                ["N"],
             )
-            form.specialAttacks.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many active skill attacks does the form have?",
-                    ActiveSkillAttack,
-                    [
-                        "What is the attack multiplier?",
-                        "What is the additional attack buff when performing the attack?",
-                    ],
-                    [clc.Choice(specialAttackConversion.keys(), case_sensitive=False), None],
-                    ["Ultimate", 0.0],
-                )
+        )
+        form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many revive skills does the form have?",
+                Revive,
+                [
+                    "How much HP is revived with?",
+                    "Does the revive only apply to this unit?",
+                ],
+                [None, None],
+                [0.7, "N"],
             )
-            form.abilities.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many active skill buffs does the form have?",
-                    ActiveSkillBuff,
-                    [
-                        "How many times can the active skill be activated?",
-                    ],
-                    [None],
-                    [1],
-                )
+        )
+        form.specialAttacks.extend(
+            abilityQuestionaire(
+                form,
+                "How many active skill attacks does the form have?",
+                ActiveSkillAttack,
+                [
+                    "What is the attack multiplier?",
+                    "What is the additional attack buff when performing the attack?",
+                ],
+                [clc.Choice(specialAttackConversion.keys(), case_sensitive=False), None],
+                ["Ultimate", 0.0],
             )
-            form.abilities.extend(
-                abilityQuestionaire(
-                    form,
-                    "How many standby skills does the form have?",
-                    StandbySkill,
-                    [
-                        "What is the ",
-                    ],
-                    [None],
-                    [1],
-                )
+        )
+        form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many active skill buffs does the form have?",
+                ActiveSkillBuff,
+                [
+                    "How many times can the active skill be activated?",
+                ],
+                [None],
+                [1],
             )
+        )
+        """ form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many Standby Skill Effects does the form have?",
+                StandbySkill,
+                ["How many turns does the standy mode last?", "What is the type of the Finish Effect condition?"],
+                [None, clc.Choice(, case_sensitive=False)],
+                [5, ""],
+            )
+        ) """
+        # If have another form left
+        if formIdx + 1 < self.numForms:
+            form.formChangeConditionOperator, form.formChangeCondtions = getConditions(self.inputHelper)
 
     def getStates(self):
         self.states = []
+        self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
+        self.numForms = self.inputHelper.getAndSaveUserInput("How many forms does the unit have?", default=1)
         turn = 1
         formIdx = 0
         self.fightPeak = False
+        nextForm = True
         while turn <= MAX_TURN:
-            form = self.forms[formIdx]
-            slot = form.slot
+            if nextForm:
+                formIdx += 1  # TODO needs to be generalised for standby
+                form = self.getForm(formIdx)
+                self.forms.append(form)
+                slot = form.slot
+                nextForm = False
+            form.turn = turn
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
             if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN):
                 self.fightPeak = True
             state = State(self, form, slot, turn)
             state.setState(self, form)
             form.numAttacksReceived += state.numAttacksReceived
+            nextForm = form.checkConditions(form.formChangeConditionOperator, form.formChangeConditions)
             self.states.append(state)
             turn = nextTurn
-            if turn > form.endTurn:
-                formIdx += form.nextFormDelta
 
     def saveUnit(self):
         # Can't pickle this for some reason, but ok as only needed for inputting data.
@@ -529,11 +518,10 @@ class Unit:
 
 
 class Form:
-    def __init__(self, inputHelper, startTurn, endTurn, slot):
+    def __init__(self, inputHelper, slot, initialTurn):
         self.inputHelper = inputHelper
-        self.startTurn = startTurn
-        self.endTurn = endTurn
         self.slot = slot
+        self.initialTurn = initialTurn
         self.linkNames = [""] * MAX_NUM_LINKS
         self.linkCommonality = 0
         self.linkKi = 0
@@ -549,10 +537,12 @@ class Form:
         self.saCounterMult = 0
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.attacksPerformed = 0
-        self.nextFormDelta = 1
+        self.superAttacksPerformed = 0
         self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
+        self.formChangeConditionOperator = None
+        self.formChangeCondtions = None
         # This will list active skill attacks and finish skills (as have to be applied after state.setState())
         self.specialAttacks = []
 
@@ -626,6 +616,16 @@ class Form:
                     superFracTotal += superFrac
                 assert superFracTotal == 1, "Invald super attack variant proabilities entered"
             self.superAttacks[superAttackType] = avgSuperAttack
+
+    def checkConditions(self, operator, conditions):
+        match operator:
+            case None:
+                result = conditions[0].isSatisfied(self)
+            case "AND":
+                result = np.logical_and([condition.isSatisfied(self) for condition in conditions])
+            case "OR":
+                result = np.logical_or([condition.isSatisfied(self) for condition in conditions])
+        return result
 
 
 class Link:
@@ -927,22 +927,10 @@ class Ability:
         self.form = form
 
 
-class SpecialAbility(Ability):
+class SingleTurnAbility(Ability):
     def __init__(self, form):
         super().__init__(form)
-        self.activationProbability, self.maxTurnRestriction = restrictionQuestionaire(form.inputHelper)
-
-
-class SingleTurnAbility(SpecialAbility):
-    def __init__(self, form):
-        super().__init__(form)
-        # Mean of geometric distribution is 1/p
-        self.activationTurn = int(
-            max(
-                min(round(1 / self.activationProbability), self.maxTurnRestriction),
-                PEAK_TURN,
-            )
-        )
+        self.operator, self.conditions = getConditions()
         self.activated = False
 
 
@@ -952,9 +940,8 @@ class GiantRageMode(SingleTurnAbility):
         self.ATK = args[0]
         self.support = GIANT_RAGE_SUPPORT
         slot = 1  # Arbitarary choice, could also be 2 or 3
-        self.giantRageForm = Form(
-            form.inputHelper, self.activationTurn, self.activationTurn, slot
-        )  # Create a form so can get access to abilityQuestionaire to ask user questions
+        # Create a form so can get access to abilityQuestionaire to ask user questions
+        self.giantRageForm = Form(form.inputHelper, slot)
         self.giantRageForm.abilities.extend(
             abilityQuestionaire(
                 self.giantRageForm,
@@ -964,7 +951,7 @@ class GiantRageMode(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn >= self.activationTurn and unit.fightPeak and not (self.activated):
+        if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
             self.activated = True
             # Create a State so can get access to setState for damage calc
             self.giantRageModeState = State(unit, form, state.slot, self.activationTurn)
@@ -1007,7 +994,7 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn >= self.activationTurn and unit.fightPeak and not (self.activated):
+        if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
             self.activated = True
             form.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.avgAtk += getActiveAttack(
@@ -1022,6 +1009,14 @@ class ActiveSkillAttack(SingleTurnAbility):
                 self.activeMult,
                 unit.nCopies,
             )
+
+
+class StandbySkill(SingleTurnAbility):
+    def __init__(self, form):
+        super().__init__(form)
+
+    def applyToState(self, state, unit=None, form=None):
+        pass
 
 
 class Revive(SingleTurnAbility):
@@ -1043,7 +1038,7 @@ class Revive(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if state.turn >= self.activationTurn and unit.fightPeak and not (self.activated):
+        if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
             self.activated = True
             state.healing = min(state.healing + self.hpRegen, 1)
             if self.isThisCharacterOnly:
@@ -1230,8 +1225,63 @@ class Nullification(PassiveAbility):
             state.pCounterSA = (1 - state.pCounterSA) * pNullify + (1 - pNullify) * state.pCounterSA
 
 
+class Condition:
+    def __init__(self):
+        self.formAttr = None
+        self.conditionValue = 0
+
+    def isSatisfied(self, form):
+        return getattr(form, self.formAttr) >= self.conditionValue
+
+
+class TurnCondition(Condition):
+    def __init__(self, turnCondition):
+        self.conditionValue = turnCondition
+        self.formAttr = "turn"
+
+
+class ProbabilityCondition(Condition):
+    def __init__(self, conditionProbability):
+        super.__init__()
+        self.conditionProbability = conditionProbability
+
+    def isSatisfied(self, form):
+        # Mean of geometric distribution is 1/p
+        self.conditionValue += 1 / self.conditionProbability
+        return round(self.conditionValue) >= 1
+
+
+class MaxHpCondition(ProbabilityCondition):
+    def __init__(self, maxHpCondition):
+        conditionProbability = maxHealthCDF(maxHpCondition)
+        super.__init__(conditionProbability)
+
+
+class MinHpCondition(ProbabilityCondition):
+    def __init__(self, minHpCondition):
+        conditionProbability = 1 - maxHealthCDF(minHpCondition)
+        super.__init__(conditionProbability)
+
+
+class EnemyMaxHpCondition(ProbabilityCondition):
+    def __init__(self, enemyMaxHpCondition):
+        conditionProbability = enemyMaxHpCondition
+        super.__init__(conditionProbability)
+
+
+class EnemyMinHpCondition(ProbabilityCondition):
+    def __init__(self, enemyMinHpCondition):
+        conditionProbability = 1 - enemyMinHpCondition
+        super.__init__(conditionProbability)
+
+
+class NumAttacksCondition(Condition):
+    def __init__(self, numAttacks):
+        self.formAttr = "attacksPerformed"
+        self.conditionValue = numAttacks
+
+
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    #kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
     kit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="manual")
-

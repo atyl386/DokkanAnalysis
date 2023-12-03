@@ -80,7 +80,6 @@ COUNTER_ATTACK_MULTIPLIERS = [0, 3.0, 4.0]
 # Special Attacks
 SPECIAL_ATTACK_MULTIPLIER_NAMES = [
     "NA",
-    "",
     "Super-Intense",
     "Mega-Colossal",
     "Ultimate",
@@ -428,8 +427,10 @@ EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)
 SUPER_ATTACK_EFFECTS = ["ATK", "DEF", "Crit", "Disable Action"]
 STACK_EFFECTS = ["ATK", "DEF"]
 
-# Restrictions
-RESTRICTIONS = ["Turn", "Max HP", "Min HP", "Max Enemy HP", "Min Enemy HP"]
+# Conditions
+CONDITION_TYPES = ["Form Change", ""]
+CONDITIONS = ["Turn", "Max HP", "Min HP", "Max Enemy HP", "Min Enemy HP", "Num Attacks"]
+OR_AND = ["OR", "AND"]
 
 # Revive
 REVIVE_UNIT_SUPPORT_BUFF = 0.75  # Just revives this unit
