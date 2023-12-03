@@ -5,6 +5,8 @@ import pickle
 
 # TODO:
 # - Bugs:
+# - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
+# - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
 # - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
 # - Add some functionality that can update existing input .txt files with new questions (assuming not relevant to exisiting unit)
 # - Need to incorporate standby skills
@@ -17,7 +19,7 @@ import pickle
 # - Should put at may not be relevant tag onto end of the prompts that may not always be relevant.
 # - Ideally would just pull data from database, but not up in time for new units. Would be amazing for old units though.
 # - Leader skill weight should decrease from 5 as new structure adds more variability between leader skills
-# - Once calculate how many supers do on turn 1, use this in the SBR calculation for debuffs on super. i.e. SBR should be one of the last things to be calculated
+# - Once calculate how many supers do on turn 1, use this in the SBR calculation for debuffs on super(). i.e. SBR should be one of the last things to be calculated
 
 ##################################################### Helper Functions ############################################################################
 
@@ -381,7 +383,7 @@ class Unit:
                     "What turn does the buff end on?",
                 ],
                 [None, None],
-                [form.startTurn, form.endTurn],
+                [form.initialTurn, MAX_TURN],
             )
         )
         form.abilities.extend(
@@ -462,11 +464,6 @@ class Unit:
                 form,
                 "How many active skill buffs does the form have?",
                 ActiveSkillBuff,
-                [
-                    "How many times can the active skill be activated?",
-                ],
-                [None],
-                [1],
             )
         )
         """ form.abilities.extend(
@@ -494,7 +491,7 @@ class Unit:
         while turn <= MAX_TURN:
             if nextForm:
                 formIdx += 1  # TODO needs to be generalised for standby
-                form = self.getForm(formIdx)
+                form = self.getForm(formIdx, turn)
                 self.forms.append(form)
                 slot = form.slot
                 nextForm = False
@@ -930,7 +927,7 @@ class Ability:
 class SingleTurnAbility(Ability):
     def __init__(self, form):
         super().__init__(form)
-        self.operator, self.conditions = getConditions()
+        self.operator, self.conditions = getConditions(form.inputHelper)
         self.activated = False
 
 
@@ -954,7 +951,7 @@ class GiantRageMode(SingleTurnAbility):
         if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
             self.activated = True
             # Create a State so can get access to setState for damage calc
-            self.giantRageModeState = State(unit, form, state.slot, self.activationTurn)
+            self.giantRageModeState = State(unit, form, state.slot, state.turn)
             for ability in self.giantRageForm.abilities:  # Apply the giant/form abilities
                 ability.applyToState(self.giantRageModeState)
             giantRageUnit = copy(unit)
@@ -965,26 +962,16 @@ class GiantRageMode(SingleTurnAbility):
 
 
 class ActiveSkillBuff(SingleTurnAbility):
-    def __init__(self, form, args):
+    def __init__(self, form, args=[]):
         super().__init__(form)
-        self.numActivations = args[0]
-        for activation in range(self.numActivations):
-            self.form.abilities.extend(
-                abilityQuestionaire(
-                    self.form,
-                    "How many different buffs does this active skill have?",
-                    TurnDependent,
-                    [
-                        "This is the activation turn. Please press enter to continue",
-                        "This is the form's next turn. Please press enter to continue",
-                    ],
-                    [None, None],
-                    [
-                        self.activationTurn + activation * RETURN_PERIOD_PER_SLOT[self.form.slot],
-                        self.activationTurn + activation * RETURN_PERIOD_PER_SLOT[self.form.slot] + 1,
-                    ],
-                )
-            )
+        self.abilities = abilityQuestionaire(form, "How many different buffs does the active skill have?", StartOfTurn)
+
+    def applyToState(self, state, unit=None, form=None):
+        if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
+            self.activated = True
+            for ability in self.abilities:
+                ability.end = state.turn + ability.effectDuration
+                ability.applyToState(state, unit, form)
 
 
 class ActiveSkillAttack(SingleTurnAbility):
@@ -1023,18 +1010,8 @@ class Revive(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.hpRegen, self.isThisCharacterOnly = args
-        self.form.abilities.extend(
-            abilityQuestionaire(
-                self.form,
-                "How many additional constant buffs does this revive have?",
-                TurnDependent,
-                [
-                    "This is the activation turn. Please press enter to continue",
-                    "This is the form's end turn. Please press enter to continue",
-                ],
-                [None, None],
-                [self.activationTurn, self.form.endTurn],
-            )
+        self.abilities = abilityQuestionaire(
+            form, "How many additional constant buffs does this revive have?", StartOfTurn
         )
 
     def applyToState(self, state, unit=None, form=None):
@@ -1045,6 +1022,8 @@ class Revive(SingleTurnAbility):
                 state.support += REVIVE_UNIT_SUPPORT_BUFF
             else:
                 state.support += REVIVE_ROTATION_SUPPORT_BUFF
+            for ability in self.abilities:
+                ability.applyToState(state, unit, form)
 
 
 class PassiveAbility(Ability):
@@ -1091,7 +1070,7 @@ class StartOfTurn(PassiveAbility):
         self.activationProbability *= pHaveKi
         # Check if state is elligible for ability
         if state.turn >= self.start and state.turn <= self.end and state.slot in self.slots:
-            # If not a support ability
+            # If a support ability
             if self.effect in SUPPORT_EFFECTS:
                 state.support += SUPPORT_FACTOR_DICT[self.effect] * self.effectiveBuff
             elif self.effect in state.buff.keys():
@@ -1242,7 +1221,7 @@ class TurnCondition(Condition):
 
 class ProbabilityCondition(Condition):
     def __init__(self, conditionProbability):
-        super.__init__()
+        super().__init__()
         self.conditionProbability = conditionProbability
 
     def isSatisfied(self, form):
@@ -1254,25 +1233,25 @@ class ProbabilityCondition(Condition):
 class MaxHpCondition(ProbabilityCondition):
     def __init__(self, maxHpCondition):
         conditionProbability = maxHealthCDF(maxHpCondition)
-        super.__init__(conditionProbability)
+        super().__init__(conditionProbability)
 
 
 class MinHpCondition(ProbabilityCondition):
     def __init__(self, minHpCondition):
         conditionProbability = 1 - maxHealthCDF(minHpCondition)
-        super.__init__(conditionProbability)
+        super().__init__(conditionProbability)
 
 
 class EnemyMaxHpCondition(ProbabilityCondition):
     def __init__(self, enemyMaxHpCondition):
         conditionProbability = enemyMaxHpCondition
-        super.__init__(conditionProbability)
+        super().__init__(conditionProbability)
 
 
 class EnemyMinHpCondition(ProbabilityCondition):
     def __init__(self, enemyMinHpCondition):
         conditionProbability = 1 - enemyMinHpCondition
-        super.__init__(conditionProbability)
+        super().__init__(conditionProbability)
 
 
 class NumAttacksCondition(Condition):
@@ -1284,4 +1263,4 @@ class NumAttacksCondition(Condition):
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
     # kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    kit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="manual")
+    kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
