@@ -18,7 +18,7 @@ N
 15530
 # What is the unit's Max Level DEF stat?
 9231
-# How would you rate the unit's leader skill on a scale of 1-10? 200% limited - e.g. LR Hatchiyak Goku 200% small - e.g. LR Metal Cooler 200% medium - e.g. PHY God Goku 200% large - e.g. LR Vegeta & Trunks
+# How would you rate the unit's leader skill on a scale of 1-10?200% limited - e.g. LR Hatchiyak Goku 200% small - e.g. LR Metal Cooler 200% medium - e.g. PHY God Goku 200% large - e.g. LR Vegeta & Trunks
 200% small
 # How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account.
 13
@@ -32,7 +32,7 @@ N
 N
 # How many forms does the unit have?
 1
-# Which slot is form # 1 best suited for?
+# Which slot is form # 2 best suited for?
 1
 # Should a 12 Ki be targetted for this form?
 N
@@ -45,11 +45,11 @@ Golden Warrior
 # If has an ideal linking partner, what is the chance this link is active?
 -1
 # What is the form's link # 2
-Super Saiyan
+Saiyan Warrior Race
 # If has an ideal linking partner, what is the chance this link is active?
 -1
 # What is the form's link # 3
-Saiyan Warrior Race
+Super Saiyan
 # If has an ideal linking partner, what is the chance this link is active?
 -1
 # What is the form's link # 4
@@ -99,14 +99,6 @@ DEF
 # How many unconditional buffs does the form have?
 4
 # What type of buff does the unit get?
-Ki
-# What is the probability this ability activates?
-1.0
-# What is the value of the buff?
-5.0
-# How many turns does it last for? Only applicable to abilities with a time limit.
-1
-# What type of buff does the unit get?
 ATK
 # What is the probability this ability activates?
 1.0
@@ -120,6 +112,14 @@ DEF
 1.0
 # What is the value of the buff?
 1.59
+# How many turns does it last for? Only applicable to abilities with a time limit.
+1
+# What type of buff does the unit get?
+Ki
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+4.0
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
@@ -137,14 +137,6 @@ Guard
 # How many different buffs does the form get after receiving an attack?
 2
 # What type of buff does the unit get?
-AEAAT
-# What is the probability this ability activates?
-1.0
-# What is the value of the buff?
-1.0
-# How many turns does it last for? Only applicable to abilities with a time limit.
-1
-# What type of buff does the unit get?
 DEF
 # What is the probability this ability activates?
 1.0
@@ -152,10 +144,18 @@ DEF
 0.59
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1
+# What type of buff does the unit get?
+AEAAT
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+1.0
+# How many turns does it last for? Only applicable to abilities with a time limit.
+1
 # How many different buffs does the form get on attacks received?
 2
 # What is the maximum buff?
-5.0
+4.0
 # What type of buff does the unit get?
 Ki
 # What is the probability this ability activates?
@@ -184,24 +184,20 @@ ATK
 0.59
 # Does the revive only apply to this unit?
 N
-# How many different restrictions does this ability have?
+# How many conditions have to met before changing into the next form?
 1
-# What type of restriction is it?
+# What type of condition is #0?
 Max HP
-# What is the maximum HP restriction?
+# What is the maximum HP condition?
 0.59
 # How many additional constant buffs does this revive have?
 1
-# This is the activation turn. Please press enter to continue
-5
-# This is the form's end turn. Please press enter to continue
-20
 # What type of buff does the unit get?
 Crit
 # What is the probability this ability activates?
 1.0
 # What is the value of the buff?
-0.5
+0.59
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many active skill attacks does the form have?
@@ -210,11 +206,11 @@ Crit
 Ultimate
 # What is the additional attack buff when performing the attack?
 0.5
-# How many different restrictions does this ability have?
+# How many conditions have to met before changing into the next form?
 1
-# What type of restriction is it?
+# What type of condition is #0?
 Turn
-# What is the turn restriction (relative to the form's starting turn)?
+# What is the turn condition (relative to the form's starting turn)?
 5
 # How many active skill buffs does the form have?
 0

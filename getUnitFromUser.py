@@ -59,7 +59,7 @@ def getConditions(inputHelper):
     Askes the user questions to determine which Condition class(es) apply and returns them. Only want once per condition set.
     """
     numConditions = inputHelper.getAndSaveUserInput(
-        "How many conditions have to met before changing into the next form?", default=0
+        "How many conditions have to met?", default=0
     )
     conditions = [None] * numConditions
     operator = None
@@ -69,7 +69,7 @@ def getConditions(inputHelper):
         )
     for i in range(numConditions):
         conditionType = inputHelper.getAndSaveUserInput(
-            f"What type of condition is #{i}?", type=clc.Choice(CONDITIONS), default="Turn"
+            f"What type of condition is # {i + 1}?", type=clc.Choice(CONDITIONS, case_sensitive=False), default="Turn"
         )
         match conditionType:
             case "Turn":
@@ -341,146 +341,8 @@ class Unit:
             )
         return self.SBR
 
-    def getForm(self, formIdx, turn):
-        slot = int(
-            self.inputHelper.getAndSaveUserInput(f"Which slot is form # {formIdx + 1} best suited for?", default=2)
-        )
-        form = Form(self.inputHelper, slot, turn)
-        form.intentional12Ki = yesNo2Bool[
-            self.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
-        ]
-        form.normalCounterMult = counterAttackConversion[
-            self.inputHelper.getAndSaveUserInput(
-                "What is the unit's normal counter multiplier?",
-                type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
-                default="NA",
-            )
-        ]
-        form.saCounterMult = counterAttackConversion[
-            self.inputHelper.getAndSaveUserInput(
-                "What is the unit's super attack counter multiplier?",
-                type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
-                default="NA",
-            )
-        ]
-        form.getLinks()
-        assert len(np.unique(form.linkNames)) == MAX_NUM_LINKS, "Duplicate links"
-        form.getSuperAttacks(self.rarity, self.EZA)
-        form.abilities.extend(
-            abilityQuestionaire(
-                form,
-                "How many unconditional buffs does the form have?",
-                StartOfTurn,
-            )
-        )
-        form.abilities.extend(
-            abilityQuestionaire(
-                form,
-                "How many turn dependent buffs does the form have?",
-                TurnDependent,
-                [
-                    "What turn does the buff start from?",
-                    "What turn does the buff end on?",
-                ],
-                [None, None],
-                [form.initialTurn, MAX_TURN],
-            )
-        )
-        form.abilities.extend(
-            abilityQuestionaire(
-                form,
-                "How many slot specific buffs does the form have?",
-                SlotDependent,
-                ["Which slot is required?"],
-                [None],
-                [1],
-            )
-        )
-        form.abilities.extend(
-            abilityQuestionaire(
-                form,
-                "How many different buffs does the form get after receiving an attack?",
-                AfterAttackReceived,
-            )
-        )
-        form.abilities.extend(
-            abilityQuestionaire(
-                form,
-                "How many different buffs does the form get on attacks received?",
-                PerAttackReceived,
-                ["What is the maximum buff?"],
-                [None],
-                [1.0],
-            )
-        )
-        form.abilities.extend(
-            abilityQuestionaire(
-                form,
-                "How many ki dependent buffs does the form have?",
-                KiDependent,
-                ["What is the required ki?"],
-                [None],
-                [24],
-            )
-        )
-        form.abilities.extend(
-            abilityQuestionaire(
-                form,
-                "How many different nullification abilities does the form have?",
-                Nullification,
-                ["Does this nullification have counter?"],
-                [YES_NO],
-                ["N"],
-            )
-        )
-        form.abilities.extend(
-            abilityQuestionaire(
-                form,
-                "How many revive skills does the form have?",
-                Revive,
-                [
-                    "How much HP is revived with?",
-                    "Does the revive only apply to this unit?",
-                ],
-                [None, None],
-                [0.7, "N"],
-            )
-        )
-        form.specialAttacks.extend(
-            abilityQuestionaire(
-                form,
-                "How many active skill attacks does the form have?",
-                ActiveSkillAttack,
-                [
-                    "What is the attack multiplier?",
-                    "What is the additional attack buff when performing the attack?",
-                ],
-                [clc.Choice(specialAttackConversion.keys(), case_sensitive=False), None],
-                ["Ultimate", 0.0],
-            )
-        )
-        form.abilities.extend(
-            abilityQuestionaire(
-                form,
-                "How many active skill buffs does the form have?",
-                ActiveSkillBuff,
-            )
-        )
-        """ form.abilities.extend(
-            abilityQuestionaire(
-                form,
-                "How many Standby Skill Effects does the form have?",
-                StandbySkill,
-                ["How many turns does the standy mode last?", "What is the type of the Finish Effect condition?"],
-                [None, clc.Choice(, case_sensitive=False)],
-                [5, ""],
-            )
-        ) """
-        # If have another form left
-        if formIdx + 1 < self.numForms:
-            form.formChangeConditionOperator, form.formChangeCondtions = getConditions(self.inputHelper)
-
     def getStates(self):
+        self.forms = []
         self.states = []
         self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
         self.numForms = self.inputHelper.getAndSaveUserInput("How many forms does the unit have?", default=1)
@@ -491,7 +353,7 @@ class Unit:
         while turn <= MAX_TURN:
             if nextForm:
                 formIdx += 1  # TODO needs to be generalised for standby
-                form = self.getForm(formIdx, turn)
+                form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms)
                 self.forms.append(form)
                 slot = form.slot
                 nextForm = False
@@ -515,10 +377,11 @@ class Unit:
 
 
 class Form:
-    def __init__(self, inputHelper, slot, initialTurn):
+    def __init__(self, inputHelper, initialTurn, rarity, eza, formIdx, numForms):
         self.inputHelper = inputHelper
-        self.slot = slot
         self.initialTurn = initialTurn
+        self.rarity = rarity
+        self.EZA = eza
         self.linkNames = [""] * MAX_NUM_LINKS
         self.linkCommonality = 0
         self.linkKi = 0
@@ -529,9 +392,6 @@ class Form:
         self.linkDodge = 0
         self.linkDmgRed = 0
         self.linkHealing = 0
-        self.intentional12Ki = False
-        self.normalCounterMult = 0
-        self.saCounterMult = 0
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
@@ -539,9 +399,145 @@ class Form:
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
         self.formChangeConditionOperator = None
-        self.formChangeCondtions = None
+        self.formChangeConditions = [Condition()]
         # This will list active skill attacks and finish skills (as have to be applied after state.setState())
         self.specialAttacks = []
+        self.slot = int(
+            self.inputHelper.getAndSaveUserInput(f"Which slot is form # {formIdx + 1} best suited for?", default=2)
+        )
+        self.intentional12Ki = yesNo2Bool[
+            self.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
+        ]
+        self.normalCounterMult = counterAttackConversion[
+            self.inputHelper.getAndSaveUserInput(
+                "What is the unit's normal counter multiplier?",
+                type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
+                default="NA",
+            )
+        ]
+        self.saCounterMult = counterAttackConversion[
+            self.inputHelper.getAndSaveUserInput(
+                "What is the unit's super attack counter multiplier?",
+                type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
+                default="NA",
+            )
+        ]
+        self.getLinks()
+        assert len(np.unique(self.linkNames)) == MAX_NUM_LINKS, "Duplicate links"
+        self.getSuperAttacks(self.rarity, self.EZA)
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many unconditional buffs does the form have?",
+                StartOfTurn,
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many turn dependent buffs does the form have?",
+                TurnDependent,
+                [
+                    "What turn does the buff start from?",
+                    "What turn does the buff end on?",
+                ],
+                [None, None],
+                [self.initialTurn, MAX_TURN],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many slot specific buffs does the form have?",
+                SlotDependent,
+                ["Which slot is required?"],
+                [None],
+                [1],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after receiving an attack?",
+                AfterAttackReceived,
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get on attacks received?",
+                PerAttackReceived,
+                ["What is the maximum buff?"],
+                [None],
+                [1.0],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many ki dependent buffs does the form have?",
+                KiDependent,
+                ["What is the required ki?"],
+                [None],
+                [24],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many different nullification abilities does the form have?",
+                Nullification,
+                ["Does this nullification have counter?"],
+                [YES_NO],
+                ["N"],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many revive skills does the form have?",
+                Revive,
+                [
+                    "How much HP is revived with?",
+                    "Does the revive only apply to this unit?",
+                ],
+                [None, None],
+                [0.7, "N"],
+            )
+        )
+        self.specialAttacks.extend(
+            abilityQuestionaire(
+                self,
+                "How many active skill attacks does the form have?",
+                ActiveSkillAttack,
+                [
+                    "What is the attack multiplier?",
+                    "What is the additional attack buff when performing the attack?",
+                ],
+                [clc.Choice(specialAttackConversion.keys(), case_sensitive=False), None],
+                ["Ultimate", 0.0],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many active skill buffs does the form have?",
+                ActiveSkillBuff,
+            )
+        )
+        """ form.abilities.extend(
+            abilityQuestionaire(
+                form,
+                "How many Standby Skill Effects does the form have?",
+                StandbySkill,
+                ["How many turns does the standy mode last?", "What is the type of the Finish Effect condition?"],
+                [None, clc.Choice(, case_sensitive=False)],
+                [5, ""],
+            )
+        ) """
+        # If have another form left
+        if formIdx + 1 < numForms:
+            self.formChangeConditionOperator, self.formChangeConditions = getConditions(self.inputHelper)
 
     def getLinks(self):
         for linkIndex in range(MAX_NUM_LINKS):
@@ -1206,8 +1202,8 @@ class Nullification(PassiveAbility):
 
 class Condition:
     def __init__(self):
-        self.formAttr = None
-        self.conditionValue = 0
+        self.formAttr = "numAttacksReceived"
+        self.conditionValue = LARGE_INT
 
     def isSatisfied(self, form):
         return getattr(form, self.formAttr) >= self.conditionValue
