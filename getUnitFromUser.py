@@ -348,9 +348,13 @@ class Unit:
         nextForm = True
         while turn <= MAX_TURN:
             if nextForm:
-                formIdx += 1  # TODO needs to be generalised for standby
-                form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms)
-                self.forms.append(form)
+                formIdx += 1
+                # If finish stanby phase with a finish skill attack, go back to previous form.
+                if form.finishSkillActivated:
+                    form = self.forms[-2]
+                else:
+                    form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms)
+                    self.forms.append(form)
                 slot = form.slot
                 nextForm = False
             form.turn = turn
