@@ -422,6 +422,10 @@ EFFECTS = [
     "Guaranteed Hit",
     "Evasion",
     "Ki (Type Ki Sphere)",
+    "Ki (Ki Sphere)",
+    "Ki (Ki Sphere)",
+    "Ki (Same Type Ki Sphere)",
+    "Ki (Rainbow Ki Sphere)",
 ]
 EFFECTS.extend(SUPPORT_EFFECTS)
 EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)

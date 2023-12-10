@@ -345,12 +345,13 @@ class Unit:
         turn = 1
         formIdx = 0
         self.fightPeak = False
+        self.finishSkillActivated = False
         nextForm = True
         while turn <= MAX_TURN:
             if nextForm:
                 formIdx += 1
                 # If finish stanby phase with a finish skill attack, go back to previous form.
-                if form.finishSkillActivated:
+                if self.finishSkillActivated:
                     form = self.forms[-2]
                 else:
                     form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms)
@@ -395,7 +396,6 @@ class Form:
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
-        self.finishSkillActivated = False
         self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
@@ -404,7 +404,7 @@ class Form:
         # This will list active skill attacks and finish skills (as have to be applied after state.setState())
         self.specialAttacks = []
         self.slot = int(
-            self.inputHelper.getAndSaveUserInput(f"Which slot is form # {formIdx + 1} best suited for?", default=2)
+            self.inputHelper.getAndSaveUserInput(f"Which slot is form # {formIdx} best suited for?", default=2)
         )
         self.intentional12Ki = yesNo2Bool[
             self.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
@@ -1055,8 +1055,8 @@ class StandbyFinshSkill(SingleTurnAbility):
 
     def applyToState(self, state, unit=None, form=None):
         self.charge += self.chargePerTurn
-        if form.checkConditions(self.operator, self.conditions) and not form.finishSkillActivated:
-            form.finishSkillActivated = True
+        if form.checkConditions(self.operator, self.conditions) and not unit.finishSkillActivated:
+            unit.finishSkillActivated = True
             form.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.avgAtk += getActiveAttack(
                 unit.kiMod12,
@@ -1163,6 +1163,14 @@ class StartOfTurn(PassiveAbility):
                     case "Ki (Type Ki Sphere)":
                         state.kiPerOtherTypeOrb += self.effectiveBuff
                         state.kiPerSameTypeOrb += self.effectiveBuff
+                    case "Ki (Ki Sphere)":
+                        state.kiPerOtherTypeOrb += self.effectiveBuff
+                        state.kiPerSameTypeOrb += self.effectiveBuff
+                        state.kiPerRainbowKiSphere += self.effectiveBuff
+                    case "Ki (Same Type Ki Sphere)":
+                        state.kiPerSameTypeOrb += self.effectiveBuff
+                    case "Ki (Rainbow Ki Sphere)":
+                        state.kiPerRainbowKiSphere += self.effectiveBuff
 
 
 class TurnDependent(StartOfTurn):
@@ -1346,5 +1354,5 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="manual")
+    # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
