@@ -429,9 +429,20 @@ SUPER_ATTACK_EFFECTS = ["ATK", "DEF", "Crit", "Disable Action"]
 STACK_EFFECTS = ["ATK", "DEF"]
 
 # Conditions
-CONDITION_TYPES = ["Form Change", ""]
-CONDITIONS = ["Turn", "Max HP", "Min HP", "Max Enemy HP", "Min Enemy HP", "Num Attacks"]
+CONDITIONS = [
+    "Turn",
+    "Max HP",
+    "Min HP",
+    "Max Enemy HP",
+    "Min Enemy HP",
+    "Num Attacks",
+    "Finish Skill Activation",
+    "x2 same / rainbow or x1 other",
+]
 OR_AND = ["OR", "AND"]
+
+# Standby Finish Effect Conditions
+FINISH_EFFECT_CONDITIONS = ["Ki sphere Obtained by allies", "Revive", "Attack performed by allies"]
 
 # Revive
 REVIVE_UNIT_SUPPORT_BUFF = 0.75  # Just revives this unit
@@ -441,6 +452,15 @@ REVIVE_ROTATION_SUPPORT_BUFF = 1  # Revive whole rotation
 NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING = 1.75
 NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING = 1.75
 NUM_RAINBOW_ORBS_NO_ORB_CHANGING = 1
+
+NUM_OTHER_TYPE_ORBS_TYPE_ORB_CHANGING = 0.5
+NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING = 5.25
+NUM_RAINBOW_ORBS_NO_ORB_CHANGING = 1.5
+
+NUM_OTHER_TYPE_ORBS_RAINBOW_ORB_CHANGING = 2.05
+NUM_SAME_TYPE_ORBS_RAINBOW_ORB_CHANGING = 2.05
+NUM_RAINBOW_ORBS_RAINBOW_ORB_CHANGING = 2.7
+
 KI_PER_SAME_TYPE_ORB = 2.0
 
 # Support

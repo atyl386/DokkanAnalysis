@@ -4,7 +4,6 @@ import copy
 import pickle
 
 # TODO:
-# - Bugs:
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
 # - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
@@ -58,9 +57,7 @@ def getConditions(inputHelper):
     """
     Askes the user questions to determine which Condition class(es) apply and returns them. Only want once per condition set.
     """
-    numConditions = inputHelper.getAndSaveUserInput(
-        "How many conditions have to met?", default=0
-    )
+    numConditions = inputHelper.getAndSaveUserInput("How many conditions have to met?", default=0)
     conditions = [None] * numConditions
     operator = None
     if numConditions > 1:
@@ -96,6 +93,12 @@ def getConditions(inputHelper):
             case "Num Attacks":
                 numAttacksCondition = inputHelper.getAndSaveUserInput("How many attacks are required?", default=6)
                 conditions[i] = NumAttacksCondition(numAttacksCondition)
+            case "Finish Skill Activated":
+                conditions[i] = FinishSkillActivatedCondition()
+            case "x2 same / rainbow or x1 other":  # LR INT Majuub -> SFPS4 Goku
+                chargeCondition = inputHelper.getAndSaveUserInput("What is the maximum charge condition?", default=30)
+                conditions[i] = DoubleSameRainbowKiSphereCondition(chargeCondition)
+
     return operator, conditions
 
 
@@ -395,6 +398,7 @@ class Form:
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
+        self.finishSkillActivated = False
         self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
@@ -514,7 +518,7 @@ class Form:
                     "What is the attack multiplier?",
                     "What is the additional attack buff when performing the attack?",
                 ],
-                [clc.Choice(specialAttackConversion.keys(), case_sensitive=False), None],
+                [clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False), None],
                 ["Ultimate", 0.0],
             )
         )
@@ -525,16 +529,26 @@ class Form:
                 ActiveSkillBuff,
             )
         )
-        """ form.abilities.extend(
+        # The SingleTurnAbility ability will get us the turn condition to activate this ability.
+        self.abilities.extend(
             abilityQuestionaire(
-                form,
-                "How many Standby Skill Effects does the form have?",
-                StandbySkill,
-                ["How many turns does the standy mode last?", "What is the type of the Finish Effect condition?"],
-                [None, clc.Choice(, case_sensitive=False)],
-                [5, ""],
+                self,
+                "How many Standby Finish Skills does the form have?",
+                StandbyFinshSkill,
+                [
+                    "What is the type of the Finish Effect condition",
+                    "What is the attack multiplier",
+                    "What is the buff per charge?",
+                ],
+                [
+                    clc.Choice(FINISH_EFFECT_CONDITIONS, case_sensitive=False),
+                    clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
+                    None,
+                ],
+                ["Revive", "Super-Ultimate", 0],
             )
-        ) """
+        )
+
         # If have another form left
         if formIdx + 1 < numForms:
             self.formChangeConditionOperator, self.formChangeConditions = getConditions(self.inputHelper)
@@ -619,6 +633,49 @@ class Form:
             case "OR":
                 result = np.logical_or([condition.isSatisfied(self) for condition in conditions])
         return result
+
+    # Get charge per turn for a standby finish skill
+    def getCharge(self, chargeCondition):
+        charge = 0
+        match chargeCondition:
+            case "x2 same / rainbow or x1 other":
+                charge = (
+                    (
+                        self.numSameTypeOrbs
+                        + self.numRainbowOrbs
+                        + (NUM_SLOTS - 1) * (NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING + NUM_RAINBOW_ORBS_NO_ORB_CHANGING)
+                    )
+                    * 2
+                    + self.numOtherTypeOrbs
+                    + (NUM_SLOTS - 1) * NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING
+                )
+            case "Ki sphere Obtained by allies":
+                # Currently assumes have rainbow orb changing
+                charge = (
+                    self.numSameTypeOrbs
+                    + self.numRainbowOrbs
+                    + self.numOtherTypeOrbs
+                    + (NUM_SLOTS - 1)
+                    * (
+                        NUM_SAME_TYPE_ORBS_RAINBOW_ORB_CHANGING
+                        + NUM_RAINBOW_ORBS_RAINBOW_ORB_CHANGING
+                        + NUM_OTHER_TYPE_ORBS_RAINBOW_ORB_CHANGING
+                    )
+                )
+            case "Attack performed by allies":
+                charge = (
+                    self.attacksPerformed
+                    + (NUM_SLOTS - 1)
+                    - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[1]
+                    - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[2]
+                    + (NUM_ATTACKS_PERFORMED_PER_UNIT_PER_TURN - 1)
+                    * (
+                        (NUM_SLOTS - 1)
+                        - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[1]
+                        - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[2]
+                        - (NUM_SLOTS - 1) * PROBABILITY_KILL_ENEMY_PER_ATTACK
+                    )
+                )
 
 
 class Link:
@@ -973,8 +1030,8 @@ class ActiveSkillBuff(SingleTurnAbility):
 class ActiveSkillAttack(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        self.attackMultiplier, self.attackBuff = args
-        self.activeMult = specialAttackConversion[self.attackMultiplier] + self.attackBuff
+        attackMultiplier, attackBuff = args
+        self.activeMult = specialAttackConversion[attackMultiplier] + attackBuff
 
     def applyToState(self, state, unit=None, form=None):
         if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
@@ -994,12 +1051,33 @@ class ActiveSkillAttack(SingleTurnAbility):
             )
 
 
-class StandbySkill(SingleTurnAbility):
-    def __init__(self, form):
+# This skill is to apply to a unit already in it's standyby mode.
+# The condition to enter & exit the standy mode will be controlled by regular form changes.
+class StandbyFinshSkill(SingleTurnAbility):
+    def __init__(self, form, args):
         super().__init__(form)
+        finishSkillChargeCondition, attackMultiplier, attackBuff = args
+        self.activeMult = specialAttackConversion[attackMultiplier] * (1 + attackBuff)
+        self.chargePerTurn = form.getCharge(finishSkillChargeCondition)
+        self.charge = 0
 
     def applyToState(self, state, unit=None, form=None):
-        pass
+        self.charge += self.chargePerTurn
+        if form.checkConditions(self.operator, self.conditions) and not form.finishSkillActivated:
+            form.finishSkillActivated = True
+            form.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
+            state.avgAtk += getActiveAttack(
+                unit.kiMod12,
+                rarity2MaxKi[unit.rarity],
+                unit.ATK,
+                state.p1Buff["ATK"],
+                state.stackedStats["ATK"],
+                self.form.linkAtkSoT,
+                state.p2Buff["ATK"],
+                state.p3Buff["ATK"],
+                self.activeMult,
+                unit.nCopies,
+            )
 
 
 class Revive(SingleTurnAbility):
@@ -1202,6 +1280,7 @@ class Nullification(PassiveAbility):
 
 class Condition:
     def __init__(self):
+        # Just a default attributes so is always false upon itialisation
         self.formAttr = "numAttacksReceived"
         self.conditionValue = LARGE_INT
 
@@ -1256,7 +1335,26 @@ class NumAttacksCondition(Condition):
         self.conditionValue = numAttacks
 
 
+class FinishSkillActivatedCondition(Condition):
+    def __init__(self):
+        self.formAttr = "finishSkillActivated"
+        self.conditionValue = True
+
+
+# Too niche to conform to a generalised case
+class DoubleSameRainbowKiSphereCondition(Condition):
+    def __init__(self, chargeCondition):
+        self.conditionValue = chargeCondition
+        self.currentValue = 0
+
+    def isSatisfied(self, form):
+        self.currentValue += form.getCharge(self.conditionValue)
+        return self.currentValue >= self.conditionValue
+
+
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
     # kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    kit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="manual")
+
+    # Still need to add the condition for how the finish skill is buffed and activate

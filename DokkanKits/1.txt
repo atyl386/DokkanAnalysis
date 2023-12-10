@@ -119,7 +119,7 @@ Ki
 # What is the probability this ability activates?
 1.0
 # What is the value of the buff?
-4.0
+5.0
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
@@ -155,7 +155,7 @@ AEAAT
 # How many different buffs does the form get on attacks received?
 2
 # What is the maximum buff?
-4.0
+5.0
 # What type of buff does the unit get?
 Ki
 # What is the probability this ability activates?
