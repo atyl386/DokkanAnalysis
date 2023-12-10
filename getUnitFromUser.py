@@ -4,6 +4,8 @@ import copy
 import pickle
 
 # TODO:
+# - Bug with random ki being too high for golden bois
+# - Need to make new ability class "PerSuperAttackPerformed"
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
 # - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
@@ -453,7 +455,7 @@ class Form:
                 SlotDependent,
                 ["Which slot is required?"],
                 [None],
-                [1],
+                [[2, 3]],
             )
         )
         self.abilities.extend(
@@ -547,7 +549,7 @@ class Form:
         )
 
         # If have another form left
-        if formIdx + 1 < numForms:
+        if formIdx < numForms:
             self.formChangeConditionOperator, self.formChangeConditions = getConditions(self.inputHelper)
 
     def getLinks(self):
@@ -626,9 +628,9 @@ class Form:
             case None:
                 result = conditions[0].isSatisfied(self)
             case "AND":
-                result = np.logical_and([condition.isSatisfied(self) for condition in conditions])
+                result = np.all([condition.isSatisfied(self) for condition in conditions])
             case "OR":
-                result = np.logical_or([condition.isSatisfied(self) for condition in conditions])
+                result = np.any([condition.isSatisfied(self) for condition in conditions])
         return result
 
     # Get charge per turn for a standby finish skill
@@ -1150,7 +1152,7 @@ class StartOfTurn(PassiveAbility):
                             P_NULLIFY_FROM_DISABLE_ACTIVE * (1 - state.pNullify)
                             + (1 - P_NULLIFY_FROM_DISABLE_ACTIVE) * state.pNullify
                         )
-                    case "AdditonalSuper":
+                    case "AdditionalSuper":
                         state.aaPSuper.append(self.activationProbability)
                         state.aaPGuarantee.append(0)
                     case "AAChance":
@@ -1295,11 +1297,13 @@ class ProbabilityCondition(Condition):
     def __init__(self, conditionProbability):
         super().__init__()
         self.conditionProbability = conditionProbability
+        # Mean of geometric distribution is 1/p
+        self.conditionValue = round(1 / self.conditionProbability)
+        self.turnCounter = 0
 
     def isSatisfied(self, form):
-        # Mean of geometric distribution is 1/p
-        self.conditionValue += 1 / self.conditionProbability
-        return round(self.conditionValue) >= 1
+        self.turnCounter += 1
+        return self.turnCounter >= self.conditionValue
 
 
 class MaxHpCondition(ProbabilityCondition):
