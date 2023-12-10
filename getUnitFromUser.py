@@ -1153,13 +1153,10 @@ class StartOfTurn(PassiveAbility):
                     case "AdditonalSuper":
                         state.aaPSuper.append(self.activationProbability)
                         state.aaPGuarantee.append(0)
-                    case "AAWithChanceToSuper":
-                        chanceToSuper = self.inputHelper.getAndSaveUserInput(
-                            "What is the chance to super given the additional triggered?",
-                            default=0.0,
-                        )
-                        state.aaPSuper.append(chanceToSuper)
+                    case "AAChance":
                         state.aaPGuarantee.append(self.activationProbability)
+                    case "SuperChance":
+                        state.aaPSuper.append(self.activationProbability)
                     case "Ki (Type Ki Sphere)":
                         state.kiPerOtherTypeOrb += self.effectiveBuff
                         state.kiPerSameTypeOrb += self.effectiveBuff
