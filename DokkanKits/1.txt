@@ -24,8 +24,6 @@ N
 13
 # What is the unit's 12 ki attck modifer?
 1.45
-# Does the unit have the ability to keep stacking before transforming?
-N
 # How many turns does the unit's giant/rage mode last for?
 0
 # Does the unit have any SBR abilities?
@@ -213,4 +211,6 @@ Turn
 # What is the turn condition (relative to the form's starting turn)?
 5
 # How many active skill buffs does the form have?
+0
+# How many Standby Finish Skills does the form have?
 0

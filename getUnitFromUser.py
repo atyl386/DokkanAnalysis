@@ -221,13 +221,6 @@ class Unit:
                 default="1.5",
             )
         )
-        self.keepStacking = yesNo2Bool[
-            self.inputHelper.getAndSaveUserInput(
-                "Does the unit have the ability to keep stacking before transforming?",
-                type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False),
-                default="N",
-            )
-        ]
         self.giantRageDuration = self.inputHelper.getAndSaveUserInput(
             "How many turns does the unit's giant/rage mode last for?",
             default=0,
@@ -923,11 +916,6 @@ class State:
     def updateStackedStats(self, form, unit):
         # Needs to do two things, remove stacked attack from previous states if worn out and apply new buffs
         # If want the stacking of initial turn and transform later
-        if unit.keepStacking:
-            form = unit.forms[0]
-            state = self.states[0]
-        else:
-            state = self
         for stat in STACK_EFFECTS:
             # Update previous stack durations
             for stack in unit.stacks[stat]:
@@ -940,19 +928,19 @@ class State:
             # Add new stacks. Has to be after apply otherwise will double count the stacks in each turn
             if unit.rarity == "LR":
                 # If stack for long enough to last to next turn
-                if form.superAttacks["18 Ki"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+                if form.superAttacks["18 Ki"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
                     unit.stacks[stat].append(
                         Stack(
                             stat,
-                            state.pUSA * form.superAttacks["18 Ki"].effects[stat].buff,
+                            self.pUSA * form.superAttacks["18 Ki"].effects[stat].buff,
                             form.superAttacks["18 Ki"].effects[stat].duration,
                         )
                     )
-            if form.superAttacks["12 Ki"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+            if form.superAttacks["12 Ki"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
                 unit.stacks[stat].append(
                     Stack(
                         stat,
-                        (state.pSA + state.aaSA) * form.superAttacks["12 Ki"].effects[stat].buff,
+                        (self.pSA + self.aaSA) * form.superAttacks["12 Ki"].effects[stat].buff,
                         form.superAttacks["12 Ki"].effects[stat].duration,
                     )
                 )
@@ -1354,7 +1342,5 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    # kit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    kit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="manual")
-
-    # Still need to add the condition for how the finish skill is buffed and activate
+    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="manual")
