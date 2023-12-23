@@ -1424,14 +1424,14 @@ class FinishSkillActivatedCondition(Condition):
         self.conditionValue = True
 
 
-# Too niche to conform to a generalised case because there is no formAttr for the charge condtion 
+# Too niche to conform to a generalised case because there is no formAttr for the charge condtion
 class DoubleSameRainbowKiSphereCondition(Condition):
     def __init__(self, chargeCondition):
         self.conditionValue = chargeCondition
         self.currentValue = 0
 
     def isSatisfied(self, form):
-        #NB: this line only works because the chargeCondition does not rely on form.attacksPerformed as that value will increase per turn, wheras here we are assuming the getCharge in constant
+        # NB: this line only works because the chargeCondition does not rely on form.attacksPerformed as that value will increase per turn, wheras here we are assuming the getCharge in constant
         self.currentValue += form.getCharge(self.conditionValue)
         return self.currentValue >= self.conditionValue
 
