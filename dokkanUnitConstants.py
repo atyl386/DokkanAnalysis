@@ -454,6 +454,9 @@ REVIVE_UNIT_SUPPORT_BUFF = 0.75  # Just revives this unit
 REVIVE_ROTATION_SUPPORT_BUFF = 1  # Revive whole rotation
 
 # Orb Changing
+
+ORB_REQUIREMENTS = ["Any", "Type", "Rainbow", "Same Type", "Other Type"]
+
 NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING = 1.75
 NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING = 1.75
 NUM_RAINBOW_ORBS_NO_ORB_CHANGING = 1

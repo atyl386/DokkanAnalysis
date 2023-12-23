@@ -176,6 +176,8 @@ Ki (Ki Sphere)
 0
 # How many different buffs does the form get on attacks received?
 0
+How many ki sphere dependent buffs does the form have?
+0
 # How many ki dependent buffs does the form have?
 3
 # What is the required ki?
@@ -208,6 +210,30 @@ AdditionalSuper
 1.0
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1
+# How many different buffs does the form get per attack performed?
+0
+# How many different buffs does the form get per super attack performed?
+2
+# What is the maximum buff?
+24.0
+# What type of buff does the unit get?
+Ki
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+1.0
+# How many turns does it last for? Only applicable to abilities with a time limit.
+1
+# What is the maximum buff?
+0.5
+# What type of buff does the unit get?
+Crit
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+0.1
+# How many turns does it last for? Only applicable to abilities with a time limit.
+1
 # How many different nullification abilities does the form have?
 0
 # How many revive skills does the form have?
@@ -230,3 +256,61 @@ Max HP
 Num Attacks
 # How many attacks are required?
 4
+# Which slot is form # 2 best suited for?
+1
+# Should a 12 Ki be targetted for this form?
+N
+# What is the unit's normal counter multiplier?
+NA
+# What is the unit's super attack counter multiplier?
+NA
+# What is the form's link # 1
+Saiyan Warrior Race
+# If has an ideal linking partner, what is the chance this link is active?
+-1
+# What is the form's link # 2
+Experienced Fighters
+# If has an ideal linking partner, what is the chance this link is active?
+-1
+# What is the form's link # 3
+The Saiyan Lineage
+# If has an ideal linking partner, what is the chance this link is active?
+-1
+# What is the form's link # 4
+Tough as Nails
+# If has an ideal linking partner, what is the chance this link is active?
+-1
+# What is the form's link # 5
+Prepared for Battle
+# If has an ideal linking partner, what is the chance this link is active?
+-1
+# What is the form's link # 6
+Fierce Battle
+# If has an ideal linking partner, what is the chance this link is active?
+-1
+# What is the form's link # 7
+Legendary Power
+# If has an ideal linking partner, what is the chance this link is active?
+-1
+# What is the form's 12 Ki super attack multiplier?
+Colossal
+# How many different 12 Ki super attacks does this form have?
+1
+# How many effects does this form's 12 Ki super attack have?
+0
+# What is the form's 18 Ki super attack multiplier?
+Mega-Colossal
+# How many different 18 Ki super attacks does this form have?
+1
+# How many effects does this form's 18 Ki super attack have?
+0
+# How many unconditional buffs does the form have?
+1
+# What type of buff does the unit get?
+DEF
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+2.5
+# How many turns does it last for? Only applicable to abilities with a time limit.
+1

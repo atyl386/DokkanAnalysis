@@ -4,7 +4,6 @@ import copy
 import pickle
 
 # TODO:
-# - Need to make new ability class "PerSuperAttackPerformed"
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
 # - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
@@ -12,7 +11,7 @@ import pickle
 # - Need to incorporate standby skills
 # - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
-# - Instead of asking user how many of something, should ask until they enteran exit key aka while loop instead of for loop
+# - Instead of asking user how many of something, should ask until they enteran exit key ak a while loop instead of for loop
 # - Should read up on python optimisation techniques once is running and se how long it takes. But try be efficient you go.
 # - I think the 20x3 state matrix needs to be used to compute the best path
 # - Whilst the state matrix is the ideal way, for now just assume a user inputed slot for each form
@@ -477,6 +476,16 @@ class Form:
         self.abilities.extend(
             abilityQuestionaire(
                 self,
+                "How many ki sphere dependent buffs does the form have?",
+                KiSphereDependent,
+                ["What type of ki spheres are required?", "What is the required amount?", "Is buff applied when attacking?"],
+                [ORB_REQUIREMENTS, None, YES_NO],
+                ["Any", 5, "N"],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
                 "How many ki dependent buffs does the form have?",
                 KiDependent,
                 ["What is the required ki?"],
@@ -639,7 +648,7 @@ class Form:
                         )
                         avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
                     superFracTotal += superFrac
-                assert superFracTotal == 1, "Invald super attack variant proabilities entered"
+                assert superFracTotal == 1, "Invald super attack variant probabilities entered"
             self.superAttacks[superAttackType] = avgSuperAttack
 
     def checkConditions(self, operator, conditions):
@@ -1228,10 +1237,10 @@ class PerAttackPerformed(PassiveAbility):
     def applyToState(self, state, unit=None, form=None):
         # Chosen to calculate this here as it is needed here, although would make more sense to just calculate it in setState
         aa = branchAA(-1, len(state.aaPSuper), unit.pHiPoAA, 1, state.aaPSuper, state.aaPGuarantee, unit.pHiPoAA)
-        attacksPerformed = (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + aa * (
-            1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
+        attacksPerformed = (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[state.slot - 1]) + aa * (
+            1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[state.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
         )
-        buffPerAttack = self.effectiveBuff * np.arange(len(state.aaPSuper) + 1)
+        buffPerAttack = self.effectiveBuff * (np.arange(len(state.aaPSuper)) + 1)
         turnBuff = np.dot(buffPerAttack, state.aaPSuper)
         previousBuff = self.effectiveBuff * form.attacksPerformed
         averageBuffWhenAttacking = turnBuff / attacksPerformed
@@ -1254,10 +1263,10 @@ class PerSuperAttackPerformed(PassiveAbility):
     def applyToState(self, state, unit=None, form=None):
         # Chosen to calculate this here as it is needed here, although would make more sense to just calculate it in setState
         aaSA = branchAS(-1, len(state.aaPSuper), unit.pHiPoAA, 1, state.aaPSuper, state.aaPGuarantee, unit.pHiPoAA)
-        superAttacksPerformed = (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + aaSA * (
-            1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
+        superAttacksPerformed = (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[state.slot - 1]) + aaSA * (
+            1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[state.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
         )
-        buffPerSuper = self.effectiveBuff * np.arange(len(state.aaPSuper) + 1)
+        buffPerSuper = self.effectiveBuff * (np.arange(len(state.aaPSuper)) + 1)
         turnBuff = np.dot(buffPerSuper, state.aaPSuper)
         previousBuff = self.effectiveBuff * form.superAttacksPerformed
         averageBuffWhenAttacking = turnBuff / superAttacksPerformed
@@ -1331,20 +1340,36 @@ class AfterAttackReceived(PassiveAbility):
             self.turnsSinceActivated = 0
 
 
-class PerRainbowOrb(PassiveAbility):
+class KiSphereDependent(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff, effectDuration, args=[]):
         super().__init__(form, activationProbability, effect, buff, effectDuration)
+        self.orbType, self.required, self.whenAttacking = args
 
     def applyToState(self, state, unit=None, form=None):
-        buffFromRainbowOrbs = self.effectiveBuff * state.numRainbowOrbs
+        match self.orbType:
+            case "Any":
+                numOrbs = state.numSameTypeOrbs + state.numOtherTypeOrbs + state.numRainbowOrbs
+            case "Type":
+                numOrbs = state.numSameTypeOrbs + state.numOtherTypeOrbs
+            case "Rainbow":
+                numOrbs = state.numRainbowOrbs
+            case "Same Type":
+                numOrbs = state.numSameTypeOrbs
+            case "Other Type":
+                numOrbs = state.numOtherTypeOrbs
+        if self.required == 0: # If buff per orb
+            effectFactor = numOrbs
+        else: # If fixed buff if obtain X orbs
+            effectFactor = 1 - poisson.cdf(self.required - 1, numOrbs)
+        buffFromOrbs = self.effectiveBuff * effectFactor
         if self.effect in state.buff.keys():
-            state.buff[self.effect] += buffFromRainbowOrbs
+            state.buff[self.effect] += buffFromOrbs
         else:
             match self.effect:
                 case "Dmg Red":
-                    state.dmgRedA += buffFromRainbowOrbs
-                    state.dmgRedB += buffFromRainbowOrbs
-                    state.buff["Dmg Red against Normals"] += buffFromRainbowOrbs
+                    state.dmgRedA += buffFromOrbs
+                    state.dmgRedB += buffFromOrbs
+                    state.buff["Dmg Red against Normals"] += buffFromOrbs
 
 
 class Nullification(PassiveAbility):
