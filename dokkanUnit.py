@@ -142,14 +142,14 @@ def branchAtt(i,nAA,M_12,M_N,P_AA,nProcs,P_SA,P_g,N_0,A_12_0,SA_mult,P_HP):
         tempAtt2 = branchAtt(i, nAA,M_12 + SA_mult, M_N + SA_mult, P_AA + P_HP * (1 - P_HP)**nProcs, nProcs + 1, P_SA, P_g, N_0, A_12_0, SA_mult, P_HP)
         return P_SA[i] * (tempAtt2 + A_12) + (1 - P_SA[i])* (P_g[i] * (tempAtt1 + N) + (1 - P_g[i]) * (tempAtt0))
             
-def branchAA(i,nAA,P_AA,nProcs,P_SA,P_g,P_HP):
+def branchAS(i,nAA,P_AA,nProcs,P_SA,P_g,P_HP):
     if(i == nAA - 1): #If no more additional attacks
         return 0.5 * P_AA # Add average HP super chance
     else:
         i+= 1 # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
-        tempAA0 = branchAA(i, nAA, P_AA, nProcs, P_SA, P_g, P_HP) # Add damage if don't get any additional attacks
-        tempAA1 = branchAA(i, nAA, P_AA + P_HP * (1 - P_HP) ** nProcs, nProcs + 1, P_SA, P_g, P_HP)
+        tempAA0 = branchAS(i, nAA, P_AA, nProcs, P_SA, P_g, P_HP) # Add damage if don't get any additional attacks
+        tempAA1 = branchAS(i, nAA, P_AA + P_HP * (1 - P_HP) ** nProcs, nProcs + 1, P_SA, P_g, P_HP)
         return P_SA[i] * (1+tempAA1) + (1 - P_SA[i])* (P_g[i] * tempAA1 + (1 - P_g[i]) * tempAA0)
 def getAttackDistribution(constantKi,randomKi,intentional12Ki,rarity):
     Pr_N= ZTP_CDF(max(11-constantKi,0),randomKi)
@@ -279,7 +279,7 @@ class Unit:
         self.Pr_N, self.Pr_SA, self.Pr_USA, self.avg_AA_SA, self.normal,self.sa, self.usa, self.avgAtt = [0]*turnMax, [0]*turnMax, [0]*turnMax, [0]*turnMax, [0]*turnMax, [0]*turnMax, [0]*turnMax, [0]*turnMax
         for i in range(turnMax):
             [self.Pr_N[i], self.Pr_SA[i], self.Pr_USA[i]] = getAttackDistribution(self.constantKi[i],self.randomKi[i],self.kit.intentional12Ki[i],self.kit.rarity)
-            self.avg_AA_SA[i] = branchAA(-1,len(self.kit.AA_P_super[i]),self.HP_P_AA,1,self.kit.AA_P_super[i],self.kit.AA_P_guarantee[i],self.HP_P_AA)
+            self.avg_AA_SA[i] = branchAS(-1,len(self.kit.AA_P_super[i]),self.HP_P_AA,1,self.kit.AA_P_super[i],self.kit.AA_P_guarantee[i],self.HP_P_AA)
         [self.stackedAtt, self.stackedDef] = self.getStackedStats()
         for i in range(turnMax):
             self.normal[i] = getNormal(self.kit.kiMod_12,self.ki[i],self.att,self.p1Att[i],self.stackedAtt[i],self.linkAtt_SoT[i],self.p2Att[i],self.p3Att[i])

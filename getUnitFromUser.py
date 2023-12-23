@@ -4,7 +4,6 @@ import copy
 import pickle
 
 # TODO:
-# - Bug with random ki being too high for golden bois
 # - Need to make new ability class "PerSuperAttackPerformed"
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
@@ -488,6 +487,26 @@ class Form:
         self.abilities.extend(
             abilityQuestionaire(
                 self,
+                "How many different buffs does the form get per attack performed?",
+                PerAttackPerformed,
+                ["What is the maximum buff?"],
+                [None],
+                [1.0],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get per super attack performed?",
+                PerSuperAttackPerformed,
+                ["What is the maximum buff?"],
+                [None],
+                [1.0],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
                 "How many different nullification abilities does the form have?",
                 Nullification,
                 ["Does this nullification have counter?"],
@@ -675,6 +694,7 @@ class Form:
                         - (NUM_SLOTS - 1) * PROBABILITY_KILL_ENEMY_PER_ATTACK
                     )
                 )
+        return charge
 
 
 class Link:
@@ -756,6 +776,8 @@ class State:
         self.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * (
             1 - self.buff["Evade"]
         )
+        self.attacksPerformed = 0
+        self.superAttacksPerformed = 0
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
 
     def setState(self, unit, form):
@@ -768,11 +790,17 @@ class State:
         self.pN, self.pSA, self.pUSA = getAttackDistribution(
             self.buff["Ki"], self.randomKi, form.intentional12Ki, unit.rarity
         )
-        self.aaSA = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
-        # Assume Binomial distribution for aaSA
-        form.attacksPerformed += (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + self.aaSA * (
+        self.aaSA = branchAS(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
+        self.aa = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
+        self.attacksPerformed += (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + self.aa * (
             1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
         )
+        # Assume Binomial distribution for aaSA for the expected value
+        self.superAttacksPerformed += (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + self.aaSA * (
+            1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
+        )
+        form.attacksPerformed += self.attacksPerformed
+        form.superAttacksPerformed += self.superAttacksPerformed
         self.updateStackedStats(form, unit)
         self.normal = getNormal(
             unit.kiMod12,
@@ -1030,7 +1058,8 @@ class ActiveSkillAttack(SingleTurnAbility):
     def applyToState(self, state, unit=None, form=None):
         if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
             self.activated = True
-            form.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
+            state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
+            state.superAttacksPerformed += 1
             state.avgAtk += getActiveAttack(
                 unit.kiMod12,
                 rarity2MaxKi[unit.rarity],
@@ -1059,7 +1088,8 @@ class StandbyFinshSkill(SingleTurnAbility):
         self.charge += self.chargePerTurn
         if form.checkConditions(self.operator, self.conditions) and not unit.finishSkillActivated:
             unit.finishSkillActivated = True
-            form.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
+            state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
+            state.superAttacksPerformed += 1
             state.avgAtk += getActiveAttack(
                 unit.kiMod12,
                 rarity2MaxKi[unit.rarity],
@@ -1188,6 +1218,58 @@ class SlotDependent(StartOfTurn):
     def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
         slots = args[0]
         super().__init__(form, activationProbability, effect, buff, effectDuration, slots=slots)
+
+
+class PerAttackPerformed(PassiveAbility):
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
+        super().__init__(form, activationProbability, effect, buff, effectDuration)
+        self.max = args[0]
+
+    def applyToState(self, state, unit=None, form=None):
+        # Chosen to calculate this here as it is needed here, although would make more sense to just calculate it in setState
+        aa = branchAA(-1, len(state.aaPSuper), unit.pHiPoAA, 1, state.aaPSuper, state.aaPGuarantee, unit.pHiPoAA)
+        attacksPerformed = (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + aa * (
+            1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
+        )
+        buffPerAttack = self.effectiveBuff * np.arange(len(state.aaPSuper) + 1)
+        turnBuff = np.dot(buffPerAttack, state.aaPSuper)
+        previousBuff = self.effectiveBuff * form.attacksPerformed
+        averageBuffWhenAttacking = turnBuff / attacksPerformed
+        match self.effect:
+            case "ATK":
+                state.p2Buff["ATK"] += min(averageBuffWhenAttacking + previousBuff, self.max)
+            case "DEF":
+                state.p2DefB += min(turnBuff + previousBuff, self.max)
+            case "Ki":
+                state.buff["Ki"] += min(previousBuff, self.max)
+            case "Crit":
+                state.buff["Crit"] += min(averageBuffWhenAttacking + previousBuff, self.max)
+
+
+class PerSuperAttackPerformed(PassiveAbility):
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
+        super().__init__(form, activationProbability, effect, buff, effectDuration)
+        self.max = args[0]
+
+    def applyToState(self, state, unit=None, form=None):
+        # Chosen to calculate this here as it is needed here, although would make more sense to just calculate it in setState
+        aaSA = branchAS(-1, len(state.aaPSuper), unit.pHiPoAA, 1, state.aaPSuper, state.aaPGuarantee, unit.pHiPoAA)
+        superAttacksPerformed = (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + aaSA * (
+            1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
+        )
+        buffPerSuper = self.effectiveBuff * np.arange(len(state.aaPSuper) + 1)
+        turnBuff = np.dot(buffPerSuper, state.aaPSuper)
+        previousBuff = self.effectiveBuff * form.superAttacksPerformed
+        averageBuffWhenAttacking = turnBuff / superAttacksPerformed
+        match self.effect:
+            case "ATK":
+                state.p2Buff["ATK"] += min(averageBuffWhenAttacking + previousBuff, self.max)
+            case "DEF":
+                state.p2DefB += min(turnBuff + previousBuff, self.max)
+            case "Ki":
+                state.buff["Ki"] += min(previousBuff, self.max)
+            case "Crit":
+                state.buff["Crit"] += min(averageBuffWhenAttacking + previousBuff, self.max)
 
 
 class PerAttackReceived(PassiveAbility):
@@ -1342,13 +1424,14 @@ class FinishSkillActivatedCondition(Condition):
         self.conditionValue = True
 
 
-# Too niche to conform to a generalised case
+# Too niche to conform to a generalised case because there is no formAttr for the charge condtion 
 class DoubleSameRainbowKiSphereCondition(Condition):
     def __init__(self, chargeCondition):
         self.conditionValue = chargeCondition
         self.currentValue = 0
 
     def isSatisfied(self, form):
+        #NB: this line only works because the chargeCondition does not rely on form.attacksPerformed as that value will increase per turn, wheras here we are assuming the getCharge in constant
         self.currentValue += form.getCharge(self.conditionValue)
         return self.currentValue >= self.conditionValue
 

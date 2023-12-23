@@ -83,17 +83,30 @@ def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo):
         )
 
 
-def branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo):
-    """Returns the average number of remaining attacks in a turn recursively"""
+def branchAS(i, nAA, pAA, nProcs, pSA, pG, pHiPo):
+    """Returns the average number of remaining super attacks in a turn recursively"""
     if i == nAA - 1:  # If no more additional attacks
         return 0.5 * pAA  # Add average HiPo super chance
     else:
         i += 1  # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
         # Add damage if don't get any additional attacks
-        tempAA0 = branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo)
-        tempAA1 = branchAA(i, nAA, pAA + pHiPo * (1 - pHiPo) ** nProcs, nProcs + 1, pSA, pG, pHiPo)
+        tempAA0 = branchAS(i, nAA, pAA, nProcs, pSA, pG, pHiPo)
+        tempAA1 = branchAS(i, nAA, pAA + pHiPo * (1 - pHiPo) ** nProcs, nProcs + 1, pSA, pG, pHiPo)
         return pSA[i] * (1 + tempAA1) + (1 - pSA[i]) * (pG[i] * tempAA1 + (1 - pG[i]) * tempAA0)
+
+
+def branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo):
+    """Returns the average number of remaining attacks in a turn recursively"""
+    if i == nAA - 1:  # If no more additional attacks
+        return pAA  # Add average HiPo super chance
+    else:
+        i += 1  # Increment attack counter
+        # Calculate extra attack if get additional super and subsequent addditional attacks
+        # Add damage if don't get any additional attacks
+        tempAA0 = branchAS(i, nAA, pAA, nProcs, pSA, pG, pHiPo)
+        tempAA1 = branchAS(i, nAA, pAA + pHiPo * (1 - pHiPo) ** nProcs, nProcs + 1, pSA, pG, pHiPo)
+        return pSA[i] * (1 + tempAA1) + (1 - pSA[i]) * (pG[i] * (1 + tempAA1) + (1 - pG[i]) * tempAA0)
 
 
 def getAttackDistribution(constantKi, randomKi, intentional12Ki, rarity):
