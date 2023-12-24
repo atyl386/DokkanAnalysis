@@ -93,7 +93,7 @@ def getConditions(inputHelper):
             case "Num Attacks":
                 numAttacksCondition = inputHelper.getAndSaveUserInput("How many attacks are required?", default=6)
                 conditions[i] = NumAttacksCondition(numAttacksCondition)
-            case "Finish Skill Activated":
+            case "Finish Skill Activation":
                 conditions[i] = FinishSkillActivatedCondition()
             case "x2 same / rainbow or x1 other":  # LR INT Majuub -> SFPS4 Goku
                 chargeCondition = inputHelper.getAndSaveUserInput("What is the maximum charge condition?", default=30)
@@ -401,6 +401,7 @@ class Form:
         self.abilities = []
         self.formChangeConditionOperator = None
         self.formChangeConditions = [Condition()]
+        self.finishSkillActivated = False
         # This will list active skill attacks and finish skills (as have to be applied after state.setState())
         self.specialAttacks = []
         self.slot = int(
@@ -483,8 +484,8 @@ class Form:
                     "What is the required amount?",
                     "Is buff applied when attacking?",
                 ],
-                [ORB_REQUIREMENTS, None, YES_NO],
-                ["Any", 5, "N"],
+                [clc.Choice(ORB_REQUIREMENTS), None, clc.Choice(YES_NO)],
+                ["Any", 0, "N"],
             )
         )
         self.abilities.extend(
@@ -576,7 +577,7 @@ class Form:
                     clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
                     None,
                 ],
-                ["Revive", "Super-Ultimate", 0],
+                ["Revive", "Super-Ultimate", 0.1],
             )
         )
 
@@ -670,28 +671,27 @@ class Form:
         charge = 0
         match chargeCondition:
             case "x2 same / rainbow or x1 other":
+                # Currently assumes have type orb changing
                 charge = (
                     (
-                        self.numSameTypeOrbs
-                        + self.numRainbowOrbs
-                        + (NUM_SLOTS - 1) * (orbChangeConversion["No Orb Change"]["Same"] + orbChangeConversion["No Orb Change"]["Rainbow"])
+                        orbChangeConversion["Type Orb Change"]["Same"]
+                        + orbChangeConversion["Type Orb Change"]["Rainbow"]
+                        + (NUM_SLOTS - 1)
+                        * (
+                            orbChangeConversion["No Orb Change"]["Same"]
+                            + orbChangeConversion["No Orb Change"]["Rainbow"]
+                        )
                     )
                     * 2
                     + self.numOtherTypeOrbs
                     + (NUM_SLOTS - 1) * orbChangeConversion["No Orb Change"]["Other"]
                 )
-            case "Ki sphere Obtained by allies":
+            case "Ki sphere obtained by allies":
                 # Currently assumes have rainbow orb changing
-                charge = (
-                    self.numSameTypeOrbs
-                    + self.numRainbowOrbs
-                    + self.numOtherTypeOrbs
-                    + (NUM_SLOTS - 1)
-                    * (
-                        orbChangeConversion["Rainbow Orb Change"]["Same"]
-                        + orbChangeConversion["Rainbow Orb Change"]["Rainbow"]
-                        + orbChangeConversion["Rainbow Orb Change"]["Other"]
-                    )
+                charge = NUM_SLOTS * (
+                    orbChangeConversion["Rainbow Orb Change"]["Same"]
+                    + orbChangeConversion["Rainbow Orb Change"]["Rainbow"]
+                    + orbChangeConversion["Rainbow Orb Change"]["Other"]
                 )
             case "Attack performed by allies":
                 charge = (
@@ -1099,8 +1099,8 @@ class StandbyFinshSkill(SingleTurnAbility):
 
     def applyToState(self, state, unit=None, form=None):
         self.charge += self.chargePerTurn
-        if form.checkConditions(self.operator, self.conditions) and not unit.finishSkillActivated:
-            unit.finishSkillActivated = True
+        if form.checkConditions(self.operator, self.conditions) and not form.finishSkillActivated:
+            form.finishSkillActivated = True
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.superAttacksPerformed += 1
             state.avgAtk += getActiveAttack(

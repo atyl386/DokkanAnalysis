@@ -398,7 +398,7 @@ REGULAR_SUPPORT_EFFECTS = [
     "Remove Status Effects",
     "Survive K.O. Attack",
 ]
-SUPPORT_EFFECTS = REGULAR_SUPPORT_EFFECTS.extend(ORB_CHANGING_EFFECTS)
+SUPPORT_EFFECTS = REGULAR_SUPPORT_EFFECTS + ORB_CHANGING_EFFECTS
 EFFECTS = [
     "None",
     "ATK",
@@ -448,7 +448,7 @@ CONDITIONS = [
 OR_AND = ["OR", "AND"]
 
 # Standby Finish Effect Conditions
-FINISH_EFFECT_CONDITIONS = ["Ki sphere Obtained by allies", "Revive", "Attack performed by allies"]
+FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "Attack performed by allies"]
 
 # Revive
 REVIVE_UNIT_SUPPORT_BUFF = 0.75  # Just revives this unit
@@ -457,7 +457,7 @@ REVIVE_ROTATION_SUPPORT_BUFF = 1  # Revive whole rotation
 # Orb Changing
 
 ORB_REQUIREMENTS = ["Any", "Type", "Rainbow", "Same Type", "Other Type"]
-ORB_CHANGING_TYPES = ORB_CHANGING_EFFECTS.insert(0, "No Orb Change")
+ORB_CHANGING_TYPES = ["No Orb Change"] + ORB_CHANGING_EFFECTS
 ORB_TYPES = ["Other", "Same", "Rainbow"]
 ORB_COUNTS_NO_ORB_CHANGING = [1.75, 1.75, 1]
 ORB_COUNTS_TYPE_ORB_CHANGING = [0.5, 5.25, 1.5]
