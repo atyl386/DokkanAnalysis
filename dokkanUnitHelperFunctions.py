@@ -225,68 +225,49 @@ def getAvgAtk(
     pUSA,
     rarity,
     slot,
+    canAttack,
 ):
     """Returns the average ATK stat of a unit in a turn"""
-    # Number of additional attacks from passive in each turn
-    nAA = len(AApSuper)
-    i = -1  # iteration counter
-    nProcs = 1  # Initialise number of HiPo procs
-    saMultiplier = SAMultiplier(saMult12, nCopies, sa12AtkStacks, sa12Atk)
-    m12 = saMultiplier + sa12Atk + stackedAtk  # 12 ki multiplier after SA effect
-    a12_0 = sa / m12  # Get 12 ki SA attack stat without multiplier
-    baseAtk = 1 + p1Atk + stackedAtk
-    if baseAtk <= 0:
-        n_0 = 0
-    else:
-        # Get normal attack stat without SoT attack
+    if canAttack:
+        # Number of additional attacks from passive in each turn
+        nAA = len(AApSuper)
+        i = -1  # iteration counter
+        nProcs = 1  # Initialise number of HiPo procs
+        saMultiplier = SAMultiplier(saMult12, nCopies, sa12AtkStacks, sa12Atk)
+        m12 = saMultiplier + sa12Atk + stackedAtk  # 12 ki multiplier after SA effect
+        a12_0 = sa / m12  # Get 12 ki SA attack stat without multiplier
+        baseAtk = 1 + p1Atk + stackedAtk
         n_0 = normal / baseAtk
-    pAA = HiPopAA  # Probability of doing an additional attack next
-    pAASA = AApSuper  # Probability of doing a super on inbuilt additional
-    pG = aaPGuarantee  # Probability of inbuilt additional
-    counterAtk = (
-        NUM_ATTACKS_DIRECTED[slot] * normalCounterMult + NUM_SUPER_ATTACKS_DIRECTED[slot] * pCounterSA * saCounterMult
-    ) * normal
-    avgAtk = pN * (
-        normal
-        + branchAtk(
-            i,
-            nAA,
-            m12,
-            baseAtk,
-            pAA,
-            nProcs,
-            pAASA,
-            pG,
-            n_0,
-            a12_0,
-            sa12Atk,
-            HiPopAA,
-        )
-    ) + pSA * (
-        sa
-        + branchAtk(
-            i,
-            nAA,
-            m12 + sa12Atk,
-            baseAtk + sa18Atk,
-            pAA,
-            nProcs,
-            pAASA,
-            pG,
-            n_0,
-            a12_0,
-            sa12Atk,
-            HiPopAA,
-        )
-    )
-    if rarity == "LR":  # If  is a LR
-        avgAtk += pUSA * (
-            usa
+        pAA = HiPopAA  # Probability of doing an additional attack next
+        pAASA = AApSuper  # Probability of doing a super on inbuilt additional
+        pG = aaPGuarantee  # Probability of inbuilt additional
+        counterAtk = (
+            NUM_ATTACKS_DIRECTED[slot] * normalCounterMult
+            + NUM_SUPER_ATTACKS_DIRECTED[slot] * pCounterSA * saCounterMult
+        ) * normal
+        avgAtk = pN * (
+            normal
             + branchAtk(
                 i,
                 nAA,
-                m12 + sa18Atk,
-                1 + p1Atk + stackedAtk + sa18Atk,
+                m12,
+                baseAtk,
+                pAA,
+                nProcs,
+                pAASA,
+                pG,
+                n_0,
+                a12_0,
+                sa12Atk,
+                HiPopAA,
+            )
+        ) + pSA * (
+            sa
+            + branchAtk(
+                i,
+                nAA,
+                m12 + sa12Atk,
+                baseAtk + sa18Atk,
                 pAA,
                 nProcs,
                 pAASA,
@@ -297,7 +278,27 @@ def getAvgAtk(
                 HiPopAA,
             )
         )
-    avgAtk += counterAtk
+        if rarity == "LR":  # If  is a LR
+            avgAtk += pUSA * (
+                usa
+                + branchAtk(
+                    i,
+                    nAA,
+                    m12 + sa18Atk,
+                    1 + p1Atk + stackedAtk + sa18Atk,
+                    pAA,
+                    nProcs,
+                    pAASA,
+                    pG,
+                    n_0,
+                    a12_0,
+                    sa12Atk,
+                    HiPopAA,
+                )
+            )
+        avgAtk += counterAtk
+    else:
+        avgAtk = 0
     return avgAtk
 
 

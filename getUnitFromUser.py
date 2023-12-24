@@ -407,6 +407,7 @@ class Form:
         self.slot = int(
             self.inputHelper.getAndSaveUserInput(f"Which slot is form # {formIdx} best suited for?", default=2)
         )
+        self.canAttack = yesNo2Bool[self.inputHelper.getAndSaveUserInput("Can this form attack?", default="Y")]
         self.intentional12Ki = yesNo2Bool[
             self.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
         ]
@@ -874,6 +875,7 @@ class State:
             self.pUSA,
             unit.rarity,
             self.slot,
+            form.canAttack,
         )
         # Apply active skill and finish skill attacks
         for specialAttack in form.specialAttacks:
@@ -1045,7 +1047,7 @@ class GiantRageMode(SingleTurnAbility):
             giantRageUnit = copy(unit)
             giantRageUnit.ATK = self.ATK
             self.giantRageModeState.setState(self.giantRageForm, giantRageUnit)  # Calculate the APT of the state
-            state.APT += self.giantRageModeState.APT * NUM_SLOTS * giantRageUnit.giantRageDuration
+            state.apt += self.giantRageModeState.apt * NUM_SLOTS * giantRageUnit.giantRageDuration
             state.support += self.support
 
 
