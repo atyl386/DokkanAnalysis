@@ -443,7 +443,6 @@ CONDITIONS = [
     "Min Enemy HP",
     "Num Attacks",
     "Finish Skill Activation",
-    "x2 same / rainbow or x1 other",
 ]
 OR_AND = ["OR", "AND"]
 

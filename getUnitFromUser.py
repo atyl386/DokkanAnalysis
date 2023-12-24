@@ -94,10 +94,8 @@ def getConditions(inputHelper):
                 numAttacksCondition = inputHelper.getAndSaveUserInput("How many attacks are required?", default=6)
                 conditions[i] = NumAttacksCondition(numAttacksCondition)
             case "Finish Skill Activation":
-                conditions[i] = FinishSkillActivatedCondition()
-            case "x2 same / rainbow or x1 other":  # LR INT Majuub -> SFPS4 Goku
-                chargeCondition = inputHelper.getAndSaveUserInput("What is the maximum charge condition?", default=30)
-                conditions[i] = DoubleSameRainbowKiSphereCondition(chargeCondition)
+                requiredCharge = inputHelper.getAndSaveUserInput("What is the required charge condition?", default=30)
+                conditions[i] = FinishSkillActivatedCondition(requiredCharge)
 
     return operator, conditions
 
@@ -396,6 +394,7 @@ class Form:
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
+        self.charge = 0
         self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
@@ -792,6 +791,7 @@ class State:
         )
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
+        self.avgAtk = 0
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
 
     def setState(self, unit, form):
@@ -853,7 +853,7 @@ class State:
             form.superAttacks["18 Ki"].effects["ATK"].duration,
             form.superAttacks["18 Ki"].effects["ATK"].buff,
         )
-        self.avgAtk = getAvgAtk(
+        self.avgAtk += getAvgAtk(
             self.aaPSuper,
             form.superAttacks["12 Ki"].multiplier,
             unit.nCopies,
@@ -1097,10 +1097,9 @@ class StandbyFinshSkill(SingleTurnAbility):
         finishSkillChargeCondition, attackMultiplier, attackBuff = args
         self.activeMult = specialAttackConversion[attackMultiplier] * (1 + attackBuff)
         self.chargePerTurn = form.getCharge(finishSkillChargeCondition)
-        self.charge = 0
 
     def applyToState(self, state, unit=None, form=None):
-        self.charge += self.chargePerTurn
+        form.charge += self.chargePerTurn
         if form.checkConditions(self.operator, self.conditions) and not form.finishSkillActivated:
             form.finishSkillActivated = True
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
@@ -1455,9 +1454,9 @@ class NumAttacksCondition(Condition):
 
 
 class FinishSkillActivatedCondition(Condition):
-    def __init__(self):
-        self.formAttr = "finishSkillActivated"
-        self.conditionValue = True
+    def __init__(self, requiredCharge):
+        self.formAttr = "charge"
+        self.conditionValue = requiredCharge
 
 
 # Too niche to conform to a generalised case because there is no formAttr for the charge condtion
