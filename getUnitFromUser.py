@@ -44,7 +44,7 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
             )
             buff = form.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=1.0)
             effectDuration = form.inputHelper.getAndSaveUserInput(
-                "How many turns does it last for? Only applicable to abilities with a time limit.", default=1
+                "How many turns does it last for? Only applicable to abilities with a time limit?.", default=1
             )
             ability = abilityClass(form, activationProbability, effect, buff, effectDuration, args=parameters)
         elif issubclass(abilityClass, SingleTurnAbility):
@@ -343,29 +343,44 @@ class Unit:
         turn = 1
         formIdx = 0
         self.fightPeak = False
-        self.finishSkillActivated = False
+        # When not equal to 0 means are in turn when activated the standby finish skill attack
+        self.standbyFinishSkillAtk = 0
+        # Only non-zero in between activating the stanby finish skill attack and applying to subsequent state
+        self.standbyFinishSkillAPT = 0
         nextForm = True
         while turn <= MAX_TURN:
             if nextForm:
-                formIdx += 1
-                # If finish stanby phase with a finish skill attack, go back to previous form.
-                if self.finishSkillActivated:
+                # If finish standby phase with a finish skill attack, go back to previous form.
+                if self.standbyFinishSkillAtk != 0:
+                    formIdx -= 1
                     form = self.forms[-2]
+                    # Reset so don't go to next form again
+                    self.standbyFinishSkillAtk = 0
                 else:
+                    formIdx += 1
+                    # Ignore case where turn == 1 as this is when nextForm == True doesn't mean transformation
+                    if turn != 1:
+                        form.transformed = True
                     form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms)
                     self.forms.append(form)
                 slot = form.slot
                 nextForm = False
             form.turn = turn
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
-            if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN):
+            if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN) and not (self.fightPeak):
                 self.fightPeak = True
             state = State(self, form, slot, turn)
             state.setState(self, form)
-            form.numAttacksReceived += state.numAttacksReceived
-            nextForm = form.checkConditions(form.formChangeConditionOperator, form.formChangeConditions)
-            self.states.append(state)
-            turn = nextTurn
+            # If are in a standby
+            if self.standbyFinishSkillAtk != 0:
+                nextForm = True
+            else:
+                form.numAttacksReceived += state.numAttacksReceived
+                nextForm = form.checkConditions(
+                    form.formChangeConditionOperator, form.formChangeConditions, form.transformed
+                )
+                self.states.append(state)
+                turn = nextTurn
 
     def saveUnit(self):
         # Can't pickle this for some reason, but ok as only needed for inputting data.
@@ -399,8 +414,8 @@ class Form:
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = []
         self.formChangeConditionOperator = None
+        self.transformed = False
         self.formChangeConditions = [Condition()]
-        self.finishSkillActivated = False
         # This will list active skill attacks and finish skills (as have to be applied after state.setState())
         self.specialAttacks = []
         self.slot = int(
@@ -566,18 +581,20 @@ class Form:
             abilityQuestionaire(
                 self,
                 "How many Standby Finish Skills does the form have?",
-                StandbyFinshSkill,
+                StandbyFinishSkill,
                 [
-                    "What is the type of the Finish Effect condition",
-                    "What is the attack multiplier",
+                    "What is the type of the Finish Effect condition?",
+                    "What is the attack multiplier?",
+                    "What is the attack buff when finish is activated?",
                     "What is the buff per charge?",
                 ],
                 [
                     clc.Choice(FINISH_EFFECT_CONDITIONS, case_sensitive=False),
                     clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
                     None,
+                    None,
                 ],
-                ["Revive", "Super-Ultimate", 0.1],
+                ["Revive", "Super-Ultimate", 1.0, 0.1],
             )
         )
 
@@ -656,14 +673,17 @@ class Form:
                 assert superFracTotal == 1, "Invald super attack variant probabilities entered"
             self.superAttacks[superAttackType] = avgSuperAttack
 
-    def checkConditions(self, operator, conditions):
-        match operator:
-            case None:
-                result = conditions[0].isSatisfied(self)
-            case "AND":
-                result = np.all([condition.isSatisfied(self) for condition in conditions])
-            case "OR":
-                result = np.any([condition.isSatisfied(self) for condition in conditions])
+    def checkConditions(self, operator, conditions, activated):
+        if activated:
+            result = False
+        else:
+            match operator:
+                case None:
+                    result = conditions[0].isSatisfied(self)
+                case "AND":
+                    result = np.all([condition.isSatisfied(self) for condition in conditions])
+                case "OR":
+                    result = np.any([condition.isSatisfied(self) for condition in conditions])
         return result
 
     # Get charge per turn for a standby finish skill
@@ -891,6 +911,14 @@ class State:
             )
         )
         self.apt = self.avgAtk * self.avgAtkModifer
+        # If previous form has done a stanby finish attack
+        if unit.standbyFinishSkillAPT != 0:
+            # Add that apt onto the resulting form
+            self.apt += unit.standbyFinishSkillAPT
+            # Set back to 0 so don't apply more than once
+            unit.standbyFinishSkillAPT = 0
+        # If have activated the standby finish, calculate the apt and store if for next state to apply it
+        unit.standbyFinishSkillAPT = unit.standbyFinishSkillAtk * self.avgAtkModifer
         self.getAvgDefMult(form, unit)
         self.avgDefPreSuper = getDefStat(
             unit.DEF, self.p1Buff["DEF"], form.linkDef, self.p2DefA, self.p3Buff["DEF"], self.stackedStats["DEF"]
@@ -1038,7 +1066,7 @@ class GiantRageMode(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
+        if form.checkConditions(self.operator, self.conditions, self.activated) and unit.fightPeak:
             self.activated = True
             # Create a State so can get access to setState for damage calc
             self.giantRageModeState = State(unit, form, state.slot, state.turn)
@@ -1057,7 +1085,7 @@ class ActiveSkillBuff(SingleTurnAbility):
         self.abilities = abilityQuestionaire(form, "How many different buffs does the active skill have?", StartOfTurn)
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
+        if form.checkConditions(self.operator, self.conditions, self.activated) and unit.fightPeak:
             self.activated = True
             for ability in self.abilities:
                 ability.end = state.turn + ability.effectDuration
@@ -1071,7 +1099,7 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.activeMult = specialAttackConversion[attackMultiplier] + attackBuff
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
+        if form.checkConditions(self.operator, self.conditions, self.activated) and unit.fightPeak:
             self.activated = True
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.superAttacksPerformed += 1
@@ -1091,20 +1119,19 @@ class ActiveSkillAttack(SingleTurnAbility):
 
 # This skill is to apply to a unit already in it's standyby mode.
 # The condition to enter & exit the standy mode will be controlled by regular form changes.
-class StandbyFinshSkill(SingleTurnAbility):
+class StandbyFinishSkill(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        finishSkillChargeCondition, attackMultiplier, attackBuff = args
-        self.activeMult = specialAttackConversion[attackMultiplier] * (1 + attackBuff)
+        finishSkillChargeCondition, attackMultiplier, self.attackBuff, self.buffPerCharge = args
+        self.activeMult = specialAttackConversion[attackMultiplier]
         self.chargePerTurn = form.getCharge(finishSkillChargeCondition)
 
     def applyToState(self, state, unit=None, form=None):
         form.charge += self.chargePerTurn
-        if form.checkConditions(self.operator, self.conditions) and not form.finishSkillActivated:
-            form.finishSkillActivated = True
-            state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
-            state.superAttacksPerformed += 1
-            state.avgAtk += getActiveAttack(
+        if form.checkConditions(self.operator, self.conditions, unit.standbyFinishSkillAtk != 0):
+            self.activeMult += self.buffPerCharge * form.charge
+            state.p1Buff["ATK"] += self.attackBuff
+            unit.standbyFinishSkillAtk = getActiveAttack(
                 unit.kiMod12,
                 rarity2MaxKi[unit.rarity],
                 unit.ATK,
@@ -1127,7 +1154,7 @@ class Revive(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions) and unit.fightPeak and not self.activated:
+        if form.checkConditions(self.operator, self.conditions, self.activated) and unit.fightPeak:
             self.activated = True
             state.healing = min(state.healing + self.hpRegen, 1)
             if self.isThisCharacterOnly:

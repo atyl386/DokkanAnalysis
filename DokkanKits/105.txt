@@ -382,10 +382,12 @@ Dmg Red
 0
 # How many Standby Finish Skills does the form have?
 1
-# What is the type of the Finish Effect condition
+# What is the type of the Finish Effect condition?
 Ki sphere obtained by allies
-# What is the attack multiplier
+# What is the attack multiplier?
 Super-Ultimate
+# What is the attack buff when finish is activated?
+5.0
 # What is the buff per charge?
 0.2
 # How many conditions have to met?
