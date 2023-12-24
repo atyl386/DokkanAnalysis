@@ -176,7 +176,7 @@ Ki (Ki Sphere)
 0
 # How many different buffs does the form get on attacks received?
 0
-How many ki sphere dependent buffs does the form have?
+# How many ki sphere dependent buffs does the form have?
 0
 # How many ki dependent buffs does the form have?
 3
@@ -312,5 +312,31 @@ DEF
 1.0
 # What is the value of the buff?
 2.5
+# How many turns does it last for? Only applicable to abilities with a time limit.
+1
+# How many turn dependent buffs does the form have?
+2
+# What turn does the buff start from?
+5
+# What turn does the buff end on?
+8
+# What type of buff does the unit get?
+Guard
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+1.0
+# How many turns does it last for? Only applicable to abilities with a time limit.
+1
+# What turn does the buff start from?
+5
+# What turn does the buff end on?
+8
+# What type of buff does the unit get?
+Rainbow Orb Change
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+1.0
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1

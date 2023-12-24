@@ -478,7 +478,11 @@ class Form:
                 self,
                 "How many ki sphere dependent buffs does the form have?",
                 KiSphereDependent,
-                ["What type of ki spheres are required?", "What is the required amount?", "Is buff applied when attacking?"],
+                [
+                    "What type of ki spheres are required?",
+                    "What is the required amount?",
+                    "Is buff applied when attacking?",
+                ],
                 [ORB_REQUIREMENTS, None, YES_NO],
                 ["Any", 5, "N"],
             )
@@ -670,11 +674,11 @@ class Form:
                     (
                         self.numSameTypeOrbs
                         + self.numRainbowOrbs
-                        + (NUM_SLOTS - 1) * (NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING + NUM_RAINBOW_ORBS_NO_ORB_CHANGING)
+                        + (NUM_SLOTS - 1) * (orbChangeConversion["No Orb Change"]["Same"] + orbChangeConversion["No Orb Change"]["Rainbow"])
                     )
                     * 2
                     + self.numOtherTypeOrbs
-                    + (NUM_SLOTS - 1) * NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING
+                    + (NUM_SLOTS - 1) * orbChangeConversion["No Orb Change"]["Other"]
                 )
             case "Ki sphere Obtained by allies":
                 # Currently assumes have rainbow orb changing
@@ -684,9 +688,9 @@ class Form:
                     + self.numOtherTypeOrbs
                     + (NUM_SLOTS - 1)
                     * (
-                        NUM_SAME_TYPE_ORBS_RAINBOW_ORB_CHANGING
-                        + NUM_RAINBOW_ORBS_RAINBOW_ORB_CHANGING
-                        + NUM_OTHER_TYPE_ORBS_RAINBOW_ORB_CHANGING
+                        orbChangeConversion["Rainbow Orb Change"]["Same"]
+                        + orbChangeConversion["Rainbow Orb Change"]["Rainbow"]
+                        + orbChangeConversion["Rainbow Orb Change"]["Other"]
                     )
                 )
             case "Attack performed by allies":
@@ -767,9 +771,9 @@ class State:
         self.kiPerOtherTypeOrb = 1
         self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB
         self.kiPerRainbowKiSphere = 1  # Ki per orb
-        self.numRainbowOrbs = NUM_RAINBOW_ORBS_NO_ORB_CHANGING
-        self.numOtherTypeOrbs = NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING
-        self.numSameTypeOrbs = NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING  # num of orbs
+        self.numRainbowOrbs = orbChangeConversion["No Orb Change"]["Rainbow"]
+        self.numOtherTypeOrbs = orbChangeConversion["No Orb Change"]["Other"]
+        self.numSameTypeOrbs = orbChangeConversion["No Orb Change"]["Same"]
         self.p2DefA = 0
         self.p2DefB = 0
         self.healing = 0  # Fraction of health healed every turn
@@ -1169,7 +1173,7 @@ class StartOfTurn(PassiveAbility):
             KI_SUPPORT
             + state.kiPerOtherTypeOrb * state.numOtherTypeOrbs
             + state.kiPerSameTypeOrb * state.numSameTypeOrbs
-            + state.numRainbowOrbs * state.kiPerRainbowKiSphere
+            + state.kiPerOtherTypeOrb * state.numRainbowOrbs
             + form.linkKi
         )
         pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
@@ -1178,8 +1182,13 @@ class StartOfTurn(PassiveAbility):
         # Check if state is elligible for ability
         if state.turn >= self.start and state.turn <= self.end and state.slot in self.slots:
             # If a support ability
-            if self.effect in SUPPORT_EFFECTS:
-                state.support += SUPPORT_FACTOR_DICT[self.effect] * self.effectiveBuff
+            if self.effect in REGULAR_SUPPORT_EFFECTS:
+                state.support += supportFactorConversion[self.effect] * self.effectiveBuff
+            elif self.effect in ORB_CHANGING_EFFECTS:
+                state.support += supportFactorConversion[self.effect] * self.effectiveBuff
+                state.numOtherTypeOrbs = orbChangeConversion[self.effect]["Other"]
+                state.numSameTypeOrbs = orbChangeConversion[self.effect]["Same"]
+                state.numRainbowOrbs = orbChangeConversion[self.effect]["Rainbow"]
             elif self.effect in state.buff.keys():
                 state.buff[self.effect] += self.effectiveBuff
             elif self.effect in state.p1Buff.keys():
@@ -1357,9 +1366,9 @@ class KiSphereDependent(PassiveAbility):
                 numOrbs = state.numSameTypeOrbs
             case "Other Type":
                 numOrbs = state.numOtherTypeOrbs
-        if self.required == 0: # If buff per orb
+        if self.required == 0:  # If buff per orb
             effectFactor = numOrbs
-        else: # If fixed buff if obtain X orbs
+        else:  # If fixed buff if obtain X orbs
             effectFactor = 1 - poisson.cdf(self.required - 1, numOrbs)
         buffFromOrbs = self.effectiveBuff * effectFactor
         if self.effect in state.buff.keys():

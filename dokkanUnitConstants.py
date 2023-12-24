@@ -389,15 +389,16 @@ LINK_NAMES = list(LINK_DATA[:, 0])
 MAX_KI = [12, 24]
 
 # Effects
-SUPPORT_EFFECTS = [
+
+ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Rainbow Orb Change"]
+
+REGULAR_SUPPORT_EFFECTS = [
     "Delay Target",
     "Scouter",
-    "Orb Change",
-    "Double Orb Change",
-    "Rainbow Orb Change",
     "Remove Status Effects",
     "Survive K.O. Attack",
 ]
+SUPPORT_EFFECTS = REGULAR_SUPPORT_EFFECTS.extend(ORB_CHANGING_EFFECTS)
 EFFECTS = [
     "None",
     "ATK",
@@ -456,18 +457,12 @@ REVIVE_ROTATION_SUPPORT_BUFF = 1  # Revive whole rotation
 # Orb Changing
 
 ORB_REQUIREMENTS = ["Any", "Type", "Rainbow", "Same Type", "Other Type"]
-
-NUM_OTHER_TYPE_ORBS_NO_ORB_CHANGING = 1.75
-NUM_SAME_TYPE_ORBS_NO_ORB_CHANGING = 1.75
-NUM_RAINBOW_ORBS_NO_ORB_CHANGING = 1
-
-NUM_OTHER_TYPE_ORBS_TYPE_ORB_CHANGING = 0.5
-NUM_SAME_TYPE_ORBS_TYPE_ORB_CHANGING = 5.25
-NUM_RAINBOW_ORBS_TYPE_ORB_CHANGING = 1.5
-
-NUM_OTHER_TYPE_ORBS_RAINBOW_ORB_CHANGING = 2.05
-NUM_SAME_TYPE_ORBS_RAINBOW_ORB_CHANGING = 2.05
-NUM_RAINBOW_ORBS_RAINBOW_ORB_CHANGING = 2.7
+ORB_CHANGING_TYPES = ORB_CHANGING_EFFECTS.insert(0, "No Orb Change")
+ORB_TYPES = ["Other", "Same", "Rainbow"]
+ORB_COUNTS_NO_ORB_CHANGING = [1.75, 1.75, 1]
+ORB_COUNTS_TYPE_ORB_CHANGING = [0.5, 5.25, 1.5]
+ORB_COUNTS_DOUBLE_ORB_CHANGING = [0, 6.375, 2]
+ORB_COUNTS_RAINBOW_ORB_CHANGING = [2.05, 2.05, 2.7]
 
 KI_PER_SAME_TYPE_ORB = 2.0
 
@@ -476,8 +471,7 @@ KI_SUPPORT = 1
 ATK_DEF_SUPPORT = 0.2
 USEABILITY_SUPPORT_FACTOR = 0.2
 KI_SUPPORT_FACTOR = 0.25  # Guess
-SUPPORT_FACTORS = [6.0, 1, 0.125, 0.25, 0.5, 0.125, 0.25]
-SUPPORT_FACTOR_DICT = dict(zip(SUPPORT_EFFECTS, SUPPORT_FACTORS))
+SUPPORT_FACTORS = [6.0, 1, 0.125, 0.25, 0.125, 0.25, 0.5]
 
 # Hidden Potential + Equips
 HIPO_PHY = np.array(
@@ -552,6 +546,16 @@ attDebuffOnAttackConversion = dict(zip(ATT_DEBUFF_ON_ATT_NAMES, ATT_DEBUFF_ON_AT
 multipleEnemyBuffConversion = dict(zip(MULTIPLE_ENEMY_BUFF_TIERS, MULTIPLE_ENEMY_BUFF_SCORES))
 attackAllConversion = dict(zip(YES_NO, ATTACK_ALL_SCORE))
 attackAllDebuffConversion = dict(zip(ATTACK_ALL_SCORE, ATTACK_ALL_DEBUFF_FACTOR))
+
+# Support
+supportFactorConversion = dict(zip(SUPPORT_EFFECTS, SUPPORT_FACTORS))
+
+# Orb Changing
+orbTypeNoOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_NO_ORB_CHANGING))
+orbTypeOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_TYPE_ORB_CHANGING))
+orbTypeDoubleOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_DOUBLE_ORB_CHANGING))
+orbTypeRainbowOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_RAINBOW_ORB_CHANGING))
+orbChangeConversion = dict(zip(ORB_CHANGING_TYPES, [orbTypeNoOrbChangingConversion, orbTypeOrbChangingConversion, orbTypeDoubleOrbChangingConversion, orbTypeRainbowOrbChangingConversion]))
 
 # Counters
 counterAttackConversion = dict(zip(COUNTER_ATTACK_MULTIPLIER_NAMES, COUNTER_ATTACK_MULTIPLIERS))
