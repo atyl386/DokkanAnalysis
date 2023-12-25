@@ -1206,22 +1206,22 @@ class StartOfTurn(PassiveAbility):
             + form.linkKi
         )
         pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
-        self.effectiveBuff = self.effectiveBuff * pHaveKi
-        self.activationProbability *= pHaveKi
+        effectiveBuff = self.effectiveBuff * pHaveKi
+        activationProbability = self.activationProbability * pHaveKi
         # Check if state is elligible for ability
         if state.turn >= self.start and state.turn <= self.end and state.slot in self.slots:
             # If a support ability
             if self.effect in REGULAR_SUPPORT_EFFECTS:
-                state.support += supportFactorConversion[self.effect] * self.effectiveBuff
+                state.support += supportFactorConversion[self.effect] * effectiveBuff
             elif self.effect in ORB_CHANGING_EFFECTS:
-                state.support += supportFactorConversion[self.effect] * self.effectiveBuff
+                state.support += supportFactorConversion[self.effect] * effectiveBuff
                 state.numOtherTypeOrbs = orbChangeConversion[self.effect]["Other"]
                 state.numSameTypeOrbs = orbChangeConversion[self.effect]["Same"]
                 state.numRainbowOrbs = orbChangeConversion[self.effect]["Rainbow"]
             elif self.effect in state.buff.keys():
-                state.buff[self.effect] += self.effectiveBuff
+                state.buff[self.effect] += effectiveBuff
             elif self.effect in state.p1Buff.keys():
-                state.p1Buff[self.effect] += self.effectiveBuff
+                state.p1Buff[self.effect] += effectiveBuff
             else:  # Edge cases
                 match self.effect:
                     case "Disable Action":
@@ -1230,23 +1230,23 @@ class StartOfTurn(PassiveAbility):
                             + (1 - P_NULLIFY_FROM_DISABLE_ACTIVE) * state.pNullify
                         )
                     case "AdditionalSuper":
-                        state.aaPSuper.append(self.activationProbability)
+                        state.aaPSuper.append(activationProbability)
                         state.aaPGuarantee.append(0)
                     case "AAChance":
-                        state.aaPGuarantee.append(self.activationProbability)
+                        state.aaPGuarantee.append(activationProbability)
                     case "SuperChance":
-                        state.aaPSuper.append(self.activationProbability)
+                        state.aaPSuper.append(activationProbability)
                     case "Ki (Type Ki Sphere)":
-                        state.kiPerOtherTypeOrb += self.effectiveBuff
-                        state.kiPerSameTypeOrb += self.effectiveBuff
+                        state.kiPerOtherTypeOrb += effectiveBuff
+                        state.kiPerSameTypeOrb += effectiveBuff
                     case "Ki (Ki Sphere)":
-                        state.kiPerOtherTypeOrb += self.effectiveBuff
-                        state.kiPerSameTypeOrb += self.effectiveBuff
-                        state.kiPerRainbowKiSphere += self.effectiveBuff
+                        state.kiPerOtherTypeOrb += effectiveBuff
+                        state.kiPerSameTypeOrb += effectiveBuff
+                        state.kiPerRainbowKiSphere += effectiveBuff
                     case "Ki (Same Type Ki Sphere)":
-                        state.kiPerSameTypeOrb += self.effectiveBuff
+                        state.kiPerSameTypeOrb += effectiveBuff
                     case "Ki (Rainbow Ki Sphere)":
-                        state.kiPerRainbowKiSphere += self.effectiveBuff
+                        state.kiPerRainbowKiSphere += effectiveBuff
 
 
 class TurnDependent(StartOfTurn):
