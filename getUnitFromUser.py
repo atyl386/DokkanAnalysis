@@ -398,6 +398,7 @@ class Form:
         self.EZA = eza
         self.linkNames = [""] * MAX_NUM_LINKS
         self.linkCommonality = 0
+        self.extraKi = 0
         self.linkKi = 0
         self.linkAtkSoT = 0
         self.linkDef = 0
@@ -777,7 +778,7 @@ class State:
         self.turn = turn
         # Dictionary for variables which have a 1-1 relationship with StartOfTurn EFFECTS
         self.buff = {
-            "Ki": LEADER_SKILL_KI,
+            "Ki": LEADER_SKILL_KI + form.extraKi,
             "AEAAT": 0,
             "Guard": 0,
             "Crit": unit.pHiPoCrit + (1 - unit.pHiPoCrit) * form.linkCrit,
@@ -1286,8 +1287,9 @@ class PerAttackPerformed(PassiveAbility):
                 state.p2Buff["ATK"] += min(averageBuffWhenAttacking + previousBuff, self.max)
             case "DEF":
                 state.p2DefB += min(turnBuff + previousBuff, self.max)
+            # Have to make a special case for ki as only applies to future states
             case "Ki":
-                state.buff["Ki"] += min(previousBuff, self.max)
+                form.extraKi = min(form.extraKi + turnBuff, self.max)
             case "Crit":
                 state.buff["Crit"] += min(averageBuffWhenAttacking + previousBuff, self.max)
 
@@ -1312,8 +1314,9 @@ class PerSuperAttackPerformed(PassiveAbility):
                 state.p2Buff["ATK"] += min(averageBuffWhenAttacking + previousBuff, self.max)
             case "DEF":
                 state.p2DefB += min(turnBuff + previousBuff, self.max)
+            # Have to make a special case for ki as only applies to future states
             case "Ki":
-                state.buff["Ki"] += min(previousBuff, self.max)
+                form.extraKi = min(form.extraKi + turnBuff, self.max)
             case "Crit":
                 state.buff["Crit"] += min(averageBuffWhenAttacking + previousBuff, self.max)
 
