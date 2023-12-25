@@ -508,6 +508,16 @@ class Form:
         self.abilities.extend(
             abilityQuestionaire(
                 self,
+                "How many health dependent buffs does the form have?",
+                HealthDependent,
+                ["What is the threshold health value?", "Is it a max HP condition?"],
+                [None, clc.Choice(YES_NO)],
+                [0.5, "Y"],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
                 "How many ki dependent buffs does the form have?",
                 KiDependent,
                 ["What is the required ki?"],
@@ -541,7 +551,7 @@ class Form:
                 "How many different nullification abilities does the form have?",
                 Nullification,
                 ["Does this nullification have counter?"],
-                [YES_NO],
+                [clc.Choice(YES_NO)],
                 ["N"],
             )
         )
@@ -1268,6 +1278,17 @@ class SlotDependent(StartOfTurn):
         super().__init__(form, activationProbability, effect, buff, effectDuration, slots=slots)
 
 
+class HealthDependent(StartOfTurn):
+    def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
+        health, isMaxHpCondition = args
+        p = maxHealthCDF(health)
+        if yesNo2Bool[isMaxHpCondition]:
+            activationProbability *= p
+        else:
+            activationProbability *= 1 - p
+        super().__init__(form, activationProbability, effect, buff, effectDuration)
+
+
 class PerAttackPerformed(PassiveAbility):
     def __init__(self, form, activationProbability, effect, buff, effectDuration, args):
         super().__init__(form, activationProbability, effect, buff, effectDuration)
@@ -1421,7 +1442,7 @@ class Nullification(PassiveAbility):
     def applyToState(self, state, unit=None, form=None):
         pNullify = self.activationProbability * (1 - (1 - saFracConversion[self.effect]) ** 2)
         state.pNullify = (1 - state.pNullify) * pNullify + (1 - pNullify) * state.pNullify
-        if self.hasCounter:
+        if yesNo2Bool[self.hasCounter]:
             state.pCounterSA = (1 - state.pCounterSA) * pNullify + (1 - pNullify) * state.pCounterSA
 
 
@@ -1505,4 +1526,5 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
     # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="manual")

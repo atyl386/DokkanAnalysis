@@ -180,6 +180,32 @@ Ki (Ki Sphere)
 0
 # How many ki sphere dependent buffs does the form have?
 0
+# How many health dependent buffs does the form have?
+2
+# What is the threshold health value?
+0.5
+# Is it a max HP condition?
+N
+# What type of buff does the unit get?
+ATK
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+0.5
+# How many turns does it last for? Only applicable to abilities with a time limit?.
+1
+# What is the threshold health value?
+0.5
+# Is it a max HP condition?
+N
+# What type of buff does the unit get?
+DEF
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+0.5
+# How many turns does it last for? Only applicable to abilities with a time limit?.
+1
 # How many ki dependent buffs does the form have?
 3
 # What is the required ki?
@@ -366,6 +392,8 @@ Dmg Red
 0.08
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1
+# How many health dependent buffs does the form have?
+0
 # How many ki dependent buffs does the form have?
 0
 # How many different buffs does the form get per attack performed?
@@ -392,7 +420,6 @@ Super-Ultimate
 0.2
 # How many conditions have to met?
 1
-# What type of condition is # 1?
 # What type of condition is # 1?
 Finish Skill Activation
 # What is the required charge condition?
