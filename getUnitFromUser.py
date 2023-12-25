@@ -508,7 +508,7 @@ class Form:
         self.abilities.extend(
             abilityQuestionaire(
                 self,
-                "How many health dependent buffs does the form have?",
+                "How many health threshold buffs does the form have?",
                 HealthDependent,
                 ["What is the threshold health value?", "Is it a max HP condition?"],
                 [None, clc.Choice(YES_NO)],

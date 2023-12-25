@@ -180,7 +180,7 @@ Ki (Ki Sphere)
 0
 # How many ki sphere dependent buffs does the form have?
 0
-# How many health dependent buffs does the form have?
+# How many health threshold buffs does the form have?
 2
 # What is the threshold health value?
 0.5
@@ -392,7 +392,7 @@ Dmg Red
 0.08
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1
-# How many health dependent buffs does the form have?
+# How many health threshold buffs does the form have?
 0
 # How many ki dependent buffs does the form have?
 0
