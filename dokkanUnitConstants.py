@@ -441,7 +441,8 @@ CONDITIONS = [
     "Min HP",
     "Max Enemy HP",
     "Min Enemy HP",
-    "Num Attacks",
+    "Num Attacks Performed",
+    "Num Attacks Recieved",
     "Finish Skill Activation",
 ]
 OR_AND = ["OR", "AND"]

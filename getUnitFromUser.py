@@ -91,9 +91,12 @@ def getConditions(inputHelper):
                     "What is the minimum enemy HP condition?", default=0.5
                 )
                 conditions[i] = EnemyMinHpCondition(enemyMinHpCondition)
-            case "Num Attacks":
-                numAttacksCondition = inputHelper.getAndSaveUserInput("How many attacks are required?", default=6)
-                conditions[i] = NumAttacksCondition(numAttacksCondition)
+            case "Num Attacks Performed":
+                numAttacksPerformedCondition = inputHelper.getAndSaveUserInput("How many performed attacks are required?", default=5)
+                conditions[i] = AttacksPerformedCondition(numAttacksPerformedCondition)
+            case "Num Attacks Received":
+                numAttacksReceivedCondition = inputHelper.getAndSaveUserInput("How many received attacks are required?", default=5)
+                conditions[i] = AttacksReceivedCondition(numAttacksReceivedCondition)
             case "Finish Skill Activation":
                 requiredCharge = inputHelper.getAndSaveUserInput("What is the required charge condition?", default=30)
                 conditions[i] = FinishSkillActivatedCondition(requiredCharge)
@@ -471,7 +474,8 @@ class Form:
                 SlotDependent,
                 ["Which slot is required?"],
                 [None],
-                [[2, 3]],
+                # e.g. [1] or [2, 3]
+                [None],
             )
         )
         self.abilities.extend(
@@ -1499,9 +1503,15 @@ class EnemyMinHpCondition(ProbabilityCondition):
         super().__init__(conditionProbability)
 
 
-class NumAttacksCondition(Condition):
+class AttacksPerformedCondition(Condition):
     def __init__(self, numAttacks):
         self.formAttr = "attacksPerformed"
+        self.conditionValue = numAttacks
+
+
+class AttacksReceivedCondition(Condition):
+    def __init__(self, numAttacks):
+        self.formAttr = "numAttacksReceived"
         self.conditionValue = numAttacks
 
 
@@ -1527,4 +1537,4 @@ if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
     # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
     # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="manual")
+    unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
