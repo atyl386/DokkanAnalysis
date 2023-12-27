@@ -395,6 +395,9 @@ MAX_KI = [12, 24]
 ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Rainbow Orb Change"]
 
 REGULAR_SUPPORT_EFFECTS = [
+    "Ki Support",
+    "ATK Support",
+    "DEF Support",
     "Delay Target",
     "Scouter",
     "Remove Status Effects",
@@ -435,9 +438,10 @@ EFFECTS.extend(SUPPORT_EFFECTS)
 EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)
 STACK_EFFECTS = ["ATK", "DEF"]
 SUPPORT_SUPER_ATTACK_EFFECTS = ["Raise Allies ATK"]
-# 100% atk increase support == 1.875 support points
-ATK_SUPPORT = 1.875  # Guesstimate
-SUPER_ATTACK_SUPPORT_FACTORS = [1 / 5 * ATK_SUPPORT]
+ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
+DEF_SUPPORT_100_FACTOR = 3 # 100% def increase support == 3 support points
+AVG_SA_MULT = 5
+SUPER_ATTACK_SUPPORT_FACTORS = [ATK_SUPPORT_100_FACTOR / AVG_SA_MULT]
 OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action"]
 SUPER_ATTACK_EFFECTS = STACK_EFFECTS + SUPPORT_SUPER_ATTACK_EFFECTS + OTHER_SUPER_ATTACK_EFFECTS
 
@@ -478,7 +482,8 @@ KI_SUPPORT = 1
 ATK_DEF_SUPPORT = 0.2
 USEABILITY_SUPPORT_FACTOR = 0.2
 KI_SUPPORT_FACTOR = 0.25  # Guess
-SUPPORT_FACTORS = [6.0, 1, 0.125, 0.25, 0.125, 0.25, 0.5]
+AVG_SOT_STATS = 3
+SUPPORT_FACTORS = [KI_SUPPORT_FACTOR, ATK_SUPPORT_100_FACTOR / AVG_SOT_STATS, DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS, 6.0, 1, 0.125, 0.25, 0.125, 0.25, 0.5]
 
 # Hidden Potential + Equips
 HIPO_PHY = np.array(

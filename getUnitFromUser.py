@@ -706,6 +706,8 @@ class Form:
     def checkConditions(self, operator, conditions, activated):
         if activated:
             result = False
+        elif len(conditions) == 0:
+            result = True
         else:
             match operator:
                 case None:
@@ -884,7 +886,7 @@ class State:
                         + (NUM_SLOTS - self.slot) / (NUM_SLOTS - 1)
                     )
                 )
-            self.support += supportFactor * numSupers
+                self.support += supportFactor * numSupers
             self.pNullify += (
                 (1 - self.pNullify)
                 * numSupers
@@ -1060,7 +1062,7 @@ class State:
         for stat in STACK_EFFECTS:
             # Update previous stack durations
             for stack in unit.stacks[stat]:
-                stack.duration -= RETURN_PERIOD_PER_SLOT[unit.states[-1].slot]
+                stack.duration -= RETURN_PERIOD_PER_SLOT[unit.states[-1].slot - 1]
             # Remove them if expired
             unit.stacks[stat] = [stack for stack in unit.stacks[stat] if stack.duration > 0]
             # Apply stacks
@@ -1592,6 +1594,6 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
     unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    # unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")

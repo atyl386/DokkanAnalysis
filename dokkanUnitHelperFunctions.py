@@ -337,8 +337,8 @@ def getAPT(
         pAASA = AApSuper  # Probability of doing a super on inbuilt additional
         pG = aaPGuarantee  # Probability of inbuilt additional
         counterAtk = (
-            NUM_ATTACKS_DIRECTED[slot] * normalCounterMult
-            + NUM_SUPER_ATTACKS_DIRECTED[slot] * pCounterSA * saCounterMult
+            NUM_ATTACKS_DIRECTED[slot - 1] * normalCounterMult
+            + NUM_SUPER_ATTACKS_DIRECTED[slot - 1] * pCounterSA * saCounterMult
         ) * normal
         pCritN = min(pCrit0 + (1 - pCrit0) * critPerAttackPerformed[0], 1)
         pCritSA = min(pCrit0 + (1 - pCrit0) * (critPerSuperPerformed[0] + (1 - critPerSuperPerformed[0]) * sa12Crit), 1)
