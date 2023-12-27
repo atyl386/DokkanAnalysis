@@ -39,7 +39,32 @@ def KiModifier(base, ki):
         return np.linspace(base, 2, 13)[ki - 12]
 
 
-def branchAPT(i, nAA, m12, mN, p2Atk, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo, pCrit, critMultiplier, atkModifer, p2AtkBuff, critBuff, atkPerAttackPerformed, critPerAttackPerformed, atkPerSuperPerformed, critPerSuperPerformed):
+def branchAPT(
+    i,
+    nAA,
+    m12,
+    mN,
+    p2Atk,
+    pAA,
+    nProcs,
+    pSA,
+    pG,
+    n_0,
+    a12_0,
+    saMult,
+    pHiPo,
+    pCrit,
+    critMultiplier,
+    atkModifer,
+    p2AtkBuff,
+    critBuff,
+    atkPerAttackPerformed,
+    critPerAttackPerformed,
+    atkPerSuperPerformed,
+    critPerSuperPerformed,
+    saCrit,
+    sa12Crit,
+):
     """Returns the total remaining APT of a unit in a turn recursively"""
     p2AtkFactor = (p2Atk + p2AtkBuff) / p2Atk
     normal = mN * n_0 * p2AtkFactor * atkModifer
@@ -50,8 +75,35 @@ def branchAPT(i, nAA, m12, mN, p2Atk, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, 
         i += 1  # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
         # Add damage if don't get any additional attacks
-        tempAPT0 = branchAPT(i, nAA, m12, mN, p2Atk, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo, pCrit, critMultiplier, atkModifer, p2AtkBuff, critBuff, atkPerAttackPerformed, critPerAttackPerformed, atkPerSuperPerformed, critPerSuperPerformed)
-        pCrit1 = (pCrit - critBuff) / (1 - critBuff) * (1 - critPerAttackPerformed[0]) + critPerAttackPerformed[0]
+        tempAPT0 = branchAPT(
+            i,
+            nAA,
+            m12,
+            mN,
+            p2Atk,
+            pAA,
+            nProcs,
+            pSA,
+            pG,
+            n_0,
+            a12_0,
+            saMult,
+            pHiPo,
+            pCrit,
+            critMultiplier,
+            atkModifer,
+            p2AtkBuff,
+            critBuff,
+            atkPerAttackPerformed,
+            critPerAttackPerformed,
+            atkPerSuperPerformed,
+            critPerSuperPerformed,
+            saCrit,
+            sa12Crit,
+        )
+        pCrit1 = min(
+            (pCrit - critBuff) / (1 - critBuff) * (1 - critPerAttackPerformed[0]) + critPerAttackPerformed[0], 1
+        )
         tempAPT1 = branchAPT(
             i,
             nAA,
@@ -75,8 +127,11 @@ def branchAPT(i, nAA, m12, mN, p2Atk, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, 
             critPerAttackPerformed[1:],
             atkPerSuperPerformed,
             critPerSuperPerformed,
+            saCrit,
+            sa12Crit,
         )
-        pCrit2 = (pCrit - critBuff) / (1 - critBuff) * (1 - critPerSuperPerformed[0]) + critPerSuperPerformed[0]
+        saCrit2 = saCrit + sa12Crit
+        pCrit2 = min((((pCrit - critBuff) / (1 - critBuff) - saCrit) / (1 - saCrit) * (1 - saCrit2) + saCrit2) * (1 - critPerSuperPerformed[0]) + critPerSuperPerformed[0], 1)
         tempAPT2 = branchAPT(
             i,
             nAA,
@@ -100,6 +155,8 @@ def branchAPT(i, nAA, m12, mN, p2Atk, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, 
             critPerAttackPerformed,
             atkPerSuperPerformed[1:],
             critPerSuperPerformed[1:],
+            saCrit2,
+            sa12Crit,
         )
         return pSA[i] * (tempAPT2 + additional12Ki) + (1 - pSA[i]) * (
             pG[i] * (tempAPT1 + normal) + (1 - pG[i]) * (tempAPT0)
@@ -278,8 +335,13 @@ def getAPT(
             NUM_ATTACKS_DIRECTED[slot] * normalCounterMult
             + NUM_SUPER_ATTACKS_DIRECTED[slot] * pCounterSA * saCounterMult
         ) * normal
-        pCritN = pCrit0 * (1 - critPerAttackPerformed[0]) + critPerAttackPerformed[0]
-        pCritSA = pCrit0 * (1 - critPerSuperPerformed[0]) + critPerSuperPerformed[0]
+        pCritN = min(pCrit0 + (1 - pCrit0) * critPerAttackPerformed[0], 1)
+        pCritSA = min(
+            pCrit0 + (1 - pCrit0) * (critPerSuperPerformed[0] + (1 - critPerSuperPerformed[0]) * sa12Crit), 1
+        )
+        pCritUSA = min(
+            pCrit0 + (1 - pCrit0) * (critPerSuperPerformed[0] + (1 - critPerSuperPerformed[0]) * sa18Crit), 1
+        )
         apt = pN * (
             normal * preAtkModifer
             + branchAPT(
@@ -305,6 +367,8 @@ def getAPT(
                 critPerAttackPerformed[1:],
                 atkPerSuperPerformed,
                 critPerSuperPerformed,
+                0,
+                sa12Crit,
             )
         ) + pSA * (
             sa * preAtkModifer
@@ -331,6 +395,8 @@ def getAPT(
                 critPerAttackPerformed,
                 atkPerSuperPerformed[1:],
                 critPerSuperPerformed[1:],
+                sa12Crit,
+                sa12Crit,
             )
         )
         if rarity == "LR":  # If  is a LR
@@ -350,15 +416,18 @@ def getAPT(
                     a12_0,
                     sa12Atk,
                     HiPopAA,
-                    pCritSA,
+                    pCritUSA,
                     critMultiplier,
-                    (preAtkModifer - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritSA) + pCritSA * critMultiplier,
+                    (preAtkModifer - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritSA)
+                    + pCritUSA * critMultiplier,
                     atkPerSuperPerformed[0],
                     critPerSuperPerformed[0],
                     atkPerAttackPerformed,
                     critPerAttackPerformed,
                     atkPerSuperPerformed[1:],
                     critPerSuperPerformed[1:],
+                    sa18Crit,
+                    sa12Crit,
                 )
             )
         apt += counterAtk * preAtkModifer

@@ -4,9 +4,6 @@ import copy
 import pickle
 
 # TODO:
-# - Still need to add in crit chance from supers into apt calcs
-# - previous calcs for apt when had buffs per super attack performed were wrong because didn't include HP buffs.
-# - Should have an output file with the aggregated attributes for each unit so can see in the diffs. Sort of like FlightConfig.
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
 # - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
@@ -399,7 +396,7 @@ class Unit:
     def saveUnit(self):
         # Output the unit's attributes to a .txt file
         outputFilePath = os.path.join(CWD, "DokkanKitOutputs", self.id + ".txt")
-        outputFile = open(outputFilePath, 'w')
+        outputFile = open(outputFilePath, "w")
         for i, state in enumerate(self.states):
             outputFile.write(f"State # {i} / Turn # {state.turn} \n \n")
             for j, attribute in enumerate(state.attributes):
@@ -888,7 +885,12 @@ class State:
                     )
                 )
             self.support += supportFactor * numSupers
-            self.pNullify += (1 - self.pNullify) * numSupers * P_NULLIFY_FROM_DISABLE * form.superAttacks[superAttackType].effects["Disable Action"].buff
+            self.pNullify += (
+                (1 - self.pNullify)
+                * numSupers
+                * P_NULLIFY_FROM_DISABLE
+                * form.superAttacks[superAttackType].effects["Disable Action"].buff
+            )
         self.updateStackedStats(form, unit)
         self.normal = getNormal(
             unit.kiMod12,
@@ -928,9 +930,7 @@ class State:
             form.superAttacks["18 Ki"].effects["ATK"].buff,
         )
         critMultiplier = (CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR
-        self.preAtkModifer = self.buff["Crit"] * critMultiplier + (
-            1 - self.buff["Crit"]
-        ) * (
+        self.preAtkModifer = self.buff["Crit"] * critMultiplier + (1 - self.buff["Crit"]) * (
             self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
             + (1 - self.buff["AEAAT"])
             * (
@@ -1167,18 +1167,21 @@ class ActiveSkillAttack(SingleTurnAbility):
             self.activated = True
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.superAttacksPerformed += 1
-            state.APT += getActiveAtk(
-                unit.kiMod12,
-                rarity2MaxKi[unit.rarity],
-                unit.ATK,
-                state.p1Buff["ATK"],
-                state.stackedStats["ATK"],
-                self.form.linkAtkSoT,
-                state.p2Buff["ATK"],
-                state.p3Buff["ATK"],
-                self.activeMult,
-                unit.nCopies,
-            ) * state.preAtkModifer
+            state.APT += (
+                getActiveAtk(
+                    unit.kiMod12,
+                    rarity2MaxKi[unit.rarity],
+                    unit.ATK,
+                    state.p1Buff["ATK"],
+                    state.stackedStats["ATK"],
+                    self.form.linkAtkSoT,
+                    state.p2Buff["ATK"],
+                    state.p3Buff["ATK"],
+                    self.activeMult,
+                    unit.nCopies,
+                )
+                * state.preAtkModifer
+            )
 
 
 # This skill is to apply to a unit already in it's standyby mode.
@@ -1367,7 +1370,7 @@ class PerAttackPerformed(PassiveAbility):
             case "Ki":
                 form.extraKi = min(form.extraKi + turnBuff, self.max)
             case "Crit":
-                state.buff["Crit"] +=  previousBuffCapped
+                state.buff["Crit"] += previousBuffCapped
                 state.critPerAttackPerformed = np.minimum(buffPerAttack, self.max - previousBuffCapped)
                 state.critPerSuperPerformed = state.critPerAttackPerformed[:]
 
@@ -1397,7 +1400,7 @@ class PerSuperAttackPerformed(PassiveAbility):
             case "Ki":
                 form.extraKi = min(form.extraKi + turnBuff, self.max)
             case "Crit":
-                state.buff["Crit"] +=  previousBuffCapped
+                state.buff["Crit"] += previousBuffCapped
                 state.critPerSuperPerformed = np.minimum(buffPerSuper, self.max - previousBuffCapped)
 
 
