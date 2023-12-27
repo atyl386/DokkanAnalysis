@@ -131,7 +131,12 @@ def branchAPT(
             sa12Crit,
         )
         saCrit2 = saCrit + sa12Crit
-        pCrit2 = min((((pCrit - critBuff) / (1 - critBuff) - saCrit) / (1 - saCrit) * (1 - saCrit2) + saCrit2) * (1 - critPerSuperPerformed[0]) + critPerSuperPerformed[0], 1)
+        pCrit2 = min(
+            (((pCrit - critBuff) / (1 - critBuff) - saCrit) / (1 - saCrit) * (1 - saCrit2) + saCrit2)
+            * (1 - critPerSuperPerformed[0])
+            + critPerSuperPerformed[0],
+            1,
+        )
         tempAPT2 = branchAPT(
             i,
             nAA,
@@ -336,9 +341,7 @@ def getAPT(
             + NUM_SUPER_ATTACKS_DIRECTED[slot] * pCounterSA * saCounterMult
         ) * normal
         pCritN = min(pCrit0 + (1 - pCrit0) * critPerAttackPerformed[0], 1)
-        pCritSA = min(
-            pCrit0 + (1 - pCrit0) * (critPerSuperPerformed[0] + (1 - critPerSuperPerformed[0]) * sa12Crit), 1
-        )
+        pCritSA = min(pCrit0 + (1 - pCrit0) * (critPerSuperPerformed[0] + (1 - critPerSuperPerformed[0]) * sa12Crit), 1)
         pCritUSA = min(
             pCrit0 + (1 - pCrit0) * (critPerSuperPerformed[0] + (1 - critPerSuperPerformed[0]) * sa18Crit), 1
         )
