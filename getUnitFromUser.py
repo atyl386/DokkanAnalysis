@@ -927,7 +927,7 @@ class State:
             form.superAttacks["18 Ki"].effects["ATK"].duration,
             form.superAttacks["18 Ki"].effects["ATK"].buff,
         )
-        critMultiplier = CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC * BYPASS_DEFENSE_FACTOR
+        critMultiplier = (CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR
         self.preAtkModifer = self.buff["Crit"] * critMultiplier + (
             1 - self.buff["Crit"]
         ) * (
