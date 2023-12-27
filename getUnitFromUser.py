@@ -1589,6 +1589,6 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
     # unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
