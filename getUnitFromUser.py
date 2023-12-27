@@ -4,6 +4,7 @@ import copy
 import pickle
 
 # TODO:
+# - Should change to calculating the APT for N, SA, USA etc instead of attacks as the modifier can change for indivdual ones, e.g. crit chance on super
 # - Should have an output file with the aggregated attributes for each unit so can see in the diffs. Sort of like FlightConfig.
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
@@ -92,10 +93,14 @@ def getConditions(inputHelper):
                 )
                 conditions[i] = EnemyMinHpCondition(enemyMinHpCondition)
             case "Num Attacks Performed":
-                numAttacksPerformedCondition = inputHelper.getAndSaveUserInput("How many performed attacks are required?", default=5)
+                numAttacksPerformedCondition = inputHelper.getAndSaveUserInput(
+                    "How many performed attacks are required?", default=5
+                )
                 conditions[i] = AttacksPerformedCondition(numAttacksPerformedCondition)
             case "Num Attacks Received":
-                numAttacksReceivedCondition = inputHelper.getAndSaveUserInput("How many received attacks are required?", default=5)
+                numAttacksReceivedCondition = inputHelper.getAndSaveUserInput(
+                    "How many received attacks are required?", default=5
+                )
                 conditions[i] = AttacksReceivedCondition(numAttacksReceivedCondition)
             case "Finish Skill Activation":
                 requiredCharge = inputHelper.getAndSaveUserInput("What is the required charge condition?", default=30)
@@ -378,6 +383,10 @@ class Unit:
             # If are in a standby
             if self.standbyFinishSkillAtk != 0:
                 nextForm = True
+                # Only if the trigger condition for the finish is a revive will the unit actually complete the turn
+                if form.abilities[-1].finishSkillChargeCondition == "Revive":
+                    self.states.append(state)
+                    turn = nextTurn
             else:
                 form.numAttacksReceived += state.numAttacksReceived
                 nextForm = form.checkConditions(
@@ -642,8 +651,7 @@ class Form:
         self.linkCommonality /= MAX_NUM_LINKS
 
     def getSuperAttacks(self, rarity, eza):
-        superAttackTypes = ["12 Ki", "18 Ki"]
-        for superAttackType in superAttackTypes:
+        for superAttackType in SUPER_ATTACK_CATEGORIES:
             multiplier = superAttackConversion[
                 self.inputHelper.getAndSaveUserInput(
                     f"What is the form's {superAttackType} super attack multiplier?",
@@ -842,15 +850,31 @@ class State:
         )
         self.aaSA = branchAS(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
         self.aa = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
-        self.attacksPerformed += (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + self.aa * (
-            1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
-        )
+        pAttack = 1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]
+        pNextAttack = pAttack - PROBABILITY_KILL_ENEMY_PER_ATTACK
+        self.attacksPerformed += pAttack + self.aa * pNextAttack
         # Assume Binomial distribution for aaSA for the expected value
-        self.superAttacksPerformed += (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]) + self.aaSA * (
-            1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
-        )
+        self.superAttacksPerformed += pAttack + self.aaSA * pNextAttack
         form.attacksPerformed += self.attacksPerformed
         form.superAttacksPerformed += self.superAttacksPerformed
+        # Compute support bonuses from super attack effects
+        for superAttackType in SUPER_ATTACK_CATEGORIES:
+            if superAttackType == "18 Ki":
+                numSupers = pAttack * self.pUSA
+            else:
+                numSupers = pAttack * self.pSA + self.aaSA * pNextAttack
+            for superAttackEFfect in SUPPORT_SUPER_ATTACK_EFFECTS:
+                supportFactor = (
+                    superAttackSupportFactorConversion[superAttackEFfect]
+                    * form.superAttacks[superAttackType].effects[superAttackEFfect].buff
+                    * (
+                        form.superAttacks[superAttackType].effects[superAttackEFfect].duration
+                        - 1
+                        + (NUM_SLOTS - self.slot) / (NUM_SLOTS - 1)
+                    )
+                )
+            self.support += supportFactor * numSupers
+            self.pNullify += (1 - self.pNullify) * numSupers * P_NULLIFY_FROM_DISABLE * form.superAttacks[superAttackType].effects["Disable Action"].buff
         self.updateStackedStats(form, unit)
         self.normal = getNormal(
             unit.kiMod12,
@@ -1138,9 +1162,9 @@ class ActiveSkillAttack(SingleTurnAbility):
 class StandbyFinishSkill(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        finishSkillChargeCondition, attackMultiplier, self.attackBuff, self.buffPerCharge = args
+        self.finishSkillChargeCondition, attackMultiplier, self.attackBuff, self.buffPerCharge = args
         self.activeMult = specialAttackConversion[attackMultiplier]
-        self.chargePerTurn = form.getCharge(finishSkillChargeCondition)
+        self.chargePerTurn = form.getCharge(self.finishSkillChargeCondition)
 
     def applyToState(self, state, unit=None, form=None):
         form.charge += self.chargePerTurn
@@ -1241,8 +1265,8 @@ class StartOfTurn(PassiveAbility):
                 match self.effect:
                     case "Disable Action":
                         state.pNullify = (
-                            P_NULLIFY_FROM_DISABLE_ACTIVE * (1 - state.pNullify)
-                            + (1 - P_NULLIFY_FROM_DISABLE_ACTIVE) * state.pNullify
+                            P_NULLIFY_FROM_DISABLE * (1 - state.pNullify)
+                            + (1 - P_NULLIFY_FROM_DISABLE) * state.pNullify
                         )
                     case "AdditionalSuper":
                         state.aaPSuper.append(activationProbability)
@@ -1536,5 +1560,5 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
     # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")

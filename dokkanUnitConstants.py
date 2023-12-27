@@ -64,6 +64,7 @@ SUPER_ATTACK_MULTIPLIER_NAMES = [
     "Colossal",
     "Mega-Colossal",
 ]
+SUPER_ATTACK_CATEGORIES = ["12 Ki", "18 Ki"]
 DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES = {"12 Ki": "Immense", "18 Ki": "Mega-Colossal"}
 TUR_SUPER_ATTACK_LEVELS = [10, 15]
 LR_SUPER_ATTACK_LEVELS = [20, 25]
@@ -185,10 +186,8 @@ NUM_ATTACKS_DIRECTED = (
     + NUM_ATTACKS_SLOT_SPECIFIC_BEFORE_ATTACKING
     + NUM_ATTACKS_SLOT_SPECIFIC_AFTER_ATTACKING * (1 - PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS)
 )
-P_NULLIFY_FROM_DISABLE_ACTIVE = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN
-P_NULLIFY_FROM_DISABLE_SUPER = (
-    NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING
-) * P_NULLIFY_FROM_DISABLE_ACTIVE
+P_NULLIFY_FROM_DISABLE = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN
+P_NULLIFY_FROM_DISABLE_SUPER = (NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING) * P_NULLIFY_FROM_DISABLE
 NUM_SUPER_ATTACKS_SLOT_SPECIFIC = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN * NUM_ATTACKS_SLOT_SPECIFIC
 NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING = np.array(
     [NUM_SUPER_ATTACKS_SLOT_SPECIFIC[0] * PRE_SLOT_1_ATTACK_FRAC, 0, 0]
@@ -431,8 +430,13 @@ EFFECTS = [
 ]
 EFFECTS.extend(SUPPORT_EFFECTS)
 EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)
-SUPER_ATTACK_EFFECTS = ["ATK", "DEF", "Crit", "Disable Action"]
 STACK_EFFECTS = ["ATK", "DEF"]
+SUPPORT_SUPER_ATTACK_EFFECTS = ["Raise Allies ATK"]
+# 100% atk increase support == 1.875 support points
+ATK_SUPPORT = 1.875  # Guesstimate
+SUPER_ATTACK_SUPPORT_FACTORS = [1 / 5 * ATK_SUPPORT]
+OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action"]
+SUPER_ATTACK_EFFECTS = STACK_EFFECTS + SUPPORT_SUPER_ATTACK_EFFECTS + OTHER_SUPER_ATTACK_EFFECTS
 
 # Conditions
 CONDITIONS = [
@@ -442,7 +446,7 @@ CONDITIONS = [
     "Max Enemy HP",
     "Min Enemy HP",
     "Num Attacks Performed",
-    "Num Attacks Recieved",
+    "Num Attacks Received",
     "Finish Skill Activation",
 ]
 OR_AND = ["OR", "AND"]
@@ -549,13 +553,24 @@ attackAllDebuffConversion = dict(zip(ATTACK_ALL_SCORE, ATTACK_ALL_DEBUFF_FACTOR)
 
 # Support
 supportFactorConversion = dict(zip(SUPPORT_EFFECTS, SUPPORT_FACTORS))
+superAttackSupportFactorConversion = dict(zip(SUPPORT_SUPER_ATTACK_EFFECTS, SUPER_ATTACK_SUPPORT_FACTORS))
 
 # Orb Changing
 orbTypeNoOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_NO_ORB_CHANGING))
 orbTypeOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_TYPE_ORB_CHANGING))
 orbTypeDoubleOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_DOUBLE_ORB_CHANGING))
 orbTypeRainbowOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_RAINBOW_ORB_CHANGING))
-orbChangeConversion = dict(zip(ORB_CHANGING_TYPES, [orbTypeNoOrbChangingConversion, orbTypeOrbChangingConversion, orbTypeDoubleOrbChangingConversion, orbTypeRainbowOrbChangingConversion]))
+orbChangeConversion = dict(
+    zip(
+        ORB_CHANGING_TYPES,
+        [
+            orbTypeNoOrbChangingConversion,
+            orbTypeOrbChangingConversion,
+            orbTypeDoubleOrbChangingConversion,
+            orbTypeRainbowOrbChangingConversion,
+        ],
+    )
+)
 
 # Counters
 counterAttackConversion = dict(zip(COUNTER_ATTACK_MULTIPLIER_NAMES, COUNTER_ATTACK_MULTIPLIERS))
