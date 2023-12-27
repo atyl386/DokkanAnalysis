@@ -1292,6 +1292,10 @@ class StartOfTurn(PassiveAbility):
                 state.p1Buff[self.effect] += effectiveBuff
             else:  # Edge cases
                 match self.effect:
+                    case "Dmg Red":
+                        state.dmgRedA += effectiveBuff
+                        state.dmgRedB += effectiveBuff
+                        state.buff["Dmg Red against Normals"] += effectiveBuff
                     case "Disable Action":
                         state.pNullify = (
                             P_NULLIFY_FROM_DISABLE * (1 - state.pNullify)
@@ -1399,11 +1403,16 @@ class PerSuperAttackPerformed(PassiveAbility):
             case "DEF":
                 state.p2DefB += min(turnBuff + previousBuff, self.max)
             # Have to make a special case for ki as only applies to future states
+            # Just setting previous buff doesn't work as is required before it would be set in next state
             case "Ki":
                 form.extraKi = min(form.extraKi + turnBuff, self.max)
             case "Crit":
                 state.buff["Crit"] += previousBuffCapped
                 state.critPerSuperPerformed = np.minimum(buffPerSuper, self.max - previousBuffCapped)
+            case "Dmg Red":
+                state.dmgRedA += min(previousBuff, self.max)
+                state.dmgRedB += min(turnBuff + previousBuff, self.max)
+                state.buff["Dmg Red against Normals"] += min(turnBuff + previousBuff, self.max)
 
 
 class PerAttackReceived(PassiveAbility):
@@ -1594,6 +1603,6 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
     unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
