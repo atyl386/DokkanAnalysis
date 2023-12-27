@@ -396,6 +396,14 @@ class Unit:
                 turn = nextTurn
 
     def saveUnit(self):
+        # Output the unit's attributes to a .txt file
+        outputFilePath = os.path.join(CWD, "DokkanKitOutputs", self.id + ".txt")
+        outputFile = open(outputFilePath, 'w')
+        for i, state in enumerate(self.states):
+            outputFile.write(f"State # {i} / Turn # {state.turn} \n \n")
+            for j, attribute in enumerate(state.attributes):
+                outputFile.write(f"{ATTTRIBUTE_NAMES[j]}: {attribute} \n")
+            outputFile.write("\n")
         # Can't pickle this for some reason, but ok as only needed for inputting data.
         self.inputHelper.file = None
         with open(self.picklePath, "wb") as outp:  # Overwrites any existing file.

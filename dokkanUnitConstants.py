@@ -9,6 +9,9 @@ CWD = os.getcwd()
 COMMENT_CHAR = "#"
 END_OF_FILE_STRING = ""
 
+# Attributes
+ATTTRIBUTE_NAMES = ["Leader Skill", "SBR", "HP", "Useability", "Healing", "Support", "APT", "Normal Defence", "Super Attack Defence", "Slot Bonus"]
+
 # High-level Unit constants
 EXCLUSIVITIES = ["DF", "DFLR", "LR", "CLR", "BU", "F2P", "F2PLR", "Super Strike"]
 # elements correspond to EXCLUSIVITIES
