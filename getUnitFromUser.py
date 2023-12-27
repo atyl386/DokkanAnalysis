@@ -4,7 +4,8 @@ import copy
 import pickle
 
 # TODO:
-# - Should change to calculating the APT for N, SA, USA etc instead of attacks as the modifier can change for indivdual ones, e.g. crit chance on super
+# - Still need to add in crit chance from supers into apt calcs
+# - previous calcs for apt when had buffs per super attack performed were wrong because didn't include HP buffs.
 # - Should have an output file with the aggregated attributes for each unit so can see in the diffs. Sort of like FlightConfig.
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
@@ -843,7 +844,12 @@ class State:
         )
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
-        self.avgAtk = 0
+        # Required for getting APTs for individual attacks
+        self.atkPerAttackPerformed = np.zeros(MAX_TURN)
+        self.atkPerSuperPerformed = np.zeros(MAX_TURN)
+        self.critPerAttackPerformed = np.zeros(MAX_TURN)
+        self.critPerSuperPerformed = np.zeros(MAX_TURN)
+        self.APT = 0
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
 
     def setState(self, unit, form):
@@ -921,7 +927,18 @@ class State:
             form.superAttacks["18 Ki"].effects["ATK"].duration,
             form.superAttacks["18 Ki"].effects["ATK"].buff,
         )
-        self.avgAtk += getAvgAtk(
+        critMultiplier = CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC * BYPASS_DEFENSE_FACTOR
+        self.preAtkModifer = self.buff["Crit"] * critMultiplier + (
+            1 - self.buff["Crit"]
+        ) * (
+            self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
+            + (1 - self.buff["AEAAT"])
+            * (
+                self.buff["Disable Guard"] * (DISABLE_GUARD_MULTIPLIER + unit.TAB * DISABLE_GUARD_TAB_INC)
+                + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + unit.TAB * DEFAULT_TAB_INC)
+            )
+        )
+        self.APT += getAPT(
             self.aaPSuper,
             form.superAttacks["12 Ki"].multiplier,
             unit.nCopies,
@@ -930,6 +947,7 @@ class State:
             form.superAttacks["18 Ki"].effects["ATK"].buff,
             self.stackedStats["ATK"],
             self.p1Buff["ATK"],
+            self.p2Buff["ATK"],
             self.normal,
             self.sa,
             self.usa,
@@ -944,29 +962,27 @@ class State:
             unit.rarity,
             self.slot,
             form.canAttack,
+            self.buff["Crit"],
+            critMultiplier,
+            self.preAtkModifer,
+            self.atkPerAttackPerformed,
+            self.atkPerSuperPerformed,
+            self.critPerAttackPerformed,
+            self.critPerSuperPerformed,
+            form.superAttacks["12 Ki"].effects["Crit"].buff,
+            form.superAttacks["18 Ki"].effects["Crit"].buff,
         )
         # Apply active skill and finish skill attacks
         for specialAttack in form.specialAttacks:
             specialAttack.applyToState(self, unit, form)
-        self.avgAtkModifer = self.buff["Crit"] * (CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR + (
-            1 - self.buff["Crit"]
-        ) * (
-            self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
-            + (1 - self.buff["AEAAT"])
-            * (
-                self.buff["Disable Guard"] * (DISABLE_GUARD_MULTIPLIER + unit.TAB * DISABLE_GUARD_TAB_INC)
-                + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + unit.TAB * DEFAULT_TAB_INC)
-            )
-        )
-        self.apt = self.avgAtk * self.avgAtkModifer
-        # If previous form has done a stanby finish attack
+        # If previous form has done a standby finish attack
         if unit.standbyFinishSkillAPT != 0:
             # Add that apt onto the resulting form
-            self.apt += unit.standbyFinishSkillAPT
+            self.APT += unit.standbyFinishSkillAPT
             # Set back to 0 so don't apply more than once
             unit.standbyFinishSkillAPT = 0
         # If have activated the standby finish, calculate the apt and store if for next state to apply it
-        unit.standbyFinishSkillAPT = unit.standbyFinishSkillAtk * self.avgAtkModifer
+        unit.standbyFinishSkillAPT = unit.standbyFinishSkillAtk * self.preAtkModifer
         self.getAvgDefMult(form, unit)
         self.avgDefPreSuper = getDefStat(
             unit.DEF, self.p1Buff["DEF"], form.linkDef, self.p2DefA, self.p3Buff["DEF"], self.stackedStats["DEF"]
@@ -1032,7 +1048,7 @@ class State:
             self.useability,  # Requires user input, should make a version that loads from file
             self.healing,
             self.support,
-            self.apt,
+            self.APT,
             self.normalDamageTaken,
             self.saDamageTaken,
             self.slotFactor,
@@ -1123,7 +1139,7 @@ class GiantRageMode(SingleTurnAbility):
             giantRageUnit = copy(unit)
             giantRageUnit.ATK = self.ATK
             self.giantRageModeState.setState(self.giantRageForm, giantRageUnit)  # Calculate the APT of the state
-            state.apt += self.giantRageModeState.apt * NUM_SLOTS * giantRageUnit.giantRageDuration
+            state.APT += self.giantRageModeState.APT * NUM_SLOTS * giantRageUnit.giantRageDuration
             state.support += self.support
 
 
@@ -1151,7 +1167,7 @@ class ActiveSkillAttack(SingleTurnAbility):
             self.activated = True
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.superAttacksPerformed += 1
-            state.avgAtk += getActiveAttack(
+            state.APT += getActiveAtk(
                 unit.kiMod12,
                 rarity2MaxKi[unit.rarity],
                 unit.ATK,
@@ -1162,7 +1178,7 @@ class ActiveSkillAttack(SingleTurnAbility):
                 state.p3Buff["ATK"],
                 self.activeMult,
                 unit.nCopies,
-            )
+            ) * state.preAtkModifer
 
 
 # This skill is to apply to a unit already in it's standyby mode.
@@ -1179,7 +1195,7 @@ class StandbyFinishSkill(SingleTurnAbility):
         if form.checkConditions(self.operator, self.conditions, unit.standbyFinishSkillAtk != 0):
             self.activeMult += self.buffPerCharge * form.charge
             state.p1Buff["ATK"] += self.attackBuff
-            unit.standbyFinishSkillAtk = getActiveAttack(
+            unit.standbyFinishSkillAtk = getActiveAtk(
                 unit.kiMod12,
                 rarity2MaxKi[unit.rarity],
                 unit.ATK,
@@ -1336,20 +1352,24 @@ class PerAttackPerformed(PassiveAbility):
         attacksPerformed = (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[state.slot - 1]) + aa * (
             1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[state.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
         )
-        buffPerAttack = self.effectiveBuff * (np.arange(len(state.aaPSuper)) + 1)
-        turnBuff = np.dot(buffPerAttack, state.aaPSuper)
+        buffPerAttack = self.effectiveBuff * (np.arange(len(state.aaPSuper) + 1) + 1)
+        turnBuff = self.effectiveBuff * attacksPerformed
         previousBuff = self.effectiveBuff * form.attacksPerformed
-        averageBuffWhenAttacking = turnBuff / attacksPerformed
+        previousBuffCapped = min(previousBuff, self.max)
         match self.effect:
             case "ATK":
-                state.p2Buff["ATK"] += min(averageBuffWhenAttacking + previousBuff, self.max)
+                state.p2Buff["ATK"] += previousBuffCapped
+                state.atkPerAttackPerformed = np.minimum(buffPerAttack, self.max - previousBuffCapped)
+                state.atkPerSuperPerformed = state.atkPerAttackPerformed[:]
             case "DEF":
                 state.p2DefB += min(turnBuff + previousBuff, self.max)
             # Have to make a special case for ki as only applies to future states
             case "Ki":
                 form.extraKi = min(form.extraKi + turnBuff, self.max)
             case "Crit":
-                state.buff["Crit"] += min(averageBuffWhenAttacking + previousBuff, self.max)
+                state.buff["Crit"] +=  previousBuffCapped
+                state.critPerAttackPerformed = np.minimum(buffPerAttack, self.max - previousBuffCapped)
+                state.critPerSuperPerformed = state.critPerAttackPerformed[:]
 
 
 class PerSuperAttackPerformed(PassiveAbility):
@@ -1363,20 +1383,22 @@ class PerSuperAttackPerformed(PassiveAbility):
         superAttacksPerformed = (1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[state.slot - 1]) + aaSA * (
             1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[state.slot - 1] - PROBABILITY_KILL_ENEMY_PER_ATTACK
         )
-        buffPerSuper = self.effectiveBuff * (np.arange(len(state.aaPSuper)) + 1)
-        turnBuff = np.dot(buffPerSuper, state.aaPSuper)
+        buffPerSuper = self.effectiveBuff * (np.arange(len(state.aaPSuper) + 1) + 1)
+        turnBuff = self.effectiveBuff * superAttacksPerformed
         previousBuff = self.effectiveBuff * form.superAttacksPerformed
-        averageBuffWhenAttacking = turnBuff / superAttacksPerformed
+        previousBuffCapped = min(previousBuff, self.max)
         match self.effect:
             case "ATK":
-                state.p2Buff["ATK"] += min(averageBuffWhenAttacking + previousBuff, self.max)
+                state.p2Buff["ATK"] += previousBuffCapped
+                state.atkPerSuperPerformed = np.minimum(buffPerSuper, self.max - previousBuffCapped)
             case "DEF":
                 state.p2DefB += min(turnBuff + previousBuff, self.max)
             # Have to make a special case for ki as only applies to future states
             case "Ki":
                 form.extraKi = min(form.extraKi + turnBuff, self.max)
             case "Crit":
-                state.buff["Crit"] += min(averageBuffWhenAttacking + previousBuff, self.max)
+                state.buff["Crit"] +=  previousBuffCapped
+                state.critPerSuperPerformed = np.minimum(buffPerSuper, self.max - previousBuffCapped)
 
 
 class PerAttackReceived(PassiveAbility):
@@ -1567,6 +1589,6 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
     # unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")

@@ -39,22 +39,25 @@ def KiModifier(base, ki):
         return np.linspace(base, 2, 13)[ki - 12]
 
 
-def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo):
-    """Returns the total remaining ATK of a unit in a turn recursively"""
-    normal = mN * n_0
-    additional12Ki = m12 * a12_0
+def branchAPT(i, nAA, m12, mN, p2Atk, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo, pCrit, critMultiplier, atkModifer, p2AtkBuff, critBuff, atkPerAttackPerformed, critPerAttackPerformed, atkPerSuperPerformed, critPerSuperPerformed):
+    """Returns the total remaining APT of a unit in a turn recursively"""
+    p2AtkFactor = (p2Atk + p2AtkBuff) / p2Atk
+    normal = mN * n_0 * p2AtkFactor * atkModifer
+    additional12Ki = m12 * a12_0 * p2AtkFactor * atkModifer
     if i == nAA - 1:  # If no more additional attacks
         return 0.5 * pAA * (additional12Ki + normal)  # Add average hidden-potential attack damage
     else:
         i += 1  # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
         # Add damage if don't get any additional attacks
-        tempAtk0 = branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo)
-        tempAtk1 = branchAtk(
+        tempAPT0 = branchAPT(i, nAA, m12, mN, p2Atk, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo, pCrit, critMultiplier, atkModifer, p2AtkBuff, critBuff, atkPerAttackPerformed, critPerAttackPerformed, atkPerSuperPerformed, critPerSuperPerformed)
+        pCrit1 = (pCrit - critBuff) / (1 - critBuff) * (1 - critPerAttackPerformed[0]) + critPerAttackPerformed[0]
+        tempAPT1 = branchAPT(
             i,
             nAA,
             m12,
             mN,
+            p2Atk,
             pAA + pHiPo * (1 - pHiPo) ** nProcs,
             nProcs + 1,
             pSA,
@@ -63,12 +66,23 @@ def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo):
             a12_0,
             saMult,
             pHiPo,
+            pCrit1,
+            critMultiplier,
+            (atkModifer - critMultiplier * pCrit) / (1 - pCrit) * (1 - pCrit1) + pCrit1 * critMultiplier,
+            atkPerAttackPerformed[0],
+            critPerAttackPerformed[0],
+            atkPerAttackPerformed[1:],
+            critPerAttackPerformed[1:],
+            atkPerSuperPerformed,
+            critPerSuperPerformed,
         )
-        tempAtk2 = branchAtk(
+        pCrit2 = (pCrit - critBuff) / (1 - critBuff) * (1 - critPerSuperPerformed[0]) + critPerSuperPerformed[0]
+        tempAPT2 = branchAPT(
             i,
             nAA,
             m12 + saMult,
             mN + saMult,
+            p2Atk,
             pAA + pHiPo * (1 - pHiPo) ** nProcs,
             nProcs + 1,
             pSA,
@@ -77,9 +91,18 @@ def branchAtk(i, nAA, m12, mN, pAA, nProcs, pSA, pG, n_0, a12_0, saMult, pHiPo):
             a12_0,
             saMult,
             pHiPo,
+            pCrit2,
+            critMultiplier,
+            (atkModifer - critMultiplier * pCrit) / (1 - pCrit) * (1 - pCrit2) + pCrit2 * critMultiplier,
+            atkPerSuperPerformed[0],
+            critPerSuperPerformed[0],
+            atkPerAttackPerformed,
+            critPerAttackPerformed,
+            atkPerSuperPerformed[1:],
+            critPerSuperPerformed[1:],
         )
-        return pSA[i] * (tempAtk2 + additional12Ki) + (1 - pSA[i]) * (
-            pG[i] * (tempAtk1 + normal) + (1 - pG[i]) * (tempAtk0)
+        return pSA[i] * (tempAPT2 + additional12Ki) + (1 - pSA[i]) * (
+            pG[i] * (tempAPT1 + normal) + (1 - pG[i]) * (tempAPT0)
         )
 
 
@@ -185,7 +208,7 @@ def getUSA(
     return getAtkStat(ATK, p1Atk, linkAtkSoT, p2Atk, p3Atk, kiMultiplier, saMultiplier + sa18Atk + stackedAtk)
 
 
-def getActiveAttack(
+def getActiveAtk(
     kiMod12,
     ki,
     ATK,
@@ -203,7 +226,7 @@ def getActiveAttack(
     return getAtkStat(ATK, p1Atk, linkAtkSoT, p2Atk, p3Atk, kiMultiplier, saMultiplier * (1 + stackedAtk))
 
 
-def getAvgAtk(
+def getAPT(
     AApSuper,
     saMult12,
     nCopies,
@@ -212,6 +235,7 @@ def getAvgAtk(
     sa18Atk,
     stackedAtk,
     p1Atk,
+    p2Atk,
     normal,
     sa,
     usa,
@@ -226,8 +250,17 @@ def getAvgAtk(
     rarity,
     slot,
     canAttack,
+    pCrit0,
+    critMultiplier,
+    preAtkModifer,
+    atkPerAttackPerformed,
+    atkPerSuperPerformed,
+    critPerAttackPerformed,
+    critPerSuperPerformed,
+    sa12Crit,
+    sa18Crit,
 ):
-    """Returns the average ATK stat of a unit in a turn"""
+    """Returns the APT of a unit in a turn"""
     if canAttack:
         # Number of additional attacks from passive in each turn
         nAA = len(AApSuper)
@@ -245,13 +278,16 @@ def getAvgAtk(
             NUM_ATTACKS_DIRECTED[slot] * normalCounterMult
             + NUM_SUPER_ATTACKS_DIRECTED[slot] * pCounterSA * saCounterMult
         ) * normal
-        avgAtk = pN * (
-            normal
-            + branchAtk(
+        pCritN = pCrit0 * (1 - critPerAttackPerformed[0]) + critPerAttackPerformed[0]
+        pCritSA = pCrit0 * (1 - critPerSuperPerformed[0]) + critPerSuperPerformed[0]
+        apt = pN * (
+            normal * preAtkModifer
+            + branchAPT(
                 i,
                 nAA,
                 m12,
                 baseAtk,
+                p2Atk,
                 pAA,
                 nProcs,
                 pAASA,
@@ -260,14 +296,24 @@ def getAvgAtk(
                 a12_0,
                 sa12Atk,
                 HiPopAA,
+                pCritN,
+                critMultiplier,
+                (preAtkModifer - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritN) + pCritN * critMultiplier,
+                atkPerAttackPerformed[0],
+                critPerAttackPerformed[0],
+                atkPerAttackPerformed[1:],
+                critPerAttackPerformed[1:],
+                atkPerSuperPerformed,
+                critPerSuperPerformed,
             )
         ) + pSA * (
-            sa
-            + branchAtk(
+            sa * preAtkModifer
+            + branchAPT(
                 i,
                 nAA,
                 m12 + sa12Atk,
                 baseAtk + sa18Atk,
+                p2Atk,
                 pAA,
                 nProcs,
                 pAASA,
@@ -276,16 +322,26 @@ def getAvgAtk(
                 a12_0,
                 sa12Atk,
                 HiPopAA,
+                pCritSA,
+                critMultiplier,
+                (preAtkModifer - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritSA) + pCritSA * critMultiplier,
+                atkPerSuperPerformed[0],
+                critPerSuperPerformed[0],
+                atkPerAttackPerformed,
+                critPerAttackPerformed,
+                atkPerSuperPerformed[1:],
+                critPerSuperPerformed[1:],
             )
         )
         if rarity == "LR":  # If  is a LR
-            avgAtk += pUSA * (
-                usa
-                + branchAtk(
+            apt += pUSA * (
+                usa * preAtkModifer
+                + branchAPT(
                     i,
                     nAA,
                     m12 + sa18Atk,
                     1 + p1Atk + stackedAtk + sa18Atk,
+                    p2Atk,
                     pAA,
                     nProcs,
                     pAASA,
@@ -294,12 +350,21 @@ def getAvgAtk(
                     a12_0,
                     sa12Atk,
                     HiPopAA,
+                    pCritSA,
+                    critMultiplier,
+                    (preAtkModifer - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritSA) + pCritSA * critMultiplier,
+                    atkPerSuperPerformed[0],
+                    critPerSuperPerformed[0],
+                    atkPerAttackPerformed,
+                    critPerAttackPerformed,
+                    atkPerSuperPerformed[1:],
+                    critPerSuperPerformed[1:],
                 )
             )
-        avgAtk += counterAtk
+        apt += counterAtk * preAtkModifer
     else:
-        avgAtk = 0
-    return avgAtk
+        apt = 0
+    return apt
 
 
 def getDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
