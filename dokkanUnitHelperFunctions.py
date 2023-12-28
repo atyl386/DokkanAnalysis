@@ -449,3 +449,9 @@ def getDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
         / (maxDamage * AVG_TYPE_ADVANATGE),
         0,
     )
+
+def aprioriProbMod(p, knownApriori):
+    if knownApriori:
+        return 1 - (1 - p)**2
+    else:
+        return p

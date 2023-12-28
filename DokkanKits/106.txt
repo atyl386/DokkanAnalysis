@@ -224,6 +224,8 @@ AAChance
 SuperChance
 # What is the probability this ability activates?
 0.7
+# Is the status of this ability known beforehand?
+N
 # What is the value of the buff?
 1.0
 # How many turns does it last for? Only applicable to abilities with a time limit?.

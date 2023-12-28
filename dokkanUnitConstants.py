@@ -453,7 +453,7 @@ ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
 DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
 AVG_SA_MULT = 5
 SUPER_ATTACK_SUPPORT_FACTORS = [ATK_SUPPORT_100_FACTOR / AVG_SA_MULT]
-OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action", "Lowers DEF"]
+OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action", "Lowers ATK", "Lowers DEF"]
 SUPER_ATTACK_EFFECTS = STACK_EFFECTS + SUPPORT_SUPER_ATTACK_EFFECTS + OTHER_SUPER_ATTACK_EFFECTS
 
 # Conditions
