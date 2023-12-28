@@ -46,16 +46,22 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
             )
             # If the status of this ability is known beforehand, scale it to account for this fact.
             if activationProbability != 1:
-                knownApriori = yesNo2Bool[form.inputHelper.getAndSaveUserInput(
-                    "Is the status of this ability known beforehand?", type=clc.Choice(YES_NO, case_sensitive=False), default="N"
-                )]
+                knownApriori = yesNo2Bool[
+                    form.inputHelper.getAndSaveUserInput(
+                        "Is the status of this ability known beforehand?",
+                        type=clc.Choice(YES_NO, case_sensitive=False),
+                        default="N",
+                    )
+                ]
             else:
                 knownApriori = False
             buff = form.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=1.0)
             effectDuration = form.inputHelper.getAndSaveUserInput(
                 "How many turns does it last for? Only applicable to abilities with a time limit?.", default=1
             )
-            ability = abilityClass(form, activationProbability, knownApriori, effect, buff, effectDuration, args=parameters)
+            ability = abilityClass(
+                form, activationProbability, knownApriori, effect, buff, effectDuration, args=parameters
+            )
         elif issubclass(abilityClass, SingleTurnAbility):
             ability = abilityClass(form, parameters)
         abilities.append(ability)
@@ -493,7 +499,7 @@ class Form:
                 TurnDependent,
                 [
                     "What turn does the buff start from?",
-                    "What turn does the buff end on?",
+                    "What turn does the buff end on (last turn active)?",
                 ],
                 [None, None],
                 [self.initialTurn, MAX_TURN],
@@ -777,7 +783,9 @@ class Form:
                     )
                 )
             case "Revive":
-                charge = int(next(ability for ability in self.abilities if isinstance(ability, Revive)).activated == True)
+                charge = int(
+                    next(ability for ability in self.abilities if isinstance(ability, Revive)).activated == True
+                )
         return charge
 
 
@@ -1457,7 +1465,9 @@ class PerAttackReceived(PassiveAbility):
 
 
 class AfterAttackReceived(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, turnsSinceActivated=0, args=[]):
+    def __init__(
+        self, form, activationProbability, knownApriori, effect, buff, effectDuration, turnsSinceActivated=0, args=[]
+    ):
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
         self.turnsSinceActivated = turnsSinceActivated
 
@@ -1481,6 +1491,13 @@ class AfterAttackReceived(PassiveAbility):
             match self.effect:
                 case "DEF":
                     state.p2DefA += effectiveBuff
+                case "AdditionalSuper":
+                    state.aaPSuper.append(self.effectiveBuff)
+                    state.aaPGuarantee.append(0)
+                case "AAChance":
+                    state.aaPGuarantee.append(self.effectiveBuff)
+                case "SuperChance":
+                    state.aaPSuper.append(self.effectiveBuff)
         self.turnsSinceActivated += 1
         # If not still going to be active next turn
         if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:
@@ -1617,7 +1634,7 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    #unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    #unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    #unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    # unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
     unit = Unit(151, 1, "ATT", "ADD", "CRT", inputMode="fromTxt")

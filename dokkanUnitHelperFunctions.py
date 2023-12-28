@@ -450,8 +450,9 @@ def getDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
         0,
     )
 
+
 def aprioriProbMod(p, knownApriori):
     if knownApriori:
-        return 1 - (1 - p)**2
+        return 1 - (1 - p) ** 2
     else:
         return p

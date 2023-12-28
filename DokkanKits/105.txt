@@ -350,7 +350,7 @@ DEF
 2
 # What turn does the buff start from?
 5
-# What turn does the buff end on?
+# What turn does the buff end on (last turn active)?
 8
 # What type of buff does the unit get?
 Guard
@@ -362,7 +362,7 @@ Guard
 1
 # What turn does the buff start from?
 5
-# What turn does the buff end on?
+# What turn does the buff end on (last turn active)?
 8
 # What type of buff does the unit get?
 Rainbow Orb Change
