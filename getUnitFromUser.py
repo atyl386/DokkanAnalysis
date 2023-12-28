@@ -4,7 +4,7 @@ import copy
 import pickle
 
 # TODO:
-#  Bug - Fix charge conditions now that finish skills as applied after state is set.
+# - It might be worht tracking where all the buffs of certain value come from for when debugging
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
 # - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
@@ -768,6 +768,8 @@ class Form:
                         - (NUM_SLOTS - 1) * PROBABILITY_KILL_ENEMY_PER_ATTACK
                     )
                 )
+            case "Revive":
+                charge = int(next(ability for ability in self.abilities if isinstance(ability, Revive)).activated == True)
         return charge
 
 
@@ -1146,6 +1148,26 @@ class GiantRageMode(SingleTurnAbility):
             state.support += self.support
 
 
+class Revive(SingleTurnAbility):
+    def __init__(self, form, args):
+        super().__init__(form)
+        self.hpRegen, self.isThisCharacterOnly = args
+        self.abilities = abilityQuestionaire(
+            form, "How many additional constant buffs does this revive have?", StartOfTurn
+        )
+
+    def applyToState(self, state, unit=None, form=None):
+        if form.checkConditions(self.operator, self.conditions, self.activated) and unit.fightPeak:
+            self.activated = True
+            state.healing = min(state.healing + self.hpRegen, 1)
+            if self.isThisCharacterOnly:
+                state.support += REVIVE_UNIT_SUPPORT_BUFF
+            else:
+                state.support += REVIVE_ROTATION_SUPPORT_BUFF
+            for ability in self.abilities:
+                ability.applyToState(state, unit, form)
+
+
 class ActiveSkillBuff(SingleTurnAbility):
     def __init__(self, form, args=[]):
         super().__init__(form)
@@ -1187,17 +1209,16 @@ class ActiveSkillAttack(SingleTurnAbility):
             )
 
 
-# This skill is to apply to a unit already in it's standyby mode.
+# This skill is to apply to a unit already in it's standby mode.
 # The condition to enter & exit the standy mode will be controlled by regular form changes.
 class StandbyFinishSkill(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.finishSkillChargeCondition, attackMultiplier, self.attackBuff, self.buffPerCharge = args
         self.activeMult = specialAttackConversion[attackMultiplier]
-        self.chargePerTurn = form.getCharge(self.finishSkillChargeCondition)
 
     def applyToState(self, state, unit=None, form=None):
-        form.charge += self.chargePerTurn
+        form.charge += form.getCharge(self.finishSkillChargeCondition)
         if form.checkConditions(self.operator, self.conditions, self.activated):
             self.activated = True
             self.activeMult += self.buffPerCharge * form.charge
@@ -1216,26 +1237,6 @@ class StandbyFinishSkill(SingleTurnAbility):
                 )
                 * state.preAtkModifer
             )
-
-
-class Revive(SingleTurnAbility):
-    def __init__(self, form, args):
-        super().__init__(form)
-        self.hpRegen, self.isThisCharacterOnly = args
-        self.abilities = abilityQuestionaire(
-            form, "How many additional constant buffs does this revive have?", StartOfTurn
-        )
-
-    def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions, self.activated) and unit.fightPeak:
-            self.activated = True
-            state.healing = min(state.healing + self.hpRegen, 1)
-            if self.isThisCharacterOnly:
-                state.support += REVIVE_UNIT_SUPPORT_BUFF
-            else:
-                state.support += REVIVE_ROTATION_SUPPORT_BUFF
-            for ability in self.abilities:
-                ability.applyToState(state, unit, form)
 
 
 class PassiveAbility(Ability):
@@ -1607,6 +1608,6 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
     unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
