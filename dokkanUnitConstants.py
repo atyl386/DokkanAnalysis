@@ -10,7 +10,18 @@ COMMENT_CHAR = "#"
 END_OF_FILE_STRING = ""
 
 # Attributes
-ATTTRIBUTE_NAMES = ["Leader Skill", "SBR", "HP", "Useability", "Healing", "Support", "APT", "Normal Defence", "Super Attack Defence", "Slot Bonus"]
+ATTTRIBUTE_NAMES = [
+    "Leader Skill",
+    "SBR",
+    "HP",
+    "Useability",
+    "Healing",
+    "Support",
+    "APT",
+    "Normal Defence",
+    "Super Attack Defence",
+    "Slot Bonus",
+]
 
 # High-level Unit constants
 EXCLUSIVITIES = ["DF", "DFLR", "LR", "CLR", "BU", "F2P", "F2PLR", "Super Strike"]
@@ -85,12 +96,12 @@ COUNTER_ATTACK_MULTIPLIERS = [0, 3.0, 4.0]
 # Special Attacks
 SPECIAL_ATTACK_MULTIPLIER_NAMES = [
     "NA",
-    "Super-Intense",
     "Mega-Colossal",
+    "Super-Intense",
     "Ultimate",
     "Super-Ultimate",
 ]
-SPECIAL_ATTACK_MULTIPLIERS = [0, 1, 5.0, 5.4, 6.5, 7.5]
+SPECIAL_ATTACK_MULTIPLIERS = [0, 4.4, 5.0, 5.5, 7.5]
 
 # Giant/Rage Form
 GIANT_RAGE_SUPPORT = 2  # Support for nullifying super attacks for a turn
@@ -439,7 +450,7 @@ EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)
 STACK_EFFECTS = ["ATK", "DEF"]
 SUPPORT_SUPER_ATTACK_EFFECTS = ["Raise Allies ATK"]
 ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
-DEF_SUPPORT_100_FACTOR = 3 # 100% def increase support == 3 support points
+DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
 AVG_SA_MULT = 5
 SUPER_ATTACK_SUPPORT_FACTORS = [ATK_SUPPORT_100_FACTOR / AVG_SA_MULT]
 OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action"]
@@ -483,7 +494,18 @@ ATK_DEF_SUPPORT = 0.2
 USEABILITY_SUPPORT_FACTOR = 0.2
 KI_SUPPORT_FACTOR = 0.25  # Guess
 AVG_SOT_STATS = 3
-SUPPORT_FACTORS = [KI_SUPPORT_FACTOR, ATK_SUPPORT_100_FACTOR / AVG_SOT_STATS, DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS, 6.0, 1, 0.125, 0.25, 0.125, 0.25, 0.5]
+SUPPORT_FACTORS = [
+    KI_SUPPORT_FACTOR,
+    ATK_SUPPORT_100_FACTOR / AVG_SOT_STATS,
+    DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS,
+    6.0,
+    1,
+    0.125,
+    0.25,
+    0.125,
+    0.25,
+    0.5,
+]
 
 # Hidden Potential + Equips
 HIPO_PHY = np.array(

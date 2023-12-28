@@ -4,6 +4,7 @@ import copy
 import pickle
 
 # TODO:
+#  Bug - Fix charge conditions now that finish skills as applied after state is set.
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
 # - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
@@ -350,41 +351,49 @@ class Unit:
         turn = 1
         formIdx = 0
         self.fightPeak = False
-        # When not equal to 0 means are in turn when activated the standby finish skill attack
-        self.standbyFinishSkillAtk = 0
         # Only non-zero in between activating the stanby finish skill attack and applying to subsequent state
         self.standbyFinishSkillAPT = 0
+        previousForm = False
         nextForm = True
+        applyFinishSkillAPT = False
         while turn <= MAX_TURN:
             if nextForm:
-                # If finish standby phase with a finish skill attack, go back to previous form.
-                if self.standbyFinishSkillAtk != 0:
-                    formIdx -= 1
-                    form = self.forms[-2]
-                    # Reset so don't go to next form again
-                    self.standbyFinishSkillAtk = 0
-                else:
-                    formIdx += 1
-                    # Ignore case where turn == 1 as this is when nextForm == True doesn't mean transformation
-                    if turn != 1:
-                        form.transformed = True
-                    form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms)
-                    self.forms.append(form)
-                slot = form.slot
+                formIdx += 1
+                # Ignore case where turn == 1 as this is when nextForm == True doesn't mean transformation
+                if turn != 1:
+                    form.transformed = True
+                form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms)
+                self.forms.append(form)
                 nextForm = False
+            elif previousForm:
+                formIdx -= 1
+                form = self.forms[-2]
+                previousForm = False
+            slot = form.slot
             form.turn = turn
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
             if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN) and not (self.fightPeak):
                 self.fightPeak = True
             state = State(self, form, slot, turn)
             state.setState(self, form)
-            # If are in a standby
-            if self.standbyFinishSkillAtk != 0:
-                nextForm = True
-                # Only if the trigger condition for the finish is a revive will the unit actually complete the turn
-                if form.abilities[-1].finishSkillChargeCondition == "Revive":
-                    self.states.append(state)
+            # If have finished a standby
+            if self.standbyFinishSkillAPT != 0:
+                # If the trigger condition for the finish is a revive, apply APT this turn, otherwise next.
+                try:
+                    hasReviveCounter = form.specialAttacks[-1].finishSkillChargeCondition == "Revive"
+                except:
+                    hasReviveCounter = False
+                if hasReviveCounter:
+                    applyFinishSkillAPT = True
+                    previousForm = True
+                if applyFinishSkillAPT:
+                    state.attributes["APT"] += self.standbyFinishSkillAPT
                     turn = nextTurn
+                    self.standbyFinishSkillAPT = 0
+                    self.states.append(state)
+                else:  # Set this to True so apply APT in next turn (e.g. Buu Bois)
+                    applyFinishSkillAPT = True
+                    previousForm = True
             else:
                 form.numAttacksReceived += state.numAttacksReceived
                 nextForm = form.checkConditions(
@@ -399,8 +408,8 @@ class Unit:
         outputFile = open(outputFilePath, "w")
         for i, state in enumerate(self.states):
             outputFile.write(f"State # {i} / Turn # {state.turn} \n \n")
-            for j, attribute in enumerate(state.attributes):
-                outputFile.write(f"{ATTTRIBUTE_NAMES[j]}: {attribute} \n")
+            for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
+                outputFile.write(f"{attributeName}: {state.attributes[attributeName]} \n")
             outputFile.write("\n")
         # Can't pickle this for some reason, but ok as only needed for inputting data.
         self.inputHelper.file = None
@@ -608,7 +617,7 @@ class Form:
             )
         )
         # The SingleTurnAbility ability will get us the turn condition to activate this ability.
-        self.abilities.extend(
+        self.specialAttacks.extend(
             abilityQuestionaire(
                 self,
                 "How many Standby Finish Skills does the form have?",
@@ -854,7 +863,6 @@ class State:
     def setState(self, unit, form):
         for ability in form.abilities:
             ability.applyToState(self, unit, form)
-        self.p1Buff["ATK"] = np.maximum(self.p1Buff["ATK"], -1)
         self.p2Buff["DEF"] = self.p2DefA + self.p2DefB
         self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
         self.buff["Ki"] = min(round(self.buff["Ki"] + self.randomKi), rarity2MaxKi[unit.rarity])
@@ -977,14 +985,6 @@ class State:
         # Apply active skill and finish skill attacks
         for specialAttack in form.specialAttacks:
             specialAttack.applyToState(self, unit, form)
-        # If previous form has done a standby finish attack
-        if unit.standbyFinishSkillAPT != 0:
-            # Add that apt onto the resulting form
-            self.APT += unit.standbyFinishSkillAPT
-            # Set back to 0 so don't apply more than once
-            unit.standbyFinishSkillAPT = 0
-        # If have activated the standby finish, calculate the apt and store if for next state to apply it
-        unit.standbyFinishSkillAPT = unit.standbyFinishSkillAtk * self.preAtkModifer
         self.getAvgDefMult(form, unit)
         self.avgDefPreSuper = getDefStat(
             unit.DEF, self.p1Buff["DEF"], form.linkDef, self.p2DefA, self.p3Buff["DEF"], self.stackedStats["DEF"]
@@ -1043,7 +1043,7 @@ class State:
         self.useability = (
             unit.teams / NUM_TEAMS_MAX * (1 + USEABILITY_SUPPORT_FACTOR * self.support + form.linkCommonality)
         )
-        self.attributes = [
+        attributeValues = [
             unit.leaderSkill,
             unit.SBR,
             unit.HP,
@@ -1055,6 +1055,7 @@ class State:
             self.saDamageTaken,
             self.slotFactor,
         ]
+        self.attributes = dict(zip(ATTTRIBUTE_NAMES, attributeValues))
 
     def updateStackedStats(self, form, unit):
         # Needs to do two things, remove stacked attack from previous states if worn out and apply new buffs
@@ -1197,20 +1198,23 @@ class StandbyFinishSkill(SingleTurnAbility):
 
     def applyToState(self, state, unit=None, form=None):
         form.charge += self.chargePerTurn
-        if form.checkConditions(self.operator, self.conditions, unit.standbyFinishSkillAtk != 0):
+        if form.checkConditions(self.operator, self.conditions, self.activated):
+            self.activated = True
             self.activeMult += self.buffPerCharge * form.charge
-            state.p1Buff["ATK"] += self.attackBuff
-            unit.standbyFinishSkillAtk = getActiveAtk(
-                unit.kiMod12,
-                rarity2MaxKi[unit.rarity],
-                unit.ATK,
-                state.p1Buff["ATK"],
-                state.stackedStats["ATK"],
-                self.form.linkAtkSoT,
-                state.p2Buff["ATK"],
-                state.p3Buff["ATK"],
-                self.activeMult,
-                unit.nCopies,
+            unit.standbyFinishSkillAPT = (
+                getActiveAtk(
+                    unit.kiMod12,
+                    rarity2MaxKi[unit.rarity],
+                    unit.ATK,
+                    state.p1Buff["ATK"],
+                    state.stackedStats["ATK"],
+                    self.form.linkAtkSoT,
+                    state.p2Buff["ATK"],
+                    state.p3Buff["ATK"],
+                    self.activeMult * (1 + self.attackBuff),
+                    unit.nCopies,
+                )
+                * state.preAtkModifer
             )
 
 
