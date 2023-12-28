@@ -4,6 +4,7 @@ import copy
 import pickle
 
 # TODO:
+# - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
 # - It might be worht tracking where all the buffs of certain value come from for when debugging
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
@@ -269,7 +270,7 @@ class Unit:
                 self.inputHelper.getAndSaveUserInput(
                     "How many turns does the unit seal for?",
                     type=clc.Choice(sealTurnConversion.keys()),
-                    default="0",
+                    default=0,
                 )
             ]
             if seal != 0:
@@ -304,7 +305,7 @@ class Unit:
                 ]
 
             attDebuffPassive = attDebuffTurnConversion[
-                self.inputHelper.self.inputHelper.getAndSaveUserInput(
+                self.inputHelper.getAndSaveUserInput(
                     "How many turns does the unit lower the enemy attack passively?",
                     type=clc.Choice(attDebuffTurnConversion.keys()),
                     default="0",
@@ -319,7 +320,7 @@ class Unit:
                 self.inputHelper.getAndSaveUserInput(
                     "How much of a buff does the unit get when facing multiple enemies?",
                     type=clc.Choice(multipleEnemyBuffConversion.keys(), case_sensitive=False),
-                    default="None",
+                    default="NA",
                 )
             ]
             sbrActiveSkillBuff = 0
@@ -1608,6 +1609,7 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    #unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    #unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    #unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(151, 1, "ATT", "ADD", "CRT", inputMode="fromTxt")

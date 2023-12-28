@@ -38,7 +38,7 @@ LARGE_INT = 1000000
 
 # SBR
 ATT_DEBUFF_PASSIVE_CONVERSION_GRADIENT = 10  # 10% attack down for 2 turns = SBR score of +1
-DEBUFF_DURATIONS = ["0", "1", "2"]  # [turns]
+DEBUFF_DURATIONS = [0, 1, 2]  # [turns]
 SEAL_SCORE_PER_TURN = [0, 0.25, 0.75]  # [SBR metric/chance to seal]
 STUN_SCORE_PER_TURN = [0, 0.5, 1.5]  # [SBR metric/chance to stun]
 ATT_DEBUFF_SCORE_PER_TURN = [0, 1 / 3, 1]  # [SBR metirc/attack debuff score]
@@ -47,7 +47,7 @@ ATT_DEBUFF_ON_ATT_SCORE = [
     0.25,
     0.5,
 ]  # [attack debuff scrore for lower and greatly lower]
-MULTIPLE_ENEMY_BUFF_TIERS = ["None", "Minor", "Moderate", "Major", "Huge"]
+MULTIPLE_ENEMY_BUFF_TIERS = ["NA", "Minor", "Moderate", "Major", "Huge"]
 MULTIPLE_ENEMY_BUFF_SCORES = [0.25, 0.5, 1, 2]  # [SBR metric]
 ATTACK_ALL_SCORE = [0, 1]  # [SBR metric]
 ATTACK_ALL_DEBUFF_FACTOR = [1, 3]  # [-]
@@ -453,7 +453,7 @@ ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
 DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
 AVG_SA_MULT = 5
 SUPER_ATTACK_SUPPORT_FACTORS = [ATK_SUPPORT_100_FACTOR / AVG_SA_MULT]
-OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action"]
+OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action", "Lowers DEF"]
 SUPER_ATTACK_EFFECTS = STACK_EFFECTS + SUPPORT_SUPER_ATTACK_EFFECTS + OTHER_SUPER_ATTACK_EFFECTS
 
 # Conditions
