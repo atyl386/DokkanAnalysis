@@ -4,13 +4,15 @@ import copy
 import pickle
 
 # TODO:
+# - Add Active's which cause form change for only few turns, sort of like turn bases transformations, but opposite
+# - Add Domains
+# - Also might want to include attack all in atk calcs.
 # - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
 # - It might be worht tracking where all the buffs of certain value come from for when debugging
 # - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
 # - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
 # - Add some functionality that can update existing input .txt files with new questions (assuming not relevant to exisiting unit)
-# - Need to incorporate standby skills
 # - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
 # - Instead of asking user how many of something, should ask until they enteran exit key ak a while loop instead of for loop
@@ -385,8 +387,8 @@ class Unit:
                 previousForm = False
             slot = form.slot
             form.turn = turn
-            nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
-            if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN) and not (self.fightPeak):
+            form.nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
+            if abs(PEAK_TURN - turn) < abs(form.nextTurn - PEAK_TURN) and not (self.fightPeak):
                 self.fightPeak = True
             state = State(self, form, slot, turn)
             state.setState(self, form)
@@ -402,7 +404,7 @@ class Unit:
                     previousForm = True
                 if applyFinishSkillAPT:
                     state.attributes["APT"] += self.standbyFinishSkillAPT
-                    turn = nextTurn
+                    turn = form.nextTurn
                     self.standbyFinishSkillAPT = 0
                     self.states.append(state)
                 else:  # Set this to True so apply APT in next turn (e.g. Buu Bois)
@@ -414,7 +416,7 @@ class Unit:
                     form.formChangeConditionOperator, form.formChangeConditions, form.transformed
                 )
                 self.states.append(state)
-                turn = nextTurn
+                turn = form.nextTurn
 
     def saveUnit(self):
         # Output the unit's attributes to a .txt file
@@ -1284,7 +1286,7 @@ class StartOfTurn(PassiveAbility):
         self.end = end
         self.ki = ki
         self.slots = slots
-        self.effectiveBuff = buff * activationProbability * effectDuration
+        self.effectiveBuff = buff * activationProbability
 
     def applyToState(self, state, unit=None, form=None):
         # Need to update in case one of the relevant variables has been updated
@@ -1296,7 +1298,7 @@ class StartOfTurn(PassiveAbility):
             + form.linkKi
         )
         pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
-        effectiveBuff = self.effectiveBuff * pHaveKi
+        effectiveBuff = self.effectiveBuff * pHaveKi * min(self.effectDuration, RETURN_PERIOD_PER_SLOT[state.slot - 1])
         activationProbability = self.activationProbability * pHaveKi
         # Check if state is elligible for ability
         if state.turn >= self.start and state.turn <= self.end and state.slot in self.slots:
@@ -1562,7 +1564,7 @@ class Condition:
 class TurnCondition(Condition):
     def __init__(self, turnCondition):
         self.conditionValue = turnCondition
-        self.formAttr = "turn"
+        self.formAttr = "nextTurn"
 
 
 class ProbabilityCondition(Condition):
@@ -1634,7 +1636,7 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    # unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    # unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    # unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(151, 1, "ATT", "ADD", "CRT", inputMode="fromTxt")
+    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(151, 1, "ATK", "ADD", "CRT", inputMode="fromTxt")

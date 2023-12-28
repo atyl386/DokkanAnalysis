@@ -453,7 +453,7 @@ ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
 DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
 AVG_SA_MULT = 5
 SUPER_ATTACK_SUPPORT_FACTORS = [ATK_SUPPORT_100_FACTOR / AVG_SA_MULT]
-OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action", "Lowers ATK", "Lowers DEF"]
+OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action", "Lowers ATK", "Lowers DEF", "Attack All"]
 SUPER_ATTACK_EFFECTS = STACK_EFFECTS + SUPPORT_SUPER_ATTACK_EFFECTS + OTHER_SUPER_ATTACK_EFFECTS
 
 # Conditions
@@ -578,7 +578,7 @@ stunTurnConversion = dict(zip(DEBUFF_DURATIONS, STUN_SCORE_PER_TURN))
 attDebuffTurnConversion = dict(zip(DEBUFF_DURATIONS, ATT_DEBUFF_SCORE_PER_TURN))
 attDebuffOnAttackConversion = dict(zip(ATT_DEBUFF_ON_ATT_NAMES, ATT_DEBUFF_ON_ATT_SCORE))
 multipleEnemyBuffConversion = dict(zip(MULTIPLE_ENEMY_BUFF_TIERS, MULTIPLE_ENEMY_BUFF_SCORES))
-attackAllConversion = dict(zip(YES_NO, ATTACK_ALL_SCORE))
+attackAllConversion = dict(zip(YES_NO, [1, 0]))
 attackAllDebuffConversion = dict(zip(ATTACK_ALL_SCORE, ATTACK_ALL_DEBUFF_FACTOR))
 
 # Support
@@ -654,7 +654,7 @@ HIPO_D2 = {
     ("DGE", "CRT"): [0, 0, 0, 0.06, 0.06],
 }
 HIPO_BRZ = {
-    "ATT": [BRZ_STAT, 0, 0, 0, 0],
+    "ATK": [BRZ_STAT, 0, 0, 0, 0],
     "DEF": [0, BRZ_STAT, 0, 0, 0],
     "ADD": [0, 0, 2 * BRZ_HIPO, 0, 0],
     "CRT": [0, 0, 0, 2 * BRZ_HIPO, 0],
