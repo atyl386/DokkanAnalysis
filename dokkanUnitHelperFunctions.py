@@ -314,7 +314,7 @@ def getAPT(
     canAttack,
     pCrit0,
     critMultiplier,
-    preAtkModifer,
+    preAtkModifier,
     atkPerAttackPerformed,
     atkPerSuperPerformed,
     critPerAttackPerformed,
@@ -346,7 +346,7 @@ def getAPT(
             pCrit0 + (1 - pCrit0) * (critPerSuperPerformed[0] + (1 - critPerSuperPerformed[0]) * sa18Crit), 1
         )
         apt = pN * (
-            normal * preAtkModifer
+            normal * preAtkModifier
             + branchAPT(
                 i,
                 nAA,
@@ -363,7 +363,7 @@ def getAPT(
                 HiPopAA,
                 pCritN,
                 critMultiplier,
-                (preAtkModifer - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritN) + pCritN * critMultiplier,
+                (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritN) + pCritN * critMultiplier,
                 atkPerAttackPerformed[0],
                 critPerAttackPerformed[0],
                 atkPerAttackPerformed[1:],
@@ -374,7 +374,7 @@ def getAPT(
                 sa12Crit,
             )
         ) + pSA * (
-            sa * preAtkModifer
+            sa * preAtkModifier
             + branchAPT(
                 i,
                 nAA,
@@ -391,7 +391,7 @@ def getAPT(
                 HiPopAA,
                 pCritSA,
                 critMultiplier,
-                (preAtkModifer - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritSA) + pCritSA * critMultiplier,
+                (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritSA) + pCritSA * critMultiplier,
                 atkPerSuperPerformed[0],
                 critPerSuperPerformed[0],
                 atkPerAttackPerformed,
@@ -404,7 +404,7 @@ def getAPT(
         )
         if rarity == "LR":  # If  is a LR
             apt += pUSA * (
-                usa * preAtkModifer
+                usa * preAtkModifier
                 + branchAPT(
                     i,
                     nAA,
@@ -421,7 +421,7 @@ def getAPT(
                     HiPopAA,
                     pCritUSA,
                     critMultiplier,
-                    (preAtkModifer - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritSA)
+                    (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritSA)
                     + pCritUSA * critMultiplier,
                     atkPerSuperPerformed[0],
                     critPerSuperPerformed[0],
@@ -433,7 +433,7 @@ def getAPT(
                     sa12Crit,
                 )
             )
-        apt += counterAtk * preAtkModifer
+        apt += counterAtk * preAtkModifier
     else:
         apt = 0
     return apt

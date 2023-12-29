@@ -934,7 +934,7 @@ class State:
             ability.applyToState(self, unit, form)
         self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
         critMultiplier = (CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR
-        self.preAtkModifer = self.buff["Crit"] * critMultiplier + (1 - self.buff["Crit"]) * (
+        self.preAtkModifier = self.buff["Crit"] * critMultiplier + (1 - self.buff["Crit"]) * (
             self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
             + (1 - self.buff["AEAAT"])
             * (
@@ -1052,7 +1052,7 @@ class State:
             form.canAttack,
             self.buff["Crit"],
             critMultiplier,
-            self.preAtkModifer,
+            self.preAtkModifier,
             self.atkPerAttackPerformed,
             self.atkPerSuperPerformed,
             self.critPerAttackPerformed,
@@ -1298,7 +1298,7 @@ class ActiveSkillAttack(SingleTurnAbility):
                     self.activeMult,
                     unit.nCopies,
                 )
-                * state.preAtkModifer
+                * state.preAtkModifier
             )
 
 
@@ -1328,7 +1328,7 @@ class StandbyFinishSkill(SingleTurnAbility):
                     self.activeMult * (1 + self.attackBuff),
                     unit.nCopies,
                 )
-                * state.preAtkModifer
+                * state.preAtkModifier
             )
 
 
