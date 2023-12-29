@@ -208,7 +208,7 @@ DEF
 0
 # How many active skill buffs does the form have?
 0
-# How many Standby Finish Skills does the form have?
+# How many Non-Revival Counterattack Standby Finish Skills does the form have?
 0
 # How many ki sphere dependent buffs does the form have?
 0
@@ -273,6 +273,8 @@ Crit
 # How many different nullification abilities does the form have?
 0
 # How many revive skills does the form have?
+0
+# How many Revival Counterattack Finish Skills does the form have?
 0
 # How many conditions have to met?
 2
@@ -384,7 +386,7 @@ Rainbow Orb Change
 0
 # How many active skill buffs does the form have?
 0
-# How many Standby Finish Skills does the form have?
+# How many Non-Revival Counterattack Standby Finish Skills does the form have?
 1
 # What is the type of the Finish Effect condition?
 Ki sphere obtained by allies
@@ -425,6 +427,8 @@ Dmg Red
 # How many different nullification abilities does the form have?
 0
 # How many revive skills does the form have?
+0
+# How many Revival Counterattack Finish Skills does the form have?
 0
 # How many conditions have to met?
 -1

@@ -9,6 +9,9 @@ CWD = os.getcwd()
 COMMENT_CHAR = "#"
 END_OF_FILE_STRING = ""
 
+# Phases of a Turn
+PHASES = ["Start of Turn", "Active / Finish Skills", "Collect Ki", "Attacks"]
+
 # Attributes
 ATTTRIBUTE_NAMES = [
     "Leader Skill",
@@ -459,6 +462,7 @@ AVG_SA_MULT = 5
 SUPER_ATTACK_SUPPORT_FACTORS = [ATK_SUPPORT_100_FACTOR / AVG_SA_MULT]
 OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action", "Lowers ATK", "Lowers DEF", "Attack All"]
 SUPER_ATTACK_EFFECTS = STACK_EFFECTS + SUPPORT_SUPER_ATTACK_EFFECTS + OTHER_SUPER_ATTACK_EFFECTS
+EXTRA_BUFF_EFFECTS = ["ATK", "DEF", "Crit", "Ki", "Dmg Red"]
 
 # Conditions
 CONDITIONS = [

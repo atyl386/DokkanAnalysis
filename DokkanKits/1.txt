@@ -190,7 +190,7 @@ Turn
 5
 # How many active skill buffs does the form have?
 0
-# How many Standby Finish Skills does the form have?
+# How many Non-Revival Counterattack Standby Finish Skills does the form have?
 0
 # How many ki sphere dependent buffs does the form have?
 0
@@ -224,5 +224,7 @@ Crit
 0.59
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
+# How many Revival Counterattack Finish Skills does the form have?
+0
 # How many conditions have to met?
 -1
