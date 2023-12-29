@@ -1098,8 +1098,7 @@ class State:
         self.healing += (
             form.linkHealing
             + (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1])
-#            * avgDefStartOfTurn
-            * self.avgDefPreSuper
+            * avgDefStartOfTurn
             * self.numSameTypeOrbs
             / AVG_HEALTH
         )
