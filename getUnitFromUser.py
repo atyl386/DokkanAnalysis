@@ -4,7 +4,6 @@ import copy
 import pickle
 
 # TODO:
-# Problem is that some abilities apply buffs later on in the turn than thier cumulative amount is . e.g. perAttackPerformed. I think a good solution to this would be to instead copy a state from the previous isstead of rebulding it from scratch each time.
 # - Should output the states like in v2.0 for newInputStructure to compare.
 # - Add Domains
 # - Also might want to include attack all in atk calcs.
@@ -916,7 +915,7 @@ class State:
             ability.applyToState(self, unit, form)
         self.p2Buff["DEF"] = self.p2DefA + self.p2DefB
         self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
-        self.buff["Ki"] = min(round(self.buff["Ki"] + self.randomKi), rarity2MaxKi[unit.rarity])
+        self.ki = min(round(self.buff["Ki"] + self.randomKi), rarity2MaxKi[unit.rarity])
         self.pN, self.pSA, self.pUSA = getAttackDistribution(
             self.buff["Ki"], self.randomKi, form.intentional12Ki, unit.rarity
         )
@@ -955,7 +954,7 @@ class State:
         self.updateStackedStats(form, unit)
         self.normal = getNormal(
             unit.kiMod12,
-            self.buff["Ki"],
+            self.ki,
             unit.ATK,
             self.p1Buff["ATK"],
             self.stackedStats["ATK"],
@@ -978,7 +977,7 @@ class State:
         )
         self.usa = getUSA(
             unit.kiMod12,
-            self.buff["Ki"],
+            self.ki,
             unit.ATK,
             self.p1Buff["ATK"],
             self.stackedStats["ATK"],
