@@ -1519,6 +1519,8 @@ class PerAttackReceived(PerEvent):
         cappedTurnBuff = min(buffToGo, turnBuff)
         form.extraBuffs[self.effect] += cappedTurnBuff
         match self.effect:
+            case "Ki":
+                state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "DEF":
