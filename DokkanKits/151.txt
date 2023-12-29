@@ -275,11 +275,9 @@ AAChance
 # What type of buff does the unit get?
 SuperChance
 # What is the probability this ability activates?
-0.5
-# Is the status of this ability known beforehand?
-N
-# What is the value of the buff?
 1.0
+# What is the value of the buff?
+0.5
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
 # How many different buffs does the form get on attacks received?

@@ -4,7 +4,6 @@ import copy
 import pickle
 
 # TODO:
-# Only un-explained diffs are 151
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
 # - Move AfterReceiveAttack & PerAttackReceived from Start of Turn to Attack (will also have to change input files)
 # - Should output the states like in v2.0 for newInputStructure to compare.
@@ -1532,21 +1531,21 @@ class AfterAttackReceived(PassiveAbility):
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
         self.turnsSinceActivated = 0
         self.applied = 0
+        self.hitFactor = 1
     def applyToState(self, state, unit=None, form=None):
-        hitFactor = 1
         if self.turnsSinceActivated == 0:
             if self.applied > 0:
                 form.extraBuffs[self.effect] -= self.applied
                 self.applied = 0
             # If buff is a defensive one
             if self.effect in ["DEF", "Dmg Red"]:
-                hitFactor = (
+                self.hitFactor = (
                     state.numAttacksReceived - 1
                 ) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
             else:
-                hitFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
+                self.hitFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
         # geometric cdf
-        turnBuff = self.effectiveBuff * hitFactor * (1 - (1 - self.activationProbability) ** (self.turnsSinceActivated + 1))
+        turnBuff = self.effectiveBuff * self.hitFactor
         buffToGo = (self.effectiveBuff - self.applied)
         cappedTurnBuff = min(buffToGo, turnBuff)
         if self.effect in state.buff.keys():
@@ -1557,12 +1556,12 @@ class AfterAttackReceived(PassiveAbility):
                     state.p2DefA += cappedTurnBuff
                 # These addiotnal super abilities won't be applied correctly if self.effectDuration > 2.
                 case "AdditionalSuper":
-                    state.aaPSuper.append(self.effectiveBuff)
+                    state.aaPSuper.append(cappedTurnBuff)
                     state.aaPGuarantee.append(0)
                 case "AAChance":
-                    state.aaPGuarantee.append(self.effectiveBuff)
+                    state.aaPGuarantee.append(cappedTurnBuff)
                 case "SuperChance":
-                    state.aaPSuper.append(self.effectiveBuff)
+                    state.aaPSuper.append(cappedTurnBuff)
         self.turnsSinceActivated += 1
         # If not still going to be active next turn
         if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:
@@ -1571,6 +1570,7 @@ class AfterAttackReceived(PassiveAbility):
         else:
             form.extraBuffs[self.effect] += cappedTurnBuff
             self.applied += cappedTurnBuff
+            self.hitFactor = 1
 
 
 class KiSphereDependent(PassiveAbility):
