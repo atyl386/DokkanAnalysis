@@ -416,7 +416,10 @@ class Unit:
             else:
                 form.numAttacksReceived += state.numAttacksReceived
                 nextForm = form.checkConditions(
-                    form.formChangeConditionOperator, form.formChangeConditions, form.transformed, form.newForm,
+                    form.formChangeConditionOperator,
+                    form.formChangeConditions,
+                    form.transformed,
+                    form.newForm,
                 )
                 self.states.append(state)
                 turn = nextTurn
@@ -489,7 +492,7 @@ class Form:
         self.getLinks()
         assert len(np.unique(self.linkNames)) == MAX_NUM_LINKS, "Duplicate links"
         self.getSuperAttacks(self.rarity, self.EZA)
-################################################ Turn Start #####################################################
+        ################################################ Turn Start #####################################################
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -545,7 +548,7 @@ class Form:
                 ["Increase Damage Received", 0.3, 0.5],
             )
         )
-############################################ Active / Finish Skills ###############################################
+        ############################################ Active / Finish Skills ###############################################
         self.abilities["Active / Finish Skills"].extend(
             abilityQuestionaire(
                 self,
@@ -586,7 +589,7 @@ class Form:
                 ["Ki sphere obtained by allies", "Super-Ultimate", 1.0, 0.1],
             )
         )
-############################################## Collect Ki ##################################################
+        ############################################## Collect Ki ##################################################
         self.abilities["Collect Ki"].extend(
             abilityQuestionaire(
                 self,
@@ -611,7 +614,7 @@ class Form:
                 [24],
             )
         )
-############################################## Receive Attacks ##################################################
+        ############################################## Receive Attacks ##################################################
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -629,7 +632,7 @@ class Form:
                 [1.0],
             )
         )
-############################################## Attack Enemy ##################################################
+        ############################################## Attack Enemy ##################################################
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -689,7 +692,7 @@ class Form:
                 ["Super-Ultimate", 1.0],
             )
         )
-################################################ Turn End #####################################################
+        ################################################ Turn End #####################################################
         self.formChangeConditionOperator, self.formChangeConditions = getConditions(self.inputHelper)
         if formIdx < numForms:
             self.newForm = True
@@ -833,7 +836,8 @@ class Form:
                 )
             case "Revive":
                 charge = int(
-                    next(ability for ability in self.abilities["Attack Enemy"] if isinstance(ability, Revive)).activated == True
+                    next(ability for ability in self.abilities["Attack Enemy"] if isinstance(ability, Revive)).activated
+                    == True
                 )
         return charge
 
@@ -888,7 +892,8 @@ class State:
             "Ki": LEADER_SKILL_KI + form.extraBuffs["Ki"],
             "AEAAT": 0,
             "Guard": 0,
-            "Crit": unit.pHiPoCrit + (1 - unit.pHiPoCrit) * (form.linkCrit + (1 - form.linkCrit) * form.extraBuffs["Crit"]),
+            "Crit": unit.pHiPoCrit
+            + (1 - unit.pHiPoCrit) * (form.linkCrit + (1 - form.linkCrit) * form.extraBuffs["Crit"]),
             "Disable Guard": 0,
             "Evade": unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge,
             "Dmg Red against Normals": form.extraBuffs["Dmg Red"],
@@ -1055,7 +1060,14 @@ class State:
             form.superAttacks["18 Ki"].effects["Crit"].buff,
         )
         self.getAvgDefMult(form, unit)
-        avgDefStartOfTurn = getDefStat(unit.DEF, self.p1Buff["DEF"], form.linkDef, form.extraBuffs["DEF"], self.p3Buff["DEF"], self.stackedStats["DEF"])
+        avgDefStartOfTurn = getDefStat(
+            unit.DEF,
+            self.p1Buff["DEF"],
+            form.linkDef,
+            form.extraBuffs["DEF"],
+            self.p3Buff["DEF"],
+            self.stackedStats["DEF"],
+        )
         self.avgDefPreSuper = getDefStat(
             unit.DEF, self.p1Buff["DEF"], form.linkDef, self.p2DefA, self.p3Buff["DEF"], self.stackedStats["DEF"]
         )
@@ -1165,16 +1177,16 @@ class State:
         )
         if unit.rarity == "LR":  # If unit is a LR
             self.avgDefMult += self.pUSA * form.superAttacks["18 Ki"].effects["DEF"].buff
-    
+
     def getAvgAtkMod(self, form, unit):
         return self.buff["Crit"] * unit.critMultiplier + (1 - self.buff["Crit"]) * (
-        self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
-        + (1 - self.buff["AEAAT"])
-        * (
-            self.buff["Disable Guard"] * (DISABLE_GUARD_MULTIPLIER + unit.TAB * DISABLE_GUARD_TAB_INC)
-            + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + unit.TAB * DEFAULT_TAB_INC)
+            self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
+            + (1 - self.buff["AEAAT"])
+            * (
+                self.buff["Disable Guard"] * (DISABLE_GUARD_MULTIPLIER + unit.TAB * DISABLE_GUARD_TAB_INC)
+                + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + unit.TAB * DEFAULT_TAB_INC)
+            )
         )
-    )
 
 
 class Stack:
@@ -1537,6 +1549,7 @@ class AfterAttackReceived(PassiveAbility):
         self.turnsSinceActivated = 0
         self.applied = 0
         self.hitFactor = 1
+
     def applyToState(self, state, unit=None, form=None):
         if self.turnsSinceActivated == 0:
             if self.applied > 0:
@@ -1551,7 +1564,7 @@ class AfterAttackReceived(PassiveAbility):
                 self.hitFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
         # geometric cdf
         turnBuff = self.effectiveBuff * self.hitFactor
-        buffToGo = (self.effectiveBuff - self.applied)
+        buffToGo = self.effectiveBuff - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
