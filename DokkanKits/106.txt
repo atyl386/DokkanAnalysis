@@ -178,8 +178,6 @@ ATK
 0
 # How many different buffs does the form get on attacks received?
 0
-# How many ki sphere dependent buffs does the form have?
-0
 # How many health threshold buffs does the form have?
 2
 # What is the threshold health value?
@@ -206,6 +204,14 @@ DEF
 0.5
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
+# How many active skill attacks does the form have?
+0
+# How many active skill buffs does the form have?
+0
+# How many Standby Finish Skills does the form have?
+0
+# How many ki sphere dependent buffs does the form have?
+0
 # How many ki dependent buffs does the form have?
 3
 # What is the required ki?
@@ -267,12 +273,6 @@ Ki
 # How many different nullification abilities does the form have?
 0
 # How many revive skills does the form have?
-0
-# How many active skill attacks does the form have?
-0
-# How many active skill buffs does the form have?
-0
-# How many Standby Finish Skills does the form have?
 0
 # How many conditions have to met?
 2
@@ -420,27 +420,7 @@ Dmg Red
 0
 # How many different buffs does the form get on attacks received?
 0
-# How many ki sphere dependent buffs does the form have?
-0
 # How many health threshold buffs does the form have?
-0
-# How many ki dependent buffs does the form have?
-0
-# How many different buffs does the form get per attack performed?
-0
-# How many different buffs does the form get per super attack performed?
-0
-# How many different nullification abilities does the form have?
-0
-# How many revive skills does the form have?
-1
-# How much HP is revived with?
-1.0
-# Does the revive only apply to this unit?
-N
-# How many conditions have to met?
-0
-# How many additional constant buffs does this revive have?
 0
 # How many active skill attacks does the form have?
 0
@@ -462,5 +442,25 @@ Super-Intense
 Finish Skill Activation
 # What is the required charge condition?
 1
+# How many ki sphere dependent buffs does the form have?
+0
+# How many ki dependent buffs does the form have?
+0
+# How many different buffs does the form get per attack performed?
+0
+# How many different buffs does the form get per super attack performed?
+0
+# How many different nullification abilities does the form have?
+0
+# How many revive skills does the form have?
+1
+# How much HP is revived with?
+1.0
+# Does the revive only apply to this unit?
+N
+# How many conditions have to met?
+0
+# How many additional constant buffs does this revive have?
+0
 # How many conditions have to met?
 -1

@@ -4,6 +4,7 @@ import copy
 import pickle
 
 # TODO:
+# Problem is that some abilities apply buffs later on in the turn than thier cumulative amount is . e.g. perAttackPerformed. I think a good solution to this would be to instead copy a state from the previous isstead of rebulding it from scratch each time.
 # - Should output the states like in v2.0 for newInputStructure to compare.
 # - Add Domains
 # - Also might want to include attack all in atk calcs.
@@ -488,6 +489,7 @@ class Form:
         self.getLinks()
         assert len(np.unique(self.linkNames)) == MAX_NUM_LINKS, "Duplicate links"
         self.getSuperAttacks(self.rarity, self.EZA)
+################################################ Turn Start #####################################################
         self.abilities.extend(
             abilityQuestionaire(
                 self,
@@ -539,6 +541,73 @@ class Form:
         self.abilities.extend(
             abilityQuestionaire(
                 self,
+                "How many health threshold buffs does the form have?",
+                HealthDependent,
+                ["What is the threshold health value?", "Is it a max HP condition?"],
+                [None, clc.Choice(YES_NO)],
+                [0.5, "Y"],
+            )
+        )
+############################################ Activate Skills ###############################################
+        """         self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many Domain skills does the form have?",
+                Domain,
+                [
+                    "What is the Domain type?",
+                    "How much is the effect?",
+                    "What proportion does it effect?",
+                ],
+                [clc.Choice(DOMAIN_TYPES), None, None],
+                ["Increase Damage Received", 0.3, 0.5],
+            )
+        ) """
+        self.specialAttacks.extend(
+            abilityQuestionaire(
+                self,
+                "How many active skill attacks does the form have?",
+                ActiveSkillAttack,
+                [
+                    "What is the attack multiplier?",
+                    "What is the additional attack buff when performing the attack?",
+                ],
+                [clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False), None],
+                ["Ultimate", 0.0],
+            )
+        )
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
+                "How many active skill buffs does the form have?",
+                ActiveSkillBuff,
+            )
+        )
+        # The SingleTurnAbility ability will get us the turn condition to activate this ability.
+        self.specialAttacks.extend(
+            abilityQuestionaire(
+                self,
+                "How many Standby Finish Skills does the form have?",
+                StandbyFinishSkill,
+                [
+                    "What is the type of the Finish Effect condition?",
+                    "What is the attack multiplier?",
+                    "What is the attack buff when finish is activated?",
+                    "What is the buff per charge?",
+                ],
+                [
+                    clc.Choice(FINISH_EFFECT_CONDITIONS, case_sensitive=False),
+                    clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
+                    None,
+                    None,
+                ],
+                ["Revive", "Super-Ultimate", 1.0, 0.1],
+            )
+        )
+############################################## Collect Ki ##################################################
+        self.abilities.extend(
+            abilityQuestionaire(
+                self,
                 "How many ki sphere dependent buffs does the form have?",
                 KiSphereDependent,
                 [
@@ -553,16 +622,6 @@ class Form:
         self.abilities.extend(
             abilityQuestionaire(
                 self,
-                "How many health threshold buffs does the form have?",
-                HealthDependent,
-                ["What is the threshold health value?", "Is it a max HP condition?"],
-                [None, clc.Choice(YES_NO)],
-                [0.5, "Y"],
-            )
-        )
-        self.abilities.extend(
-            abilityQuestionaire(
-                self,
                 "How many ki dependent buffs does the form have?",
                 KiDependent,
                 ["What is the required ki?"],
@@ -570,6 +629,7 @@ class Form:
                 [24],
             )
         )
+############################################## Attack ##################################################
         self.abilities.extend(
             abilityQuestionaire(
                 self,
@@ -613,48 +673,7 @@ class Form:
                 [0.7, "N"],
             )
         )
-        self.specialAttacks.extend(
-            abilityQuestionaire(
-                self,
-                "How many active skill attacks does the form have?",
-                ActiveSkillAttack,
-                [
-                    "What is the attack multiplier?",
-                    "What is the additional attack buff when performing the attack?",
-                ],
-                [clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False), None],
-                ["Ultimate", 0.0],
-            )
-        )
-        self.abilities.extend(
-            abilityQuestionaire(
-                self,
-                "How many active skill buffs does the form have?",
-                ActiveSkillBuff,
-            )
-        )
-        # The SingleTurnAbility ability will get us the turn condition to activate this ability.
-        self.specialAttacks.extend(
-            abilityQuestionaire(
-                self,
-                "How many Standby Finish Skills does the form have?",
-                StandbyFinishSkill,
-                [
-                    "What is the type of the Finish Effect condition?",
-                    "What is the attack multiplier?",
-                    "What is the attack buff when finish is activated?",
-                    "What is the buff per charge?",
-                ],
-                [
-                    clc.Choice(FINISH_EFFECT_CONDITIONS, case_sensitive=False),
-                    clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
-                    None,
-                    None,
-                ],
-                ["Revive", "Super-Ultimate", 1.0, 0.1],
-            )
-        )
-
+################################################ Turn End #####################################################
         self.formChangeConditionOperator, self.formChangeConditions = getConditions(self.inputHelper)
         if formIdx < numForms:
             self.newForm = True
@@ -1194,8 +1213,26 @@ class Revive(SingleTurnAbility):
                 state.support += REVIVE_UNIT_SUPPORT_BUFF
             else:
                 state.support += REVIVE_ROTATION_SUPPORT_BUFF
-            for ability in self.abilities:
-                ability.applyToState(state, unit, form)
+            form.abilities.extend(self.abilities)
+
+
+# Although these aren't triggered manually, they are currently dealt with this way
+class Domain(SingleTurnAbility):
+    def __init__(self, form, args):
+        super().__init__(form)
+        self.domainType, self.buff, self.prop = args
+        self.abilities = abilityQuestionaire(
+            form, "How many additional buffs are there when this Domain is active?", StartOfTurn
+        )
+
+    def applyToState(self, state, unit=None, form=None):
+        if form.checkConditions(self.operator, self.conditions, False, True):
+            state.healing = min(state.healing + self.hpRegen, 1)
+            if self.isThisCharacterOnly:
+                state.support += REVIVE_UNIT_SUPPORT_BUFF
+            else:
+                state.support += REVIVE_ROTATION_SUPPORT_BUFF
+            form.abilities.extend(self.abilities)
 
 
 class ActiveSkillBuff(SingleTurnAbility):

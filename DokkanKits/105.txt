@@ -178,8 +178,6 @@ Ki (Ki Sphere)
 0
 # How many different buffs does the form get on attacks received?
 0
-# How many ki sphere dependent buffs does the form have?
-0
 # How many health threshold buffs does the form have?
 2
 # What is the threshold health value?
@@ -206,6 +204,14 @@ DEF
 0.5
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
+# How many active skill attacks does the form have?
+0
+# How many active skill buffs does the form have?
+0
+# How many Standby Finish Skills does the form have?
+0
+# How many ki sphere dependent buffs does the form have?
+0
 # How many ki dependent buffs does the form have?
 3
 # What is the required ki?
@@ -267,12 +273,6 @@ Crit
 # How many different nullification abilities does the form have?
 0
 # How many revive skills does the form have?
-0
-# How many active skill attacks does the form have?
-0
-# How many active skill buffs does the form have?
-0
-# How many Standby Finish Skills does the form have?
 0
 # How many conditions have to met?
 2
@@ -378,33 +378,7 @@ Rainbow Orb Change
 0
 # How many different buffs does the form get on attacks received?
 0
-# How many ki sphere dependent buffs does the form have?
-1
-# What type of ki spheres are required?
-Any
-# What is the required amount?
-0
-# Is buff applied when attacking?
-N
-# What type of buff does the unit get?
-Dmg Red
-# What is the probability this ability activates?
-1.0
-# What is the value of the buff?
-0.08
-# How many turns does it last for? Only applicable to abilities with a time limit.
-1
 # How many health threshold buffs does the form have?
-0
-# How many ki dependent buffs does the form have?
-0
-# How many different buffs does the form get per attack performed?
-0
-# How many different buffs does the form get per super attack performed?
-0
-# How many different nullification abilities does the form have?
-0
-# How many revive skills does the form have?
 0
 # How many active skill attacks does the form have?
 0
@@ -426,5 +400,31 @@ Super-Ultimate
 Finish Skill Activation
 # What is the required charge condition?
 39
+# How many ki sphere dependent buffs does the form have?
+1
+# What type of ki spheres are required?
+Any
+# What is the required amount?
+0
+# Is buff applied when attacking?
+N
+# What type of buff does the unit get?
+Dmg Red
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+0.08
+# How many turns does it last for? Only applicable to abilities with a time limit.
+1
+# How many ki dependent buffs does the form have?
+0
+# How many different buffs does the form get per attack performed?
+0
+# How many different buffs does the form get per super attack performed?
+0
+# How many different nullification abilities does the form have?
+0
+# How many revive skills does the form have?
+0
 # How many conditions have to met?
 -1

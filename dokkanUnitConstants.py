@@ -105,6 +105,10 @@ SPECIAL_ATTACK_MULTIPLIERS = [0, 4.4, 5.0, 5.5, 7.5]
 
 # Giant/Rage Form
 GIANT_RAGE_SUPPORT = 2  # Support for nullifying super attacks for a turn
+
+# Domain
+DOMAIN_TYPES = ["Increase Damage Received"]
+
 # Turns
 MAX_TURN = 20
 PEAK_TURN = 5  # Most important turn
