@@ -4,8 +4,7 @@ import copy
 import pickle
 
 # TODO:
-# The diff in 106 is actually a bug fix, we were previously double counting crit in PerSuperAttackPerformed
-# I think the diffs in 1 & 151 are because of PerAttackReceived and AfterReceiveAttack
+# Only un-explained diffs are 151
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
 # - Move AfterReceiveAttack & PerAttackReceived from Start of Turn to Attack (will also have to change input files)
 # - Should output the states like in v2.0 for newInputStructure to compare.
@@ -1703,7 +1702,7 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    #unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    #unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    #unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
     unit = Unit(151, 1, "ATK", "ADD", "CRT", inputMode="fromTxt")
