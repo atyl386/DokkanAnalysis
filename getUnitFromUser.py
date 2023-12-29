@@ -1557,12 +1557,12 @@ class AfterAttackReceived(PassiveAbility):
                     state.p2DefA += cappedTurnBuff
                 # These addiotnal super abilities won't be applied correctly if self.effectDuration > 2.
                 case "AdditionalSuper":
-                    state.aaPSuper.append(cappedTurnBuff)
+                    state.aaPSuper.append(self.effectiveBuff)
                     state.aaPGuarantee.append(0)
                 case "AAChance":
-                    state.aaPGuarantee.append(cappedTurnBuff)
+                    state.aaPGuarantee.append(self.effectiveBuff)
                 case "SuperChance":
-                    state.aaPSuper.append(cappedTurnBuff)
+                    state.aaPSuper.append(self.effectiveBuff)
         self.turnsSinceActivated += 1
         # If not still going to be active next turn
         if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:
