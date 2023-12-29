@@ -134,6 +134,28 @@ Guard
 0
 # How many slot specific buffs does the form have?
 0
+# How many health threshold buffs does the form have?
+0
+# How many active skill attacks does the form have?
+1
+# What is the attack multiplier?
+Ultimate
+# What is the additional attack buff when performing the attack?
+0.5
+# How many conditions have to met before changing into the next form?
+1
+# What type of condition is #0?
+Turn
+# What is the turn condition (relative to the form's starting turn)?
+5
+# How many active skill buffs does the form have?
+0
+# How many Non-Revival Counterattack Standby Finish Skills does the form have?
+0
+# How many ki sphere dependent buffs does the form have?
+0
+# How many ki dependent buffs does the form have?
+0
 # How many different buffs does the form get after receiving an attack?
 2
 # What type of buff does the unit get?
@@ -174,28 +196,6 @@ ATK
 0.1
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
-# How many health threshold buffs does the form have?
-0
-# How many active skill attacks does the form have?
-1
-# What is the attack multiplier?
-Ultimate
-# What is the additional attack buff when performing the attack?
-0.5
-# How many conditions have to met before changing into the next form?
-1
-# What type of condition is #0?
-Turn
-# What is the turn condition (relative to the form's starting turn)?
-5
-# How many active skill buffs does the form have?
-0
-# How many Non-Revival Counterattack Standby Finish Skills does the form have?
-0
-# How many ki sphere dependent buffs does the form have?
-0
-# How many ki dependent buffs does the form have?
-0
 # How many different buffs does the form get per attack performed?
 0
 # How many different buffs does the form get per super attack performed?

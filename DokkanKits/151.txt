@@ -244,6 +244,18 @@ Dmg Red
 1
 # How many slot specific buffs does the form have?
 0
+# How many health threshold buffs does the form have?
+0
+# How many active skill attacks does the form have?
+0
+# How many active skill buffs does the form have?
+0
+# How many Non-Revival Counterattack Standby Finish Skills does the form have?
+0
+# How many ki sphere dependent buffs does the form have?
+0
+# How many ki dependent buffs does the form have?
+0
 # How many different buffs does the form get after receiving an attack?
 4
 # What type of buff does the unit get?
@@ -292,18 +304,6 @@ ATK
 0.25
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
-# How many health threshold buffs does the form have?
-0
-# How many active skill attacks does the form have?
-0
-# How many active skill buffs does the form have?
-0
-# How many Non-Revival Counterattack Standby Finish Skills does the form have?
-0
-# How many ki sphere dependent buffs does the form have?
-0
-# How many ki dependent buffs does the form have?
-0
 # How many different buffs does the form get per attack performed?
 0
 # How many different buffs does the form get per super attack performed?
@@ -448,10 +448,6 @@ Ki
 0
 # How many slot specific buffs does the form have?
 0
-# How many different buffs does the form get after receiving an attack?
-0
-# How many different buffs does the form get on attacks received?
-0
 # How many health threshold buffs does the form have?
 0
 # How many active skill attacks does the form have?
@@ -491,6 +487,10 @@ DEF Support
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
 # How many ki dependent buffs does the form have?
+0
+# How many different buffs does the form get after receiving an attack?
+0
+# How many different buffs does the form get on attacks received?
 0
 # How many different buffs does the form get per attack performed?
 0

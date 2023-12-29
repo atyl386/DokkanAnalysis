@@ -10,7 +10,7 @@ COMMENT_CHAR = "#"
 END_OF_FILE_STRING = ""
 
 # Phases of a Turn
-PHASES = ["Start of Turn", "Active / Finish Skills", "Collect Ki", "Attacks"]
+PHASES = ["Start of Turn", "Active / Finish Skills", "Collect Ki", "Receive Attacks", "Attack Enemy"]
 
 # Attributes
 ATTTRIBUTE_NAMES = [

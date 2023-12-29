@@ -5,7 +5,6 @@ import pickle
 
 # TODO:
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
-# - Move AfterReceiveAttack & PerAttackReceived from Start of Turn to Attack (will also have to change input files)
 # - Should output the states like in v2.0 for newInputStructure to compare.
 # - Add Domains
 # - Also might want to include attack all in atk calcs.
@@ -375,6 +374,7 @@ class Unit:
         self.standbyFinishSkillAPT = 0
         nextForm = 1
         applyFinishSkillAPT = False
+        self.critMultiplier = (CRIT_MULTIPLIER + self.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR
         while turn <= MAX_TURN:
             formIdx += nextForm
             if nextForm == 1:
@@ -398,7 +398,7 @@ class Unit:
             if self.standbyFinishSkillAPT != 0:
                 # If the trigger condition for the finish is a revive, apply APT this turn, otherwise next.
                 try:
-                    hasReviveCounter = form.abilities["Attacks"][-1].finishSkillChargeCondition == "Revive"
+                    hasReviveCounter = form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "Revive"
                 except:
                     hasReviveCounter = False
                 if hasReviveCounter:
@@ -525,23 +525,6 @@ class Form:
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
-                "How many different buffs does the form get after receiving an attack?",
-                AfterAttackReceived,
-            )
-        )
-        self.abilities["Start of Turn"].extend(
-            abilityQuestionaire(
-                self,
-                "How many different buffs does the form get on attacks received?",
-                PerAttackReceived,
-                ["What is the maximum buff?"],
-                [None],
-                [1.0],
-            )
-        )
-        self.abilities["Start of Turn"].extend(
-            abilityQuestionaire(
-                self,
                 "How many health threshold buffs does the form have?",
                 HealthDependent,
                 ["What is the threshold health value?", "Is it a max HP condition?"],
@@ -629,8 +612,26 @@ class Form:
                 [24],
             )
         )
-############################################## Attack ##################################################
-        self.abilities["Attacks"].extend(
+############################################## Receive Attacks ##################################################
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after receiving an attack?",
+                AfterAttackReceived,
+            )
+        )
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get on attacks received?",
+                PerAttackReceived,
+                ["What is the maximum buff?"],
+                [None],
+                [1.0],
+            )
+        )
+############################################## Attack Enemy ##################################################
+        self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
                 "How many different buffs does the form get per attack performed?",
@@ -640,7 +641,7 @@ class Form:
                 [1.0],
             )
         )
-        self.abilities["Attacks"].extend(
+        self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
                 "How many different buffs does the form get per super attack performed?",
@@ -650,7 +651,7 @@ class Form:
                 [1.0],
             )
         )
-        self.abilities["Attacks"].extend(
+        self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
                 "How many different nullification abilities does the form have?",
@@ -660,7 +661,7 @@ class Form:
                 ["N"],
             )
         )
-        self.abilities["Attacks"].extend(
+        self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
                 "How many revive skills does the form have?",
@@ -673,7 +674,7 @@ class Form:
                 [0.7, "N"],
             )
         )
-        self.abilities["Attacks"].extend(
+        self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
                 "How many Revival Counterattack Finish Skills does the form have?",
@@ -833,7 +834,7 @@ class Form:
                 )
             case "Revive":
                 charge = int(
-                    next(ability for ability in self.abilities["Attacks"] if isinstance(ability, Revive)).activated == True
+                    next(ability for ability in self.abilities["Attack Enemy"] if isinstance(ability, Revive)).activated == True
                 )
         return charge
 
@@ -931,21 +932,17 @@ class State:
         for ability in form.abilities["Start of Turn"]:
             ability.applyToState(self, unit, form)
         self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
-        critMultiplier = (CRIT_MULTIPLIER + unit.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR
-        self.preAtkModifier = self.buff["Crit"] * critMultiplier + (1 - self.buff["Crit"]) * (
-            self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
-            + (1 - self.buff["AEAAT"])
-            * (
-                self.buff["Disable Guard"] * (DISABLE_GUARD_MULTIPLIER + unit.TAB * DISABLE_GUARD_TAB_INC)
-                + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + unit.TAB * DEFAULT_TAB_INC)
-            )
-        )
+        self.atkModifier = self.getAvgAtkMod(form, unit)
 
         for ability in form.abilities["Active / Finish Skills"]:
             ability.applyToState(self, unit, form)
 
         for ability in form.abilities["Collect Ki"]:
             ability.applyToState(self, unit, form)
+
+        for ability in form.abilities["Receive Attacks"]:
+            ability.applyToState(self, unit, form)
+        self.atkModifier = self.getAvgAtkMod(form, unit)
         self.p2Buff["DEF"] = self.p2DefA + self.p2DefB
         self.ki = min(round(self.buff["Ki"] + self.randomKi), rarity2MaxKi[unit.rarity])
         self.pN, self.pSA, self.pUSA = getAttackDistribution(
@@ -985,7 +982,7 @@ class State:
                 * form.superAttacks[superAttackType].effects["Disable Action"].buff
             )
 
-        for ability in form.abilities["Attacks"]:
+        for ability in form.abilities["Attack Enemy"]:
             ability.applyToState(self, unit, form)
         self.normal = getNormal(
             unit.kiMod12,
@@ -1049,8 +1046,8 @@ class State:
             self.slot,
             form.canAttack,
             self.buff["Crit"],
-            critMultiplier,
-            self.preAtkModifier,
+            unit.critMultiplier,
+            self.atkModifier,
             self.atkPerAttackPerformed,
             self.atkPerSuperPerformed,
             self.critPerAttackPerformed,
@@ -1170,6 +1167,16 @@ class State:
         )
         if unit.rarity == "LR":  # If unit is a LR
             self.avgDefMult += self.pUSA * form.superAttacks["18 Ki"].effects["DEF"].buff
+    
+    def getAvgAtkMod(self, form, unit):
+        return self.buff["Crit"] * unit.critMultiplier + (1 - self.buff["Crit"]) * (
+        self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
+        + (1 - self.buff["AEAAT"])
+        * (
+            self.buff["Disable Guard"] * (DISABLE_GUARD_MULTIPLIER + unit.TAB * DISABLE_GUARD_TAB_INC)
+            + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + unit.TAB * DEFAULT_TAB_INC)
+        )
+    )
 
 
 class Stack:
@@ -1296,7 +1303,7 @@ class ActiveSkillAttack(SingleTurnAbility):
                     self.activeMult,
                     unit.nCopies,
                 )
-                * state.preAtkModifier
+                * state.atkModifier
             )
 
 
@@ -1326,7 +1333,7 @@ class StandbyFinishSkill(SingleTurnAbility):
                     self.activeMult * (1 + self.attackBuff),
                     unit.nCopies,
                 )
-                * state.preAtkModifier
+                * state.atkModifier
             )
 
 
@@ -1702,7 +1709,7 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    #unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    #unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    #unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(105, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(106, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
     unit = Unit(151, 1, "ATK", "ADD", "CRT", inputMode="fromTxt")
