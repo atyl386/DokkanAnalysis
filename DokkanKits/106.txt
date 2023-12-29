@@ -200,6 +200,8 @@ DEF
 0.5
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
+# How many Domain skills does the form have?
+0
 # How many active skill attacks does the form have?
 0
 # How many active skill buffs does the form have?
@@ -419,6 +421,8 @@ Dmg Red
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
 # How many health threshold buffs does the form have?
+0
+# How many Domain skills does the form have?
 0
 # How many active skill attacks does the form have?
 0

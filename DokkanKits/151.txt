@@ -246,6 +246,8 @@ Dmg Red
 0
 # How many health threshold buffs does the form have?
 0
+# How many Domain skills does the form have?
+0
 # How many active skill attacks does the form have?
 0
 # How many active skill buffs does the form have?
@@ -318,7 +320,7 @@ ATK
 1
 # What type of condition is # 1?
 Turn
-# What is the turn condition? (relative to the form's starting turn & 1 more than final turn)
+# What is the turn condition? (relative to the form's starting turn)
 7
 # Which slot is form # 2 best suited for?
 1
@@ -450,6 +452,28 @@ Ki
 0
 # How many health threshold buffs does the form have?
 0
+# How many Domain skills does the form have?
+1
+# What is the Domain type?
+Increase Damage Received
+# How much is the effect?
+0.3
+# What proportion does it effect?
+0.5
+# How many conditions have to met?
+2
+# Are the condtions ORs or ANDs?
+AND
+# What type of condition is # 1?
+Turn
+# What is the turn condition (relative to the form's starting turn)?
+0
+# What type of condition is # 2?
+Turn
+# What is the turn condition (relative to the form's starting turn)?
+0
+# How many additional buffs are there when this Domain is active?
+0
 # How many active skill attacks does the form have?
 0
 # How many active skill buffs does the form have?
@@ -506,5 +530,5 @@ DEF Support
 1
 # What type of condition is # 1?
 Turn
-# What is the turn condition? (relative to the form's starting turn & 1 more than final turn)
+# What is the turn condition? (relative to the form's starting turn)
 6

@@ -6,7 +6,6 @@ import pickle
 # TODO:
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
 # - Should output the states like in v2.0 for newInputStructure to compare.
-# - Add Domains
 # - Also might want to include attack all in atk calcs.
 # - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
 # - It might be worht tracking where all the buffs of certain value come from for when debugging
@@ -532,8 +531,7 @@ class Form:
                 [0.5, "Y"],
             )
         )
-############################################ Active / Finish Skills ###############################################
-        """         self.abilities["Active / Finish Skills"].extend(
+        self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
                 "How many Domain skills does the form have?",
@@ -546,7 +544,8 @@ class Form:
                 [clc.Choice(DOMAIN_TYPES), None, None],
                 ["Increase Damage Received", 0.3, 0.5],
             )
-        ) """
+        )
+############################################ Active / Finish Skills ###############################################
         self.abilities["Active / Finish Skills"].extend(
             abilityQuestionaire(
                 self,
@@ -1250,18 +1249,18 @@ class Revive(SingleTurnAbility):
 class Domain(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        self.domainType, self.buff, self.prop = args
+        self.domainType, buff, prop = args
+        self.effectiveBuff = buff * aprioriProbMod(prop, True)
         self.abilities = abilityQuestionaire(
             form, "How many additional buffs are there when this Domain is active?", StartOfTurn
         )
 
     def applyToState(self, state, unit=None, form=None):
         if form.checkConditions(self.operator, self.conditions, False, True):
-            state.healing = min(state.healing + self.hpRegen, 1)
-            if self.isThisCharacterOnly:
-                state.support += REVIVE_UNIT_SUPPORT_BUFF
-            else:
-                state.support += REVIVE_ROTATION_SUPPORT_BUFF
+            match self.domainType:
+                case "Increase Damage Received":
+                    state.support += ATK_SUPPORT_100_FACTOR * self.effectiveBuff
+                    state.p3Buff["ATK"] += self.effectiveBuff
             form.abilities["Start of Turn"].extend(self.abilities)
 
 
