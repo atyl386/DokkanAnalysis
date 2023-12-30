@@ -65,24 +65,22 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
     return abilities
 
 
-def getConditions(inputHelper):
+def getCondition(inputHelper):
     """
     Askes the user questions to determine which Condition class(es) apply and returns them. Only want once per condition set.
     """
     numConditions = inputHelper.getAndSaveUserInput("How many conditions have to met?", default=0)
-    conditions = [None] * numConditions
-    operator = [None]
-    if numConditions < 0:
-        return ["NOT"], [[None]]
-    if  numConditions > 1:
-        operator[0] = inputHelper.getAndSaveUserInput(
+    if numConditions < 1:
+        return numConditions
+    if numConditions > 1:
+        operator = inputHelper.getAndSaveUserInput(
             "What is the condition logic?", type=clc.Choice(CONDITION_LOGIC), default="AND"
         )
-    if numConditions > 2:
-        operatorA, conditionsA = getConditions(inputHelper)
-        operatorB, conditionsB = getConditions(inputHelper)
-        return operator + operatorA + operatorB, conditionsA + conditionsB
-
+        if numConditions > 2:
+            conditionA = getCondition(inputHelper)
+            conditionB = getCondition(inputHelper)
+            return CompositeCondition(operator, [conditionA, conditionB])
+    condition = [None] * numConditions
     for i in range(numConditions):
         conditionType = inputHelper.getAndSaveUserInput(
             f"What type of condition is # {i + 1}?", type=clc.Choice(CONDITIONS, case_sensitive=False), default="Turn"
@@ -92,38 +90,40 @@ def getConditions(inputHelper):
                 turnCondition = inputHelper.getAndSaveUserInput(
                     "What is the turn condition (relative to the form's starting turn)?", default=5
                 )
-                conditions[i] = TurnCondition(turnCondition)
+                condition[i] = TurnCondition(turnCondition)
             case "Max HP":
                 maxHpCondition = inputHelper.getAndSaveUserInput("What is the maximum HP condition?", default=0.7)
-                conditions[i] = MaxHpCondition(maxHpCondition)
+                condition[i] = MaxHpCondition(maxHpCondition)
             case "Min HP":
                 minHpCondition = inputHelper.getAndSaveUserInput("What is the minimum HP condition?", default=0.7)
-                conditions[i] = MinHpCondition(minHpCondition)
+                condition[i] = MinHpCondition(minHpCondition)
             case "Enemy Max HP":
                 enemyMaxHpCondition = inputHelper.getAndSaveUserInput(
                     "What is the maximum enemy HP condition?", default=0.5
                 )
-                conditions[i] = EnemyMaxHpCondition(enemyMaxHpCondition)
+                condition[i] = EnemyMaxHpCondition(enemyMaxHpCondition)
             case "Enemy Min HP":
                 enemyMinHpCondition = inputHelper.getAndSaveUserInput(
                     "What is the minimum enemy HP condition?", default=0.5
                 )
-                conditions[i] = EnemyMinHpCondition(enemyMinHpCondition)
+                condition[i] = EnemyMinHpCondition(enemyMinHpCondition)
             case "Num Attacks Performed":
                 numAttacksPerformedCondition = inputHelper.getAndSaveUserInput(
                     "How many performed attacks are required?", default=5
                 )
-                conditions[i] = AttacksPerformedCondition(numAttacksPerformedCondition)
+                condition[i] = AttacksPerformedCondition(numAttacksPerformedCondition)
             case "Num Attacks Received":
                 numAttacksReceivedCondition = inputHelper.getAndSaveUserInput(
                     "How many received attacks are required?", default=5
                 )
-                conditions[i] = AttacksReceivedCondition(numAttacksReceivedCondition)
+                condition[i] = AttacksReceivedCondition(numAttacksReceivedCondition)
             case "Finish Skill Activation":
                 requiredCharge = inputHelper.getAndSaveUserInput("What is the required charge condition?", default=30)
-                conditions[i] = FinishSkillActivatedCondition(requiredCharge)
-
-    return operator, [conditions]
+                condition[i] = FinishSkillActivatedCondition(requiredCharge)
+    if numConditions == 2:
+        return CompositeCondition(operator, condition)
+    else:
+        return condition[0]
 
 
 ######################################################### Classes #################################################################
@@ -415,9 +415,8 @@ class Unit:
                     nextForm = -1
             else:
                 form.numAttacksReceived += state.numAttacksReceived
-                nextForm = form.checkConditions(
-                    form.formChangeConditionOperator,
-                    form.formChangeConditions,
+                nextForm = form.checkCondition(
+                    form.formChangeCondition,
                     form.transformed,
                     form.newForm,
                 )
@@ -475,10 +474,9 @@ class Form:
         self.superAttacks = {}  # Will be a list of SuperAttack objects
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = dict(zip(PHASES, [[] for i in range(len(PHASES))]))
-        self.formChangeConditionOperator = None
         self.transformed = False
         self.newForm = True
-        self.formChangeConditions = [Condition()]
+        self.formChangeCondition = [Condition()]
         self.slot = int(
             self.inputHelper.getAndSaveUserInput(f"Which slot is form # {formIdx} best suited for?", default=2)
         )
@@ -712,7 +710,7 @@ class Form:
             )
         )
         ################################################ Turn End #####################################################
-        self.formChangeConditionOperator, self.formChangeConditions = getConditions(self.inputHelper)
+        self.formChangeCondition = getCondition(self.inputHelper)
         if formIdx < numForms:
             self.newForm = True
         else:
@@ -788,42 +786,13 @@ class Form:
                 assert superFracTotal == 1, "Invald super attack variant probabilities entered"
             self.superAttacks[superAttackType] = avgSuperAttack
 
-    def checkConditions(self, operator, conditions, activated, newForm):
-        if activated:
+    def checkCondition(self, condition, activated, newForm):
+        if activated or condition == -1:
             nextForm = 0
-        elif len(conditions[0]) == 0:
+        elif condition == 0:
             nextForm = 1
-        elif len(operator) == 3:
-            operator, operatorA, operatorB = operator
-            conditionsA, conditionsB = conditions
-            A = self.checkConditions([operatorA], [conditionsA], activated, newForm)
-            B = self.checkConditions([operatorB], [conditionsB], activated, newForm)
-            match operator:
-                case "AND":
-                    if A == B:
-                        return A
-                    else:
-                        return 0
-                case "OR":
-                    if A != 0:
-                        return A
-                    else:
-                        return B
         else:
-            operator = operator[0]
-            conditions = conditions[0]
-            match operator:
-                case None:
-                    result = conditions[0].isSatisfied(self)
-                case "AND":
-                    result = np.all([condition.isSatisfied(self) for condition in conditions])
-                case "OR":
-                    result = np.any([condition.isSatisfied(self) for condition in conditions])
-                case "NOT":
-                    result = False
-                case "AFTER":
-                    conditions[0].conditionValue += conditions[1].conditionValue
-                    result = conditions[0].isSatisfied(self)
+            result = condition.isSatisfied(self)
             if result:
                 if newForm:
                     nextForm = 1
@@ -1244,7 +1213,7 @@ class Ability:
 class SingleTurnAbility(Ability):
     def __init__(self, form):
         super().__init__(form)
-        self.operator, self.conditions = getConditions(form.inputHelper)
+        self.condition = getCondition(form.inputHelper)
         self.activated = False
 
 
@@ -1265,7 +1234,7 @@ class GiantRageMode(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions, self.activated, True) and unit.fightPeak:
+        if form.checkCondition(self.condition, self.activated, True) and unit.fightPeak:
             self.activated = True
             # Create a State so can get access to setState for damage calc
             self.giantRageModeState = State(unit, form, state.slot, state.turn)
@@ -1287,7 +1256,7 @@ class Revive(SingleTurnAbility):
         )
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions, self.activated, True) and unit.fightPeak:
+        if form.checkCondition(self.condition, self.activated, True) and unit.fightPeak:
             self.activated = True
             state.healing = min(state.healing + self.hpRegen, 1)
             if self.isThisCharacterOnly:
@@ -1305,7 +1274,7 @@ class Domain(SingleTurnAbility):
         self.abilities = abilityQuestionaire(form, "How many additional buffs are there when this Domain is active?", TurnDependent)
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions, self.activated, True):
+        if form.checkCondition(self.condition, self.activated, True):
             self.activated = True
             start = state.turn
             end = start + self.duration - 1
@@ -1323,7 +1292,7 @@ class ActiveSkillBuff(SingleTurnAbility):
         self.abilities = abilityQuestionaire(form, "How many different buffs does the active skill have?", Buff)
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions, False, True) and unit.fightPeak:
+        if form.checkCondition(self.condition, False, True) and unit.fightPeak:
             for ability in self.abilities:
                 ability.end = state.turn + ability.effectDuration
                 ability.applyToState(state, unit, form)
@@ -1336,7 +1305,7 @@ class ActiveSkillAttack(SingleTurnAbility):
         self.activeMult = specialAttackConversion[attackMultiplier] + attackBuff
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions, self.activated, True) and unit.fightPeak:
+        if form.checkCondition(self.condition, self.activated, True) and unit.fightPeak:
             self.activated = True
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.superAttacksPerformed += 1
@@ -1367,7 +1336,7 @@ class StandbyFinishSkill(SingleTurnAbility):
 
     def applyToState(self, state, unit=None, form=None):
         form.charge += form.getCharge(self.finishSkillChargeCondition)
-        if form.checkConditions(self.operator, self.conditions, self.activated, True):
+        if form.checkCondition(self.condition, self.activated, True):
             self.activated = True
             self.activeMult += self.buffPerCharge * form.charge
             unit.standbyFinishSkillAPT = (
@@ -1770,6 +1739,22 @@ class DoubleSameRainbowKiSphereCondition(Condition):
         # NB: this line only works because the chargeCondition does not rely on form.attacksPerformed as that value will increase per turn, wheras here we are assuming the getCharge in constant
         self.currentValue += form.getCharge(self.conditionValue)
         return self.currentValue >= self.conditionValue
+
+
+class CompositeCondition:
+    def __init__(self, operator, conditions):
+        self.operator = operator
+        self.conditions = conditions
+    
+    def isSatisfied(self, form):
+        match self.operator:
+            case "AND":
+                return np.all([condition.isSatisfied(form) for condition in self.conditions])
+            case "OR":
+                return np.any([condition.isSatisfied(form) for condition in self.conditions])
+            case "AFTER":
+                self.conditions[0].conditionValue += self.conditions[1].conditionValue
+                return self.conditions[0].isSatisfied(form)
 
 
 if __name__ == "__main__":
