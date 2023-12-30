@@ -5,13 +5,8 @@ import pickle
 
 # TODO:
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
-# - Should output the states like in v2.0 for newInputStructure to compare.
 # - Also might want to include attack all in atk calcs.
 # - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
-# - It might be worht tracking where all the buffs of certain value come from for when debugging
-# - It might make sense to factor out the big if statemnet in the Buff class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call Buff and instead could just call that new function.
-# - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
-# - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
 # - Add some functionality that can update existing input .txt files with new questions (assuming not relevant to exisiting unit)
 # - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
@@ -423,6 +418,17 @@ class Unit:
                 )
                 self.states.append(state)
                 turn = nextTurn
+
+    def getAttributes(self):
+        attributes = [] * len(self.states)
+        for i, state in enumerate(self.states):
+            attributes[i] = state.attributes.values()
+        return attributes
+    
+    def setAttributes(self, attributes):
+        for i, state in enumerate(self.states):
+            for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
+                state.attributes[attributeName] = attributes[i, j]
 
     def saveUnit(self):
         # Output the unit's attributes to a .txt file

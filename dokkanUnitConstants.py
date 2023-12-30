@@ -12,20 +12,6 @@ END_OF_FILE_STRING = ""
 # Phases of a Turn
 PHASES = ["Start of Turn", "Active / Finish Skills", "Collect Ki", "Receive Attacks", "Attack Enemy"]
 
-# Attributes
-ATTTRIBUTE_NAMES = [
-    "Leader Skill",
-    "SBR",
-    "HP",
-    "Useability",
-    "Healing",
-    "Support",
-    "APT",
-    "Normal Defence",
-    "Super Attack Defence",
-    "Slot Bonus",
-]
-
 # High-level Unit constants
 EXCLUSIVITIES = ["DF", "DFLR", "LR", "CLR", "BU", "F2P", "F2PLR", "Super Strike"]
 # elements correspond to EXCLUSIVITIES
@@ -115,6 +101,27 @@ DOMAIN_TYPES = ["Increase Damage Received"]
 # Turns
 MAX_TURN = 20
 PEAK_TURN = 5  # Most important turn
+
+# Evaluation
+NUM_CONSTANT_ATTRIBUTES = 3
+NUM_COPIES_MAX = 5
+AVG_PEAK_TURN = 3.471591
+PEAK_TURN_STD = 1.857813
+ATTTRIBUTE_NAMES = [
+    "Leader Skill",
+    "SBR",
+    "HP",
+    "Useability",
+    "Healing",
+    "Support",
+    "APT",
+    "Normal Defence",
+    "Super Attack Defence",
+    "Slot Bonus",
+]
+NUM_ATTRIBUTES = len(ATTTRIBUTE_NAMES)
+EVAL_TURNS = np.arange(1, MAX_TURN + 1, 2)
+NUM_EVAL_TURNS = len(EVAL_TURNS)
 
 # Slots
 SLOTS = [1, 2, 3]
@@ -566,6 +573,7 @@ BRZ_HIPO = 0.02
 SLV_HIPO = 0.05
 GLD_HIPO1 = 0.05
 GLD_HIPO2 = 0.02
+HIPO_BUILDS = [['ATT','ADD','CRT'],['ATT','ADD','DGE'],['ATT','CRT','DGE'],['ATT','CRT','ADD'],['DEF','ADD','CRT'],['DEF','ADD','DGE'],['DEF','CRT','DGE'],['DEF','CRT','ADD'],['DEF','DGE','CRT'],['DEF','DGE','ADD'],['ADD','ADD','CRT'],['ADD','ADD','DGE'],['CRT','CRT','DGE'],['CRT','CRT','ADD'],['DGE','DGE','CRT'],['ATT','DGE','ADD']]
 
 ###################################################### Dicts ##########################################################################
 
