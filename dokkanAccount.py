@@ -1,6 +1,10 @@
 # List of nCopies of units as they currently are in my account
 
-User = [['DEF','ADD','DGE',1]] # TEQLR SS Goku
+User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
+        ['DEF','ADD','CRT',1], # LR GoldenBois
+        ['DEF','CRT','ADD',1], # LR GT Bois
+        ['ATT','ADD','CRT',0], # Infinite Zamasu
+        ] 
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
     ['DEF','ADD','DGE',3], # TEQLR Gods
     ['DEF','ADD','CRT',1], # INTLR Vegeta & Trunks
@@ -104,8 +108,6 @@ User = [['DEF','ADD','DGE',1]] # TEQLR SS Goku
     ['DEF','ADD','DGE',5], # TEQ Super Saiyan 4 Gogeta
     ['DEF','ADD','CRT',5], # LR INT Cell
     ['DEF','ADD','CRT',5], # LR AGL Gohan
-    ['DEF','ADD','CRT',1], # LR GoldenBois
-    ['DEF','CRT','ADD',1], # LR GT Bois
     ['DEF','DGE','CRT',1], # SS3 Gotenks & Piccolo
     ['DEF','DGE','ADD',1], # Eis & Nouva Shenron
     ['DEF','DGE','ADD',5], # STR Super Buu
@@ -150,7 +152,6 @@ User = [['DEF','ADD','DGE',1]] # TEQLR SS Goku
     ['DEF','ADD','DGE',0], # Android 18
     ['DEF','ADD','DGE',0], # Mamba
     ['DEF','CRT','ADD',1], # SSGSS Goku & Vegeta (Vegito Blue)
-    ['ATT','ADD','CRT',0], # Infinite Zamasu
     ['DEF','DGE','ADD',0], # STR Mai (Future)
     ['DEF','DGE','ADD',0], # PHY Zamasu
     ['DEF','ADD','DGE',5], # TEQ Future Trunks
