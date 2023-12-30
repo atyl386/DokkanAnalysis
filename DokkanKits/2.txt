@@ -281,13 +281,23 @@ Crit
 # How many Revival Counterattack Finish Skills does the form have?
 0
 # How many conditions have to met?
-2
-# Are the condtions ORs or ANDs?
+3
+# What is the condition logic?
 OR
+# How many conditions have to met?
+1
 # What type of condition is # 1?
 Max HP
 # What is the maximum HP condition?
 0.5
+# How many conditions have to met?
+2
+# What is the condition logic?
+AND
+# What type of condition is # 1?
+Turn
+# What is the turn condition (relative to the form's starting turn)?
+4
 # What type of condition is # 2?
 Num Attacks Performed
 # How many performed attacks are required?

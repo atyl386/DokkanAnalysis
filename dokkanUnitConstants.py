@@ -482,7 +482,7 @@ CONDITIONS = [
     "Num Attacks Received",
     "Finish Skill Activation",
 ]
-OR_AND = ["OR", "AND"]
+CONDITION_LOGIC = ["OR", "AND", "AFTER"]
 
 # Standby Finish Effect Conditions
 FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "Attack performed by allies"]

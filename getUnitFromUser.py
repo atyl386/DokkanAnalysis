@@ -71,13 +71,18 @@ def getConditions(inputHelper):
     """
     numConditions = inputHelper.getAndSaveUserInput("How many conditions have to met?", default=0)
     conditions = [None] * numConditions
-    operator = None
+    operator = [None]
     if numConditions < 0:
-        return "NOT", [None]
-    if numConditions > 1:
-        operator = inputHelper.getAndSaveUserInput(
-            "Are the condtions ORs or ANDs?", type=clc.Choice(OR_AND), default="AND"
+        return ["NOT"], [[None]]
+    if  numConditions > 1:
+        operator[0] = inputHelper.getAndSaveUserInput(
+            "What is the condition logic?", type=clc.Choice(CONDITION_LOGIC), default="AND"
         )
+    if numConditions > 2:
+        operatorA, conditionsA = getConditions(inputHelper)
+        operatorB, conditionsB = getConditions(inputHelper)
+        return operator + operatorA + operatorB, conditionsA + conditionsB
+
     for i in range(numConditions):
         conditionType = inputHelper.getAndSaveUserInput(
             f"What type of condition is # {i + 1}?", type=clc.Choice(CONDITIONS, case_sensitive=False), default="Turn"
@@ -118,7 +123,7 @@ def getConditions(inputHelper):
                 requiredCharge = inputHelper.getAndSaveUserInput("What is the required charge condition?", default=30)
                 conditions[i] = FinishSkillActivatedCondition(requiredCharge)
 
-    return operator, conditions
+    return operator, [conditions]
 
 
 ######################################################### Classes #################################################################
@@ -786,9 +791,27 @@ class Form:
     def checkConditions(self, operator, conditions, activated, newForm):
         if activated:
             nextForm = 0
-        elif len(conditions) == 0:
+        elif len(conditions[0]) == 0:
             nextForm = 1
+        elif len(operator) == 3:
+            operator, operatorA, operatorB = operator
+            conditionsA, conditionsB = conditions
+            A = self.checkConditions([operatorA], [conditionsA], activated, newForm)
+            B = self.checkConditions([operatorB], [conditionsB], activated, newForm)
+            match operator:
+                case "AND":
+                    if A == B:
+                        return A
+                    else:
+                        return 0
+                case "OR":
+                    if A != 0:
+                        return A
+                    else:
+                        return B
         else:
+            operator = operator[0]
+            conditions = conditions[0]
             match operator:
                 case None:
                     result = conditions[0].isSatisfied(self)
@@ -798,6 +821,9 @@ class Form:
                     result = np.any([condition.isSatisfied(self) for condition in conditions])
                 case "NOT":
                     result = False
+                case "AFTER":
+                    conditions[0].conditionValue += conditions[1].conditionValue
+                    result = conditions[0].isSatisfied(self)
             if result:
                 if newForm:
                     nextForm = 1
