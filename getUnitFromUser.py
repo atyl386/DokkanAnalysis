@@ -543,9 +543,10 @@ class Form:
                     "What is the Domain type?",
                     "How much is the effect?",
                     "What proportion does it effect?",
+                    "How many turns does it last?"
                 ],
-                [clc.Choice(DOMAIN_TYPES), None, None],
-                ["Increase Damage Received", 0.3, 0.5],
+                [clc.Choice(DOMAIN_TYPES), None, None, None],
+                ["Increase Damage Received", 0.3, 0.5, 5],
             )
         )
         ############################################ Active / Finish Skills ###############################################
@@ -1257,22 +1258,23 @@ class Revive(SingleTurnAbility):
             form.abilities["Start of Turn"].extend(self.abilities)
 
 
-# Although these aren't triggered manually, they are currently dealt with this way
 class Domain(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        self.domainType, buff, prop = args
+        self.domainType, buff, prop, self.duration  = args
         self.effectiveBuff = buff * aprioriProbMod(prop, True)
-        self.abilities = abilityQuestionaire(
-            form, "How many additional buffs are there when this Domain is active?", StartOfTurn
-        )
+        self.abilities = abilityQuestionaire(form, "How many additional buffs are there when this Domain is active?", TurnDependent)
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions, False, True):
+        if form.checkConditions(self.operator, self.conditions, self.activated, True):
+            self.activated = True
+            start = state.turn
+            end = start + self.duration - 1
+            params = [start, end]
             match self.domainType:
                 case "Increase Damage Received":
-                    state.support += ATK_SUPPORT_100_FACTOR * self.effectiveBuff
-                    state.p3Buff["ATK"] += self.effectiveBuff
+                    self.abilities.append(TurnDependent(form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, 1, params))
+                    self.abilities.append(TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params))
             form.abilities["Start of Turn"].extend(self.abilities)
 
 
@@ -1282,8 +1284,7 @@ class ActiveSkillBuff(SingleTurnAbility):
         self.abilities = abilityQuestionaire(form, "How many different buffs does the active skill have?", StartOfTurn)
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkConditions(self.operator, self.conditions, self.activated, True) and unit.fightPeak:
-            self.activated = True
+        if form.checkConditions(self.operator, self.conditions, False, True) and unit.fightPeak:
             for ability in self.abilities:
                 ability.end = state.turn + ability.effectDuration
                 ability.applyToState(state, unit, form)
@@ -1439,6 +1440,8 @@ class StartOfTurn(PassiveAbility):
                         state.kiPerSameTypeOrb += effectiveBuff
                     case "Ki (Rainbow Ki Sphere)":
                         state.kiPerRainbowKiSphere += effectiveBuff
+                    case "P3 ATK":
+                        state.p3Buff["ATK"] += effectiveBuff
 
 
 class TurnDependent(StartOfTurn):
