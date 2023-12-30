@@ -3,7 +3,7 @@
 User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
         ['DEF','ADD','CRT',1], # LR GoldenBois
         ['DEF','CRT','ADD',1], # LR GT Bois
-        ['ATT','ADD','CRT',0], # Infinite Zamasu
+        ['ATK','ADD','CRT',0], # Infinite Zamasu
         ] 
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
     ['DEF','ADD','DGE',3], # TEQLR Gods
@@ -12,14 +12,14 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','ADD','CRT',2], # AGLLR SSs
     ['DEF','CRT','ADD',4], # STR LR Final Form Cooler
     ['DEF','ADD','CRT',4], # STR Gamma 1
-    ['ATT','ADD','CRT',0], # AGL Gamma 2
+    ['ATK','ADD','CRT',0], # AGL Gamma 2
     ['DEF','CRT','DGE',1], # PHYLR Metal Cooler
     ['DEF','ADD','CRT',3], # TEQ Androids 17&18
     ['DEF','CRT','ADD',1], # AGL LR Golden Frieza
     ['DEF','DGE','ADD',5], # AGL LR MUI Goku
     ['DEF','ADD','CRT',2], # STR SS Goku/Gohan
     ['DEF','ADD','CRT',1], # TEQ Pan
-    ['ATT','ADD','CRT',0], # INT LR Fusion Zamasu
+    ['ATK','ADD','CRT',0], # INT LR Fusion Zamasu
     ['DEF','DGE','ADD',1], # INT Cheelai
     ['DEF','ADD','DGE',5], # STR Cooler
     ['DEF','ADD','DGE',5], # TEQ Ultimate Gohan
@@ -59,7 +59,7 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',2], # AGL Goku Black
     ['DEF','DGE','ADD',1], # TEQ LR Gogeta
     ['DEF','DGE','ADD',2], # PHY LR Blu Bois
-    ['ATT','CRT','ADD',3], # TEQ LR SS Gohan & Goten
+    ['ATK','CRT','ADD',3], # TEQ LR SS Gohan & Goten
     ['DEF','DGE','CRT',1], # PHY SS Goten & Trunks
     ['DGE','DGE','CRT',2], # STR Kefla
     ['DEF','ADD','CRT',3], # STR SSGSSK Goku
@@ -115,28 +115,28 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',5], # LR INT God Goku
     ['DEF','ADD','DGE',3], # LR AGL SS SBA Goku
     ['DEF','CRT','ADD',0], # LR Cha-la
-    ['ATT','ADD','DGE',0], # LR Dragon Soul
+    ['ATK','ADD','DGE',0], # LR Dragon Soul
     ['DEF','ADD','DGE',5], # LR STR Gogeta
-    ['ATT','CRT','ADD',3], # LR TEQ Vegito
+    ['ATK','CRT','ADD',3], # LR TEQ Vegito
     ['DEF','ADD','CRT',0], # Fusing Super 17
     ['DEF','DGE','ADD',2], # Dr. Myu & Dr. Gero
     ['DEF','DGE','ADD',5], # PHY Android 17
     ['DEF','ADD','CRT',4], # LR Beerus & Whis
     ['DEF','CRT','ADD',4], # TEQ SS Rage Vegeta
-    ['ATT','ADD','CRT',1], # PHY God Goku
-    ['ATT','CRT','ADD',0], # AGL Kale
+    ['ATK','ADD','CRT',1], # PHY God Goku
+    ['ATK','CRT','ADD',0], # AGL Kale
     ['DEF','ADD','DGE',0], # TEQ Frost
     ['DEF','ADD','CRT',1], # LR Kale & Caulifla
     ['DEF','CRT','ADD',3], # LR Super Buu
     ['DEF','DGE','ADD',4], # STR Krillin
     ['DEF','CRT','ADD',1], # PHY Tien
     ['DEF','ADD','CRT',1], # Piccolo Jr.
-    ['ATT','ADD','CRT',1], # WT Goku
+    ['ATK','ADD','CRT',1], # WT Goku
     ['DEF','ADD','DGE',5], # PHY Piccolo
     ['DEF','ADD','CRT',1], # LR Bulma
     ['DEF','DGE','ADD',0], # Almond & Rasin
     ['DEF','DGE','ADD',0], # Daiz & Cacao
-    ['ATT','ADD','CRT',0], # Turles
+    ['ATK','ADD','CRT',0], # Turles
     ['DEF','CRT','DGE',0], # LR Spirit Bomb Goku
     ['DEF','ADD','CRT',3], # PHY Beerus
     ['DEF','DGE','ADD',0], # TEQ Baby
