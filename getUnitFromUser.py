@@ -9,7 +9,7 @@ import pickle
 # - Also might want to include attack all in atk calcs.
 # - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
 # - It might be worht tracking where all the buffs of certain value come from for when debugging
-# - It might make sense to factor out the big if statemnet in the StartOfTurn class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call StartOfTurn and instead could just call that new function.
+# - It might make sense to factor out the big if statemnet in the Buff class so it can apply to P3 buffs too. Then it wouldn't look so weird for ActiveSkillBuff to call Buff and instead could just call that new function.
 # - Previously I was determining the single turn ability turns before applying to State so could use turnDependent Class to apply single turn buffs.
 # - i.e. will just have to determine the form start and end turns once at a time within the form for loop, and assert at the end that the numFomrs given by the user matches the number found by the endTurn determinations
 # - Add some functionality that can update existing input .txt files with new questions (assuming not relevant to exisiting unit)
@@ -497,7 +497,7 @@ class Form:
             abilityQuestionaire(
                 self,
                 "How many unconditional buffs does the form have?",
-                StartOfTurn,
+                Buff,
             )
         )
         self.abilities["Start of Turn"].extend(
@@ -888,7 +888,7 @@ class State:
     def __init__(self, unit, form, slot, turn):
         self.slot = slot  # Slot no.
         self.turn = turn
-        # Dictionary for variables which have a 1-1 relationship with StartOfTurn EFFECTS
+        # Dictionary for variables which have a 1-1 relationship with Buff EFFECTS
         self.buff = {
             "Ki": LEADER_SKILL_KI + form.extraBuffs["Ki"],
             "AEAAT": 0,
@@ -1221,7 +1221,7 @@ class GiantRageMode(SingleTurnAbility):
             abilityQuestionaire(
                 self.giantRageForm,
                 "How many buffs does this giant/rage mode have?",
-                StartOfTurn,
+                Buff,
             )
         )
 
@@ -1244,7 +1244,7 @@ class Revive(SingleTurnAbility):
         super().__init__(form)
         self.hpRegen, self.isThisCharacterOnly = args
         self.abilities = abilityQuestionaire(
-            form, "How many additional constant buffs does this revive have?", StartOfTurn
+            form, "How many additional constant buffs does this revive have?", Buff
         )
 
     def applyToState(self, state, unit=None, form=None):
@@ -1281,7 +1281,7 @@ class Domain(SingleTurnAbility):
 class ActiveSkillBuff(SingleTurnAbility):
     def __init__(self, form, args=[]):
         super().__init__(form)
-        self.abilities = abilityQuestionaire(form, "How many different buffs does the active skill have?", StartOfTurn)
+        self.abilities = abilityQuestionaire(form, "How many different buffs does the active skill have?", Buff)
 
     def applyToState(self, state, unit=None, form=None):
         if form.checkConditions(self.operator, self.conditions, False, True) and unit.fightPeak:
@@ -1363,7 +1363,7 @@ class PassiveAbility(Ability):
         self.effectiveBuff = buff * self.activationProbability
 
 
-class StartOfTurn(PassiveAbility):
+class Buff(PassiveAbility):
     def __init__(
         self,
         form,
@@ -1444,25 +1444,25 @@ class StartOfTurn(PassiveAbility):
                         state.p3Buff["ATK"] += effectiveBuff
 
 
-class TurnDependent(StartOfTurn):
+class TurnDependent(Buff):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
         start, end = args
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, start=start, end=end)
 
 
-class KiDependent(StartOfTurn):
+class KiDependent(Buff):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
         ki = args[0]
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, ki=ki)
 
 
-class SlotDependent(StartOfTurn):
+class SlotDependent(Buff):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
         slots = args[0]
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, slots=slots)
 
 
-class HealthDependent(StartOfTurn):
+class HealthDependent(Buff):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
         health, isMaxHpCondition = args
         p = maxHealthCDF(health)
