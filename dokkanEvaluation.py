@@ -15,8 +15,8 @@ def save_object(obj, filename):
 def interpStates(unit):
     stateTurns = [state.turn for state in unit.states]
     attributes = unit.getAttributes()
-    interpolatedStates = [np.interp(EVAL_TURNS, stateTurns, attributes[:, i]) for i in range(NUM_ATTRIBUTES)]
-    return interpolatedStates
+    interpAttrs = np.array([np.interp(EVAL_TURNS, stateTurns, attributes[:, i]) for i in range(NUM_ATTRIBUTES)]).T
+    return interpAttrs
 
 
 def summaryStats(attributeValues):
@@ -35,7 +35,7 @@ def normalizeUnit(unit, means, stds):
     normalisedAttributes = np.zeros((NUM_EVAL_TURNS, NUM_ATTRIBUTES))
     attributes = unit.getAttributes()
     for j in range(NUM_ATTRIBUTES):
-        normalisedAttributes[:, j] = (attributes[j] - means[:, j]) / stds[:, j]
+        normalisedAttributes[:, j] = (attributes[:, j] - means[:, j]) / stds[:, j]
     unit.setAttributes(normalisedAttributes)
     save_object(
         unit,
@@ -109,7 +109,8 @@ if reCalc:
     for ID in range(1, nUnits + 1):
         print(ID)
         units[-1][ID - 1] = Unit(ID, NUM_COPIES_MAX, User[ID - 1][0], User[ID - 1][1], User[ID - 1][2])
-        attributeValues[ID - 1, :, :, -1] = units[-1][ID - 1].getAttributes()
+        attributeValues[ID - 1, :, :, -1] = interpStates(units[-1][ID - 1])
+
     [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
     for ID in range(1, nUnits + 1):
         attributeValues[ID - 1, :, :, -1] = normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)

@@ -423,7 +423,7 @@ class Unit:
         attributes = [None] * len(self.states)
         for i, state in enumerate(self.states):
             attributes[i] = list(state.attributes.values())
-        return attributes
+        return np.array(attributes)
     
     def setAttributes(self, attributes):
         for i, state in enumerate(self.states):
