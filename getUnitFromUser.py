@@ -643,6 +643,13 @@ class Form:
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
+                "How many different buffs does the form get when performing a super attack?",
+                PerformingSuperAttack,
+            )
+        )
+        self.abilities["Attack Enemy"].extend(
+            abilityQuestionaire(
+                self,
                 "How many different buffs does the form get per attack performed?",
                 PerAttackPerformed,
                 ["What is the maximum buff?"],
@@ -731,15 +738,15 @@ class Form:
 
     def getSuperAttacks(self, rarity, eza):
         for superAttackType in SUPER_ATTACK_CATEGORIES:
-            multiplier = superAttackConversion[
-                self.inputHelper.getAndSaveUserInput(
-                    f"What is the form's {superAttackType} super attack multiplier?",
-                    type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
-                    default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
-                )
-            ][superAttackLevelConversion[rarity][eza]]
-            avgSuperAttack = SuperAttack(superAttackType, multiplier)
             if superAttackType == "12 Ki" or (rarity == "LR" and not (self.intentional12Ki)):
+                multiplier = superAttackConversion[
+                    self.inputHelper.getAndSaveUserInput(
+                        f"What is the form's {superAttackType} super attack multiplier?",
+                        type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
+                        default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
+                    )
+                ][superAttackLevelConversion[rarity][eza]]
+                avgSuperAttack = SuperAttack(superAttackType, multiplier)
                 numSuperAttacks = self.inputHelper.getAndSaveUserInput(
                     f"How many different {superAttackType} super attacks does this form have?",
                     default=1,
@@ -1600,6 +1607,18 @@ class AfterAttackReceived(PassiveAbility):
             self.hitFactor = 1
 
 
+class PerformingSuperAttack(PassiveAbility):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+
+    def applyToState(self, state, unit=None, form=None):
+        match self.effect:
+            case "ATK":
+                state.p2Buff["ATK"] = self.effectiveBuff
+            case "DEF":
+                state.p2DefB += self.effectiveBuff
+
+
 class KiSphereDependent(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
@@ -1729,7 +1748,5 @@ class DoubleSameRainbowKiSphereCondition(Condition):
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(1, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    unit = Unit(2, 1, "DEF", "ADD", "CRT", inputMode="fromTxt")
-    unit = Unit(3, 1, "DEF", "CRT", "ADD", inputMode="fromTxt")
-    unit = Unit(4, 1, "ATK", "ADD", "CRT", inputMode="fromTxt")
+    unit = Unit(5, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    

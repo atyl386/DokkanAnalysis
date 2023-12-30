@@ -355,7 +355,7 @@ LINKS = [
     "Respect",
     "Resurrection F",
     "Revival",
-    "Royal Lineage:",
+    "Royal Lineage",
     "RR Army",
     "Saiyan Pride",
     "Saiyan Roar",
