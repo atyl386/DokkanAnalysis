@@ -164,7 +164,7 @@ class InputHelper:
 
 
 class Unit:
-    def __init__(self, id, nCopies, brz, HiPo1, HiPo2, inputMode=False):
+    def __init__(self, id, nCopies, brz, HiPo1, HiPo2, inputMode="fromTxt"):
         self.id = str(id)
         self.nCopies = nCopies
         self.brz = brz
@@ -420,9 +420,9 @@ class Unit:
                 turn = nextTurn
 
     def getAttributes(self):
-        attributes = [] * len(self.states)
+        attributes = [None] * len(self.states)
         for i, state in enumerate(self.states):
-            attributes[i] = state.attributes.values()
+            attributes[i] = list(state.attributes.values())
         return attributes
     
     def setAttributes(self, attributes):
@@ -432,7 +432,7 @@ class Unit:
 
     def saveUnit(self):
         # Output the unit's attributes to a .txt file
-        outputFilePath = os.path.join(CWD, "DokkanKitOutputs", self.id + ".txt")
+        outputFilePath = os.path.join(CWD, "DokkanKitOutputs", HIPO_DUPES[self.nCopies - 1], self.id + ".txt")
         outputFile = open(outputFilePath, "w")
         for i, state in enumerate(self.states):
             outputFile.write(f"State # {i} / Turn # {state.turn} \n \n")

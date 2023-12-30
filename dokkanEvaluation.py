@@ -42,7 +42,7 @@ def normalizeUnit(unit, means, stds):
         "C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/"
         + HIPO_DUPES[unit.nCopies - 1]
         + "/unit_"
-        + unit.ID
+        + unit.id
         + ".pkl",
     )
     return normalisedAttributes

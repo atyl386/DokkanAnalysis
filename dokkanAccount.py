@@ -1,14 +1,7 @@
 # List of nCopies of units as they currently are in my account
 
-# TODO
-# EZA Area
-# Super 17 Dokkan Event Medal Farming
-# Further investigate standby skill stacking of orbs, what is the max?
-# Chnage input structure so have expected number of same-type and rainbow and other orbs.
-# Also make so don't have to do any computation before hand - I'm not sure if this is feasible given how varied units are
-# Dmg pre and post super
-User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
-    ['DEF','ADD','DGE',3], # PHYLR SS4s
+User = [['DEF','ADD','DGE',1]] # TEQLR SS Goku
+""" ['DEF','ADD','DGE',3], # PHYLR SS4s
     ['DEF','ADD','DGE',3], # TEQLR Gods
     ['DEF','ADD','CRT',1], # INTLR Vegeta & Trunks
     ['DEF','DGE','ADD',1], # PHY Goku Youth
@@ -169,5 +162,4 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','ADD','CRT',0], # LR Future Gohan
     ['DEF','ADD','DGE',1], # LR Goku Black
     ['DEF','CRT','DGE',0], # Zirloin, Rabanra & Zarbuto
-    ['DEF','DGE','ADD',0], # Android 17 & Android 18
-]
+    ['DEF','DGE','ADD',0], # Android 17 & Android 18 """
