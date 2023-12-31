@@ -204,9 +204,9 @@ DEF
 0
 # How many Domain skills does the form have?
 0
-# How many active skill attacks does the form have?
-0
 # How many active skill buffs does the form have?
+0
+# How many active skill attacks does the form have?
 0
 # How many Non-Revival Counterattack Standby Finish Skills does the form have?
 0
@@ -282,17 +282,17 @@ Ki
 0
 # How many Revival Counterattack Finish Skills does the form have?
 0
-# How many conditions have to met?
+# How many conditions have to be met?
 3
 # What is the condition logic?
 OR
-# How many conditions have to met?
+# How many conditions have to be met?
 1
 # What type of condition is # 1?
 Max HP
 # What is the maximum HP condition?
 0.5
-# How many conditions have to met?
+# How many conditions have to be met?
 2
 # What is the condition logic?
 AND
@@ -440,9 +440,9 @@ Dmg Red
 0
 # How many Domain skills does the form have?
 0
-# How many active skill attacks does the form have?
-0
 # How many active skill buffs does the form have?
+0
+# How many active skill attacks does the form have?
 0
 # How many Non-Revival Counterattack Standby Finish Skills does the form have?
 0
@@ -468,7 +468,7 @@ Dmg Red
 1.0
 # Does the revive only apply to this unit?
 N
-# How many conditions have to met?
+# How many conditions have to be met?
 0
 # How many additional constant buffs does this revive have?
 0
@@ -478,11 +478,11 @@ N
 Super-Intense
 # What is the attack buff when finish is activated?
 0.39
-# How many conditions have to met?
+# How many conditions have to be met?
 1
 # What type of condition is # 1?
 Finish Skill Activation
 # What is the required charge condition?
 1
-# How many conditions have to met?
+# How many conditions have to be met?
 -1

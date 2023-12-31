@@ -71,7 +71,7 @@ def getCondition(inputHelper):
     """
     Askes the user questions to determine which Condition class(es) apply and returns them. Only want once per condition set.
     """
-    numConditions = inputHelper.getAndSaveUserInput("How many conditions have to met?", default=0)
+    numConditions = inputHelper.getAndSaveUserInput("How many conditions have to be met?", default=0)
     if numConditions < 1:
         return numConditions
     if numConditions > 1:
@@ -576,19 +576,6 @@ class Form:
         self.abilities["Active / Finish Skills"].extend(
             abilityQuestionaire(
                 self,
-                "How many active skill attacks does the form have?",
-                ActiveSkillAttack,
-                [
-                    "What is the attack multiplier?",
-                    "What is the additional attack buff when performing the attack?",
-                ],
-                [clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False), None],
-                ["Ultimate", 0.0],
-            )
-        )
-        self.abilities["Active / Finish Skills"].extend(
-            abilityQuestionaire(
-                self,
                 "How many active skill buffs does the form have?",
                 ActiveSkillBuff,
                 [
@@ -598,7 +585,20 @@ class Form:
                     "How many times can it be activated?",
                 ],
                 [clc.Choice(EFFECTS, case_sensitive=False), None, None, None],
-                ["P3 ATK", 0.3, 5, 1],
+                ["P3 ATK", 1.0, 1, 1],
+            )
+        )
+        self.abilities["Active / Finish Skills"].extend(
+            abilityQuestionaire(
+                self,
+                "How many active skill attacks does the form have?",
+                ActiveSkillAttack,
+                [
+                    "What is the attack multiplier?",
+                    "What is the additional attack buff when performing the attack?",
+                ],
+                [clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False), None],
+                ["Ultimate", 0.0],
             )
         )
         self.abilities["Active / Finish Skills"].extend(

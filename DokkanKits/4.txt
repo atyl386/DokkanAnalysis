@@ -250,9 +250,9 @@ Dmg Red
 0
 # How many Domain skills does the form have?
 0
-# How many active skill attacks does the form have?
-0
 # How many active skill buffs does the form have?
+0
+# How many active skill attacks does the form have?
 0
 # How many Non-Revival Counterattack Standby Finish Skills does the form have?
 0
@@ -320,7 +320,7 @@ ATK
 0
 # How many Revival Counterattack Finish Skills does the form have?
 0
-# How many conditions have to met?
+# How many conditions have to be met?
 1
 # What type of condition is # 1?
 Turn
@@ -468,7 +468,7 @@ Increase Damage Received
 0.5
 # How many turns does it last?
 5
-# How many conditions have to met?
+# How many conditions have to be met?
 1
 # What type of condition is # 1?
 Turn
@@ -476,9 +476,9 @@ Turn
 0
 # How many additional buffs are there when this Domain is active?
 0
-# How many active skill attacks does the form have?
-0
 # How many active skill buffs does the form have?
+0
+# How many active skill attacks does the form have?
 0
 # How many Non-Revival Counterattack Standby Finish Skills does the form have?
 0
@@ -530,7 +530,7 @@ DEF Support
 0
 # How many Revival Counterattack Finish Skills does the form have?
 0
-# How many conditions have to met?
+# How many conditions have to be met?
 1
 # What type of condition is # 1?
 Turn
