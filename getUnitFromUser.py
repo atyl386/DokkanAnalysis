@@ -952,7 +952,6 @@ class State:
     def setState(self, unit, form):
         for ability in form.abilities["Start of Turn"]:
             ability.applyToState(self, unit, form)
-        self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
         self.atkModifier = self.getAvgAtkMod(form, unit)
 
         for ability in form.abilities["Active / Finish Skills"]:
@@ -1005,6 +1004,7 @@ class State:
 
         for ability in form.abilities["Attack Enemy"]:
             ability.applyToState(self, unit, form)
+        self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
         self.normal = getNormal(
             unit.kiMod12,
             self.ki,
@@ -1447,10 +1447,7 @@ class Buff(PassiveAbility):
                         state.dmgRedB += effectiveBuff
                         state.buff["Dmg Red against Normals"] += effectiveBuff
                     case "Disable Action":
-                        state.pNullify = (
-                            P_NULLIFY_FROM_DISABLE * (1 - state.pNullify)
-                            + (1 - P_NULLIFY_FROM_DISABLE) * state.pNullify
-                        )
+                        state.pNullify += (P_NULLIFY_FROM_DISABLE * (1 - state.pNullify))
                     case "AdditionalSuper":
                         state.aaPSuper.append(activationProbability)
                         state.aaPGuarantee.append(0)
@@ -1674,9 +1671,9 @@ class Nullification(PassiveAbility):
 
     def applyToState(self, state, unit=None, form=None):
         pNullify = self.activationProbability * aprioriProbMod(saFracConversion[self.effect], True)
-        state.pNullify = (1 - state.pNullify) * pNullify + (1 - pNullify) * state.pNullify
+        state.pNullify += (1 - state.pNullify) * pNullify
         if yesNo2Bool[self.hasCounter]:
-            state.pCounterSA = (1 - state.pCounterSA) * pNullify + (1 - pNullify) * state.pCounterSA
+            state.pCounterSA += (1 - state.pCounterSA) * pNullify
 
 
 class Condition:
