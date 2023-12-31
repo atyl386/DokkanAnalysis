@@ -428,7 +428,7 @@ class Unit:
         for i, state in enumerate(self.states):
             attributes[i] = list(state.attributes.values())
         return np.array(attributes)
-    
+
     def setAttributes(self, attributes):
         for i, state in enumerate(self.states):
             for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
@@ -552,7 +552,7 @@ class Form:
                     "What is the Domain type?",
                     "How much is the effect?",
                     "What proportion does it effect?",
-                    "How many turns does it last?"
+                    "How many turns does it last?",
                 ],
                 [clc.Choice(DOMAIN_TYPES), None, None, None],
                 ["Increase Damage Received", 0.3, 0.5, 5],
@@ -1263,9 +1263,7 @@ class Revive(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.hpRegen, self.isThisCharacterOnly = args
-        self.abilities = abilityQuestionaire(
-            form, "How many additional constant buffs does this revive have?", Buff
-        )
+        self.abilities = abilityQuestionaire(form, "How many additional constant buffs does this revive have?", Buff)
 
     def applyToState(self, state, unit=None, form=None):
         if form.checkCondition(self.condition, self.activated, True) and unit.fightPeak:
@@ -1281,9 +1279,11 @@ class Revive(SingleTurnAbility):
 class Domain(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        self.domainType, buff, prop, self.duration  = args
+        self.domainType, buff, prop, self.duration = args
         self.effectiveBuff = buff * aprioriProbMod(prop, True)
-        self.abilities = abilityQuestionaire(form, "How many additional buffs are there when this Domain is active?", TurnDependent)
+        self.abilities = abilityQuestionaire(
+            form, "How many additional buffs are there when this Domain is active?", TurnDependent
+        )
 
     def applyToState(self, state, unit=None, form=None):
         if form.checkCondition(self.condition, self.activated, True):
@@ -1293,7 +1293,11 @@ class Domain(SingleTurnAbility):
             params = [start, end]
             match self.domainType:
                 case "Increase Damage Received":
-                    self.abilities.append(TurnDependent(form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, self.duration, params))
+                    self.abilities.append(
+                        TurnDependent(
+                            form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, self.duration, params
+                        )
+                    )
                     self.abilities.append(TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params))
             form.abilities["Start of Turn"].extend(self.abilities)
 
@@ -1762,7 +1766,7 @@ class CompositeCondition:
     def __init__(self, operator, conditions):
         self.operator = operator
         self.conditions = conditions
-    
+
     def isSatisfied(self, form):
         match self.operator:
             case "AND":
@@ -1777,4 +1781,3 @@ class CompositeCondition:
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
     unit = Unit(5, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
-    
