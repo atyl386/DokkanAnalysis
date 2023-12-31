@@ -439,9 +439,9 @@ def getAPT(
     return apt
 
 
-def getDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
+def getDamageTaken(pNullify, pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
     return min(
-        -(1 - (1 - DODGE_CANCEL_FACTOR) * pEvade)
+        -(1 - (pNullify + (1 - pNullify) * (1 - DODGE_CANCEL_FACTOR) * pEvade))
         * (
             guard * GUARD_MOD * (maxDamage * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
             + (1 - guard) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)

@@ -4,7 +4,6 @@ import copy
 import pickle
 
 # TODO:
-# - Why SSj goku active skill buff not having eny effect?
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
 # - Also might want to include attack all in atk calcs.
 # - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
@@ -1093,6 +1092,7 @@ class State:
             unit.DEF, self.p1Buff["DEF"], form.linkDef, self.p2Buff["DEF"], self.p3Buff["DEF"], self.avgDefMult
         )
         self.normalDamageTakenPreSuper = getDamageTaken(
+            0,
             self.buff["Evade"],
             self.buff["Guard"],
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
@@ -1101,6 +1101,7 @@ class State:
             self.avgDefPreSuper,
         )
         self.normalDamageTakenPostSuper = getDamageTaken(
+            0,
             self.buff["Evade"],
             self.buff["Guard"],
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
@@ -1109,6 +1110,7 @@ class State:
             self.avgDefPostSuper,
         )
         self.saDamageTakenPreSuper = getDamageTaken(
+            self.pNullify,
             self.buff["Evade"],
             self.buff["Guard"],
             MAX_SA_DAM_PER_TURN[self.turn - 1],
@@ -1117,6 +1119,7 @@ class State:
             self.avgDefPreSuper,
         )
         self.saDamageTakenPostSuper = getDamageTaken(
+            self.pNullify,
             self.buff["Evade"],
             self.buff["Guard"],
             MAX_SA_DAM_PER_TURN[self.turn - 1],
