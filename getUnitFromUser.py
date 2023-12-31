@@ -4,6 +4,8 @@ import copy
 import pickle
 
 # TODO:
+# - Make it ask if links have changed for a new form.
+# - Change question from last turn buff ends on to duration as more explicit
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
 # - Also might want to include attack all in atk calcs.
 # - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
@@ -477,13 +479,15 @@ class Form:
         self.transformed = False
         self.newForm = True
         self.formChangeCondition = [Condition()]
+        self.intentional12Ki = False
         self.slot = int(
             self.inputHelper.getAndSaveUserInput(f"Which slot is form # {formIdx} best suited for?", default=2)
         )
         self.canAttack = yesNo2Bool[self.inputHelper.getAndSaveUserInput("Can this form attack?", default="Y")]
-        self.intentional12Ki = yesNo2Bool[
-            self.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
-        ]
+        if self.rarity == "LR":
+            self.intentional12Ki = yesNo2Bool[
+                self.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
+            ]
         self.normalCounterMult = counterAttackConversion[
             self.inputHelper.getAndSaveUserInput(
                 "What is the unit's normal counter multiplier?",
@@ -541,6 +545,16 @@ class Form:
                 ["What is the threshold health value?", "Is it a max HP condition?"],
                 [None, clc.Choice(YES_NO)],
                 [0.5, "Y"],
+            )
+        )
+        self.abilities["Start of Turn"].extend(
+            abilityQuestionaire(
+                self,
+                "How many health scale buffs does the form have?",
+                HealthScale,
+                ["The more HP remaining, the better?"],
+                [clc.Choice(YES_NO)],
+                ["Y"],
             )
         )
         self.abilities["Start of Turn"].extend(
@@ -1497,6 +1511,16 @@ class HealthDependent(Buff):
         else:
             activationProbability *= 1 - p
         super().__init__(form, activationProbability, True, effect, buff, effectDuration)
+
+
+class HealthScale(Buff):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
+        isMoreHPBetter = args[0]
+        if yesNo2Bool[isMoreHPBetter]:
+            expectedBuff = MORE_HEALTH_REMAINING_MIN + EXPECTED_HEALTH_FRAC * (buff - MORE_HEALTH_REMAINING_MIN)
+        else:
+            expectedBuff = LESS_HEALTH_REMAINING_MIN + (1 - EXPECTED_HEALTH_FRAC) * (buff - LESS_HEALTH_REMAINING_MIN)
+        super().__init__(form, activationProbability, True, effect, expectedBuff, effectDuration)
 
 
 class PerEvent(PassiveAbility):
