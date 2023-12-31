@@ -432,6 +432,7 @@ SUPPORT_EFFECTS = REGULAR_SUPPORT_EFFECTS + ORB_CHANGING_EFFECTS
 EFFECTS = [
     "None",
     "ATK",
+    "P3 ATK",
     "DEF",
     "Ki",
     "Lower ATK",

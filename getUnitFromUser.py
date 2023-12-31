@@ -4,6 +4,7 @@ import copy
 import pickle
 
 # TODO:
+# - Why SSj goku active skill buff not having eny effect?
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
 # - Also might want to include attack all in atk calcs.
 # - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
@@ -577,6 +578,14 @@ class Form:
                 self,
                 "How many active skill buffs does the form have?",
                 ActiveSkillBuff,
+                [
+                    "What type of buff does the unit get?",
+                    "What is the value of the buff?",
+                    "How many turns does it last?",
+                    "How many times can it be activated?",
+                ],
+                [clc.Choice(EFFECTS, case_sensitive=False), None, None, None],
+                ["P3 ATK", 0.3, 5, 1],
             )
         )
         self.abilities["Active / Finish Skills"].extend(
@@ -1281,21 +1290,25 @@ class Domain(SingleTurnAbility):
             params = [start, end]
             match self.domainType:
                 case "Increase Damage Received":
-                    self.abilities.append(TurnDependent(form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, 1, params))
+                    self.abilities.append(TurnDependent(form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, self.duration, params))
                     self.abilities.append(TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params))
             form.abilities["Start of Turn"].extend(self.abilities)
 
 
 class ActiveSkillBuff(SingleTurnAbility):
-    def __init__(self, form, args=[]):
+    def __init__(self, form, args):
         super().__init__(form)
-        self.abilities = abilityQuestionaire(form, "How many different buffs does the active skill have?", Buff)
+        self.effect, self.buff, self.duration, self.maxActivations = args
+        self.activations = 0
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkCondition(self.condition, False, True) and unit.fightPeak:
-            for ability in self.abilities:
-                ability.end = state.turn + ability.effectDuration
-                ability.applyToState(state, unit, form)
+        if form.checkCondition(self.condition, self.activations == self.maxActivations, True) and unit.fightPeak:
+            self.activations += 1
+            start = state.turn
+            end = start + self.duration - 1
+            params = [start, end]
+            ability = TurnDependent(form, 1, False, self.effect, self.buff, self.duration, params)
+            form.abilities["Active / Finish Skills"].append(ability)
 
 
 class ActiveSkillAttack(SingleTurnAbility):
@@ -1403,15 +1416,16 @@ class Buff(PassiveAbility):
             + form.linkKi
         )
         pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
-        effectiveBuff = self.effectiveBuff * pHaveKi * min(self.effectDuration, RETURN_PERIOD_PER_SLOT[state.slot - 1])
+        effectiveBuff = self.effectiveBuff * pHaveKi
+        supportBuff = effectiveBuff * min(self.effectDuration, RETURN_PERIOD_PER_SLOT[state.slot - 1])
         activationProbability = self.activationProbability * pHaveKi
         # Check if state is elligible for ability
         if state.turn >= self.start and state.turn <= self.end and state.slot in self.slots:
             # If a support ability
             if self.effect in REGULAR_SUPPORT_EFFECTS:
-                state.support += supportFactorConversion[self.effect] * effectiveBuff
+                state.support += supportFactorConversion[self.effect] * supportBuff
             elif self.effect in ORB_CHANGING_EFFECTS:
-                state.support += supportFactorConversion[self.effect] * effectiveBuff
+                state.support += supportFactorConversion[self.effect] * supportBuff
                 state.numOtherTypeOrbs = orbChangeConversion[self.effect]["Other"]
                 state.numSameTypeOrbs = orbChangeConversion[self.effect]["Same"]
                 state.numRainbowOrbs = orbChangeConversion[self.effect]["Rainbow"]
