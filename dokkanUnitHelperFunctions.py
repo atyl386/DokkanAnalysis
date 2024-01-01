@@ -55,7 +55,7 @@ def branchAPT(
     pHiPo,
     pCrit,
     critMultiplier,
-    atkModifer,
+    atkModifier,
     p2AtkBuff,
     critBuff,
     atkPerAttackPerformed,
@@ -67,14 +67,28 @@ def branchAPT(
 ):
     """Returns the total remaining APT of a unit in a turn recursively"""
     p2AtkFactor = (p2Atk + p2AtkBuff) / p2Atk
-    normal = mN * n_0 * p2AtkFactor * atkModifer
-    additional12Ki = m12 * a12_0 * p2AtkFactor * atkModifer
+    normal = mN * n_0 * p2AtkFactor * atkModifier
+    additional12Ki = m12 * a12_0 * p2AtkFactor * atkModifier
     if i == nAA - 1:  # If no more additional attacks
         return 0.5 * pAA * (additional12Ki + normal)  # Add average hidden-potential attack damage
     else:
         i += 1  # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
-        # Add damage if don't get any additional attacks
+        # Add damage if don't get any additional attacks 
+        pCrit1 = min((pCrit - critBuff) / (1 - critBuff) * (1 - critPerAttackPerformed[0]) + critPerAttackPerformed[0], 1)
+        if saCrit == 1:
+            saCrit2 = 1
+            pCrit2 = 1
+        else:
+            saCrit2 = saCrit + sa12Crit
+            pCrit2 = min((((pCrit - critBuff) / (1 - critBuff) - saCrit) / (1 - saCrit) * (1 - saCrit2) + saCrit2) * (1 - critPerSuperPerformed[0]) + critPerSuperPerformed[0], 1)
+        if pCrit == 1:
+            atkModifier1 = critMultiplier
+            atkModifier2 = critMultiplier
+        else:
+            atkModifier1 = (atkModifier - critMultiplier * pCrit) / (1 - pCrit) * (1 - pCrit1) + pCrit1 * critMultiplier
+            atkModifier2 = (atkModifier - critMultiplier * pCrit) / (1 - pCrit) * (1 - pCrit2) + pCrit2 * critMultiplier
+            
         tempAPT0 = branchAPT(
             i,
             nAA,
@@ -91,7 +105,7 @@ def branchAPT(
             pHiPo,
             pCrit,
             critMultiplier,
-            atkModifer,
+            atkModifier,
             p2AtkBuff,
             critBuff,
             atkPerAttackPerformed,
@@ -100,9 +114,6 @@ def branchAPT(
             critPerSuperPerformed,
             saCrit,
             sa12Crit,
-        )
-        pCrit1 = min(
-            (pCrit - critBuff) / (1 - critBuff) * (1 - critPerAttackPerformed[0]) + critPerAttackPerformed[0], 1
         )
         tempAPT1 = branchAPT(
             i,
@@ -120,7 +131,7 @@ def branchAPT(
             pHiPo,
             pCrit1,
             critMultiplier,
-            (atkModifer - critMultiplier * pCrit) / (1 - pCrit) * (1 - pCrit1) + pCrit1 * critMultiplier,
+            atkModifier1,
             atkPerAttackPerformed[0],
             critPerAttackPerformed[0],
             atkPerAttackPerformed[1:],
@@ -129,13 +140,6 @@ def branchAPT(
             critPerSuperPerformed,
             saCrit,
             sa12Crit,
-        )
-        saCrit2 = saCrit + sa12Crit
-        pCrit2 = min(
-            (((pCrit - critBuff) / (1 - critBuff) - saCrit) / (1 - saCrit) * (1 - saCrit2) + saCrit2)
-            * (1 - critPerSuperPerformed[0])
-            + critPerSuperPerformed[0],
-            1,
         )
         tempAPT2 = branchAPT(
             i,
@@ -153,7 +157,7 @@ def branchAPT(
             pHiPo,
             pCrit2,
             critMultiplier,
-            (atkModifer - critMultiplier * pCrit) / (1 - pCrit) * (1 - pCrit2) + pCrit2 * critMultiplier,
+            atkModifier2,
             atkPerSuperPerformed[0],
             critPerSuperPerformed[0],
             atkPerAttackPerformed,
