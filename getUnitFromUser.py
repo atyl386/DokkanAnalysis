@@ -4,6 +4,7 @@ import copy
 import pickle
 
 # TODO:
+# - Need to add within same turn parameters to attacks performed (better than having to make a whole other class I think.)
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
@@ -675,21 +676,11 @@ class Form:
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
-                "How many different buffs does the form get per attack performed?",
+                "How many different buffs does the form get per attack/super performed?",
                 PerAttackPerformed,
-                ["What is the maximum buff?"],
-                [None],
-                [1.0],
-            )
-        )
-        self.abilities["Attack Enemy"].extend(
-            abilityQuestionaire(
-                self,
-                "How many different buffs does the form get per super attack performed?",
-                PerSuperAttackPerformed,
-                ["What is the maximum buff?"],
-                [None],
-                [1.0],
+                ["What is the maximum buff?", "Requires super attack?"],
+                [None, clc.Choice(YES_NO, case_sensitive=False)],
+                [1.0, "N"],
             )
         )
         self.abilities["Attack Enemy"].extend(
@@ -1539,44 +1530,31 @@ class PerEvent(PassiveAbility):
 class PerAttackPerformed(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, args[0])
+        self.requiresSuperAttack = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
         buffPerAttack = self.effectiveBuff * (np.arange(len(state.aaPSuper) + 1) + 1)
-        turnBuff = self.effectiveBuff * state.attacksPerformed
+        if self.requiresSuperAttack:
+            turnBuff = self.effectiveBuff * state.superAttacksPerformed
+        else:
+            turnBuff = self.effectiveBuff * state.attacksPerformed
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
         form.extraBuffs[self.effect] += cappedTurnBuff
         cappedBuffPerAttack = np.minimum(buffPerAttack, buffToGo)
+        if not(self.requiresSuperAttack):
+            match self.effect:
+                case "ATK":
+                    state.atkPerAttackPerformed = cappedBuffPerAttack                        
+                case "Crit":
+                    state.critPerAttackPerformed = cappedBuffPerAttack
         match self.effect:
             case "ATK":
-                state.atkPerAttackPerformed = cappedBuffPerAttack
-                state.atkPerSuperPerformed = state.atkPerAttackPerformed[:]
+                state.atkPerSuperPerformed = cappedBuffPerAttack
             case "DEF":
                 state.p2DefB += cappedTurnBuff
             case "Crit":
-                state.critPerAttackPerformed = cappedBuffPerAttack
-                state.critPerSuperPerformed = state.critPerAttackPerformed[:]
-        self.applied += cappedTurnBuff
-
-
-class PerSuperAttackPerformed(PerEvent):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, args[0])
-
-    def applyToState(self, state, unit=None, form=None):
-        buffPerSuper = self.effectiveBuff * (np.arange(len(state.aaPSuper) + 1) + 1)
-        turnBuff = self.effectiveBuff * state.superAttacksPerformed
-        buffToGo = self.max - self.applied
-        cappedTurnBuff = min(buffToGo, turnBuff)
-        form.extraBuffs[self.effect] += cappedTurnBuff
-        cappedBuffPerSuper = np.minimum(buffPerSuper, buffToGo)
-        match self.effect:
-            case "ATK":
-                state.atkPerAttackPerformed = cappedBuffPerSuper
-            case "DEF":
-                state.p2DefB += cappedTurnBuff
-            case "Crit":
-                state.critPerAttackPerformed = cappedBuffPerSuper
+                state.critPerSuperPerformed = cappedBuffPerAttack
             case "Dmg Red":
                 state.dmgRedB += cappedTurnBuff
                 state.buff["Dmg Red against Normals"] += cappedTurnBuff
@@ -1807,4 +1785,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(6, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(7, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
