@@ -4,6 +4,7 @@ import copy
 import pickle
 
 # TODO:
+# - Check if super trunks looks correct + add to eval
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
