@@ -4,7 +4,6 @@ import copy
 import pickle
 
 # TODO:
-# - Check if super trunks looks correct + add to eval
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
@@ -929,6 +928,7 @@ class State:
             "Disable Guard": 0,
             "Evade": unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge,
             "Dmg Red against Normals": form.extraBuffs["Dmg Red"],
+            "Heal": 0,
         }
         self.p1Buff = {"ATK": ATK_DEF_SUPPORT, "DEF": ATK_DEF_SUPPORT}
         self.p2Buff = {"ATK": form.linkAtkOnSuper + form.extraBuffs["ATK"], "DEF": form.extraBuffs["DEF"]}
@@ -941,7 +941,6 @@ class State:
         self.numSameTypeOrbs = orbChangeConversion["No Orb Change"]["Same"]
         self.p2DefA = 0
         self.p2DefB = 0
-        self.healing = 0  # Fraction of health healed every turn
         self.support = 0  # Support score
         self.pNullify = 0  # Probability of nullifying all enemy super attacks
         self.aaPSuper = []  # Probabilities of doing additional super attacks and guaranteed additionals
@@ -1142,7 +1141,7 @@ class State:
             self.dmgRedB,
             self.avgDefPostSuper,
         )
-        self.healing += (
+        self.buff["Heal"] += (
             form.linkHealing
             + (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1])
             * avgDefStartOfTurn
@@ -1166,7 +1165,7 @@ class State:
             unit.SBR,
             unit.HP,
             self.useability,  # Requires user input, should make a version that loads from file
-            self.healing,
+            self.buff["Heal"],
             self.support,
             self.APT,
             self.normalDamageTaken,
@@ -1283,7 +1282,7 @@ class Revive(SingleTurnAbility):
     def applyToState(self, state, unit=None, form=None):
         if form.checkCondition(self.condition, self.activated, True) and unit.fightPeak:
             self.activated = True
-            state.healing = min(state.healing + self.hpRegen, 1)
+            state.buff["Heal"] = min(state.buff["Heal"] + self.hpRegen, 1)
             if self.isThisCharacterOnly:
                 state.support += REVIVE_UNIT_SUPPORT_BUFF
             else:
@@ -1807,4 +1806,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(5, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(6, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")

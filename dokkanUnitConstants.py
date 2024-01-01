@@ -463,6 +463,7 @@ EFFECTS = [
     "Ki (Ki Sphere)",
     "Ki (Same Type Ki Sphere)",
     "Ki (Rainbow Ki Sphere)",
+    "Heal",
 ]
 EFFECTS.extend(SUPPORT_EFFECTS)
 EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)
