@@ -576,6 +576,13 @@ class Form:
         self.abilities["Active / Finish Skills"].extend(
             abilityQuestionaire(
                 self,
+                "How many different buffs does the form get when performing a super attack / attacking?",
+                PerformingSuperAttack,
+            )
+        )
+        self.abilities["Active / Finish Skills"].extend(
+            abilityQuestionaire(
+                self,
                 "How many active skill buffs does the form have?",
                 ActiveSkillBuff,
                 [
@@ -665,13 +672,6 @@ class Form:
             )
         )
         ############################################## Attack Enemy ##################################################
-        self.abilities["Attack Enemy"].extend(
-            abilityQuestionaire(
-                self,
-                "How many different buffs does the form get when performing a super attack?",
-                PerformingSuperAttack,
-            )
-        )
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -977,7 +977,6 @@ class State:
         for ability in form.abilities["Receive Attacks"]:
             ability.applyToState(self, unit, form)
         self.atkModifier = self.getAvgAtkMod(form, unit)
-        self.p2Buff["DEF"] = self.p2DefA + self.p2DefB
         self.ki = min(round(self.buff["Ki"] + self.randomKi), rarity2MaxKi[unit.rarity])
         self.pN, self.pSA, self.pUSA = getAttackDistribution(
             self.buff["Ki"], self.randomKi, form.intentional12Ki, unit.rarity
@@ -1018,6 +1017,7 @@ class State:
 
         for ability in form.abilities["Attack Enemy"]:
             ability.applyToState(self, unit, form)
+        self.p2Buff["DEF"] = self.p2DefA + self.p2DefB
         self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
         self.normal = getNormal(
             unit.kiMod12,
@@ -1651,7 +1651,7 @@ class PerformingSuperAttack(PassiveAbility):
     def applyToState(self, state, unit=None, form=None):
         match self.effect:
             case "ATK":
-                state.p2Buff["ATK"] = self.effectiveBuff
+                state.p2Buff["ATK"] += self.effectiveBuff
             case "DEF":
                 state.p2DefB += self.effectiveBuff
 

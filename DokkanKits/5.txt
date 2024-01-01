@@ -178,6 +178,24 @@ Y
 0
 # How many Domain skills does the form have?
 0
+# How many different buffs does the form get when performing a super attack / attacking?
+2
+# What type of buff does the unit get?
+ATK
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+0.7
+# How many turns does it last for? Only applicable to abilities with a time limit?.
+1
+# What type of buff does the unit get?
+DEF
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+0.7
+# How many turns does it last for? Only applicable to abilities with a time limit?.
+1
 # How many active skill buffs does the form have?
 1
 # What type of buff does the unit get?
@@ -228,24 +246,6 @@ Min HP
 0
 # How many different buffs does the form get on attacks received?
 0
-# How many different buffs does the form get when performing a super attack?
-2
-# What type of buff does the unit get?
-ATK
-# What is the probability this ability activates?
-1.0
-# What is the value of the buff?
-0.7
-# How many turns does it last for? Only applicable to abilities with a time limit?.
-1
-# What type of buff does the unit get?
-DEF
-# What is the probability this ability activates?
-1.0
-# What is the value of the buff?
-0.7
-# How many turns does it last for? Only applicable to abilities with a time limit?.
-1
 # How many different buffs does the form get per attack performed?
 0
 # How many different buffs does the form get per super attack performed?
@@ -408,6 +408,24 @@ DEF
 1
 # How many Domain skills does the form have?
 0
+# How many different buffs does the form get when performing a super attack / attacking?
+2
+# What type of buff does the unit get?
+ATK
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+1.0
+# How many turns does it last for? Only applicable to abilities with a time limit?.
+1
+# What type of buff does the unit get?
+DEF
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+1.0
+# How many turns does it last for? Only applicable to abilities with a time limit?.
+1
 # How many active skill buffs does the form have?
 2
 # What type of buff does the unit get?
@@ -460,24 +478,6 @@ Min HP
 0
 # How many different buffs does the form get on attacks received?
 0
-# How many different buffs does the form get when performing a super attack?
-2
-# What type of buff does the unit get?
-ATK
-# What is the probability this ability activates?
-1.0
-# What is the value of the buff?
-1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
-1
-# What type of buff does the unit get?
-DEF
-# What is the probability this ability activates?
-1.0
-# What is the value of the buff?
-1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
-1
 # How many different buffs does the form get per attack performed?
 0
 # How many different buffs does the form get per super attack performed?

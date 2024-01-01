@@ -250,6 +250,8 @@ Dmg Red
 0
 # How many Domain skills does the form have?
 0
+# How many different buffs does the form get when performing a super attack / attacking?
+0
 # How many active skill buffs does the form have?
 0
 # How many active skill attacks does the form have?
@@ -309,8 +311,6 @@ ATK
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
 # How many different buffs does the form get per attack performed?
-0
-# How many different buffs does the form get when performing a super attack?
 0
 # How many different buffs does the form get per super attack performed?
 0
@@ -476,6 +476,8 @@ Turn
 0
 # How many additional buffs are there when this Domain is active?
 0
+# How many different buffs does the form get when performing a super attack / attacking?
+0
 # How many active skill buffs does the form have?
 0
 # How many active skill attacks does the form have?
@@ -519,8 +521,6 @@ DEF Support
 # How many different buffs does the form get on attacks received?
 0
 # How many different buffs does the form get per attack performed?
-0
-# How many different buffs does the form get when performing a super attack?
 0
 # How many different buffs does the form get per super attack performed?
 0
