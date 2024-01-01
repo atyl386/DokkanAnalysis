@@ -88,7 +88,7 @@ class Evaluator:
 
     def evaluate(self, unit):
         score = 0.0
-        for i, attribute in enumerate(unit.getAttributes()):
+        for i, attribute in enumerate(unit.getAttributes().T):
             score += self.attributeWeights[i] * np.dot(self.turnWeights, attribute)
         return score
 
