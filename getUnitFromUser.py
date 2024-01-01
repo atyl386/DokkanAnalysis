@@ -914,16 +914,16 @@ class State:
             "Ki": LEADER_SKILL_KI + form.extraBuffs["Ki"],
             "AEAAT": 0,
             "Guard": 0,
-            "Crit": unit.pHiPoCrit
-            + (1 - unit.pHiPoCrit) * (form.linkCrit + (1 - form.linkCrit) * form.extraBuffs["Crit"]),
             "Disable Guard": 0,
-            "Evade": unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge,
             "Dmg Red against Normals": form.extraBuffs["Dmg Red"],
             "Heal": 0,
         }
+        #self.multiProcBuffs
         self.p1Buff = {"ATK": ATK_DEF_SUPPORT, "DEF": ATK_DEF_SUPPORT}
         self.p2Buff = {"ATK": form.linkAtkOnSuper + form.extraBuffs["ATK"], "DEF": form.extraBuffs["DEF"]}
         self.p3Buff = {"ATK": 0, "DEF": 0}
+        self.crit = unit.pHiPoCrit + (1 - unit.pHiPoCrit) * (form.linkCrit + (1 - form.linkCrit) * form.extraBuffs["Crit"])
+        self.evade = unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge
         self.kiPerOtherTypeOrb = 1
         self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB
         self.kiPerRainbowKiSphere = 1  # Ki per orb
@@ -940,9 +940,9 @@ class State:
         self.dmgRedB = form.extraBuffs["Dmg Red"]
         self.pCounterSA = 0  # Probability of countering an enemy super attack
         # Initialising these here, but will need to be updated everytime self.buff["Evade"] is increased, best to make a function to update evade
-        self.numAttacksReceived = NUM_ATTACKS_DIRECTED[self.slot - 1] * (1 - self.buff["Evade"])
+        self.numAttacksReceived = NUM_ATTACKS_DIRECTED[self.slot - 1] * (1 - self.evade)
         self.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * (
-            1 - self.buff["Evade"]
+            1 - self.evade
         )
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
@@ -1079,7 +1079,7 @@ class State:
             unit.rarity,
             self.slot,
             form.canAttack,
-            self.buff["Crit"],
+            self.crit,
             unit.critMultiplier,
             self.atkModifier,
             self.atkPerAttackPerformed,
@@ -1098,7 +1098,7 @@ class State:
         )
         self.normalDamageTakenPreSuper = getDamageTaken(
             0,
-            self.buff["Evade"],
+            self.evade,
             self.buff["Guard"],
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1107,7 +1107,7 @@ class State:
         )
         self.normalDamageTakenPostSuper = getDamageTaken(
             0,
-            self.buff["Evade"],
+            self.evade,
             self.buff["Guard"],
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1116,7 +1116,7 @@ class State:
         )
         self.saDamageTakenPreSuper = getDamageTaken(
             self.pNullify,
-            self.buff["Evade"],
+            self.evade,
             self.buff["Guard"],
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1125,7 +1125,7 @@ class State:
         )
         self.saDamageTakenPostSuper = getDamageTaken(
             self.pNullify,
-            self.buff["Evade"],
+            self.evade,
             self.buff["Guard"],
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1206,7 +1206,7 @@ class State:
             self.avgDefMult += self.pUSA * form.superAttacks["18 Ki"].effects["DEF"].buff
 
     def getAvgAtkMod(self, form, unit):
-        return self.buff["Crit"] * unit.critMultiplier + (1 - self.buff["Crit"]) * (
+        return self.crit * unit.critMultiplier + (1 - self.crit) * (
             self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
             + (1 - self.buff["AEAAT"])
             * (
@@ -1446,8 +1446,13 @@ class Buff(PassiveAbility):
                 state.buff[self.effect] += effectiveBuff
             elif self.effect in state.p1Buff.keys():
                 state.p1Buff[self.effect] += effectiveBuff
+            #elif self.effect in MULTI_PROC_EFFECTS:
             else:  # Edge cases
                 match self.effect:
+                    case "Crit":
+                        state.crit += effectiveBuff
+                    case "Evasion":
+                        state.evasion += effectiveBuff
                     case "Dmg Red":
                         state.dmgRedA += effectiveBuff
                         state.dmgRedB += effectiveBuff
@@ -1558,6 +1563,9 @@ class PerAttackPerformed(PerEvent):
             case "Dmg Red":
                 state.dmgRedB += cappedTurnBuff
                 state.buff["Dmg Red against Normals"] += cappedTurnBuff
+            # This won't work because need to add like buffs together
+            #case "Evasion":
+                #state.evade += (1 - self.evade) * cappedTurnBuff
         if not(self.withinTheSameTurn):
             form.extraBuffs[self.effect] += cappedTurnBuff
             self.applied += cappedTurnBuff

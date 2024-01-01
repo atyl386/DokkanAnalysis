@@ -468,6 +468,7 @@ EFFECTS = [
 EFFECTS.extend(SUPPORT_EFFECTS)
 EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)
 STACK_EFFECTS = ["ATK", "DEF"]
+MULTI_PROC_EFFECTS = ["Crit", "Evasion"]
 SUPPORT_SUPER_ATTACK_EFFECTS = ["Raise Allies ATK"]
 ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
 DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
