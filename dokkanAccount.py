@@ -5,6 +5,7 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
         ['DEF','CRT','ADD',1], # LR GT Bois
         ['ATK','ADD','CRT',0], # Infinite Zamasu
         ['ATK','ADD','DGE',0], # DF Super Saiyan Trunks (Teen)
+        ['DEF','CRT','ADD',0], # Banner Super Saiyan Gohan (Youth)
         ] 
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
     ['DEF','ADD','DGE',3], # TEQLR Gods
@@ -145,7 +146,6 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',5], # PHYLR Super Gogeta
     ['DEF','ADD','CRT',0], # LR Omega Shenron
     ['DEF','ADD','DGE',2], # LR Super Baby 2 (Giant Ape)
-    ['DEF','CRT','ADD',0], # Banner Super Saiyan Gohan (Youth)
     ['DEF','ADD','CRT',5], # Transforming Vegeta
     ['DEF','ADD','DGE',5], # Launch
     ['DEF','ADD','CRT',3], # Oceanus Shenron
