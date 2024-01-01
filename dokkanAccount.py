@@ -5,7 +5,7 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
         ['DEF','CRT','ADD',1], # LR GT Bois
         ['ATK','ADD','CRT',0], # Infinite Zamasu
         ['ATK','ADD','DGE',0], # DF Super Saiyan Trunks (Teen)
-        ['DEF','CRT','ADD',0], # Banner Super Saiyan Gohan (Youth)
+        ['DEF','DGE','ADD',0], # Banner Super Saiyan Gohan (Youth)
         ] 
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
     ['DEF','ADD','DGE',3], # TEQLR Gods
