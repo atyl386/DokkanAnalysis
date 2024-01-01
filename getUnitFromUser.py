@@ -1483,6 +1483,11 @@ class Buff(PassiveAbility):
                         state.kiPerRainbowKiSphere += effectiveBuff
                     case "P3 ATK":
                         state.p3Buff["ATK"] += effectiveBuff
+                    case "Delay Target":
+                        state.support += supportFactorConversion[self.effect] * supportBuff
+                        state.dmgRedA = 1
+                        state.dmgRedB = 1
+                        state.buff["Dmg Red against Normals"] = 1
 
 
 class TurnDependent(Buff):

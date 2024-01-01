@@ -420,18 +420,19 @@ MAX_KI = [12, 24]
 
 # Effects
 
+SPECIAL_SUPPORT_EFFECTS = ["Delay Target"]
+
 ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Rainbow Orb Change"]
 
 REGULAR_SUPPORT_EFFECTS = [
     "Ki Support",
     "ATK Support",
     "DEF Support",
-    "Delay Target",
     "Scouter",
     "Remove Status Effects",
     "Survive K.O. Attack",
 ]
-SUPPORT_EFFECTS = REGULAR_SUPPORT_EFFECTS + ORB_CHANGING_EFFECTS
+SUPPORT_EFFECTS = REGULAR_SUPPORT_EFFECTS + ORB_CHANGING_EFFECTS + SPECIAL_SUPPORT_EFFECTS
 EFFECTS = [
     "None",
     "ATK",
@@ -517,13 +518,13 @@ SUPPORT_FACTORS = [
     KI_SUPPORT_FACTOR,
     ATK_SUPPORT_100_FACTOR / AVG_SOT_STATS,
     DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS,
-    6.0,
     1,
     0.125,
     0.25,
     0.125,
     0.25,
     0.5,
+    6.0,
 ]
 
 # Hidden Potential + Equips
