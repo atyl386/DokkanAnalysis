@@ -964,6 +964,7 @@ class State:
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
 
     def setState(self, unit, form):
+        self.updateStackedStats(unit)
         for ability in form.abilities["Start of Turn"]:
             ability.applyToState(self, unit, form)
         self.atkModifier = self.getAvgAtkMod(form, unit)
@@ -973,7 +974,14 @@ class State:
 
         for ability in form.abilities["Collect Ki"]:
             ability.applyToState(self, unit, form)
-
+        avgDefStartOfTurn = getDefStat(
+            unit.DEF,
+            self.p1Buff["DEF"],
+            form.linkDef,
+            form.extraBuffs["DEF"],
+            self.p3Buff["DEF"],
+            self.stackedStats["DEF"],
+        )
         for ability in form.abilities["Receive Attacks"]:
             ability.applyToState(self, unit, form)
         self.atkModifier = self.getAvgAtkMod(form, unit)
@@ -990,7 +998,7 @@ class State:
         self.superAttacksPerformed += pAttack + self.aaSA * pNextAttack
         form.attacksPerformed += self.attacksPerformed
         form.superAttacksPerformed += self.superAttacksPerformed
-        self.updateStackedStats(form, unit)
+        self.addStacks(form, unit)
         # Compute support bonuses from super attack effects
         for superAttackType in SUPER_ATTACK_CATEGORIES:
             if superAttackType == "18 Ki":
@@ -1091,14 +1099,6 @@ class State:
             form.superAttacks["18 Ki"].effects["Crit"].buff,
         )
         self.getAvgDefMult(form, unit)
-        avgDefStartOfTurn = getDefStat(
-            unit.DEF,
-            self.p1Buff["DEF"],
-            form.linkDef,
-            form.extraBuffs["DEF"],
-            self.p3Buff["DEF"],
-            self.stackedStats["DEF"],
-        )
         self.avgDefPreSuper = getDefStat(
             unit.DEF, self.p1Buff["DEF"], form.linkDef, self.p2DefA, self.p3Buff["DEF"], self.stackedStats["DEF"]
         )
@@ -1174,9 +1174,8 @@ class State:
         ]
         self.attributes = dict(zip(ATTTRIBUTE_NAMES, attributeValues))
 
-    def updateStackedStats(self, form, unit):
-        # Needs to do two things, remove stacked attack from previous states if worn out and apply new buffs
-        # If want the stacking of initial turn and transform later
+    def updateStackedStats(self, unit):
+        # Removes stacks from previous states if worn out
         for stat in STACK_EFFECTS:
             # Update previous stack durations
             for stack in unit.stacks[stat]:
@@ -1186,7 +1185,9 @@ class State:
             # Apply stacks
             for stack in unit.stacks[stat]:
                 self.stackedStats[stat] += stack.buff
-            # Add new stacks. Has to be after apply otherwise will double count the stacks in each turn
+
+    def addStacks(self, form, unit):
+        for stat in STACK_EFFECTS:
             if unit.rarity == "LR":
                 # If stack for long enough to last to next turn
                 if form.superAttacks["18 Ki"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
