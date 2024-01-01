@@ -676,11 +676,11 @@ class Form:
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
-                "How many different buffs does the form get per attack/super performed?",
+                "How many different buffs does the form get per attack / super performed?",
                 PerAttackPerformed,
-                ["What is the maximum buff?", "Requires super attack?"],
-                [None, clc.Choice(YES_NO, case_sensitive=False)],
-                [1.0, "N"],
+                ["What is the maximum buff?", "Requires super attack?", "Within the same turn?"],
+                [None, clc.Choice(YES_NO, case_sensitive=False), clc.Choice(YES_NO, case_sensitive=False)],
+                [1.0, "N", "N"],
             )
         )
         self.abilities["Attack Enemy"].extend(
@@ -1531,6 +1531,7 @@ class PerAttackPerformed(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, args[0])
         self.requiresSuperAttack = yesNo2Bool[args[1]]
+        self.withinTheSameTurn = yesNo2Bool[args[2]]
 
     def applyToState(self, state, unit=None, form=None):
         buffPerAttack = self.effectiveBuff * (np.arange(len(state.aaPSuper) + 1) + 1)
@@ -1540,7 +1541,6 @@ class PerAttackPerformed(PerEvent):
             turnBuff = self.effectiveBuff * state.attacksPerformed
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        form.extraBuffs[self.effect] += cappedTurnBuff
         cappedBuffPerAttack = np.minimum(buffPerAttack, buffToGo)
         if not(self.requiresSuperAttack):
             match self.effect:
@@ -1558,7 +1558,9 @@ class PerAttackPerformed(PerEvent):
             case "Dmg Red":
                 state.dmgRedB += cappedTurnBuff
                 state.buff["Dmg Red against Normals"] += cappedTurnBuff
-        self.applied += cappedTurnBuff
+        if not(self.withinTheSameTurn):
+            form.extraBuffs[self.effect] += cappedTurnBuff
+            self.applied += cappedTurnBuff
 
 
 class PerAttackReceived(PerEvent):
