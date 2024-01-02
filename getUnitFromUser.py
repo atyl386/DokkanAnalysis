@@ -3,7 +3,7 @@ from dokkanUnitHelperFunctions import *
 import pickle
 
 # TODO:
-# - Majin Vegeta Bugs - Why is Active so late to trigger (should be turn 9) & Why does ATK go up after Active turn
+# - Majin Vegeta Bugs - Why does ATK go up after Active turn
 # - Add p2DefB to p2buff[DEF] when performing an active / standby
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
@@ -1722,7 +1722,7 @@ class Condition:
         self.conditionValue = LARGE_INT
 
     def isSatisfied(self, form):
-        return getattr(form, self.formAttr) >= self.conditionValue
+        return round(getattr(form, self.formAttr)) >= self.conditionValue
 
 
 class TurnCondition(Condition):
