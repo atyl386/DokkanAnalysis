@@ -443,7 +443,9 @@ N
 # What type of buff does the unit get?
 Nullify Ki-Blast
 # What is the probability this ability activates?
-1.0
+0.434
+# Is the status of this ability known beforehand?
+Y
 # What is the value of the buff?
 1.0
 # How many turns does it last for? Only applicable to abilities with a time limit?.
