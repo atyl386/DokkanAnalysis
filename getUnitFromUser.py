@@ -3,7 +3,7 @@ from dokkanUnitHelperFunctions import *
 import pickle
 
 # TODO:
-# - Majin Vegeta Bugs - Why does ATK go up after Active turn
+# - Make randomKi calc a function as is used twice
 # - Add p2DefB to p2buff[DEF] when performing an active / standby
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
@@ -945,6 +945,13 @@ class State:
         self.critPerSuperPerformed = np.zeros(MAX_TURN)
         self.APT = 0
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
+        self.randomKi = (
+            KI_SUPPORT
+            + self.kiPerOtherTypeOrb * self.numOtherTypeOrbs
+            + self.kiPerSameTypeOrb * self.numSameTypeOrbs
+            + self.kiPerOtherTypeOrb * self.numRainbowOrbs
+            + form.linkEffects["Ki"]
+        )
 
     def setState(self, unit, form):
         self.updateStackedStats(unit)
@@ -1431,13 +1438,6 @@ class Buff(PassiveAbility):
 
     def applyToState(self, state, unit=None, form=None):
         # Need to update in case one of the relevant variables has been updated
-        state.randomKi = (
-            KI_SUPPORT
-            + state.kiPerOtherTypeOrb * state.numOtherTypeOrbs
-            + state.kiPerSameTypeOrb * state.numSameTypeOrbs
-            + state.kiPerOtherTypeOrb * state.numRainbowOrbs
-            + form.linkEffects["Ki"]
-        )
         pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
         effectiveBuff = self.effectiveBuff * pHaveKi
         supportBuff = effectiveBuff * min(self.effectDuration, RETURN_PERIOD_PER_SLOT[state.slot - 1])
@@ -1504,6 +1504,13 @@ class Buff(PassiveAbility):
                         state.dmgRedA = 1
                         state.dmgRedB = 1
                         state.buff["Dmg Red against Normals"] = 1
+            state.randomKi = (
+            KI_SUPPORT
+            + state.kiPerOtherTypeOrb * state.numOtherTypeOrbs
+            + state.kiPerSameTypeOrb * state.numSameTypeOrbs
+            + state.kiPerOtherTypeOrb * state.numRainbowOrbs
+            + form.linkEffects["Ki"]
+            )
 
 
 class TurnDependent(Buff):
