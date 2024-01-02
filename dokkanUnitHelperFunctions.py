@@ -1,5 +1,6 @@
 import click as clc
 from scipy.stats import poisson
+import copy
 from dokkanUnitConstants import *
 from ast import literal_eval
 
@@ -53,16 +54,14 @@ def branchAPT(
     a12_0,
     saMult,
     pHiPo,
-    pCrit,
+    crit,
     critMultiplier,
     atkModifier,
     p2AtkBuff,
-    critBuff,
     atkPerAttackPerformed,
     critPerAttackPerformed,
     atkPerSuperPerformed,
     critPerSuperPerformed,
-    saCrit,
     sa12Crit,
 ):
     """Returns the total remaining APT of a unit in a turn recursively"""
@@ -74,20 +73,19 @@ def branchAPT(
     else:
         i += 1  # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
-        # Add damage if don't get any additional attacks 
-        pCrit1 = min((pCrit - critBuff) / (1 - critBuff) * (1 - critPerAttackPerformed[0]) + critPerAttackPerformed[0], 1)
-        if saCrit == 1:
-            saCrit2 = 1
-            pCrit2 = 1
-        else:
-            saCrit2 = saCrit + sa12Crit
-            pCrit2 = min((((pCrit - critBuff) / (1 - critBuff) - saCrit) / (1 - saCrit) * (1 - saCrit2) + saCrit2) * (1 - critPerSuperPerformed[0]) + critPerSuperPerformed[0], 1)
-        if pCrit == 1:
+        # Add damage if don't get any additional attacks
+        crit0 = copy.copy(crit)
+        crit.updateChance("On Super", critPerAttackPerformed[0], "Crit")
+        crit1 = copy.copy(crit)
+        crit.updateChance("On Super", critPerSuperPerformed[0] - critPerAttackPerformed[0], "Crit")
+        crit.updateChance("Super Attack Effect", sa12Crit, "Crit")
+        crit2 = copy.copy(crit)
+        if crit0.prob == 1:
             atkModifier1 = critMultiplier
             atkModifier2 = critMultiplier
         else:
-            atkModifier1 = (atkModifier - critMultiplier * pCrit) / (1 - pCrit) * (1 - pCrit1) + pCrit1 * critMultiplier
-            atkModifier2 = (atkModifier - critMultiplier * pCrit) / (1 - pCrit) * (1 - pCrit2) + pCrit2 * critMultiplier
+            atkModifier1 = (atkModifier - critMultiplier * crit0.prob) / (1 - crit0.prob) * (1 - crit1.prob) + crit1.prob * critMultiplier
+            atkModifier2 = (atkModifier - critMultiplier * crit0.prob) / (1 - crit0.prob) * (1 - crit2.prob) + crit2.prob * critMultiplier
             
         tempAPT0 = branchAPT(
             i,
@@ -103,16 +101,14 @@ def branchAPT(
             a12_0,
             saMult,
             pHiPo,
-            pCrit,
+            crit0,
             critMultiplier,
             atkModifier,
             p2AtkBuff,
-            critBuff,
             atkPerAttackPerformed,
             critPerAttackPerformed,
             atkPerSuperPerformed,
             critPerSuperPerformed,
-            saCrit,
             sa12Crit,
         )
         tempAPT1 = branchAPT(
@@ -129,16 +125,14 @@ def branchAPT(
             a12_0,
             saMult,
             pHiPo,
-            pCrit1,
+            crit1,
             critMultiplier,
             atkModifier1,
-            atkPerAttackPerformed[0],
-            critPerAttackPerformed[0],
+            p2AtkBuff + atkPerAttackPerformed[0],
             atkPerAttackPerformed[1:],
             critPerAttackPerformed[1:],
             atkPerSuperPerformed,
             critPerSuperPerformed,
-            saCrit,
             sa12Crit,
         )
         tempAPT2 = branchAPT(
@@ -155,16 +149,14 @@ def branchAPT(
             a12_0,
             saMult,
             pHiPo,
-            pCrit2,
+            crit2,
             critMultiplier,
             atkModifier2,
-            atkPerSuperPerformed[0],
-            critPerSuperPerformed[0],
+            p2AtkBuff + atkPerSuperPerformed[0],
             atkPerAttackPerformed,
             critPerAttackPerformed,
             atkPerSuperPerformed[1:],
             critPerSuperPerformed[1:],
-            saCrit2,
             sa12Crit,
         )
         return pSA[i] * (tempAPT2 + additional12Ki) + (1 - pSA[i]) * (
@@ -316,7 +308,7 @@ def getAPT(
     rarity,
     slot,
     canAttack,
-    pCrit0,
+    crit,
     critMultiplier,
     preAtkModifier,
     atkPerAttackPerformed,
@@ -344,11 +336,23 @@ def getAPT(
             NUM_ATTACKS_DIRECTED[slot - 1] * normalCounterMult
             + NUM_SUPER_ATTACKS_DIRECTED[slot - 1] * pCounterSA * saCounterMult
         ) * normal
-        pCritN = min(pCrit0 + (1 - pCrit0) * critPerAttackPerformed[0], 1)
-        pCritSA = min(pCrit0 + (1 - pCrit0) * (critPerSuperPerformed[0] + (1 - critPerSuperPerformed[0]) * sa12Crit), 1)
-        pCritUSA = min(
-            pCrit0 + (1 - pCrit0) * (critPerSuperPerformed[0] + (1 - critPerSuperPerformed[0]) * sa18Crit), 1
-        )
+        pCrit0 = crit.prob
+        crit.updateChance("On Super", critPerAttackPerformed[0], "Crit")
+        critN = copy.copy(crit)
+        crit.updateChance("On Super", critPerSuperPerformed[0] - critPerAttackPerformed[0], "Crit")
+        crit.updateChance("Super Attack Effect", sa12Crit, "Crit")
+        critSA = copy.copy(crit)
+        crit.updateChance("Super Attack Effect", sa18Crit - sa12Crit, "Crit")
+        critUSA = copy.copy(crit)
+        if pCrit0 == 1:
+            atkModifierN = 1
+            atkModifierSA = 1
+            atkModifierUSA = 1
+        else:
+            atkModifierN = (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - critN.prob) + critN.prob * critMultiplier
+            atkModifierSA = (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - critSA.prob) + critSA.prob * critMultiplier
+            atkModifierUSA = (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - critUSA.prob) + critUSA.prob * critMultiplier
+
         apt = pN * (
             normal * preAtkModifier
             + branchAPT(
@@ -365,16 +369,14 @@ def getAPT(
                 a12_0,
                 sa12Atk,
                 HiPopAA,
-                pCritN,
+                critN,
                 critMultiplier,
-                (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritN) + pCritN * critMultiplier,
+                atkModifierN,
                 atkPerAttackPerformed[0],
-                critPerAttackPerformed[0],
                 atkPerAttackPerformed[1:],
                 critPerAttackPerformed[1:],
                 atkPerSuperPerformed,
                 critPerSuperPerformed,
-                0,
                 sa12Crit,
             )
         ) + pSA * (
@@ -393,16 +395,14 @@ def getAPT(
                 a12_0,
                 sa12Atk,
                 HiPopAA,
-                pCritSA,
+                critSA,
                 critMultiplier,
-                (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritSA) + pCritSA * critMultiplier,
+                atkModifierSA,
                 atkPerSuperPerformed[0],
-                critPerSuperPerformed[0],
                 atkPerAttackPerformed,
                 critPerAttackPerformed,
                 atkPerSuperPerformed[1:],
                 critPerSuperPerformed[1:],
-                sa12Crit,
                 sa12Crit,
             )
         )
@@ -423,17 +423,14 @@ def getAPT(
                     a12_0,
                     sa12Atk,
                     HiPopAA,
-                    pCritUSA,
+                    critUSA,
                     critMultiplier,
-                    (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - pCritSA)
-                    + pCritUSA * critMultiplier,
+                    atkModifierUSA,
                     atkPerSuperPerformed[0],
-                    critPerSuperPerformed[0],
                     atkPerAttackPerformed,
                     critPerAttackPerformed,
                     atkPerSuperPerformed[1:],
                     critPerSuperPerformed[1:],
-                    sa18Crit,
                     sa12Crit,
                 )
             )
@@ -467,3 +464,18 @@ def logisticMap(x, x_max, L=100, d=1, x_min=-7):
     x_0 = (x_min + x_max) / 2
     k = 2 * np.log((L - d) / d) / (x_max - x_min)
     return L / (1 + np.exp(-k * (x - x_0)))
+
+
+class MultiChanceBuff:
+    def __init__(self, effect):
+        self.chances = copy.copy(NULL_MULTI_CHANCE_DICT[effect])
+        self.prob = 0
+    def calcProb(self):
+        return 1 - np.prod([max(1 - p, 0) for p in self.chances.values()])
+    def updateAttacksReceived(self, state):
+        pass
+    def updateChance(self, chanceKey, increment, effect, state=None):
+        self.chances[chanceKey] += increment
+        self.prob = self.calcProb()
+        if effect == "Evasion":
+            self.updateAttacksReceived(state)

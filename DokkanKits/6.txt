@@ -174,6 +174,22 @@ N
 0
 # How many Domain skills does the form have?
 0
+# How many active skill buffs does the form have?
+1
+# What type of buff does the unit get?
+Heal
+# What is the value of the buff?
+0.4
+# How many turns does it last?
+1
+# How many times can it be activated?
+1
+# How many conditions have to be met?
+1
+# What type of condition is # 1?
+Max HP
+# What is the maximum HP condition?
+0.4
 # How many different buffs does the form get when performing a super attack / attacking?
 2
 # What type of buff does the unit get?
@@ -192,22 +208,6 @@ DEF
 1.4
 # How many turns does it last for? Only applicable to abilities with a time limit?.
 1
-# How many active skill buffs does the form have?
-1
-# What type of buff does the unit get?
-Heal
-# What is the value of the buff?
-0.4
-# How many turns does it last?
-1
-# How many times can it be activated?
-1
-# How many conditions have to be met?
-1
-# What type of condition is # 1?
-Max HP
-# What is the maximum HP condition?
-0.4
 # How many active skill attacks does the form have?
 0
 # How many Non-Revival Counterattack Standby Finish Skills does the form have?

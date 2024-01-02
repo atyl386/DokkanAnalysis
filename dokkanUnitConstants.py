@@ -10,7 +10,7 @@ COMMENT_CHAR = "#"
 END_OF_FILE_STRING = ""
 
 # Phases of a Turn
-PHASES = ["Start of Turn", "Active / Finish Skills", "Collect Ki", "Receive Attacks", "Attack Enemy"]
+PHASES = ["Start of Turn", "Active / Finish Attacks", "Collect Ki", "Receive Attacks", "Attack Enemy"]
 
 # High-level Unit constants
 EXCLUSIVITIES = ["DF", "DFLR", "LR", "CLR", "BU", "F2P", "F2PLR", "Super Strike"]
@@ -217,8 +217,8 @@ NUM_ATTACKS_DIRECTED = (
     + NUM_ATTACKS_SLOT_SPECIFIC_BEFORE_ATTACKING
     + NUM_ATTACKS_SLOT_SPECIFIC_AFTER_ATTACKING * (1 - PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS)
 )
-P_NULLIFY_FROM_DISABLE = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN
-P_NULLIFY_FROM_DISABLE_SUPER = (NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING) * P_NULLIFY_FROM_DISABLE
+P_NULLIFY_FROM_DISABLE_ACTIVE = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN
+P_NULLIFY_FROM_DISABLE_SUPER = (NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING) / NUM_ATTACKS_PER_TURN * P_NULLIFY_FROM_DISABLE_ACTIVE
 NUM_SUPER_ATTACKS_SLOT_SPECIFIC = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN * NUM_ATTACKS_SLOT_SPECIFIC
 NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING = np.array(
     [NUM_SUPER_ATTACKS_SLOT_SPECIFIC[0] * PRE_SLOT_1_ATTACK_FRAC, 0, 0]
@@ -411,9 +411,10 @@ LINK_DATA = np.genfromtxt(
     "C:/Users/Tyler/Documents/DokkanAnalysis/LinkTable.csv",
     dtype="str",
     delimiter=",",
-    skip_header=True,
+    skip_header=False,
 )
-LINK_NAMES = list(LINK_DATA[:, 0])
+LINK_NAMES = list(LINK_DATA[1:, 0])
+LINK_EFFECT_NAMES = list(LINK_DATA[0, 1:10])
 
 # Ki
 MAX_KI = [12, 24]
@@ -436,7 +437,6 @@ SUPPORT_EFFECTS = REGULAR_SUPPORT_EFFECTS + ORB_CHANGING_EFFECTS + SPECIAL_SUPPO
 EFFECTS = [
     "None",
     "ATK",
-    "P3 ATK",
     "DEF",
     "Ki",
     "Lower ATK",
@@ -468,7 +468,7 @@ EFFECTS = [
 EFFECTS.extend(SUPPORT_EFFECTS)
 EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)
 STACK_EFFECTS = ["ATK", "DEF"]
-MULTI_PROC_EFFECTS = ["Crit", "Evasion"]
+P3_EFFECTS_SUFFIX = ["ATK", "DEF", "Crit", "Evasion", "Disable Action"]
 SUPPORT_SUPER_ATTACK_EFFECTS = ["Raise Allies ATK"]
 ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
 DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
@@ -476,7 +476,14 @@ AVG_SA_MULT = 5
 SUPER_ATTACK_SUPPORT_FACTORS = [ATK_SUPPORT_100_FACTOR / AVG_SA_MULT]
 OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action", "Lowers ATK", "Lowers DEF", "Attack All"]
 SUPER_ATTACK_EFFECTS = STACK_EFFECTS + SUPPORT_SUPER_ATTACK_EFFECTS + OTHER_SUPER_ATTACK_EFFECTS
-EXTRA_BUFF_EFFECTS = ["ATK", "DEF", "Crit", "Ki", "Dmg Red"]
+EXTRA_BUFF_EFFECTS = ["ATK", "DEF", "Crit", "Ki", "Dmg Red", "Evasion"]
+
+# Multi-Chance Effects
+MULTI_CHANCE_EFFECTS = ["Crit", "Evasion", "Nullify"]
+MULTI_CHANCE_EFFECTS_NO_NULLIFY = [effect for effect in MULTI_CHANCE_EFFECTS if effect != "Nullify"]
+CRIT_CHANCES = ["HiPo", "Start of Turn", "Links", "On Super", "Active Skill", "Super Attack Effect"]
+EVASION_CHANCES = ["HiPo", "Start of Turn", "Links", "On Super", "Active Skill"]
+NULLIFY_CHANCES = ["Disable Action", "SA Counter", "Nullification"]
 
 # Conditions
 CONDITIONS = [
@@ -594,6 +601,12 @@ rarity2MaxKi = dict(zip(UNIQUE_RARITIES, MAX_KI))
 
 # Leader skill
 leaderSkillConversion = dict(zip(LEADER_SKILL_TIERS, LEADER_SKILL_SCORES))
+
+# Multi-Chance effects
+NULL_CRIT_CHANCE_DICT = dict(zip(CRIT_CHANCES, np.zeros(len(CRIT_CHANCES))))
+NULL_EVASION_CHANCE_DICT = dict(zip(EVASION_CHANCES, np.zeros(len(EVASION_CHANCES))))
+NULL_NULLIFY_CHANCE_DICT = dict(zip(NULLIFY_CHANCES, np.zeros(len(NULLIFY_CHANCES))))
+NULL_MULTI_CHANCE_DICT = dict(zip(MULTI_CHANCE_EFFECTS, [NULL_CRIT_CHANCE_DICT, NULL_EVASION_CHANCE_DICT, NULL_NULLIFY_CHANCE_DICT]))
 
 # SBR
 sealTurnConversion = dict(zip(DEBUFF_DURATIONS, SEAL_SCORE_PER_TURN))

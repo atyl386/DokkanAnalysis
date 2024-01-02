@@ -1,17 +1,15 @@
 import datetime as dt
 from dokkanUnitHelperFunctions import *
-import copy
 import pickle
 
 # TODO:
-# - Need to add within same turn parameters to attacks performed (better than having to make a whole other class I think.)
+# - Add multi-processing
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
 # - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
 # - Also might want to include attack all in atk calcs.
 # - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
 # - Add some functionality that can update existing input .txt files with new questions (assuming not relevant to exisiting unit)
-# - Whenever I update Evasion change in abilities, I need to reocompute evasion chance using self.buff["Evade"] = self.buff["Evade"] + (1 - self.buff["Evade"]) * (unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge)
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
 # - Instead of asking user how many of something, should ask until they enteran exit key ak a while loop instead of for loop
 # - Should read up on python optimisation techniques once is running and se how long it takes. But try be efficient you go.
@@ -127,6 +125,12 @@ def getCondition(inputHelper):
         return CompositeCondition(operator, condition)
     else:
         return condition[0]
+
+# Overwrite this class function as has additional 
+def updateAttacksReceived(self, state):
+    state.numAttacksReceived = NUM_ATTACKS_DIRECTED[state.slot - 1] * (1 - self.prob)
+    state.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * (1 - self.prob)
+MultiChanceBuff.updateAttacksReceived = updateAttacksReceived
 
 
 ######################################################### Classes #################################################################
@@ -263,9 +267,10 @@ class Unit:
         self.HP += HiPoStats[0]
         self.ATK += HiPoStats[1] + HiPoAbilities[0]
         self.DEF += HiPoStats[2] + HiPoAbilities[1]
-        self.pHiPoAA = HiPoAbilities[2]
-        self.pHiPoCrit = HiPoAbilities[3]
-        self.pHiPoDodge = HiPoAbilities[4]
+        self.pHiPo = {}
+        self.pHiPo["AA"] = HiPoAbilities[2]
+        self.pHiPo["Crit"] = HiPoAbilities[3]
+        self.pHiPo["Evasion"] = HiPoAbilities[4]
         self.TAB = HIPO_TYPE_ATK_BOOST[self.nCopies - 1]
         self.TDB = HIPO_TYPE_DEF_BOOST[self.nCopies - 1]
 
@@ -461,15 +466,8 @@ class Form:
         self.EZA = eza
         self.linkNames = [""] * MAX_NUM_LINKS
         self.linkCommonality = 0
-        self.extraBuffs = dict(zip(EXTRA_BUFF_EFFECTS, [0] * len(EXTRA_BUFF_EFFECTS)))
-        self.linkKi = 0
-        self.linkAtkSoT = 0
-        self.linkDef = 0
-        self.linkCrit = 0
-        self.linkAtkOnSuper = 0
-        self.linkDodge = 0
-        self.linkDmgRed = 0
-        self.linkHealing = 0
+        self.extraBuffs = dict(zip(EXTRA_BUFF_EFFECTS, np.zeros(len(EXTRA_BUFF_EFFECTS))))
+        self.linkEffects = dict(zip(LINK_EFFECT_NAMES, np.zeros(len(LINK_EFFECT_NAMES))))
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
@@ -573,15 +571,7 @@ class Form:
                 ["Increase Damage Received", 0.3, 0.5, 5],
             )
         )
-        ############################################ Active / Finish Skills ###############################################
-        self.abilities["Active / Finish Skills"].extend(
-            abilityQuestionaire(
-                self,
-                "How many different buffs does the form get when performing a super attack / attacking?",
-                PerformingSuperAttack,
-            )
-        )
-        self.abilities["Active / Finish Skills"].extend(
+        self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
                 "How many active skill buffs does the form have?",
@@ -593,10 +583,18 @@ class Form:
                     "How many times can it be activated?",
                 ],
                 [clc.Choice(EFFECTS, case_sensitive=False), None, None, None],
-                ["P3 ATK", 1.0, 1, 1],
+                ["ATK", 1.0, 1, 1],
             )
         )
-        self.abilities["Active / Finish Skills"].extend(
+        ############################################ Active / Finish Attacks ###############################################
+        self.abilities["Active / Finish Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get when performing a super attack / attacking?",
+                PerformingSuperAttack,
+            )
+        )
+        self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
                 "How many active skill attacks does the form have?",
@@ -609,7 +607,7 @@ class Form:
                 ["Ultimate", 0.0],
             )
         )
-        self.abilities["Active / Finish Skills"].extend(
+        self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
                 "How many Non-Revival Counterattack Standby Finish Skills does the form have?",
@@ -741,16 +739,9 @@ class Form:
                 default=-1,
             )
             link = Link(self.linkNames[linkIndex], linkCommonality)
-            self.linkCommonality += link.commonality
-            self.linkKi += link.ki
-            self.linkAtkSoT += link.atkSoT
-            self.linkDef += link.defence
-            self.linkCrit += link.crit
-            self.linkAtkOnSuper += link.atkOnSuper
-            self.linkDodge += link.dodge
-            self.linkDmgRed += link.dmgRed
-            self.linkHealing += link.healing
-        self.linkCommonality /= MAX_NUM_LINKS
+            for linkEffectName in LINK_EFFECT_NAMES:
+                self.linkEffects[linkEffectName] += link.effects[linkEffectName]
+        self.linkEffects["Commonality"] /= MAX_NUM_LINKS
 
     def getSuperAttacks(self, rarity, eza):
         for superAttackType in SUPER_ATTACK_CATEGORIES:
@@ -867,19 +858,14 @@ class Form:
 class Link:
     def __init__(self, name, commonality):
         self.name = name
-        i = LINK_NAMES.index(self.name)
-        self.ki = float(LINK_DATA[i, 10])
-        self.atkSoT = float(LINK_DATA[i, 11])
-        self.defence = float(LINK_DATA[i, 12])
-        self.atkOnSuper = float(LINK_DATA[i, 13])
-        self.crit = float(LINK_DATA[i, 14])
-        self.dmgRed = float(LINK_DATA[i, 15])
-        self.dodge = float(LINK_DATA[i, 16])
-        self.healing = float(LINK_DATA[i, 17])
+        i = LINK_NAMES.index(self.name) + 1
+        self.effects = {}
+        for j in range(len(LINK_EFFECT_NAMES) - 1):
+            self.effects[LINK_EFFECT_NAMES[j]] = float(LINK_DATA[i, 10 + j])
         if commonality == -1:
-            self.commonality = float(LINK_DATA[i, 9])
+            self.effects[LINK_EFFECT_NAMES[-1]] = float(LINK_DATA[i, 9])
         else:
-            self.commonality = float(commonality)
+            self.effects[LINK_EFFECT_NAMES[-1]] = float(commonality)
 
 
 class SuperAttack:
@@ -918,32 +904,33 @@ class State:
             "Dmg Red against Normals": form.extraBuffs["Dmg Red"],
             "Heal": 0,
         }
-        #self.multiProcBuffs
-        self.p1Buff = {"ATK": ATK_DEF_SUPPORT, "DEF": ATK_DEF_SUPPORT}
-        self.p2Buff = {"ATK": form.linkAtkOnSuper + form.extraBuffs["ATK"], "DEF": form.extraBuffs["DEF"]}
-        self.p3Buff = {"ATK": 0, "DEF": 0}
-        self.crit = unit.pHiPoCrit + (1 - unit.pHiPoCrit) * (form.linkCrit + (1 - form.linkCrit) * form.extraBuffs["Crit"])
-        self.evade = unit.pHiPoDodge + (1 - unit.pHiPoDodge) * form.linkDodge
+        self.p1Buff = {}
+        self.p2Buff = {}
+        self.p3Buff = {}
+        for effect in STACK_EFFECTS:
+            self.p1Buff[effect] = ATK_DEF_SUPPORT
+            self.p2Buff[effect] = form.extraBuffs[effect]
+            self.p3Buff[effect] = 0
+        self.p2Buff["ATK"] += form.linkEffects["On Super ATK"]
+        self.multiChanceBuff = {}
+        for effect in MULTI_CHANCE_EFFECTS:
+            self.multiChanceBuff[effect] = MultiChanceBuff(effect)
+            if effect in MULTI_CHANCE_EFFECTS_NO_NULLIFY:
+                self.multiChanceBuff[effect].updateChance("HiPo", unit.pHiPo[effect], effect, self)
+                self.multiChanceBuff[effect].updateChance("Links", form.linkEffects[effect], effect, self)
+                self.multiChanceBuff[effect].updateChance("On Super", form.extraBuffs[effect], effect, self)
         self.kiPerOtherTypeOrb = 1
         self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB
         self.kiPerRainbowKiSphere = 1  # Ki per orb
         self.numRainbowOrbs = orbChangeConversion["No Orb Change"]["Rainbow"]
         self.numOtherTypeOrbs = orbChangeConversion["No Orb Change"]["Other"]
         self.numSameTypeOrbs = orbChangeConversion["No Orb Change"]["Same"]
-        self.p2DefA = 0
         self.p2DefB = 0
         self.support = 0  # Support score
-        self.pNullify = 0  # Probability of nullifying all enemy super attacks
         self.aaPSuper = []  # Probabilities of doing additional super attacks and guaranteed additionals
         self.aaPGuarantee = []
         self.dmgRedA = form.extraBuffs["Dmg Red"]
         self.dmgRedB = form.extraBuffs["Dmg Red"]
-        self.pCounterSA = 0  # Probability of countering an enemy super attack
-        # Initialising these here, but will need to be updated everytime self.buff["Evade"] is increased, best to make a function to update evade
-        self.numAttacksReceived = NUM_ATTACKS_DIRECTED[self.slot - 1] * (1 - self.evade)
-        self.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * (
-            1 - self.evade
-        )
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
         # Required for getting APTs for individual attacks
@@ -960,7 +947,7 @@ class State:
             ability.applyToState(self, unit, form)
         self.atkModifier = self.getAvgAtkMod(form, unit)
 
-        for ability in form.abilities["Active / Finish Skills"]:
+        for ability in form.abilities["Active / Finish Attacks"]:
             ability.applyToState(self, unit, form)
 
         for ability in form.abilities["Collect Ki"]:
@@ -968,7 +955,7 @@ class State:
         avgDefStartOfTurn = getDefStat(
             unit.DEF,
             self.p1Buff["DEF"],
-            form.linkDef,
+            form.linkEffects["DEF"],
             form.extraBuffs["DEF"],
             self.p3Buff["DEF"],
             self.stackedStats["DEF"],
@@ -980,8 +967,8 @@ class State:
         self.pN, self.pSA, self.pUSA = getAttackDistribution(
             self.buff["Ki"], self.randomKi, form.intentional12Ki, unit.rarity
         )
-        self.aaSA = branchAS(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
-        self.aa = branchAA(-1, len(self.aaPSuper), unit.pHiPoAA, 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPoAA)
+        self.aaSA = branchAS(-1, len(self.aaPSuper), unit.pHiPo["AA"], 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPo["AA"])
+        self.aa = branchAA(-1, len(self.aaPSuper), unit.pHiPo["AA"], 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPo["AA"])
         pAttack = 1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]
         pNextAttack = pAttack - PROBABILITY_KILL_ENEMY_PER_ATTACK
         self.attacksPerformed += pAttack + self.aa * pNextAttack
@@ -1007,24 +994,17 @@ class State:
                     )
                 )
                 self.support += supportFactor * numSupers
-            self.pNullify += (
-                (1 - self.pNullify)
-                * numSupers
-                * P_NULLIFY_FROM_DISABLE
-                * form.superAttacks[superAttackType].effects["Disable Action"].buff
-            )
+            self.multiChanceBuff["Nullify"].updateChance("Disable Action", numSupers * P_NULLIFY_FROM_DISABLE_SUPER[self.slot - 1] * form.superAttacks[superAttackType].effects["Disable Action"].buff, "Nullify")
 
         for ability in form.abilities["Attack Enemy"]:
             ability.applyToState(self, unit, form)
-        self.p2Buff["DEF"] = self.p2DefA + self.p2DefB
-        self.pNullify = self.pNullify + (1 - self.pNullify) * self.pCounterSA
         self.normal = getNormal(
             unit.kiMod12,
             self.ki,
             unit.ATK,
             self.p1Buff["ATK"],
             self.stackedStats["ATK"],
-            form.linkAtkSoT,
+            form.linkEffects["SoT ATK"],
             self.p2Buff["ATK"],
             self.p3Buff["ATK"],
         )
@@ -1033,7 +1013,7 @@ class State:
             unit.ATK,
             self.p1Buff["ATK"],
             self.stackedStats["ATK"],
-            form.linkAtkSoT,
+            form.linkEffects["SoT ATK"],
             self.p2Buff["ATK"],
             self.p3Buff["ATK"],
             form.superAttacks["12 Ki"].multiplier,
@@ -1047,7 +1027,7 @@ class State:
             unit.ATK,
             self.p1Buff["ATK"],
             self.stackedStats["ATK"],
-            form.linkAtkSoT,
+            form.linkEffects["SoT ATK"],
             self.p2Buff["ATK"],
             self.p3Buff["ATK"],
             form.superAttacks["18 Ki"].multiplier,
@@ -1068,9 +1048,9 @@ class State:
             self.normal,
             self.sa,
             self.usa,
-            unit.pHiPoAA,
+            unit.pHiPo["AA"],
             self.aaPGuarantee,
-            self.pCounterSA,
+            self.multiChanceBuff["Nullify"].chances["SA Counter"],
             form.normalCounterMult,
             form.saCounterMult,
             self.pN,
@@ -1079,7 +1059,7 @@ class State:
             unit.rarity,
             self.slot,
             form.canAttack,
-            self.crit,
+            copy.copy(self.multiChanceBuff["Crit"]),
             unit.critMultiplier,
             self.atkModifier,
             self.atkPerAttackPerformed,
@@ -1091,14 +1071,15 @@ class State:
         )
         self.getAvgDefMult(form, unit)
         self.avgDefPreSuper = getDefStat(
-            unit.DEF, self.p1Buff["DEF"], form.linkDef, self.p2DefA, self.p3Buff["DEF"], self.stackedStats["DEF"]
+            unit.DEF, self.p1Buff["DEF"], form.linkEffects['DEF'], self.p2Buff["DEF"], self.p3Buff["DEF"], self.stackedStats["DEF"]
         )
+        self.p2Buff["DEF"] += self.p2DefB
         self.avgDefPostSuper = getDefStat(
-            unit.DEF, self.p1Buff["DEF"], form.linkDef, self.p2Buff["DEF"], self.p3Buff["DEF"], self.avgDefMult
+            unit.DEF, self.p1Buff["DEF"], form.linkEffects['DEF'], self.p2Buff["DEF"], self.p3Buff["DEF"], self.avgDefMult
         )
         self.normalDamageTakenPreSuper = getDamageTaken(
             0,
-            self.evade,
+            self.multiChanceBuff["Evasion"].prob,
             self.buff["Guard"],
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1107,7 +1088,7 @@ class State:
         )
         self.normalDamageTakenPostSuper = getDamageTaken(
             0,
-            self.evade,
+            self.multiChanceBuff["Evasion"].prob,
             self.buff["Guard"],
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1115,8 +1096,8 @@ class State:
             self.avgDefPostSuper,
         )
         self.saDamageTakenPreSuper = getDamageTaken(
-            self.pNullify,
-            self.evade,
+            self.multiChanceBuff["Nullify"].prob,
+            self.multiChanceBuff["Evasion"].prob,
             self.buff["Guard"],
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1124,8 +1105,8 @@ class State:
             self.avgDefPreSuper,
         )
         self.saDamageTakenPostSuper = getDamageTaken(
-            self.pNullify,
-            self.evade,
+            self.multiChanceBuff["Nullify"].prob,
+            self.multiChanceBuff["Evasion"].prob,
             self.buff["Guard"],
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1133,7 +1114,7 @@ class State:
             self.avgDefPostSuper,
         )
         self.buff["Heal"] += (
-            form.linkHealing
+            form.linkEffects["Heal"]
             + (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1])
             * avgDefStartOfTurn
             * self.numSameTypeOrbs
@@ -1149,7 +1130,7 @@ class State:
         ) / (NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1])
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
         self.useability = (
-            unit.teams / NUM_TEAMS_MAX * (1 + USEABILITY_SUPPORT_FACTOR * self.support + form.linkCommonality)
+            unit.teams / NUM_TEAMS_MAX * (1 + USEABILITY_SUPPORT_FACTOR * self.support + form.linkEffects["Commonality"])
         )
         attributeValues = [
             unit.leaderSkill,
@@ -1206,7 +1187,7 @@ class State:
             self.avgDefMult += self.pUSA * form.superAttacks["18 Ki"].effects["DEF"].buff
 
     def getAvgAtkMod(self, form, unit):
-        return self.crit * unit.critMultiplier + (1 - self.crit) * (
+        return self.multiChanceBuff["Crit"].prob * unit.critMultiplier + (1 - self.multiChanceBuff["Crit"].prob) * (
             self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
             + (1 - self.buff["AEAAT"])
             * (
@@ -1243,7 +1224,7 @@ class GiantRageMode(SingleTurnAbility):
         slot = 1  # Arbitarary choice, could also be 2 or 3
         # Create a form so can get access to abilityQuestionaire to ask user questions
         self.giantRageForm = Form(form.inputHelper, slot)
-        self.giantRageForm.abilities.extend(
+        self.giantRageForm.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self.giantRageForm,
                 "How many buffs does this giant/rage mode have?",
@@ -1258,7 +1239,7 @@ class GiantRageMode(SingleTurnAbility):
             self.giantRageModeState = State(unit, form, state.slot, state.turn)
             for ability in self.giantRageForm.abilities:  # Apply the giant/form abilities
                 ability.applyToState(self.giantRageModeState)
-            giantRageUnit = copy(unit)
+            giantRageUnit = copy.deepcopy(unit)
             giantRageUnit.ATK = self.ATK
             self.giantRageModeState.setState(self.giantRageForm, giantRageUnit)  # Calculate the APT of the state
             state.APT += self.giantRageModeState.APT * NUM_SLOTS * giantRageUnit.giantRageDuration
@@ -1320,8 +1301,10 @@ class ActiveSkillBuff(SingleTurnAbility):
             start = state.turn
             end = start + self.duration - 1
             params = [start, end]
+            if self.effect in P3_EFFECTS_SUFFIX:
+                self.effect = "P3 " + self.effect
             ability = TurnDependent(form, 1, False, self.effect, self.buff, self.duration, params)
-            form.abilities["Active / Finish Skills"].append(ability)
+            form.abilities["Start of Turn"].append(ability)
 
 
 class ActiveSkillAttack(SingleTurnAbility):
@@ -1342,7 +1325,7 @@ class ActiveSkillAttack(SingleTurnAbility):
                     unit.ATK,
                     state.p1Buff["ATK"],
                     state.stackedStats["ATK"],
-                    self.form.linkAtkSoT,
+                    self.form.linkEffects['SoT ATK'],
                     state.p2Buff["ATK"],
                     state.p3Buff["ATK"],
                     self.activeMult,
@@ -1372,7 +1355,7 @@ class StandbyFinishSkill(SingleTurnAbility):
                     unit.ATK,
                     state.p1Buff["ATK"],
                     state.stackedStats["ATK"],
-                    self.form.linkAtkSoT,
+                    self.form.linkEffects['SoT ATK'],
                     state.p2Buff["ATK"],
                     state.p3Buff["ATK"],
                     self.activeMult * (1 + self.attackBuff),
@@ -1426,7 +1409,7 @@ class Buff(PassiveAbility):
             + state.kiPerOtherTypeOrb * state.numOtherTypeOrbs
             + state.kiPerSameTypeOrb * state.numSameTypeOrbs
             + state.kiPerOtherTypeOrb * state.numRainbowOrbs
-            + form.linkKi
+            + form.linkEffects["Ki"]
         )
         pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
         effectiveBuff = self.effectiveBuff * pHaveKi
@@ -1446,19 +1429,16 @@ class Buff(PassiveAbility):
                 state.buff[self.effect] += effectiveBuff
             elif self.effect in state.p1Buff.keys():
                 state.p1Buff[self.effect] += effectiveBuff
-            #elif self.effect in MULTI_PROC_EFFECTS:
+            elif self.effect in MULTI_CHANCE_EFFECTS_NO_NULLIFY:
+                state.multiChanceBuff[self.effect].updateChance("Start of Turn", effectiveBuff, self.effect, state)
             else:  # Edge cases
                 match self.effect:
-                    case "Crit":
-                        state.crit += effectiveBuff
-                    case "Evasion":
-                        state.evasion += effectiveBuff
                     case "Dmg Red":
                         state.dmgRedA += effectiveBuff
                         state.dmgRedB += effectiveBuff
                         state.buff["Dmg Red against Normals"] += effectiveBuff
                     case "Disable Action":
-                        state.pNullify += (P_NULLIFY_FROM_DISABLE * (1 - state.pNullify))
+                        state.multiChanceBuff["Nullify"].updateChance(self.effect, P_NULLIFY_FROM_DISABLE_SUPER[self.slot - 1], "Nullify", state)
                     case "AdditionalSuper":
                         state.aaPSuper.append(activationProbability)
                         state.aaPGuarantee.append(0)
@@ -1479,6 +1459,15 @@ class Buff(PassiveAbility):
                         state.kiPerRainbowKiSphere += effectiveBuff
                     case "P3 ATK":
                         state.p3Buff["ATK"] += effectiveBuff
+                    case "P3 DEF":
+                        state.p3Buff["DEF"] += effectiveBuff
+                    case "P3 Crit":
+                        state.multiChanceBuff["Crit"].updateChance("Active Skill", effectiveBuff, "Crit", state)
+                        state.atkModifier = state.getAvgAtkMod(form, unit)
+                    case "P3 Evasion":
+                        state.multiChanceBuff["Evasion"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
+                    case "P3 Disable Action":
+                        state.multiChanceBuff["Nullify"].updateChance("Disable Action", P_NULLIFY_FROM_DISABLE_ACTIVE, "Nullify", state)
                     case "Delay Target":
                         state.support += supportFactorConversion[self.effect] * supportBuff
                         state.dmgRedA = 1
@@ -1586,7 +1575,7 @@ class PerAttackReceived(PerEvent):
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "DEF":
-                state.p2DefA += min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
+                state.p2Buff["DEF"] += min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
         self.applied += cappedTurnBuff
 
 
@@ -1618,7 +1607,7 @@ class AfterAttackReceived(PassiveAbility):
         else:
             match self.effect:
                 case "DEF":
-                    state.p2DefA += cappedTurnBuff
+                    state.p2Buff["DEF"] += cappedTurnBuff
                 # These addiotnal super abilities won't be applied correctly if self.effectDuration > 2.
                 case "AdditionalSuper":
                     state.aaPSuper.append(cappedTurnBuff)
@@ -1689,9 +1678,10 @@ class Nullification(PassiveAbility):
 
     def applyToState(self, state, unit=None, form=None):
         pNullify = self.activationProbability * aprioriProbMod(saFracConversion[self.effect], True)
-        state.pNullify += (1 - state.pNullify) * pNullify
         if yesNo2Bool[self.hasCounter]:
-            state.pCounterSA += (1 - state.pCounterSA) * pNullify
+            state.multiChanceBuff["Nullify"].updateChance("SA Counter", pNullify, "Nullify")
+        else:
+            state.multiChanceBuff["Nullify"].updateChance("Nullification", pNullify, "Nullify")
 
 
 class Condition:

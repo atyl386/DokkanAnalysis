@@ -140,8 +140,6 @@ Guard
 0
 # How many Domain skills does the form have?
 0
-# How many different buffs does the form get when performing a super attack / attacking?
-0
 # How many active skill buffs does the form have?
 1
 # What type of buff does the unit get?
@@ -158,6 +156,8 @@ Disable Action
 Turn
 # What is the turn condition (relative to the form's starting turn)?
 5
+# How many different buffs does the form get when performing a super attack / attacking?
+0
 # How many active skill attacks does the form have?
 1
 # What is the attack multiplier?
