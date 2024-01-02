@@ -3,7 +3,8 @@ from dokkanUnitHelperFunctions import *
 import pickle
 
 # TODO:
-# Finish adding Evasion for str fusing android 17
+# - Majin Vegeta Bugs - Why is Active so late to trigger (should be turn 9) & Why does ATK go up after Active turn
+# - Add p2DefB to p2buff[DEF] when performing an active / standby
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
@@ -1817,4 +1818,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(7, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(8, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
