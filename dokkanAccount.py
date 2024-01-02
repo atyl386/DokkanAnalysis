@@ -7,6 +7,7 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
         ['ATK','ADD','DGE',0], # DF Super Saiyan Trunks (Teen)
         ['DEF','DGE','ADD',0], # Banner Super Saiyan Gohan (Youth)
         ['DEF','ADD','CRT',2], # Fusing Super 17
+        ['DEF','ADD','DGE',1], # INT Majin Vegeta
 
         ] 
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
@@ -75,7 +76,6 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',1], # LR TEQ SS Goku & Gohan
     ['DEF','DGE','CRT',0], # LR Goku & Piccolo/Piccolo
     ['DEF','DGE','ADD',2], # PHY Raditz
-    ['DEF','ADD','DGE',0], # INT Majin Vegeta
     ['DEF','ADD','DGE',0], # LR Goku Black & Zamasu
     ['DEF','DGE','ADD',3], # LR INT Boujack
     ['DEF','CRT','ADD',0], # LR Beast Gohan
