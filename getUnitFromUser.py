@@ -690,9 +690,9 @@ class Form:
                 self,
                 "How many different nullification abilities does the form have?",
                 Nullification,
-                ["Does this nullification have counter?"],
-                [clc.Choice(YES_NO)],
-                ["N"],
+                ["Does this nullification have counter?", "How much health is restored if nullified?"],
+                [clc.Choice(YES_NO), None],
+                ["N", 0.0],
             )
         )
         self.abilities["Attack Enemy"].extend(
@@ -1582,9 +1582,8 @@ class PerAttackPerformed(PerEvent):
             case "Dmg Red":
                 state.dmgRedB += cappedTurnBuff
                 state.buff["Dmg Red against Normals"] += cappedTurnBuff
-            # This won't work because need to add like buffs together
-            # case "Evasion":
-            # state.evade += (1 - self.evade) * cappedTurnBuff
+            case "Evasion":
+                state.multiChanceBuff[self.effect].updateChance("On Super", cappedTurnBuff, self.effect, state)
         if not (self.withinTheSameTurn):
             form.extraBuffs[self.effect] += cappedTurnBuff
             self.applied += cappedTurnBuff
@@ -1704,10 +1703,11 @@ class KiSphereDependent(PassiveAbility):
 class Nullification(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
-        self.hasCounter = args[0]
+        self.hasCounter, self.healthFrac = args
 
     def applyToState(self, state, unit=None, form=None):
         pNullify = self.activationProbability * aprioriProbMod(saFracConversion[self.effect], True)
+        state.buff["Heal"] += self.healthFrac * pNullify / NUM_SLOTS * AVG_SA_DAM / AVG_HEALTH
         if yesNo2Bool[self.hasCounter]:
             state.multiChanceBuff["Nullify"].updateChance("SA Counter", pNullify, "Nullify")
         else:
@@ -1801,6 +1801,9 @@ class CompositeCondition:
     def __init__(self, operator, conditions):
         self.operator = operator
         self.conditions = conditions
+        if self.operator == "AFTER":
+            self.conditions[0].conditionValue += self.conditions[1].conditionValue
+
 
     def isSatisfied(self, form):
         match self.operator:
@@ -1809,7 +1812,6 @@ class CompositeCondition:
             case "OR":
                 return np.any([condition.isSatisfied(form) for condition in self.conditions])
             case "AFTER":
-                self.conditions[0].conditionValue += self.conditions[1].conditionValue
                 return self.conditions[0].isSatisfied(form)
 
 
