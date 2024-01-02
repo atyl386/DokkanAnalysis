@@ -84,9 +84,13 @@ def branchAPT(
             atkModifier1 = critMultiplier
             atkModifier2 = critMultiplier
         else:
-            atkModifier1 = (atkModifier - critMultiplier * crit0.prob) / (1 - crit0.prob) * (1 - crit1.prob) + crit1.prob * critMultiplier
-            atkModifier2 = (atkModifier - critMultiplier * crit0.prob) / (1 - crit0.prob) * (1 - crit2.prob) + crit2.prob * critMultiplier
-            
+            atkModifier1 = (atkModifier - critMultiplier * crit0.prob) / (1 - crit0.prob) * (
+                1 - crit1.prob
+            ) + crit1.prob * critMultiplier
+            atkModifier2 = (atkModifier - critMultiplier * crit0.prob) / (1 - crit0.prob) * (
+                1 - crit2.prob
+            ) + crit2.prob * critMultiplier
+
         tempAPT0 = branchAPT(
             i,
             nAA,
@@ -349,9 +353,15 @@ def getAPT(
             atkModifierSA = 1
             atkModifierUSA = 1
         else:
-            atkModifierN = (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - critN.prob) + critN.prob * critMultiplier
-            atkModifierSA = (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - critSA.prob) + critSA.prob * critMultiplier
-            atkModifierUSA = (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (1 - critUSA.prob) + critUSA.prob * critMultiplier
+            atkModifierN = (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (
+                1 - critN.prob
+            ) + critN.prob * critMultiplier
+            atkModifierSA = (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (
+                1 - critSA.prob
+            ) + critSA.prob * critMultiplier
+            atkModifierUSA = (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (
+                1 - critUSA.prob
+            ) + critUSA.prob * critMultiplier
 
         apt = pN * (
             normal * preAtkModifier
@@ -470,10 +480,13 @@ class MultiChanceBuff:
     def __init__(self, effect):
         self.chances = copy.copy(NULL_MULTI_CHANCE_DICT[effect])
         self.prob = 0
+
     def calcProb(self):
         return 1 - np.prod([max(1 - p, 0) for p in self.chances.values()])
+
     def updateAttacksReceived(self, state):
         pass
+
     def updateChance(self, chanceKey, increment, effect, state=None):
         self.chances[chanceKey] += increment
         self.prob = self.calcProb()
