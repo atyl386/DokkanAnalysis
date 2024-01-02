@@ -6,6 +6,8 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
         ['ATK','ADD','CRT',0], # Infinite Zamasu
         ['ATK','ADD','DGE',0], # DF Super Saiyan Trunks (Teen)
         ['DEF','DGE','ADD',0], # Banner Super Saiyan Gohan (Youth)
+        ['DEF','ADD','CRT',2], # Fusing Super 17
+
         ] 
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
     ['DEF','ADD','DGE',3], # TEQLR Gods
@@ -120,7 +122,6 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['ATK','ADD','DGE',0], # LR Dragon Soul
     ['DEF','ADD','DGE',5], # LR STR Gogeta
     ['ATK','CRT','ADD',3], # LR TEQ Vegito
-    ['DEF','ADD','CRT',0], # Fusing Super 17
     ['DEF','DGE','ADD',2], # Dr. Myu & Dr. Gero
     ['DEF','DGE','ADD',5], # PHY Android 17
     ['DEF','ADD','CRT',4], # LR Beerus & Whis
