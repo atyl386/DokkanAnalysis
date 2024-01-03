@@ -11,6 +11,7 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
         ['DEF','ADD','DGE',1], # STR Super Vegeta
         ['DEF','DGE','CRT',1], # AGL Trunks
         ['DEF','ADD','DGE',5], # AGL Kid Gohan
+        ['DEF','ADD','CRT',0], # LR Omega Shenron
 
 
 
@@ -148,7 +149,6 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','DGE','ADD',0], # TEQ Baby
     ['DEF','ADD','CRT',1], # INT Super Saiyan 4 Goku
     ['DEF','DGE','ADD',5], # PHYLR Super Gogeta
-    ['DEF','ADD','CRT',0], # LR Omega Shenron
     ['DEF','ADD','DGE',2], # LR Super Baby 2 (Giant Ape)
     ['DEF','ADD','CRT',5], # Transforming Vegeta
     ['DEF','ADD','DGE',5], # Launch
