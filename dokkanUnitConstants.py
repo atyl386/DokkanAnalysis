@@ -437,6 +437,8 @@ REGULAR_SUPPORT_EFFECTS = [
     "Scouter",
     "Remove Status Effects",
     "Survive K.O. Attack",
+    "P3 ATK Support",
+    "P3 DEF Support",
 ]
 SUPPORT_EFFECTS = REGULAR_SUPPORT_EFFECTS + ORB_CHANGING_EFFECTS + SPECIAL_SUPPORT_EFFECTS
 EFFECTS = [
@@ -473,7 +475,7 @@ EFFECTS = [
 EFFECTS.extend(SUPPORT_EFFECTS)
 EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)
 STACK_EFFECTS = ["ATK", "DEF"]
-P3_EFFECTS_SUFFIX = ["ATK", "DEF", "Crit", "Evasion", "Disable Action"]
+P3_EFFECTS_SUFFIX = ["ATK", "DEF", "Crit", "Evasion", "Disable Action", "ATK Support", "DEF Support"]
 SUPPORT_SUPER_ATTACK_EFFECTS = ["Raise Allies ATK"]
 ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
 DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
@@ -535,6 +537,8 @@ SUPPORT_FACTORS = [
     1,
     0.125,
     0.25,
+    ATK_SUPPORT_100_FACTOR,
+    DEF_SUPPORT_100_FACTOR,
     0.125,
     0.25,
     0.5,
