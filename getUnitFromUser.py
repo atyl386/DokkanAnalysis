@@ -945,6 +945,7 @@ class State:
         self.critPerAttackPerformed = np.zeros(MAX_TURN)
         self.critPerSuperPerformed = np.zeros(MAX_TURN)
         self.APT = 0
+        self.activeSkillAttackActivated = False
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
         self.randomKi = self.getRandomKi(form)
 
@@ -1356,6 +1357,7 @@ class ActiveSkillAttack(SingleTurnAbility):
             self.activated = True
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.superAttacksPerformed += 1
+            state.activeSkillAttackActivated = True
             state.APT += (
                 getActiveAtk(
                     unit.kiMod12,
@@ -1444,7 +1446,10 @@ class Buff(PassiveAbility):
 
     def applyToState(self, state, unit=None, form=None):
         # Need to update in case one of the relevant variables has been updated
-        pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
+        if state.activeSkillAttackActivated:
+            pHaveKi = 1
+        else:
+            pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
         effectiveBuff = self.effectiveBuff * pHaveKi
         supportBuff = self.supportBuff[state.slot - 1] * pHaveKi
         activationProbability = self.activationProbability * pHaveKi
