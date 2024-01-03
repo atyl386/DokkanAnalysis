@@ -2,11 +2,13 @@ from getUnitFromUser import *
 import pandas as pd
 from scipy.stats import truncnorm
 from dokkanAccount import User
+import shutil
 
 nUnits = len(User)
 
 
 def save_object(obj, filename):
+    obj.inputHelper.file = None
     with open(filename, "wb") as outp:  # Overwrites any existing file.
         pickle.dump(obj, outp, pickle.HIGHEST_PROTOCOL)
     outp.close()
@@ -105,6 +107,14 @@ overallEvaluator = Evaluator(overallTurnWeights, overallAttributeWeights)
 reCalc = True
 analyseHiPo = False
 if reCalc:
+    dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
+    if os.path.exists(dokkanUnitsPath):
+        for item in os.listdir(dokkanUnitsPath):
+            shutil.rmtree(os.path.join(dokkanUnitsPath, item))
+    else:
+        os.mkdir(dokkanUnitsPath)
+    for dir in HIPO_DUPES:
+        os.mkdir(os.path.join(dokkanUnitsPath, dir))
     attributeValues = np.zeros((nUnits, NUM_EVAL_TURNS, NUM_ATTRIBUTES, NUM_COPIES_MAX))
     units = [[None] * nUnits for i in range(NUM_COPIES_MAX)]
     evaluations = np.zeros((nUnits, NUM_COPIES_MAX))

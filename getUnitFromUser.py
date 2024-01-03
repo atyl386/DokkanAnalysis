@@ -184,7 +184,6 @@ class Unit:
         self.HiPo1 = HiPo1
         self.HiPo2 = HiPo2
         self.inputMode = inputMode
-        self.picklePath = CWD + "\\DokkanUnits\\" + HIPO_DUPES[nCopies - 1] + "\\unit_" + self.id + ".pkl"
         self.inputHelper = InputHelper(inputMode, self.id)
         if inputMode == "manual" or inputMode == "fromTxt":
             self.inputHelper.setInputFile()
@@ -446,11 +445,6 @@ class Unit:
             for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
                 outputFile.write(f"{attributeName}: {state.attributes[attributeName]} \n")
             outputFile.write("\n")
-        # Can't pickle this for some reason, but ok as only needed for inputting data.
-        self.inputHelper.file = None
-        with open(self.picklePath, "wb") as outp:  # Overwrites any existing file.
-            pickle.dump(self, outp, pickle.HIGHEST_PROTOCOL)
-        outp.close()
 
 
 class Form:
