@@ -89,14 +89,14 @@ DEF
 # How many turns does it last for?
 1
 # How many unconditional buffs does the form have?
-9
+8
 # What type of buff does the unit get?
 Ki
 # What is the probability this ability activates?
 1.0
 # What is the value of the buff?
 2.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 ATK
@@ -104,7 +104,7 @@ ATK
 1.0
 # What is the value of the buff?
 1.5
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 DEF
@@ -112,7 +112,7 @@ DEF
 1.0
 # What is the value of the buff?
 1.5
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 ATK
@@ -120,7 +120,7 @@ ATK
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 DEF
@@ -128,7 +128,7 @@ DEF
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 AAChance
@@ -136,18 +136,10 @@ AAChance
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
-# What type of buff does the unit get?
-SuperChance
-# What is the probability this ability activates?
+# What is the chance for this to become a super?
 0.7
-# Is the status of this ability known beforehand?
-N
-# What is the value of the buff?
-1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
-1
 # What type of buff does the unit get?
 Guard
 # What is the probability this ability activates?
@@ -156,7 +148,7 @@ Guard
 N
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 AEAAT
@@ -166,7 +158,7 @@ AEAAT
 Y
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many turn dependent buffs does the form have?
 0
@@ -208,7 +200,7 @@ ATK
 1.0
 # What is the value of the buff?
 0.7
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many active skill attacks does the form have?
 1
@@ -238,7 +230,7 @@ DEF
 1.0
 # What is the value of the buff?
 0.7
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many ki sphere dependent buffs does the form have?
 0
@@ -336,7 +328,7 @@ Ki
 1.0
 # What is the value of the buff?
 4.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 ATK
@@ -344,7 +336,7 @@ ATK
 1.0
 # What is the value of the buff?
 3.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 DEF
@@ -352,7 +344,7 @@ DEF
 1.0
 # What is the value of the buff?
 3.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many turn dependent buffs does the form have?
 2
@@ -366,7 +358,7 @@ AdditionalSuper
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What turn does the buff start from?
 7
@@ -378,7 +370,7 @@ Guard
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many slot specific buffs does the form have?
 0
@@ -394,7 +386,7 @@ ATK
 1.0
 # What is the value of the buff?
 2.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # The more HP remaining, the better?
 Y
@@ -404,7 +396,7 @@ DEF
 1.0
 # What is the value of the buff?
 2.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many Domain skills does the form have?
 0
@@ -446,7 +438,7 @@ ATK
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many active skill attacks does the form have?
 1
@@ -470,7 +462,7 @@ DEF
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many ki sphere dependent buffs does the form have?
 0

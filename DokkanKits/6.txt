@@ -88,7 +88,7 @@ Heal
 1.0
 # What is the value of the buff?
 0.1
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 ATK
@@ -96,7 +96,7 @@ ATK
 1.0
 # What is the value of the buff?
 1.4
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 DEF
@@ -104,7 +104,7 @@ DEF
 1.0
 # What is the value of the buff?
 1.4
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 Ki
@@ -112,7 +112,7 @@ Ki
 1.0
 # What is the value of the buff?
 2.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 DEF
@@ -120,7 +120,7 @@ DEF
 1.0
 # What is the value of the buff?
 0.3
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 Ki Support
@@ -128,7 +128,7 @@ Ki Support
 1.0
 # What is the value of the buff?
 2.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 DEF Support
@@ -136,14 +136,14 @@ DEF Support
 1.0
 # What is the value of the buff?
 0.3
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many turn dependent buffs does the form have?
 0
 # How many slot specific buffs does the form have?
 0
 # How many health threshold buffs does the form have?
-2
+1
 # What is the threshold health value?
 0.7
 # Is it a max HP condition?
@@ -154,22 +154,10 @@ AAChance
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
-# What is the threshold health value?
+# What is the chance for this to become a super?
 0.7
-# Is it a max HP condition?
-N
-# What type of buff does the unit get?
-SuperChance
-# What is the probability this ability activates?
-0.7
-# Is the status of this ability known beforehand?
-N
-# What is the value of the buff?
-1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
-1
 # How many health scale buffs does the form have?
 0
 # How many Domain skills does the form have?
@@ -198,7 +186,7 @@ ATK
 1.0
 # What is the value of the buff?
 1.4
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many active skill attacks does the form have?
 0
@@ -212,7 +200,7 @@ DEF
 1.0
 # What is the value of the buff?
 1.4
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many ki sphere dependent buffs does the form have?
 0
@@ -230,7 +218,7 @@ Ki
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What is the maximum buff?
 1.0
@@ -240,7 +228,7 @@ DEF
 1.0
 # What is the value of the buff?
 0.2
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many different buffs does the form get per attack / super performed?
 0

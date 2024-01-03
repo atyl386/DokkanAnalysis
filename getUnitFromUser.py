@@ -53,7 +53,7 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
                 knownApriori = False
             buff = form.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=1.0)
             effectDuration = form.inputHelper.getAndSaveUserInput(
-                "How many turns does it last for? Only applicable to abilities with a time limit?.", default=1
+                "How many turns does it last for? Only applicable to abilities with a time limit.", default=1
             )
             ability = abilityClass(
                 form, activationProbability, knownApriori, effect, buff, effectDuration, args=parameters
@@ -1412,6 +1412,8 @@ class PassiveAbility(Ability):
         self.effect = effect
         self.effectDuration = effectDuration
         self.effectiveBuff = buff * self.activationProbability
+        if effect == "AAChance":
+            self.superChance = form.inputHelper.getAndSaveUserInput("What is the chance for this to become a super?", default=0)
 
 
 class Buff(PassiveAbility):
@@ -1434,7 +1436,6 @@ class Buff(PassiveAbility):
         self.end = end
         self.ki = ki
         self.slots = slots
-        self.effectiveBuff = buff * activationProbability
 
     def applyToState(self, state, unit=None, form=None):
         # Need to update in case one of the relevant variables has been updated
@@ -1473,8 +1474,7 @@ class Buff(PassiveAbility):
                         state.aaPGuarantee.append(0)
                     case "AAChance":
                         state.aaPGuarantee.append(activationProbability)
-                    case "SuperChance":
-                        state.aaPSuper.append(activationProbability)
+                        state.aaPSuper.append(activationProbability * self.superChance)
                     case "Ki (Type Ki Sphere)":
                         state.kiPerOtherTypeOrb += effectiveBuff
                         state.kiPerSameTypeOrb += effectiveBuff
@@ -1645,8 +1645,7 @@ class AfterAttackReceived(PassiveAbility):
                     state.aaPGuarantee.append(0)
                 case "AAChance":
                     state.aaPGuarantee.append(cappedTurnBuff)
-                case "SuperChance":
-                    state.aaPSuper.append(cappedTurnBuff)
+                    state.aaPSuper.append(cappedTurnBuff * self.superChance)
         self.turnsSinceActivated += 1
         # If not still going to be active next turn
         if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:

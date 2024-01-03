@@ -186,7 +186,7 @@ ATK
 1.0
 # What is the value of the buff?
 0.5
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What is the threshold health value?
 0.5
@@ -198,7 +198,7 @@ DEF
 1.0
 # What is the value of the buff?
 0.5
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many health scale buffs does the form have?
 0
@@ -217,7 +217,7 @@ DEF
 # How many ki sphere dependent buffs does the form have?
 0
 # How many ki dependent buffs does the form have?
-3
+2
 # What is the required ki?
 18
 # What type of buff does the unit get?
@@ -228,18 +228,8 @@ AAChance
 1.0
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1
-# What is the required ki?
-18
-# What type of buff does the unit get?
-SuperChance
-# What is the probability this ability activates?
+# What is the chance for this to become a super?
 0.7
-# Is the status of this ability known beforehand?
-N
-# What is the value of the buff?
-1.0
-# How many turns does it last for? Only applicable to abilities with a time limit.
-1
 # What is the required ki?
 24
 # What type of buff does the unit get?

@@ -104,7 +104,7 @@ ATK
 1.0
 # What is the value of the buff?
 1.59
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 DEF
@@ -112,7 +112,7 @@ DEF
 1.0
 # What is the value of the buff?
 1.59
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 Ki
@@ -120,7 +120,7 @@ Ki
 1.0
 # What is the value of the buff?
 5.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 Guard
@@ -128,7 +128,7 @@ Guard
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many turn dependent buffs does the form have?
 0
@@ -186,7 +186,7 @@ DEF
 1.0
 # What is the value of the buff?
 0.59
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What type of buff does the unit get?
 AEAAT
@@ -194,7 +194,7 @@ AEAAT
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many different buffs does the form get on attacks received?
 2
@@ -206,7 +206,7 @@ Ki
 1.0
 # What is the value of the buff?
 1.0
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # What is the maximum buff?
 0.59
@@ -216,7 +216,7 @@ ATK
 1.0
 # What is the value of the buff?
 0.1
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many different buffs does the form get per attack / super performed?
 0
@@ -242,7 +242,7 @@ Crit
 1.0
 # What is the value of the buff?
 0.59
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many turns does it last for? Only applicable to abilities with a time limit.
 1
 # How many Revival Counterattack Finish Skills does the form have?
 0
