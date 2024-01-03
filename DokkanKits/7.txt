@@ -158,18 +158,10 @@ Y
 0
 # How many active skill buffs does the form have?
 0
-# How many different buffs does the form get when performing a super attack / attacking?
-2
-# What type of buff does the unit get?
-ATK
-# What is the probability this ability activates?
-1.0
-# What is the value of the buff?
-0.7
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many different offensive buffs does the form get when performing a super attack / attacking?
 1
 # What type of buff does the unit get?
-DEF
+ATK
 # What is the probability this ability activates?
 1.0
 # What is the value of the buff?
@@ -180,6 +172,16 @@ DEF
 0
 # How many Non-Revival Counterattack Standby Finish Skills does the form have?
 0
+# How many different defensive buffs does the form get when performing a super attack / attacking?
+1
+# What type of buff does the unit get?
+DEF
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+0.7
+# How many turns does it last for? Only applicable to abilities with a time limit?.
+1
 # How many ki sphere dependent buffs does the form have?
 0
 # How many ki dependent buffs does the form have?
@@ -382,7 +384,7 @@ Scouter
 0
 # How many active skill buffs does the form have?
 0
-# How many different buffs does the form get when performing a super attack / attacking?
+# How many different offensive buffs does the form get when performing a super attack / attacking?
 1
 # What type of buff does the unit get?
 ATK
@@ -395,6 +397,8 @@ ATK
 # How many active skill attacks does the form have?
 0
 # How many Non-Revival Counterattack Standby Finish Skills does the form have?
+0
+# How many different defensive buffs does the form get when performing a super attack / attacking?
 0
 # How many ki sphere dependent buffs does the form have?
 0

@@ -178,18 +178,10 @@ Heal
 Num Attacks Received
 # How many received attacks are required?
 6
-# How many different buffs does the form get when performing a super attack / attacking?
-2
-# What type of buff does the unit get?
-ATK
-# What is the probability this ability activates?
-1.0
-# What is the value of the buff?
-0.5
-# How many turns does it last for? Only applicable to abilities with a time limit?.
+# How many different offensive buffs does the form get when performing a super attack / attacking?
 1
 # What type of buff does the unit get?
-DEF
+ATK
 # What is the probability this ability activates?
 1.0
 # What is the value of the buff?
@@ -210,6 +202,16 @@ Num Attacks Received
 6
 # How many Non-Revival Counterattack Standby Finish Skills does the form have?
 0
+# How many different defensive buffs does the form get when performing a super attack / attacking?
+1
+# What type of buff does the unit get?
+DEF
+# What is the probability this ability activates?
+1.0
+# What is the value of the buff?
+0.5
+# How many turns does it last for? Only applicable to abilities with a time limit?.
+1
 # How many ki sphere dependent buffs does the form have?
 2
 # What type of ki spheres are required?

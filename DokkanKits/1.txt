@@ -156,7 +156,7 @@ Disable Action
 Turn
 # What is the turn condition (relative to the form's starting turn)?
 5
-# How many different buffs does the form get when performing a super attack / attacking?
+# How many different offensive buffs does the form get when performing a super attack / attacking?
 0
 # How many active skill attacks does the form have?
 1
@@ -171,6 +171,8 @@ Turn
 # What is the turn condition (relative to the form's starting turn)?
 5
 # How many Non-Revival Counterattack Standby Finish Skills does the form have?
+0
+# How many different defensive buffs does the form get when performing a super attack / attacking?
 0
 # How many ki sphere dependent buffs does the form have?
 0

@@ -206,11 +206,13 @@ DEF
 0
 # How many active skill buffs does the form have?
 0
-# How many different buffs does the form get when performing a super attack / attacking?
+# How many different offensive buffs does the form get when performing a super attack / attacking?
 0
 # How many active skill attacks does the form have?
 0
 # How many Non-Revival Counterattack Standby Finish Skills does the form have?
+0
+# How many different defensive buffs does the form get when performing a super attack / attacking?
 0
 # How many ki sphere dependent buffs does the form have?
 0
@@ -406,7 +408,7 @@ Rainbow Orb Change
 0
 # How many active skill buffs does the form have?
 0
-# How many different buffs does the form get when performing a super attack / attacking?
+# How many different offensive buffs does the form get when performing a super attack / attacking?
 0
 # How many active skill attacks does the form have?
 0
@@ -426,6 +428,8 @@ Super-Ultimate
 Finish Skill Activation
 # What is the required charge condition?
 39
+# How many different defensive buffs does the form get when performing a super attack / attacking?
+0
 # How many ki sphere dependent buffs does the form have?
 1
 # What type of ki spheres are required?

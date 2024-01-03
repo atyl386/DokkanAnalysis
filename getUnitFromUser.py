@@ -3,7 +3,6 @@ from dokkanUnitHelperFunctions import *
 import pickle
 
 # TODO:
-# - Add p2DefB to p2buff[DEF] when performing an active / standby
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
@@ -594,8 +593,8 @@ class Form:
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
-                "How many different buffs does the form get when performing a super attack / attacking?",
-                PerformingSuperAttack,
+                "How many different offensive buffs does the form get when performing a super attack / attacking?",
+                PerformingSuperAttackOffence,
             )
         )
         self.abilities["Active / Finish Attacks"].extend(
@@ -629,6 +628,13 @@ class Form:
                     None,
                 ],
                 ["Ki sphere obtained by allies", "Super-Ultimate", 1.0, 0.1],
+            )
+        )
+        self.abilities["Active / Finish Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different defensive buffs does the form get when performing a super attack / attacking?",
+                PerformingSuperAttackDefence,
             )
         )
         ############################################## Collect Ki ##################################################
@@ -1660,7 +1666,7 @@ class AfterAttackReceived(PassiveAbility):
             self.hitFactor = 1
 
 
-class PerformingSuperAttack(PassiveAbility):
+class PerformingSuperAttackOffence(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
 
@@ -1668,8 +1674,20 @@ class PerformingSuperAttack(PassiveAbility):
         match self.effect:
             case "ATK":
                 state.p2Buff["ATK"] += self.effectiveBuff
+
+
+class PerformingSuperAttackDefence(PassiveAbility):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+
+    def applyToState(self, state, unit=None, form=None):
+        match self.effect:
             case "DEF":
-                state.p2DefB += self.effectiveBuff
+                # If have activated active skill attack this turn
+                if state.superAttacksPerformed > 0:
+                    state.p2Buff["DEF"] += self.effectiveBuff
+                else:
+                    state.p2DefB += self.effectiveBuff
 
 
 class KiSphereDependent(PassiveAbility):
