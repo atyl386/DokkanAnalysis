@@ -1831,4 +1831,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(9, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(10, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
