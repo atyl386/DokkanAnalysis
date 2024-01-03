@@ -9,6 +9,8 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
         ['DEF','ADD','CRT',2], # Fusing Super 17
         ['DEF','ADD','DGE',1], # INT Majin Vegeta
         ['DEF','ADD','DGE',1], # STR Super Vegeta
+        ['DEF','DGE','CRT',1], # AGL Trunks
+
 
 
         ] 
@@ -87,7 +89,6 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DEF','CRT','ADD',2], # LR Vegeta (Great Ape)
     ['DEF','DGE','ADD',1], # LR Goku (Kaioken)
     ['DEF','ADD','DGE',1], # STR Ultimate Gohan
-    ['DEF','DGE','CRT',1], # AGL Trunks
     ['DEF','ADD','DGE',2], # PHY Future Gohan
     ['DEF','DGE','ADD',1], # STR Videl
     ['DEF','CRT','DGE',5], # LR Full Power Frieza AGL
