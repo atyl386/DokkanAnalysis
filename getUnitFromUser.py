@@ -6,7 +6,6 @@ import pickle
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
-# - Maybe make a function which takes in a bunch of independent probability events and returns the overall probability.
 # - Also might want to include attack all in atk calcs.
 # - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
 # - Add some functionality that can update existing input .txt files with new questions (assuming not relevant to exisiting unit)
@@ -14,7 +13,6 @@ import pickle
 # - Instead of asking user how many of something, should ask until they enteran exit key ak a while loop instead of for loop
 # - Should read up on python optimisation techniques once is running and se how long it takes. But try be efficient you go.
 # - I think the 20x3 state matrix needs to be used to compute the best path
-# - Whilst the state matrix is the ideal way, for now just assume a user inputed slot for each form
 # - Should put at may not be relevant tag onto end of the prompts that may not always be relevant.
 # - Ideally would just pull data from database, but not up in time for new units. Would be amazing for old units though.
 # - Leader skill weight should decrease from 5 as new structure adds more variability between leader skills
@@ -306,21 +304,15 @@ class Unit:
                     "What is the unit's chance to seal?", default=0.0
                 )  # Scale by number of enemies for all enemy seal, same for stun
 
-            stun = stunTurnConversion[
-                self.inputHelper.getAndSaveUserInput(
-                    "How many turns does the unit stun for?",
-                    type=clc.Choice(stunTurnConversion.keys()),
-                    default="0",
-                )
-            ]
+            stun = stunTurnConversion[self.inputHelper.getAndSaveUserInput("How many turns does the unit stun for?", type=None, default=0)]
             if stun != 0:
                 stun *= self.inputHelper.getAndSaveUserInput("What is the unit's chance to stun?", default=0.0)
 
             attDebuffOnAtk = attDebuffTurnConversion[
                 self.inputHelper.getAndSaveUserInput(
                     "How many turns does the unit lower the enemy attack by attacking?",
-                    type=clc.Choice(attDebuffTurnConversion.keys()),
-                    default="0",
+                    type=None,
+                    default=0,
                 )
             ]
             if attDebuffOnAtk != 0:
@@ -335,8 +327,8 @@ class Unit:
             attDebuffPassive = attDebuffTurnConversion[
                 self.inputHelper.getAndSaveUserInput(
                     "How many turns does the unit lower the enemy attack passively?",
-                    type=clc.Choice(attDebuffTurnConversion.keys()),
-                    default="0",
+                    type=None,
+                    default=0,
                 )
             ]
             if attDebuffPassive != 0:
@@ -1839,4 +1831,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(8, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(9, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
