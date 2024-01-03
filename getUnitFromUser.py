@@ -666,6 +666,16 @@ class Form:
                 [1.0],
             )
         )
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after multiple attacks received?",
+                AttackReceivedThreshold,
+                ["How many attacks need to be received?"],
+                [None],
+                [5],
+            )
+        )
         ############################################## Attack Enemy ##################################################
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
@@ -1406,6 +1416,7 @@ class PassiveAbility(Ability):
         self.effect = effect
         self.effectDuration = effectDuration
         self.effectiveBuff = buff * self.activationProbability
+        self.supportBuff = self.effectiveBuff * np.minimum(self.effectDuration, RETURN_PERIOD_PER_SLOT)
         if effect == "AAChance":
             self.superChance = form.inputHelper.getAndSaveUserInput("What is the chance for this to become a super?", default=0)
 
@@ -1435,7 +1446,7 @@ class Buff(PassiveAbility):
         # Need to update in case one of the relevant variables has been updated
         pHaveKi = 1 - ZTP_CDF(self.ki - 1 - state.buff["Ki"], state.randomKi)
         effectiveBuff = self.effectiveBuff * pHaveKi
-        supportBuff = effectiveBuff * min(self.effectDuration, RETURN_PERIOD_PER_SLOT[state.slot - 1])
+        supportBuff = self.supportBuff[state.slot - 1] * pHaveKi
         activationProbability = self.activationProbability * pHaveKi
         # Check if state is elligible for ability
         if state.turn >= self.start and state.turn <= self.end and state.slot in self.slots:
@@ -1598,6 +1609,20 @@ class PerAttackReceived(PerEvent):
             case "DEF":
                 state.p2Buff["DEF"] += min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
         self.applied += cappedTurnBuff
+
+
+class AttackReceivedThreshold(PassiveAbility):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+        self.threshold = args[0]
+
+    def applyToState(self, state, unit=None, form=None):
+        if form.numAttacksReceived >= self.threshold:
+            match self.effect:
+                case "Ki":
+                    state.buff["Ki"] += self.effectiveBuff
+                case "Scouter":
+                    state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1]
 
 
 class AfterAttackReceived(PassiveAbility):
@@ -1820,4 +1845,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(12, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(13, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
