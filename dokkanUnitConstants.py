@@ -49,7 +49,7 @@ LEADER_SKILL_TIERS = [
     "2 x 150%",
     "2 x 150-170% / 1 x 170%",
     "2 x 170% / 1 x 180%",
-    "200% limted",
+    "200% limited",
     "200% small",
     "200% medium",
     "200% large",

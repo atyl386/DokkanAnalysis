@@ -294,7 +294,7 @@ class Unit:
             seal = sealTurnConversion[
                 self.inputHelper.getAndSaveUserInput(
                     "How many turns does the unit seal for?",
-                    type=clc.Choice(sealTurnConversion.keys()),
+                    type=None,
                     default=0,
                 )
             ]
@@ -1459,10 +1459,6 @@ class Buff(PassiveAbility):
                         state.dmgRedA += effectiveBuff
                         state.dmgRedB += effectiveBuff
                         state.buff["Dmg Red against Normals"] += effectiveBuff
-                    case "Disable Action":
-                        state.multiChanceBuff["Nullify"].updateChance(
-                            self.effect, P_NULLIFY_FROM_DISABLE_SUPER[self.slot - 1], "Nullify", state
-                        )
                     case "AdditionalSuper":
                         state.aaPSuper.append(activationProbability)
                         state.aaPGuarantee.append(0)
@@ -1824,4 +1820,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(11, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(12, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
