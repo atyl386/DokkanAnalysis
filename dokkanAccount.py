@@ -10,6 +10,7 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
         ['DEF','ADD','DGE',1], # INT Majin Vegeta
         ['DEF','ADD','DGE',1], # STR Super Vegeta
         ['DEF','DGE','CRT',1], # AGL Trunks
+        ['DEF','ADD','DGE',5], # AGL Kid Gohan
 
 
 
