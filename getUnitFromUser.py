@@ -150,19 +150,10 @@ MultiChanceBuff.updateAttacksReceived = updateAttacksReceived
 
 class InputHelper:
     def __init__(self, id):
-        txtFilePath = os.path.join(CWD, "DokkanKits", id + ".txt")
         self.filePath = os.path.join(CWD, "DokkanKits", id + ".xml")
-        if os.path.exists(txtFilePath):
-            # TODO add in after migrate from .txt to .xml
-            #parser = ET.XMLParser(encoding="utf-8")
-            #self.tree = ET.parse(self.filePath, parser=parser)
+        if os.path.exists(self.filePath):
             self.tree = ET.parse(self.filePath)
             self.parent = self.tree.getroot()
-
-            # TODO delete after migrate from .txt to .xml
-            #self.file = open(txtFilePath, 'r+', 1)
-            #self.parent = ET.Element("inputTree")
-            #self.tree = ET.ElementTree(self.parent)
             self.parentMap = {c: p for p in self.tree.iter() for c in p}
         else:
             self.parent = ET.Element("inputTree")
@@ -171,9 +162,6 @@ class InputHelper:
         
     def getAndSaveUserInput(self, prompt, type=None, default=None):
         child = self.parent.find(f'./input[@prompt="{prompt}"]')
-        # TODO delete after migrate from .txt to .xml
-        #child = "fromTxt"
-
         if child == None:
             if type == None and default == None:
                 response = clc.prompt(prompt)
@@ -187,19 +175,6 @@ class InputHelper:
             self.parentMap[child] = self.parent
         else:
             response = simplest_type(child.attrib["response"])
-        # TODO delete after migrate from .txt to .xml
-        """ elif child == "fromTxt":
-            response = simplest_type(next(self.file, "").rstrip())
-            # Ignore lines with COMMENT_CHAR
-            try:
-                if response[0] == "#":
-                    return self.getAndSaveUserInput(prompt, type=type, default=default)
-            except:
-                pass
-            child = ET.SubElement(self.parent, "input")
-            child.set("prompt", prompt)
-            child.set("response", str(response))
-            self.parentMap[child] = self.parent """
         
         return response
     
