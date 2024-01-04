@@ -143,16 +143,12 @@ class InputHelper:
         self.mode = mode
         self.filePath = os.path.join(CWD, "DokkanKits", id + ".txt")
 
-    def setInputFile(self, finishedReading=False):
-        if self.mode == "manual":
-            if finishedReading:
-                specifier = "a"
-            else:
-                specifier = "w"
-        elif self.mode == "fromTxt":
-            specifier = "r"
-        self.file = open(self.filePath, specifier, 1)
-
+    def setInputFile(self):
+        if os.path.exists(self.filePath):
+            self.file = open(self.filePath, 'r+', 1)
+        else:
+            self.file = open(self.filePath, 'w+', 1)
+        
     def getAndSaveUserInput(self, prompt, type=None, default=None):
         if self.mode == "fromTxt":
             response = simplest_type(next(self.file, END_OF_FILE_STRING).rstrip())
@@ -162,10 +158,7 @@ class InputHelper:
                     return self.getAndSaveUserInput(prompt, type=type, default=default)
             except:
                 pass
-            if response == END_OF_FILE_STRING:
-                self.mode = "manual"
-                self.setInputFile(finishedReading=True)
-        if self.mode == "manual" or response == END_OF_FILE_STRING:
+        if response == END_OF_FILE_STRING:
             if type == None and default == None:
                 response = clc.prompt(prompt)
             elif type == None:
@@ -186,7 +179,7 @@ class Unit:
         self.HiPo2 = HiPo2
         self.inputMode = inputMode
         self.inputHelper = InputHelper(inputMode, self.id)
-        if inputMode == "manual" or inputMode == "fromTxt":
+        if inputMode == "fromTxt":
             self.inputHelper.setInputFile()
             self.getConstants()  # Requires user input, should make a version that loads from file
             self.getHiPo()  # Requires user input, should make a version that loads from file
@@ -1853,4 +1846,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(13, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(14, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
