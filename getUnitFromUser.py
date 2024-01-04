@@ -1,9 +1,11 @@
 import datetime as dt
 from dokkanUnitHelperFunctions import *
-import pickle
+import xml.etree.ElementTree as ET
 
 # TODO:
-# - Perhaps the best way to tackle the annoying input file when adding new features is for the script to look for the first occurance matching the string instead of doing it sequentially. Then rewrite the inputfile afterwards in proper order.
+# - Remove extra temporyary elements now that have parentMap
+# - Clean up getConditions
+# - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
@@ -25,7 +27,9 @@ import pickle
 def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], types=[], defaults=[]):
     numAbilities = form.inputHelper.getAndSaveUserInput(abilityPrompt, default=0)
     abilities = []
+    abilityTypeElement = form.inputHelper.parent
     for i in range(numAbilities):
+        form.inputHelper.parent = form.inputHelper.getChildElement(abilityTypeElement, f"ability_{i + 1}")
         parameters = []
         for j, parameterPrompt in enumerate(parameterPrompts):
             if len(types) == 0:  # If don't care about prompt choices
@@ -69,6 +73,7 @@ def getCondition(inputHelper):
     """
     Askes the user questions to determine which Condition class(es) apply and returns them. Only want once per condition set.
     """
+    abilityElement = inputHelper.parent
     numConditions = inputHelper.getAndSaveUserInput("How many conditions have to be met?", default=0)
     if numConditions < 1:
         return numConditions
@@ -77,11 +82,16 @@ def getCondition(inputHelper):
             "What is the condition logic?", type=clc.Choice(CONDITION_LOGIC), default="AND"
         )
         if numConditions > 2:
+            compositeConditionElement = inputHelper.getChildElement(abilityElement, "composte_condition")
+            inputHelper.parent = inputHelper.getChildElement(compositeConditionElement, "condition_a")
             conditionA = getCondition(inputHelper)
+            inputHelper.parent = inputHelper.getChildElement(compositeConditionElement, "condition_b")
             conditionB = getCondition(inputHelper)
             return CompositeCondition(operator, [conditionA, conditionB])
     condition = [None] * numConditions
+
     for i in range(numConditions):
+        inputHelper.parent = inputHelper.getChildElement(abilityElement, f"condition_{i + 1}")
         conditionType = inputHelper.getAndSaveUserInput(
             f"What type of condition is # {i + 1}?", type=clc.Choice(CONDITIONS, case_sensitive=False), default="Turn"
         )
@@ -139,64 +149,84 @@ MultiChanceBuff.updateAttacksReceived = updateAttacksReceived
 
 
 class InputHelper:
-    def __init__(self, mode, id):
-        self.mode = mode
-        self.filePath = os.path.join(CWD, "DokkanKits", id + ".txt")
+    def __init__(self, id):
+        txtFilePath = os.path.join(CWD, "DokkanKits", id + ".txt")
+        self.filePath = os.path.join(CWD, "DokkanKits", id + ".xml")
+        if os.path.exists(txtFilePath):
+            # TODO add in after migrate from .txt to .xml
+            #parser = ET.XMLParser(encoding="utf-8")
+            #self.tree = ET.parse(self.filePath, parser=parser)
+            self.tree = ET.parse(self.filePath)
+            self.parent = self.tree.getroot()
 
-    def setInputFile(self):
-        if os.path.exists(self.filePath):
-            self.file = open(self.filePath, 'r+', 1)
+            # TODO delete after migrate from .txt to .xml
+            #self.file = open(txtFilePath, 'r+', 1)
+            #self.parent = ET.Element("inputTree")
+            #self.tree = ET.ElementTree(self.parent)
+            self.parentMap = {c: p for p in self.tree.iter() for c in p}
         else:
-            self.file = open(self.filePath, 'w+', 1)
+            self.parent = ET.Element("inputTree")
+            self.tree = ET.ElementTree(self.parent)
+            self.parentMap = {}
         
     def getAndSaveUserInput(self, prompt, type=None, default=None):
-        if self.mode == "fromTxt":
-            response = simplest_type(next(self.file, END_OF_FILE_STRING).rstrip())
-            # Ignore lines with COMMENT_CHAR
-            try:
-                if response[0] == COMMENT_CHAR:
-                    return self.getAndSaveUserInput(prompt, type=type, default=default)
-            except:
-                pass
-        if response == END_OF_FILE_STRING:
+        child = self.parent.find(f'./input[@prompt="{prompt}"]')
+        # TODO delete after migrate from .txt to .xml
+        #child = "fromTxt"
+
+        if child == None:
             if type == None and default == None:
                 response = clc.prompt(prompt)
             elif type == None:
                 response = clc.prompt(prompt, default=default)
             else:
                 response = clc.prompt(prompt, type=type, default=default)
-            self.file.write(COMMENT_CHAR + " " + prompt.replace("\n", "") + "\n")
-            self.file.write(str(response) + "\n")
+            child = ET.SubElement(self.parent, "input")
+            child.set("prompt", prompt)
+            child.set("response", str(response))
+            self.parentMap[child] = self.parent
+        else:
+            response = simplest_type(child.attrib["response"])
+        # TODO delete after migrate from .txt to .xml
+        """ elif child == "fromTxt":
+            response = simplest_type(next(self.file, "").rstrip())
+            # Ignore lines with COMMENT_CHAR
+            try:
+                if response[0] == "#":
+                    return self.getAndSaveUserInput(prompt, type=type, default=default)
+            except:
+                pass
+            child = ET.SubElement(self.parent, "input")
+            child.set("prompt", prompt)
+            child.set("response", str(response))
+            self.parentMap[child] = self.parent """
+        
         return response
+    
+    def getChildElement(self, parent, childTag):
+        child = parent.find(f"{childTag}")
+        if child == None:
+            child = ET.SubElement(parent, f"{childTag}")
+            self.parentMap[child] = parent
+        return child
 
 
 class Unit:
-    def __init__(self, id, nCopies, brz, HiPo1, HiPo2, inputMode="fromTxt"):
+    def __init__(self, id, nCopies, brz, HiPo1, HiPo2):
         self.id = str(id)
         self.nCopies = nCopies
         self.brz = brz
         self.HiPo1 = HiPo1
         self.HiPo2 = HiPo2
-        self.inputMode = inputMode
-        self.inputHelper = InputHelper(inputMode, self.id)
-        if inputMode == "fromTxt":
-            self.inputHelper.setInputFile()
-            self.getConstants()  # Requires user input, should make a version that loads from file
-            self.getHiPo()  # Requires user input, should make a version that loads from file
-            self.getSBR()  # Requires user input, should make a version that loads from file
-            self.getStates()
-            self.inputHelper.file.close()
-        # elif inputMode == "fromPickle":
-        # self = pickle.load(open(self.picklePath, "rb"))
-        elif inputMode == "fromWeb":
-            print(f"inputMode: {inputMode} not implemented yet. Bailing out.")
-            exit()
-        else:
-            print("Incorrect inputMode: {inputMpde} given. Bailing out.")
-            exit()
+        self.inputHelper = InputHelper(self.id)
+        self.getConstants()
+        self.getHiPo()
+        self.getSBR()
+        self.getStates()
         self.saveUnit()
 
     def getConstants(self):
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.inputHelper.tree.getroot(), "constants")
         self.exclusivity = self.inputHelper.getAndSaveUserInput(
             "What is the unit's exclusivity?", type=clc.Choice(EXCLUSIVITIES, case_sensitive=False), default="DF"
         )
@@ -230,7 +260,7 @@ class Unit:
         self.DEF = self.inputHelper.getAndSaveUserInput("What is the unit's Max Level DEF stat?", default=0)
         self.leaderSkill = leaderSkillConversion[
             self.inputHelper.getAndSaveUserInput(
-                "How would you rate the unit's leader skill on a scale of 1-10?\n200% limited - e.g. LR Hatchiyak Goku\n 200% small - e.g. LR Metal Cooler\n 200% medium - e.g. PHY God Goku\n 200% large - e.g. LR Vegeta & Trunks\n",
+                "How would you rate the unit's leader skill on a scale of 1-10? 200% limited - e.g. LR Hatchiyak Goku 200% small - e.g. LR Metal Cooler 200% medium - e.g. PHY God Goku 200% large - e.g. LR Vegeta and Trunks",
                 type=clc.Choice(leaderSkillConversion.keys(), case_sensitive=False),
                 default="<150%",
             )
@@ -269,6 +299,7 @@ class Unit:
         self.TDB = HIPO_TYPE_DEF_BOOST[self.nCopies - 1]
 
     def getSBR(self):
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.inputHelper.tree.getroot(), "SBR")
         self.SBR = 0
         if yesNo2Bool[
             self.inputHelper.getAndSaveUserInput(
@@ -361,6 +392,8 @@ class Unit:
         self.forms = []
         self.states = []
         self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.inputHelper.tree.getroot(), "forms")
+        self.formsElement = self.inputHelper.parent
         self.numForms = self.inputHelper.getAndSaveUserInput("How many forms does the unit have?", default=1)
         turn = 1
         formIdx = 0
@@ -376,6 +409,7 @@ class Unit:
                 # Ignore case where turn == 1 as this is when nextForm == True doesn't mean transformation
                 if turn != 1:
                     form.transformed = True
+                self.inputHelper.parent = self.inputHelper.getChildElement(self.formsElement, f"form_{formIdx}")
                 form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms)
                 self.forms.append(form)
             elif nextForm == -1:
@@ -431,6 +465,8 @@ class Unit:
                 state.attributes[attributeName] = attributes[i, j]
 
     def saveUnit(self):
+        ET.indent(self.inputHelper.tree, space="\t", level=0)
+        self.inputHelper.tree.write(self.inputHelper.filePath, encoding='utf-8')
         # Output the unit's attributes to a .txt file
         outputFilePath = os.path.join(CWD, "DokkanKitOutputs", HIPO_DUPES[self.nCopies - 1], self.id + ".txt")
         outputFile = open(outputFilePath, "w")
@@ -443,6 +479,7 @@ class Unit:
 
 class Form:
     def __init__(self, inputHelper, initialTurn, rarity, eza, formIdx, numForms):
+        self.formElement = inputHelper.parent
         self.inputHelper = inputHelper
         self.initialTurn = initialTurn
         self.rarity = rarity
@@ -488,6 +525,7 @@ class Form:
         assert len(np.unique(self.linkNames)) == MAX_NUM_LINKS, "Duplicate links"
         self.getSuperAttacks(self.rarity, self.EZA)
         ################################################ Turn Start #####################################################
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "default")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -495,6 +533,7 @@ class Form:
                 Buff,
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "turn_dpendent")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -508,6 +547,7 @@ class Form:
                 [self.initialTurn, MAX_TURN],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "slot_dependent")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -519,6 +559,7 @@ class Form:
                 [None],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "health_dependent")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -529,6 +570,7 @@ class Form:
                 [0.5, "Y"],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "health_scale")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -539,6 +581,7 @@ class Form:
                 ["Y"],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "attacks_received_threshold")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -549,6 +592,7 @@ class Form:
                 [5],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "domain")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -564,6 +608,7 @@ class Form:
                 ["Increase Damage Received", 0.3, 0.5, 5],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "active_skill_buffs")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -580,6 +625,7 @@ class Form:
             )
         )
         ############################################ Active / Finish Attacks ###############################################
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "offensive_on_super")
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -587,6 +633,7 @@ class Form:
                 PerformingSuperAttackOffence,
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "active_skill_attack")
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -600,6 +647,7 @@ class Form:
                 ["Ultimate", 0.0],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "standby_finish_attack")
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -620,6 +668,7 @@ class Form:
                 ["Ki sphere obtained by allies", "Super-Ultimate", 1.0, 0.1],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "defensive_on_super")
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -628,6 +677,7 @@ class Form:
             )
         )
         ############################################## Collect Ki ##################################################
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "ki_sphere_dependent")
         self.abilities["Collect Ki"].extend(
             abilityQuestionaire(
                 self,
@@ -642,6 +692,7 @@ class Form:
                 ["Any", 0, "N"],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "ki_dependent")
         self.abilities["Collect Ki"].extend(
             abilityQuestionaire(
                 self,
@@ -653,6 +704,7 @@ class Form:
             )
         )
         ############################################## Receive Attacks ##################################################
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_receive_attack")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -660,6 +712,7 @@ class Form:
                 AfterAttackReceived,
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_received")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -671,6 +724,7 @@ class Form:
             )
         )
         ############################################## Attack Enemy ##################################################
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_super_performed")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -681,6 +735,7 @@ class Form:
                 [1.0, "N", "N"],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "nullification")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -691,6 +746,7 @@ class Form:
                 ["N", 0.0],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "revive")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -704,6 +760,7 @@ class Form:
                 [0.7, "N"],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "revival_counter")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -721,6 +778,7 @@ class Form:
             )
         )
         ################################################ Turn End #####################################################
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, f"form_{formIdx}_change_condition")
         self.formChangeCondition = getCondition(self.inputHelper)
         if formIdx < numForms:
             self.newForm = True
@@ -728,7 +786,9 @@ class Form:
             self.newForm = False
 
     def getLinks(self):
+        linksElement = self.inputHelper.getChildElement(self.inputHelper.parent, "links")
         for linkIndex in range(MAX_NUM_LINKS):
+            self.inputHelper.parent = self.inputHelper.getChildElement(linksElement, f"link_{linkIndex + 1}")
             self.linkNames[linkIndex] = self.inputHelper.getAndSaveUserInput(
                 f"What is the form's link # {linkIndex+1}",
                 type=clc.Choice(LINKS, case_sensitive=False),
@@ -742,9 +802,12 @@ class Form:
             for linkEffectName in LINK_EFFECT_NAMES:
                 self.linkEffects[linkEffectName] += link.effects[linkEffectName]
         self.linkEffects["Commonality"] /= MAX_NUM_LINKS
+        self.inputHelper.parent = self.formElement
 
     def getSuperAttacks(self, rarity, eza):
+        superAttacksElement = self.inputHelper.getChildElement(self.inputHelper.parent, "super_attack")
         for superAttackType in SUPER_ATTACK_CATEGORIES:
+            self.inputHelper.parent = self.inputHelper.getChildElement(superAttacksElement, f"{superAttackNameConversion[superAttackType]}")
             if superAttackType == "12 Ki" or (rarity == "LR" and not (self.intentional12Ki)):
                 multiplier = superAttackConversion[
                     self.inputHelper.getAndSaveUserInput(
@@ -759,7 +822,9 @@ class Form:
                     default=1,
                 )
                 superFracTotal = 0
+                superAttackVariationsElement = self.inputHelper.getChildElement(self.inputHelper.parent, f"{superAttackNameConversion[superAttackType]}_variations")
                 for i in range(numSuperAttacks):
+                    self.inputHelper.parent = self.inputHelper.getChildElement(superAttackVariationsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}")
                     if numSuperAttacks > 1:
                         superFrac = self.inputHelper.getAndSaveUserInput(
                             f"What is the probability of this {superAttackType} super attack variant from occuring?",
@@ -771,7 +836,9 @@ class Form:
                         f"How many effects does this form's {superAttackType} super attack have?",
                         default=1,
                     )
+                    superAttackEffectsElement =  self.inputHelper.getChildElement(self.inputHelper.parent, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}_effects")
                     for j in range(numEffects):
+                        self.inputHelper.parent = self.inputHelper.getChildElement(superAttackEffectsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}_effect_{j + 1}")
                         effectType = self.inputHelper.getAndSaveUserInput(
                             "What type of effect does the unit get on super?",
                             type=clc.Choice(SUPER_ATTACK_EFFECTS, case_sensitive=False),
@@ -787,8 +854,11 @@ class Form:
                         )
                         avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
                     superFracTotal += superFrac
+                    self.inputHelper.parent = superAttackVariationsElement
                 assert superFracTotal == 1, "Invald super attack variant probabilities entered"
+                self.inputHelper.parent = superAttacksElement
             self.superAttacks[superAttackType] = avgSuperAttack
+        self.inputHelper.parent = self.formElement
 
     def checkCondition(self, condition, activated, newForm):
         if activated or condition == -1:
@@ -1283,6 +1353,7 @@ class Revive(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.hpRegen, self.isThisCharacterOnly = args
+        form.inputHelper.parent = form.inputHelper.parentMap[form.inputHelper.parent]
         self.abilities = abilityQuestionaire(form, "How many additional constant buffs does this revive have?", Buff)
 
     def applyToState(self, state, unit=None, form=None):
@@ -1301,6 +1372,7 @@ class Domain(SingleTurnAbility):
         super().__init__(form)
         self.domainType, buff, prop, self.duration = args
         self.effectiveBuff = buff * aprioriProbMod(prop, True)
+        form.inputHelper.parent = form.inputHelper.parentMap[form.inputHelper.parent]
         self.abilities = abilityQuestionaire(
             form, "How many additional buffs are there when this Domain is active?", TurnDependent
         )
@@ -1846,4 +1918,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(14, 1, "DEF", "ADD", "DGE", inputMode="fromTxt")
+    unit = Unit(13, 1, 'DEF','CRT','ADD')

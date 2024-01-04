@@ -3,6 +3,7 @@ import pandas as pd
 from scipy.stats import truncnorm
 from dokkanAccount import User
 import shutil
+import pickle
 
 nUnits = len(User)
 

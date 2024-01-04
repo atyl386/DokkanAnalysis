@@ -6,8 +6,6 @@ import os
 # IO
 
 CWD = os.getcwd()
-COMMENT_CHAR = "#"
-END_OF_FILE_STRING = ""
 
 # Phases of a Turn
 PHASES = ["Start of Turn", "Active / Finish Attacks", "Collect Ki", "Receive Attacks", "Attack Enemy"]
@@ -68,6 +66,7 @@ SUPER_ATTACK_MULTIPLIER_NAMES = [
     "Mega-Colossal",
 ]
 SUPER_ATTACK_CATEGORIES = ["12 Ki", "18 Ki"]
+SUPER_ATTACK_NAMES = ["regular_super_attack", "ultra_super_attack"]
 DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES = {"12 Ki": "Immense", "18 Ki": "Mega-Colossal"}
 TUR_SUPER_ATTACK_LEVELS = [10, 15]
 LR_SUPER_ATTACK_LEVELS = [20, 25]
@@ -671,6 +670,7 @@ orbChangeConversion = dict(
 counterAttackConversion = dict(zip(COUNTER_ATTACK_MULTIPLIER_NAMES, COUNTER_ATTACK_MULTIPLIERS))
 
 # Super Attacks
+superAttackNameConversion = dict(zip(SUPER_ATTACK_CATEGORIES, SUPER_ATTACK_NAMES))
 specialAttackConversion = dict(zip(SPECIAL_ATTACK_MULTIPLIER_NAMES, SPECIAL_ATTACK_MULTIPLIERS))
 superAttackEZALevels = [
     dict(zip([False, True], TUR_SUPER_ATTACK_LEVELS)),
