@@ -444,6 +444,7 @@ SUPPORT_EFFECTS = REGULAR_SUPPORT_EFFECTS + ORB_CHANGING_EFFECTS + SPECIAL_SUPPO
 EFFECTS = [
     "None",
     "ATK",
+    "P2 ATK",
     "DEF",
     "Ki",
     "Lower ATK",

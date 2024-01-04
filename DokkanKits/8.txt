@@ -146,6 +146,8 @@ Orb Change
 1
 # How many health scale buffs does the form have?
 0
+# How many different buffs does the form get after multiple attacks received?
+0
 # How many Domain skills does the form have?
 0
 # How many active skill buffs does the form have?
@@ -247,8 +249,6 @@ Dmg Red
 # How many different buffs does the form get after receiving an attack?
 0
 # How many different buffs does the form get on attacks received?
-0
-# How many different buffs does the form get after multiple attacks received?
 0
 # How many different buffs does the form get per attack / super performed?
 0

@@ -146,6 +146,8 @@ Y
 0
 # How many health scale buffs does the form have?
 0
+# How many different buffs does the form get after multiple attacks received?
+0
 # How many Domain skills does the form have?
 0
 # How many active skill buffs does the form have?
@@ -181,8 +183,6 @@ DEF
 # How many different buffs does the form get after receiving an attack?
 0
 # How many different buffs does the form get on attacks received?
-0
-# How many different buffs does the form get after multiple attacks received?
 0
 # How many different buffs does the form get per attack / super performed?
 2
@@ -374,6 +374,8 @@ Scouter
 1
 # How many health scale buffs does the form have?
 0
+# How many different buffs does the form get after multiple attacks received?
+0
 # How many Domain skills does the form have?
 0
 # How many active skill buffs does the form have?
@@ -422,8 +424,6 @@ DEF
 0.17
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1
-# How many different buffs does the form get after multiple attacks received?
-0
 # How many different buffs does the form get per attack / super performed?
 0
 # How many different nullification abilities does the form have?

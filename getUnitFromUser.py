@@ -3,6 +3,7 @@ from dokkanUnitHelperFunctions import *
 import pickle
 
 # TODO:
+# - Perhaps the best way to tackle the annoying input file when adding new features is for the script to look for the first occurance matching the string instead of doing it sequentially. Then rewrite the inputfile afterwards in proper order.
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
@@ -548,6 +549,16 @@ class Form:
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
+                "How many different buffs does the form get after multiple attacks received?",
+                AttackReceivedThreshold,
+                ["How many attacks need to be received?"],
+                [None],
+                [5],
+            )
+        )
+        self.abilities["Start of Turn"].extend(
+            abilityQuestionaire(
+                self,
                 "How many Domain skills does the form have?",
                 Domain,
                 [
@@ -664,16 +675,6 @@ class Form:
                 ["What is the maximum buff?"],
                 [None],
                 [1.0],
-            )
-        )
-        self.abilities["Receive Attacks"].extend(
-            abilityQuestionaire(
-                self,
-                "How many different buffs does the form get after multiple attacks received?",
-                AttackReceivedThreshold,
-                ["How many attacks need to be received?"],
-                [None],
-                [5],
             )
         )
         ############################################## Attack Enemy ##################################################
@@ -1492,6 +1493,8 @@ class Buff(PassiveAbility):
                         state.kiPerSameTypeOrb += effectiveBuff
                     case "Ki (Rainbow Ki Sphere)":
                         state.kiPerRainbowKiSphere += effectiveBuff
+                    case "P2 ATK":
+                        state.p2Buff["ATK"] += effectiveBuff
                     case "P3 ATK":
                         state.p3Buff["ATK"] += effectiveBuff
                     case "P3 DEF":
@@ -1550,6 +1553,20 @@ class HealthScale(Buff):
         else:
             expectedBuff = LESS_HEALTH_REMAINING_MIN + (1 - EXPECTED_HEALTH_FRAC) * (buff - LESS_HEALTH_REMAINING_MIN)
         super().__init__(form, activationProbability, True, effect, expectedBuff, effectDuration)
+
+
+class AttackReceivedThreshold(PassiveAbility):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+        self.threshold = args[0]
+
+    def applyToState(self, state, unit=None, form=None):
+        if form.numAttacksReceived >= self.threshold:
+            match self.effect:
+                case "Ki":
+                    state.buff["Ki"] += self.effectiveBuff
+                case "Scouter":
+                    state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1]
 
 
 class PerEvent(PassiveAbility):
@@ -1614,20 +1631,6 @@ class PerAttackReceived(PerEvent):
             case "DEF":
                 state.p2Buff["DEF"] += min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
         self.applied += cappedTurnBuff
-
-
-class AttackReceivedThreshold(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
-        self.threshold = args[0]
-
-    def applyToState(self, state, unit=None, form=None):
-        if form.numAttacksReceived >= self.threshold:
-            match self.effect:
-                case "Ki":
-                    state.buff["Ki"] += self.effectiveBuff
-                case "Scouter":
-                    state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1]
 
 
 class AfterAttackReceived(PassiveAbility):

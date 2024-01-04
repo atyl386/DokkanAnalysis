@@ -138,6 +138,8 @@ Guard
 0
 # How many health scale buffs does the form have?
 0
+# How many different buffs does the form get after multiple attacks received?
+0
 # How many Domain skills does the form have?
 0
 # How many active skill buffs does the form have?
@@ -218,8 +220,6 @@ ATK
 0.1
 # How many turns does it last for? Only applicable to abilities with a time limit.
 1
-# How many different buffs does the form get after multiple attacks received?
-0
 # How many different buffs does the form get per attack / super performed?
 0
 # How many different nullification abilities does the form have?
