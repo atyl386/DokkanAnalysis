@@ -12,6 +12,7 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
         ['DEF','DGE','CRT',1], # AGL Trunks
         ['DEF','ADD','DGE',5], # AGL Kid Gohan
         ['DEF','ADD','CRT',0], # LR Omega Shenron
+        ['DEF','CRT','ADD',2], # STR Super Saiyan Goku LR
 
 
 
@@ -75,7 +76,6 @@ User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
     ['DGE','DGE','CRT',2], # STR Kefla
     ['DEF','ADD','CRT',3], # STR SSGSSK Goku
     ['DEF','DGE','ADD',1], # INT Goku Black
-    ['DEF','CRT','ADD',2], # STR Super Saiyan Goku LR
     ['DEF','ADD','DGE',5], # STR Kid Buu
     ['DEF','DGE','ADD',5], # PHY Super Saiyan 2 Goku
     ['DEF','DGE','ADD',0], # RoF Blues
