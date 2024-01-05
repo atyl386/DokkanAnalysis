@@ -187,7 +187,7 @@ class InputHelper:
 
 
 class Unit:
-    def __init__(self, id, commonName, nCopies, brz, HiPo1, HiPo2, save=True):
+    def __init__(self, id, commonName, nCopies, brz, HiPo1, HiPo2, slots, save=True):
         self.id = str(id)
         self.commonName = commonName
         self.nCopies = nCopies
@@ -196,6 +196,7 @@ class Unit:
         self.HiPo2 = HiPo2
         self.save = save
         self.inputHelper = InputHelper(self.id, commonName)
+        self.slots = slots
         self.getConstants()
         self.getHiPo()
         self.getSBR()
@@ -376,6 +377,7 @@ class Unit:
         self.numForms = self.inputHelper.getAndSaveUserInput("How many forms does the unit have?", default=1)
         turn = 1
         formIdx = 0
+        stateIdx = -1
         self.fightPeak = False
         # Only non-zero in between activating the stanby finish skill attack and applying to subsequent state
         self.standbyFinishSkillAPT = 0
@@ -383,6 +385,8 @@ class Unit:
         applyFinishSkillAPT = False
         self.critMultiplier = (CRIT_MULTIPLIER + self.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR
         while turn <= MAX_TURN:
+            stateIdx += 1
+            slot = self.slots[stateIdx]
             formIdx += nextForm
             if nextForm == 1:
                 # Ignore case where turn == 1 as this is when nextForm == True doesn't mean transformation
@@ -394,7 +398,6 @@ class Unit:
             elif nextForm == -1:
                 form = self.forms[-2]
             nextForm = 0
-            slot = form.slot
             form.turn = turn
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
             form.nextTurnRelative = nextTurn - form.initialTurn + 1
@@ -409,6 +412,7 @@ class Unit:
                     hasReviveCounter = form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "Revive"
                 except:
                     hasReviveCounter = False
+                    stateIdx -= 1
                 if hasReviveCounter:
                     applyFinishSkillAPT = True
                     nextForm = -1
@@ -477,9 +481,6 @@ class Form:
         self.newForm = True
         self.formChangeCondition = [Condition()]
         self.intentional12Ki = False
-        self.slot = int(
-            self.inputHelper.getAndSaveUserInput(f"Which slot is form # {formIdx} best suited for?", default=2)
-        )
         self.canAttack = yesNo2Bool[self.inputHelper.getAndSaveUserInput("Can this form attack?", default="Y")]
         if self.rarity == "LR":
             self.intentional12Ki = yesNo2Bool[
@@ -1314,9 +1315,8 @@ class GiantRageMode(SingleTurnAbility):
         super().__init__(form)
         self.ATK = args[0]
         self.support = GIANT_RAGE_SUPPORT
-        slot = 1  # Arbitarary choice, could also be 2 or 3
         # Create a form so can get access to abilityQuestionaire to ask user questions
-        self.giantRageForm = Form(form.inputHelper, slot)
+        self.giantRageForm = Form(form.inputHelper)
         self.giantRageForm.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self.giantRageForm,
@@ -1915,4 +1915,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(1, 1, "CLR_TEQ_SS_Goku", "DEF", "CRT", "ADD")
+    unit = Unit(1, 1, "CLR_TEQ_SS_Goku", "DEF", "CRT", "ADD", SLOT_1)

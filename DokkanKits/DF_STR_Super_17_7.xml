@@ -21,7 +21,6 @@
 	<forms>
 		<input prompt="How many forms does the unit have?" response="2" />
 		<form_1>
-			<input prompt="Which slot is form # 1 best suited for?" response="2" />
 			<input prompt="Can this form attack?" response="Y" />
 			<input prompt="What is the unit's normal counter multiplier?" response="NA" />
 			<input prompt="What is the unit's super attack counter multiplier?" response="NA" />
@@ -219,7 +218,6 @@
 			</form_1_change_condition>
 		</form_1>
 		<form_2>
-			<input prompt="Which slot is form # 2 best suited for?" response="1" />
 			<input prompt="Can this form attack?" response="Y" />
 			<input prompt="What is the unit's normal counter multiplier?" response="NA" />
 			<input prompt="What is the unit's super attack counter multiplier?" response="NA" />

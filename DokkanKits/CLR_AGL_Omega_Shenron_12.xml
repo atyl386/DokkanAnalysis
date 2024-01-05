@@ -31,7 +31,6 @@
 	<forms>
 		<input prompt="How many forms does the unit have?" response="1" />
 		<form_1>
-			<input prompt="Which slot is form # 1 best suited for?" response="1" />
 			<input prompt="Can this form attack?" response="Y" />
 			<input prompt="Should a 12 Ki be targetted for this form?" response="N" />
 			<input prompt="What is the unit's normal counter multiplier?" response="NA" />
