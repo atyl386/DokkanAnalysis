@@ -327,13 +327,31 @@
 				</ultra_super_attack>
 			</super_attack>
 			<default>
-				<input prompt="How many unconditional buffs does the form have?" response="1" />
+				<input prompt="How many unconditional buffs does the form have?" response="4" />
 				<ability_1>
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="2.58" />
 					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_1>
+				<ability_2>
+					<input prompt="What type of buff does the unit get?" response="Ki" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="5.0" />
+					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+				</ability_2>
+				<ability_3>
+					<input prompt="What type of buff does the unit get?" response="DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.58" />
+					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+				</ability_3>
+				<ability_4>
+					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.58" />
+					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+				</ability_4>
 			</default>
 			<turn_dpendent>
 				<input prompt="How many turn dependent buffs does the form have?" response="2" />
@@ -425,24 +443,8 @@
 					<input prompt="How much HP is revived with?" response="0.85" />
 					<input prompt="Does the revive only apply to this unit?" response="Y" />
 					<input prompt="How many conditions have to be met?" response="0" />
-					<input prompt="What type of buff does the unit get?" response="Ki" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="5.0" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_1>
-				<input prompt="How many additional constant buffs does this revive have?" response="3" />
-				<ability_2>
-					<input prompt="What type of buff does the unit get?" response="DEF" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.58" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
-				</ability_2>
-				<ability_3>
-					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.58" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
-				</ability_3>
+				<input prompt="How many additional constant buffs does this revive have?" response="0" />
 			</revive>
 			<revival_counter>
 				<input prompt="How many Revival Counterattack Finish Skills does the form have?" response="0" />
