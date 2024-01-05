@@ -171,6 +171,8 @@ class InputHelper:
             child.set("prompt", prompt)
             child.set("response", str(response))
             self.parentMap[child] = self.parent
+            ET.indent(self.tree, space="\t", level=0)
+            self.tree.write(self.filePath, encoding='utf-8')
         else:
             response = simplest_type(child.attrib["response"])
         
@@ -438,8 +440,6 @@ class Unit:
                 state.attributes[attributeName] = attributes[i, j]
 
     def saveUnit(self):
-        ET.indent(self.inputHelper.tree, space="\t", level=0)
-        self.inputHelper.tree.write(self.inputHelper.filePath, encoding='utf-8')
         # Output the unit's attributes to a .txt file
         outputFilePath = os.path.join(CWD, "DokkanKitOutputs", HIPO_DUPES[self.nCopies - 1], self.id + ".txt")
         outputFile = open(outputFilePath, "w")
@@ -1499,9 +1499,9 @@ class Buff(PassiveAbility):
                 state.support += supportFactorConversion[self.effect] * supportBuff
             elif self.effect in ORB_CHANGING_EFFECTS:
                 state.support += supportFactorConversion[self.effect] * supportBuff
-                state.numOtherTypeOrbs = orbChangeConversion[self.effect]["Other"]
-                state.numSameTypeOrbs = orbChangeConversion[self.effect]["Same"]
-                state.numRainbowOrbs = orbChangeConversion[self.effect]["Rainbow"]
+                state.numOtherTypeOrbs = orbChangeConversion[self.effect]["Other"] * activationProbability + state.numOtherTypeOrbs * (1 - activationProbability)
+                state.numSameTypeOrbs = orbChangeConversion[self.effect]["Same"] * activationProbability + state.numSameTypeOrbs * (1 - activationProbability)
+                state.numRainbowOrbs = orbChangeConversion[self.effect]["Rainbow"] * activationProbability + state.numRainbowOrbs * (1 - activationProbability)
             elif self.effect in state.buff.keys():
                 state.buff[self.effect] += effectiveBuff
             elif self.effect in state.p1Buff.keys():
@@ -1891,4 +1891,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(13, 1, 'DEF','CRT','ADD')
+    unit = Unit(14, 1, 'DEF','CRT','ADD')
