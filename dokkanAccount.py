@@ -1,17 +1,17 @@
 # List of nCopies of units as they currently are in my account
 
-User = [['DEF','ADD','DGE',1], # TEQLR SS Goku
-        ['DEF','ADD','CRT',1], # LR GoldenBois
-        ['DEF','CRT','ADD',1], # LR GT Bois
+User = [['DEF','ADD','CRT',1], # TEQLR SS Goku
+        ['DEF','CRT','ADD',1], # LR GoldenBois
+        ['ATK','CRT','ADD',1], # LR GT Bois
         ['ATK','ADD','CRT',0], # Infinite Zamasu
-        ['ATK','ADD','DGE',0], # DF Super Saiyan Trunks (Teen)
-        ['DEF','DGE','ADD',0], # Banner Super Saiyan Gohan (Youth)
-        ['DEF','ADD','CRT',2], # Fusing Super 17
-        ['DEF','ADD','DGE',1], # INT Majin Vegeta
-        ['DEF','ADD','DGE',1], # STR Super Vegeta
-        ['DEF','DGE','CRT',1], # AGL Trunks
-        ['DEF','ADD','DGE',5], # AGL Kid Gohan
-        ['DEF','ADD','CRT',0], # LR Omega Shenron
+        ['DEF','ADD','CRT',0], # DF Super Saiyan Trunks (Teen)
+        ['DEF','DGE','CRT',0], # Banner Super Saiyan Gohan (Youth)
+        ['DEF','ADD','DGE',2], # Fusing Super 17
+        ['DEF','DGE','ADD',1], # INT Majin Vegeta
+        ['DGE','DGE','ADD',1], # STR Super Vegeta
+        ['DEF','DGE','ADD',1], # AGL Trunks
+        ['DEF','DGE','ADD',5], # AGL Kid Gohan
+        ['ATK','ADD','CRT',0], # LR Omega Shenron
         ['DEF','CRT','ADD',2], # STR Super Saiyan Goku LR
 
 

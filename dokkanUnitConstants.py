@@ -597,10 +597,12 @@ SLV_HIPO = 0.05
 GLD_HIPO1 = 0.05
 GLD_HIPO2 = 0.02
 HIPO_BUILDS = [
-    ["ATT", "ADD", "CRT"],
-    ["ATT", "ADD", "DGE"],
-    ["ATT", "CRT", "DGE"],
-    ["ATT", "CRT", "ADD"],
+    ["ATK", "ADD", "CRT"],
+    ["ATK", "ADD", "DGE"],
+    ["ATK", "CRT", "DGE"],
+    ["ATK", "CRT", "ADD"],
+    ["ATK", "DGE", "ADD"],
+    ["ATK", "DGE", "CRT"],
     ["DEF", "ADD", "CRT"],
     ["DEF", "ADD", "DGE"],
     ["DEF", "CRT", "DGE"],
@@ -612,7 +614,7 @@ HIPO_BUILDS = [
     ["CRT", "CRT", "DGE"],
     ["CRT", "CRT", "ADD"],
     ["DGE", "DGE", "CRT"],
-    ["ATT", "DGE", "ADD"],
+    ["DGE", "DGE", "ADD"],
 ]
 
 ###################################################### Dicts ##########################################################################
@@ -694,7 +696,7 @@ saFracConversion = dict(zip(SUPER_ATTACK_NULLIFICATION_TYPES, PROBABILITY_SUPER_
 
 # Hidden-Potential + Equips
 hiddenPotentalStatsConverter = dict(zip(TYPES, [HIPO_AGL, HIPO_INT, HIPO_PHY, HIPO_STR, HIPO_TEQ]))
-# ATT, DEF, ADD, CRT, DGE
+# ATK, DEF, ADD, CRT, DGE
 HIPO_D0 = {
     "AGL": [0, 0, 0.1, 0, 0],
     "INT": [0, 0, 0, 0, 0.05],

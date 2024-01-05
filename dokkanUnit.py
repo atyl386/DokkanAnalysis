@@ -46,7 +46,7 @@ BRZ_HP = 0.02
 SLV_HP = 0.04
 GLD_HP1 = 0.05
 GLD_HP2 = 0.01
-# ATT,DEF,ADD,CRT,DGE
+# ATK,DEF,ADD,CRT,DGE
 HP_D0 = {'AGL':[0,0,0.1,0,0],
          'INT':[0,0,0,0,0.05],
          'PHY':[0,0,0.1,0,0],
@@ -64,7 +64,7 @@ HP_D2 = {('ADD','CRT'):[0,0,0.12,0.06,0],
          ('CRT','ADD'):[0,0,0.06,0.12,0],
          ('DGE','ADD'):[0,0,0.06,0,0.06],
          ('DGE','CRT'):[0,0,0,0.06,0.06]}
-HP_BRZ = {'ATT':[BRZ_STAT,0,0,0,0],
+HP_BRZ = {'ATK':[BRZ_STAT,0,0,0,0],
           'DEF':[0,BRZ_STAT,0,0,0],
           'ADD':[0,0,2*BRZ_HP,0,0],
           'CRT':[0,0,0,2*BRZ_HP,0],

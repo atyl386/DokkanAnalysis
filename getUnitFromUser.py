@@ -3,8 +3,6 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
-# - Remove extra temporyary elements now that have parentMap
-# - Clean up getConditions
 # - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
