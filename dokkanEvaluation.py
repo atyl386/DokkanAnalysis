@@ -106,7 +106,7 @@ overallAttributeWeights = np.array([5, 0.5, 2, 4, 1.5, 5, 10, 8, 8, 3])
 overallEvaluator = Evaluator(overallTurnWeights, overallAttributeWeights)
 
 reCalc = True
-analyseHiPo = True
+analyseHiPo = False
 if reCalc:
     dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
     if os.path.exists(dokkanUnitsPath):
@@ -133,7 +133,7 @@ if reCalc:
             best_HiPo = None
             best_eval = evaluations[ID - 1][-1]
             for i, HiPo_build in enumerate(HIPO_BUILDS):
-                HiPo_unit = Unit(ID, NUM_COPIES_MAX, HiPo_build[0], HiPo_build[1], HiPo_build[2])
+                HiPo_unit = Unit(ID, NUM_COPIES_MAX, HiPo_build[0], HiPo_build[1], HiPo_build[2], save=False)
                 normalizeUnit(HiPo_unit, rainbowMeans, rainbowStds)
                 HiPo_evaluation = overallEvaluator.evaluate(HiPo_unit)
                 if HiPo_evaluation > best_eval:

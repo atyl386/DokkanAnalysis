@@ -187,12 +187,13 @@ class InputHelper:
 
 
 class Unit:
-    def __init__(self, id, nCopies, brz, HiPo1, HiPo2):
+    def __init__(self, id, nCopies, brz, HiPo1, HiPo2, save=True):
         self.id = str(id)
         self.nCopies = nCopies
         self.brz = brz
         self.HiPo1 = HiPo1
         self.HiPo2 = HiPo2
+        self.save = save
         self.inputHelper = InputHelper(self.id)
         self.getConstants()
         self.getHiPo()
@@ -440,14 +441,15 @@ class Unit:
                 state.attributes[attributeName] = attributes[i, j]
 
     def saveUnit(self):
-        # Output the unit's attributes to a .txt file
-        outputFilePath = os.path.join(CWD, "DokkanKitOutputs", HIPO_DUPES[self.nCopies - 1], self.id + ".txt")
-        outputFile = open(outputFilePath, "w")
-        for i, state in enumerate(self.states):
-            outputFile.write(f"State # {i} / Turn # {state.turn} \n \n")
-            for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
-                outputFile.write(f"{attributeName}: {state.attributes[attributeName]} \n")
-            outputFile.write("\n")
+        if self.save:
+            # Output the unit's attributes to a .txt file
+            outputFilePath = os.path.join(CWD, "DokkanKitOutputs", HIPO_DUPES[self.nCopies - 1], self.id + ".txt")
+            outputFile = open(outputFilePath, "w")
+            for i, state in enumerate(self.states):
+                outputFile.write(f"State # {i} / Turn # {state.turn} \n \n")
+                for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
+                    outputFile.write(f"{attributeName}: {state.attributes[attributeName]} \n")
+                outputFile.write("\n")
 
 
 class Form:
