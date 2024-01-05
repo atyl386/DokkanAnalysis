@@ -58,13 +58,12 @@ def writeSummary(units, attributeValues, evaluations):
             data=[
                 [
                     str(i + 1),
-                    units[nCopies - 1][i].name,
-                    units[nCopies - 1][i]._type,
+                    units[nCopies - 1][i].commonName,
                     evaluations[i, nCopies - 1],
                 ]
                 for i in range(nUnits)
             ],
-            columns=["ID", "Name", "Type", "Evaluation"],
+            columns=["ID", "Common Name", "Evaluation"],
         )
         weightedSums = np.zeros((nUnits, NUM_ATTRIBUTES))
         for turn in range(NUM_EVAL_TURNS):
@@ -119,21 +118,21 @@ if reCalc:
     attributeValues = np.zeros((nUnits, NUM_EVAL_TURNS, NUM_ATTRIBUTES, NUM_COPIES_MAX))
     units = [[None] * nUnits for i in range(NUM_COPIES_MAX)]
     evaluations = np.zeros((nUnits, NUM_COPIES_MAX))
-    for ID in range(1, nUnits + 1):
+    for ID in User.keys():
         print(ID)
-        units[-1][ID - 1] = Unit(ID, NUM_COPIES_MAX, User[ID - 1][0], User[ID - 1][1], User[ID - 1][2])
+        units[-1][ID - 1] = Unit(ID, User[ID]["Common Name"], NUM_COPIES_MAX, User[ID]["BRZ Equip"], User[ID]["HiPo Choice # 1"], User[ID]["HiPo Choice # 2"])
         attributeValues[ID - 1, :, :, -1] = interpStates(units[-1][ID - 1])
 
     [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
-    for ID in range(1, nUnits + 1):
+    for ID in User.keys():
         attributeValues[ID - 1, :, :, -1] = normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
         evaluations[ID - 1][-1] = overallEvaluator.evaluate(units[-1][ID - 1])
     if analyseHiPo:
-        for ID in range(1, nUnits + 1):
+        for ID in User.keys():
             best_HiPo = None
             best_eval = evaluations[ID - 1][-1]
             for i, HiPo_build in enumerate(HIPO_BUILDS):
-                HiPo_unit = Unit(ID, NUM_COPIES_MAX, HiPo_build[0], HiPo_build[1], HiPo_build[2], save=False)
+                HiPo_unit = Unit(ID, User[ID]["Common Name"], NUM_COPIES_MAX, HiPo_build[0], HiPo_build[1], HiPo_build[2], save=False)
                 normalizeUnit(HiPo_unit, rainbowMeans, rainbowStds)
                 HiPo_evaluation = overallEvaluator.evaluate(HiPo_unit)
                 if HiPo_evaluation > best_eval:
@@ -143,10 +142,10 @@ if reCalc:
                 print(ID, "default HiPo", HiPo_unit.name)
             else:
                 print(ID, HIPO_BUILDS[best_HiPo], HiPo_unit.name)
-    for ID in range(1, nUnits + 1):
+    for ID in User.keys():
         print(ID)
         for nCopies in range(1, NUM_COPIES_MAX):
-            units[nCopies - 1][ID - 1] = Unit(ID, nCopies, User[ID - 1][0], User[ID - 1][1], User[ID - 1][2])
+            units[nCopies - 1][ID - 1] = Unit(ID, User[ID]["Common Name"], nCopies, User[ID]["BRZ Equip"], User[ID]["HiPo Choice # 1"], User[ID]["HiPo Choice # 2"])
             attributeValues[ID - 1, :, :, nCopies - 1] = normalizeUnit(
                 units[nCopies - 1][ID - 1], rainbowMeans, rainbowStds
             )

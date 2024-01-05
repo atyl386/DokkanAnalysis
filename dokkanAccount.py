@@ -1,23 +1,105 @@
 # List of nCopies of units as they currently are in my account
 
-User = [['DEF','ADD','CRT',1], # TEQLR SS Goku
-        ['DEF','CRT','ADD',1], # LR GoldenBois
-        ['ATK','CRT','ADD',1], # LR GT Bois
-        ['ATK','ADD','CRT',0], # Infinite Zamasu
-        ['DEF','ADD','CRT',0], # DF Super Saiyan Trunks (Teen)
-        ['DEF','DGE','CRT',0], # Banner Super Saiyan Gohan (Youth)
-        ['DEF','ADD','DGE',2], # Fusing Super 17
-        ['DEF','DGE','ADD',1], # INT Majin Vegeta
-        ['DGE','DGE','ADD',1], # STR Super Vegeta
-        ['DEF','DGE','ADD',1], # AGL Trunks
-        ['DEF','DGE','ADD',5], # AGL Kid Gohan
-        ['ATK','ADD','CRT',0], # LR Omega Shenron
-        ['DEF','CRT','ADD',2], # STR Super Saiyan Goku LR
-        ['DEF','DGE','CRT',1], # AGLLR Future Gohan & Trunks
-
-
-
-        ] 
+User = {
+    1: {
+        "Common Name": "CLR_TEQ_SS_Goku",
+        "# Copies": 1,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+    },
+    2: {
+        "Common Name": "LR_PHY_Buu_Bois",
+        "# Copies": 1,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
+    },
+    3: {
+        "Common Name": "LR_STR_GT_Duo",
+        "# Copies": 1,
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
+    },
+    4: {
+        "Common Name": "LR_TEQ_Fusion_Zamasu",
+        "# Copies": 0,
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+    },
+    5: {
+        "Common Name": "DF_TEQ_Super_Trunks",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+    },
+    6: {
+        "Common Name": "BU_STR_SS_Gohan",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "CRT",
+    },
+    7: {
+        "Common Name": "DF_STR_Super_17",
+        "# Copies": 2,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+    },
+    8: {
+        "Common Name": "DF_INT_Majin_Vegeta",
+        "# Copies": 1,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+    },
+    9: {
+        "Common Name": "DF_STR_Super_Vegeta",
+        "# Copies": 1,
+        "BRZ Equip": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+    },
+    10: {
+        "Common Name": "DF_AGL_Sword_Trunks",
+        "# Copies": 1,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+    },
+    11: {
+        "Common Name": "DF_AGL_Kid_Gohan",
+        "# Copies": 5,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+    },
+    12: {
+        "Common Name": "CLR_AGL_Omega_Shenron",
+        "# Copies": 0,
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+    },
+    13: {
+        "Common Name": "CLR_STR_SS_Goku",
+        "# Copies": 2,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+    },
+    14: {
+        "Common Name": "LR_AGL_Future_Duo",
+        "# Copies": 1,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+    },
+}
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
     ['DEF','ADD','DGE',3], # TEQLR Gods
     ['DEF','ADD','CRT',1], # INTLR Vegeta & Trunks

@@ -14,7 +14,7 @@ def SummonRating(ID):
     pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(ID) + ".pkl", "rb")
     unit = pickle.load(pkl)
     pkl.close()
-    nCopies = User[ID - 1][3]
+    nCopies = User[ID]["# Copies"]
     evals = [0.0] * NUM_COPIES_MAX
     now = dt.datetime.today()
     EZADiscountFactor = 0.5
@@ -60,22 +60,20 @@ def SummonRating(ID):
 
 
 def SummonRatings():
-    ID = np.arange(1, nUnits + 1)
-    Name = [""] * nUnits
-    Type = [""] * nUnits
+    IDs = list(User.keys())
+    commonName = [""] * nUnits
     nCopies = [0] * nUnits
     summonRatings = [0.0] * nUnits
-    for i in range(nUnits):
-        pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(i + 1) + ".pkl", "rb")
+    for ID in IDs:
+        pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(ID) + ".pkl", "rb")
         unit = pickle.load(pkl)
         pkl.close()
-        Name[i] = unit.name
-        Type[i] = unit._type
-        nCopies[i] = User[i][3]
-        summonRatings[i] = SummonRating(i + 1)
+        commonName[ID - 1] = User[ID]["Common Name"]
+        nCopies[ID - 1] = User[ID]["# Copies"]
+        summonRatings[ID - 1] = SummonRating(ID)
     df = pd.DataFrame(
-        data=np.transpose([ID, Name, Type, nCopies, summonRatings]),
-        columns=["ID", "Name", "Type", "# Copies", "Summon Rating"],
+        data=np.transpose([IDs, commonName, nCopies, summonRatings]),
+        columns=["ID", "Common Name", "# Copies", "Summon Rating"],
     )
     df.set_index("ID", inplace=True)
     with pd.ExcelWriter("SummonRating.xlsx") as writer:

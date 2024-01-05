@@ -147,8 +147,8 @@ MultiChanceBuff.updateAttacksReceived = updateAttacksReceived
 
 
 class InputHelper:
-    def __init__(self, id):
-        self.filePath = os.path.join(CWD, "DokkanKits", id + ".xml")
+    def __init__(self, id, commonName):
+        self.filePath = os.path.join(CWD, "DokkanKits", commonName + "_" + id + ".xml")
         if os.path.exists(self.filePath):
             self.tree = ET.parse(self.filePath)
             self.parent = self.tree.getroot()
@@ -187,14 +187,15 @@ class InputHelper:
 
 
 class Unit:
-    def __init__(self, id, nCopies, brz, HiPo1, HiPo2, save=True):
+    def __init__(self, id, commonName, nCopies, brz, HiPo1, HiPo2, save=True):
         self.id = str(id)
+        self.commonName = commonName
         self.nCopies = nCopies
         self.brz = brz
         self.HiPo1 = HiPo1
         self.HiPo2 = HiPo2
         self.save = save
-        self.inputHelper = InputHelper(self.id)
+        self.inputHelper = InputHelper(self.id, commonName)
         self.getConstants()
         self.getHiPo()
         self.getSBR()
@@ -445,7 +446,7 @@ class Unit:
     def saveUnit(self):
         if self.save:
             # Output the unit's attributes to a .txt file
-            outputFilePath = os.path.join(CWD, "DokkanKitOutputs", HIPO_DUPES[self.nCopies - 1], self.id + ".txt")
+            outputFilePath = os.path.join(CWD, "DokkanKitOutputs", HIPO_DUPES[self.nCopies - 1], self.commonName + "_" + self.id + ".txt")
             outputFile = open(outputFilePath, "w")
             for i, state in enumerate(self.states):
                 outputFile.write(f"State # {i} / Turn # {state.turn} \n \n")
@@ -1914,4 +1915,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(14, 1, "DEF", "CRT", "ADD")
+    unit = Unit(1, 1, "CLR_TEQ_SS_Goku", "DEF", "CRT", "ADD")
