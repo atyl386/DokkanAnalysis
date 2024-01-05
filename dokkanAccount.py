@@ -13,6 +13,7 @@ User = [['DEF','ADD','CRT',1], # TEQLR SS Goku
         ['DEF','DGE','ADD',5], # AGL Kid Gohan
         ['ATK','ADD','CRT',0], # LR Omega Shenron
         ['DEF','CRT','ADD',2], # STR Super Saiyan Goku LR
+        ['DEF','DGE','CRT',1], # AGLLR Future Gohan & Trunks
 
 
 
@@ -41,7 +42,6 @@ User = [['DEF','ADD','CRT',1], # TEQLR SS Goku
     ['DEF','CRT','DGE',5], # INTLR Super Vegito
     ['DEF','DGE','ADD',4], # AGLLR SS4 Goku
     ['DEF','DGE','CRT',2], # STRLR SS4 Vegeta
-    ['DEF','DGE','CRT',1], # AGLLR Future Gohan & Trunks
     ['DEF','DGE','ADD',1], # INT 19&20
     ['DEF','ADD','DGE',0], # TEQ Kale & Caulifla
     ['DEF','ADD','DGE',1], # AGL 1st Form Cell
