@@ -157,7 +157,7 @@ class InputHelper:
             self.parent = ET.Element("inputTree")
             self.tree = ET.ElementTree(self.parent)
             self.parentMap = {}
-        
+
     def getAndSaveUserInput(self, prompt, type=None, default=None):
         child = self.parent.find(f'./input[@prompt="{prompt}"]')
         if child == None:
@@ -172,12 +172,12 @@ class InputHelper:
             child.set("response", str(response))
             self.parentMap[child] = self.parent
             ET.indent(self.tree, space="\t", level=0)
-            self.tree.write(self.filePath, encoding='utf-8')
+            self.tree.write(self.filePath, encoding="utf-8")
         else:
             response = simplest_type(child.attrib["response"])
-        
+
         return response
-    
+
     def getChildElement(self, parent, childTag):
         child = parent.find(f"{childTag}")
         if child == None:
@@ -304,7 +304,9 @@ class Unit:
                     "What is the unit's chance to seal?", default=0.0
                 )  # Scale by number of enemies for all enemy seal, same for stun
 
-            stun = stunTurnConversion[self.inputHelper.getAndSaveUserInput("How many turns does the unit stun for?", type=None, default=0)]
+            stun = stunTurnConversion[
+                self.inputHelper.getAndSaveUserInput("How many turns does the unit stun for?", type=None, default=0)
+            ]
             if stun != 0:
                 stun *= self.inputHelper.getAndSaveUserInput("What is the unit's chance to stun?", default=0.0)
 
@@ -782,7 +784,9 @@ class Form:
     def getSuperAttacks(self, rarity, eza):
         superAttacksElement = self.inputHelper.getChildElement(self.inputHelper.parent, "super_attack")
         for superAttackType in SUPER_ATTACK_CATEGORIES:
-            self.inputHelper.parent = self.inputHelper.getChildElement(superAttacksElement, f"{superAttackNameConversion[superAttackType]}")
+            self.inputHelper.parent = self.inputHelper.getChildElement(
+                superAttacksElement, f"{superAttackNameConversion[superAttackType]}"
+            )
             if superAttackType == "12 Ki" or (rarity == "LR" and not (self.intentional12Ki)):
                 multiplier = superAttackConversion[
                     self.inputHelper.getAndSaveUserInput(
@@ -797,9 +801,13 @@ class Form:
                     default=1,
                 )
                 superFracTotal = 0
-                superAttackVariationsElement = self.inputHelper.getChildElement(self.inputHelper.parent, f"{superAttackNameConversion[superAttackType]}_variations")
+                superAttackVariationsElement = self.inputHelper.getChildElement(
+                    self.inputHelper.parent, f"{superAttackNameConversion[superAttackType]}_variations"
+                )
                 for i in range(numSuperAttacks):
-                    self.inputHelper.parent = self.inputHelper.getChildElement(superAttackVariationsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}")
+                    self.inputHelper.parent = self.inputHelper.getChildElement(
+                        superAttackVariationsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}"
+                    )
                     if numSuperAttacks > 1:
                         superFrac = self.inputHelper.getAndSaveUserInput(
                             f"What is the probability of this {superAttackType} super attack variant from occuring?",
@@ -811,9 +819,15 @@ class Form:
                         f"How many effects does this form's {superAttackType} super attack have?",
                         default=1,
                     )
-                    superAttackEffectsElement =  self.inputHelper.getChildElement(self.inputHelper.parent, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}_effects")
+                    superAttackEffectsElement = self.inputHelper.getChildElement(
+                        self.inputHelper.parent,
+                        f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}_effects",
+                    )
                     for j in range(numEffects):
-                        self.inputHelper.parent = self.inputHelper.getChildElement(superAttackEffectsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}_effect_{j + 1}")
+                        self.inputHelper.parent = self.inputHelper.getChildElement(
+                            superAttackEffectsElement,
+                            f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}_effect_{j + 1}",
+                        )
                         effectType = self.inputHelper.getAndSaveUserInput(
                             "What type of effect does the unit get on super?",
                             type=clc.Choice(SUPER_ATTACK_EFFECTS, case_sensitive=False),
@@ -1264,7 +1278,7 @@ class State:
                 + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + unit.TAB * DEFAULT_TAB_INC)
             )
         )
-    
+
     def getRandomKi(self, form):
         return (
             KI_SUPPORT
@@ -1461,7 +1475,9 @@ class PassiveAbility(Ability):
         self.effectiveBuff = buff * self.activationProbability
         self.supportBuff = self.effectiveBuff * np.minimum(self.effectDuration, RETURN_PERIOD_PER_SLOT)
         if effect == "AAChance":
-            self.superChance = form.inputHelper.getAndSaveUserInput("What is the chance for this to become a super?", default=0)
+            self.superChance = form.inputHelper.getAndSaveUserInput(
+                "What is the chance for this to become a super?", default=0
+            )
 
 
 class Buff(PassiveAbility):
@@ -1501,9 +1517,15 @@ class Buff(PassiveAbility):
                 state.support += supportFactorConversion[self.effect] * supportBuff
             elif self.effect in ORB_CHANGING_EFFECTS:
                 state.support += supportFactorConversion[self.effect] * supportBuff
-                state.numOtherTypeOrbs = orbChangeConversion[self.effect]["Other"] * activationProbability + state.numOtherTypeOrbs * (1 - activationProbability)
-                state.numSameTypeOrbs = orbChangeConversion[self.effect]["Same"] * activationProbability + state.numSameTypeOrbs * (1 - activationProbability)
-                state.numRainbowOrbs = orbChangeConversion[self.effect]["Rainbow"] * activationProbability + state.numRainbowOrbs * (1 - activationProbability)
+                state.numOtherTypeOrbs = orbChangeConversion[self.effect][
+                    "Other"
+                ] * activationProbability + state.numOtherTypeOrbs * (1 - activationProbability)
+                state.numSameTypeOrbs = orbChangeConversion[self.effect][
+                    "Same"
+                ] * activationProbability + state.numSameTypeOrbs * (1 - activationProbability)
+                state.numRainbowOrbs = orbChangeConversion[self.effect][
+                    "Rainbow"
+                ] * activationProbability + state.numRainbowOrbs * (1 - activationProbability)
             elif self.effect in state.buff.keys():
                 state.buff[self.effect] += effectiveBuff
             elif self.effect in state.p1Buff.keys():
@@ -1880,7 +1902,6 @@ class CompositeCondition:
         if self.operator == "AFTER":
             self.conditions[0].conditionValue += self.conditions[1].conditionValue
 
-
     def isSatisfied(self, form):
         match self.operator:
             case "AND":
@@ -1893,4 +1914,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(14, 1, 'DEF','CRT','ADD')
+    unit = Unit(14, 1, "DEF", "CRT", "ADD")
