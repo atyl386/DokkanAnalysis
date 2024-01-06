@@ -412,7 +412,6 @@ class Unit:
                     hasReviveCounter = form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "Revive"
                 except:
                     hasReviveCounter = False
-                    stateIdx -= 1
                 if hasReviveCounter:
                     applyFinishSkillAPT = True
                     nextForm = -1
@@ -426,6 +425,7 @@ class Unit:
                 else:  # Set this to True so apply APT in next turn (e.g. Buu Bois)
                     applyFinishSkillAPT = True
                     nextForm = -1
+                    stateIdx -= 1
             else:
                 form.numAttacksReceived += state.numAttacksReceived
                 nextForm = form.checkCondition(
@@ -443,9 +443,15 @@ class Unit:
         return np.array(attributes)
 
     def setAttributes(self, attributes):
-        for i, state in enumerate(self.states):
+        for i in range(len(attributes[:, 0])):
+            if i == len(self.states):
+                state = copy.deepcopy(self.states[i - 1])
+                self.states.append(state)
+            else:
+                state = self.states[i]
             for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
                 state.attributes[attributeName] = attributes[i, j]
+        
     
     def interpStates(self):
         stateTurns = [state.turn for state in self.states]

@@ -98,7 +98,7 @@ overallEvaluator = Evaluator(overallTurnWeights, overallAttributeWeights)
 
 reCalc = True
 analyseHiPo = False
-optimiseSlots = False
+optimiseSlots = True
 if reCalc:
     dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
     if os.path.exists(dokkanUnitsPath):
@@ -122,7 +122,7 @@ if reCalc:
         evaluations[ID - 1][-1] = overallEvaluator.evaluate(units[-1][ID - 1])
     if optimiseSlots:
         for ID in User.keys():
-            best_slots = User[ID]["Slots"]
+            best_slots = copy.copy(User[ID]["Slots"])
             stateIdx = 0
             nextTurn = 1
             while nextTurn < MAX_TURN:
@@ -137,7 +137,7 @@ if reCalc:
                         best_eval = evaluation
                 best_slots[stateIdx] = best_slot
                 stateIdx += 1
-                nextTurn += RETURN_PERIOD_PER_SLOT[best_slot]
+                nextTurn += RETURN_PERIOD_PER_SLOT[best_slot - 1]
             if best_slots == User[ID]["Slots"]:
                 print(ID, "default Slots", User[ID]["Common Name"])
             else:
