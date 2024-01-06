@@ -3,7 +3,7 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
-# - check that unit super isn't being used for addtionals
+# - check the mN value passed to branchAPT from call from sa in getAPT() is correct. Seems to be incorrectly using usa.
 # - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
@@ -811,6 +811,7 @@ class Form:
                     )
                 ][superAttackLevelConversion[rarity][eza]]
                 avgSuperAttack = SuperAttack(superAttackType, multiplier)
+                defaultSuperAttack = copy.deepcopy(avgSuperAttack)
                 numSuperAttacks = self.inputHelper.getAndSaveUserInput(
                     f"How many different {superAttackType} super attacks does this form have?",
                     default=1,
@@ -857,11 +858,15 @@ class Form:
                             "How many turns does it last for?", default=MAX_TURN
                         )
                         avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
+                        if i == 0:
+                            defaultSuperAttack.addEffect(effectType, activationProbability, buff, duration, 1)
                     superFracTotal += superFrac
                     self.inputHelper.parent = superAttackVariationsElement
                 assert superFracTotal == 1, "Invald super attack variant probabilities entered"
                 self.inputHelper.parent = superAttacksElement
             self.superAttacks[superAttackType] = avgSuperAttack
+            if superAttackType == "12 Ki":
+                self.superAttacks["AS"] = defaultSuperAttack
         self.inputHelper.parent = self.formElement
 
     def checkCondition(self, condition, activated, newForm):
@@ -1058,11 +1063,14 @@ class State:
         form.superAttacksPerformed += self.superAttacksPerformed
         self.addStacks(form, unit)
         # Compute support bonuses from super attack effects
-        for superAttackType in SUPER_ATTACK_CATEGORIES:
-            if superAttackType == "18 Ki":
-                numSupers = pAttack * self.pUSA
-            else:
-                numSupers = pAttack * self.pSA + self.aaSA * pNextAttack
+        for superAttackType in form.superAttacks.keys():
+            match superAttackType:
+                case "18 Ki":
+                    numSupers = pAttack * self.pUSA
+                case "12 Ki":
+                    numSupers = pAttack * self.pSA
+                case "AS":
+                    numSupers = pAttack * self.aaSA * pNextAttack
             for superAttackEFfect in SUPPORT_SUPER_ATTACK_EFFECTS:
                 supportFactor = (
                     superAttackSupportFactorConversion[superAttackEFfect]
@@ -1094,7 +1102,7 @@ class State:
             self.p2Buff["ATK"],
             self.p3Buff["ATK"],
         )
-        self.sa = getSA(
+        self.SA = getSA(
             unit.kiMod12,
             unit.ATK,
             self.p1Buff["ATK"],
@@ -1107,7 +1115,20 @@ class State:
             form.superAttacks["12 Ki"].effects["ATK"].duration,
             form.superAttacks["12 Ki"].effects["ATK"].buff,
         )
-        self.usa = getUSA(
+        self.addSA = getSA(
+            unit.kiMod12,
+            unit.ATK,
+            self.p1Buff["ATK"],
+            self.stackedStats["ATK"],
+            form.linkEffects["SoT ATK"],
+            self.p2Buff["ATK"],
+            self.p3Buff["ATK"],
+            form.superAttacks["AS"].multiplier,
+            unit.nCopies,
+            form.superAttacks["AS"].effects["ATK"].duration,
+            form.superAttacks["AS"].effects["ATK"].buff,
+        )
+        self.USA = getUSA(
             unit.kiMod12,
             self.ki,
             unit.ATK,
@@ -1125,15 +1146,17 @@ class State:
             self.aaPSuper,
             form.superAttacks["12 Ki"].multiplier,
             unit.nCopies,
-            form.superAttacks["12 Ki"].effects["ATK"].duration,
+            form.superAttacks["AS"].effects["ATK"].duration,
+            form.superAttacks["AS"].effects["ATK"].buff,
             form.superAttacks["12 Ki"].effects["ATK"].buff,
             form.superAttacks["18 Ki"].effects["ATK"].buff,
             self.stackedStats["ATK"],
             self.p1Buff["ATK"],
             self.p2Buff["ATK"],
             self.normal,
-            self.sa,
-            self.usa,
+            self.addSA,
+            self.SA,
+            self.USA,
             unit.pHiPo["AA"],
             self.aaPGuarantee,
             self.multiChanceBuff["Nullify"].chances["SA Counter"],
@@ -1152,6 +1175,7 @@ class State:
             self.atkPerSuperPerformed,
             self.critPerAttackPerformed,
             self.critPerSuperPerformed,
+            form.superAttacks["AS"].effects["Crit"].buff,
             form.superAttacks["12 Ki"].effects["Crit"].buff,
             form.superAttacks["18 Ki"].effects["Crit"].buff,
         )
@@ -1272,8 +1296,16 @@ class State:
                 unit.stacks[stat].append(
                     Stack(
                         stat,
-                        (self.pSA + self.aaSA) * form.superAttacks["12 Ki"].effects[stat].buff,
+                        self.pSA * form.superAttacks["12 Ki"].effects[stat].buff,
                         form.superAttacks["12 Ki"].effects[stat].duration,
+                    )
+                )
+            if form.superAttacks["AS"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
+                unit.stacks[stat].append(
+                    Stack(
+                        stat,
+                        self.aaSA * form.superAttacks["AS"].effects[stat].buff,
+                        form.superAttacks["AS"].effects[stat].duration,
                     )
                 )
 

@@ -293,12 +293,14 @@ def getAPT(
     saMult12,
     nCopies,
     sa12AtkStacks,
+    addSAAtk,
     sa12Atk,
     sa18Atk,
     stackedAtk,
     p1Atk,
     p2Atk,
     normal,
+    addSA,
     sa,
     usa,
     HiPopAA,
@@ -319,6 +321,7 @@ def getAPT(
     atkPerSuperPerformed,
     critPerAttackPerformed,
     critPerSuperPerformed,
+    addSACrit,
     sa12Crit,
     sa18Crit,
 ):
@@ -328,9 +331,9 @@ def getAPT(
         nAA = len(AApSuper)
         i = -1  # iteration counter
         nProcs = 1  # Initialise number of HiPo procs
-        saMultiplier = SAMultiplier(saMult12, nCopies, sa12AtkStacks, sa12Atk)
-        m12 = saMultiplier + sa12Atk + stackedAtk  # 12 ki multiplier after SA effect
-        a12_0 = sa / m12  # Get 12 ki SA attack stat without multiplier
+        saMultiplier = SAMultiplier(saMult12, nCopies, sa12AtkStacks, addSAAtk)
+        m12 = saMultiplier + addSAAtk + stackedAtk  # 12 ki multiplier after SA effect
+        a12_0 = addSA / m12  # Get 12 ki SA attack stat without multiplier
         baseAtk = 1 + p1Atk + stackedAtk
         n_0 = normal / baseAtk
         pAA = HiPopAA  # Probability of doing an additional attack next
@@ -377,7 +380,7 @@ def getAPT(
                 pG,
                 n_0,
                 a12_0,
-                sa12Atk,
+                addSAAtk,
                 HiPopAA,
                 critN,
                 critMultiplier,
@@ -387,7 +390,7 @@ def getAPT(
                 critPerAttackPerformed[1:],
                 atkPerSuperPerformed,
                 critPerSuperPerformed,
-                sa12Crit,
+                addSACrit,
             )
         ) + pSA * (
             sa * preAtkModifier
@@ -403,7 +406,7 @@ def getAPT(
                 pG,
                 n_0,
                 a12_0,
-                sa12Atk,
+                addSAAtk,
                 HiPopAA,
                 critSA,
                 critMultiplier,
@@ -413,7 +416,7 @@ def getAPT(
                 critPerAttackPerformed,
                 atkPerSuperPerformed[1:],
                 critPerSuperPerformed[1:],
-                sa12Crit,
+                addSACrit,
             )
         )
         if rarity == "LR":  # If  is a LR
@@ -431,7 +434,7 @@ def getAPT(
                     pG,
                     n_0,
                     a12_0,
-                    sa12Atk,
+                    addSAAtk,
                     HiPopAA,
                     critUSA,
                     critMultiplier,
@@ -441,7 +444,7 @@ def getAPT(
                     critPerAttackPerformed,
                     atkPerSuperPerformed[1:],
                     critPerSuperPerformed[1:],
-                    sa12Crit,
+                    addSACrit,
                 )
             )
         apt += counterAtk * preAtkModifier
