@@ -1777,6 +1777,11 @@ class PerformingSuperAttackDefence(PassiveAbility):
                     state.p2Buff["DEF"] += self.effectiveBuff
                 else:
                     state.p2DefB += self.effectiveBuff
+            case "Dmg Red":
+                state.dmgRedB += self.effectiveBuff
+                # If have activated active skill attack this turn
+                if state.superAttacksPerformed > 0:
+                    state.dmgRedA += self.effectiveBuff
 
 
 class KiSphereDependent(PassiveAbility):
