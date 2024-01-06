@@ -1927,4 +1927,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     # InputModes = {manual, fromTxt, fromPickle, fromWeb}
-    unit = Unit(1, 1, "CLR_TEQ_SS_Goku", "DEF", "CRT", "ADD", SLOT_1)
+    unit = Unit(15, "DF_INT_ToP_Androids", 1, "DEF", "CRT", "ADD", SLOT_1)
