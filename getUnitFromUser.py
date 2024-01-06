@@ -3,6 +3,7 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
+# - check that unit super isn't being used for addtionals
 # - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.

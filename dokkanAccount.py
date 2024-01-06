@@ -113,6 +113,15 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     },
+    15: {
+        "Common Name": "DF_INT_ToP_Androids",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_2,
+    },
+
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
     ['DEF','ADD','DGE',3], # TEQLR Gods
