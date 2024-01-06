@@ -1806,14 +1806,20 @@ class KiSphereDependent(PassiveAbility):
         else:  # If fixed buff if obtain X orbs
             effectFactor = 1 - poisson.cdf(self.required - 1, numOrbs)
         buffFromOrbs = self.effectiveBuff * effectFactor
-        if self.effect in state.buff.keys():
+        if self.effect in REGULAR_SUPPORT_EFFECTS:
+            state.support += supportFactorConversion[self.effect] * buffFromOrbs
+        elif self.effect in state.buff.keys():
             state.buff[self.effect] += buffFromOrbs
+        elif self.effect in state.p1Buff.keys():
+            state.p1Buff[self.effect] += buffFromOrbs
+        elif self.effect in MULTI_CHANCE_EFFECTS_NO_NULLIFY:
+            state.multiChanceBuff[self.effect].updateChance("Start of Turn", buffFromOrbs, self.effect, state)
         else:
             match self.effect:
                 case "Dmg Red":
                     state.dmgRedA += buffFromOrbs
                     state.dmgRedB += buffFromOrbs
-                    state.buff["Dmg Red against Normals"] += buffFromOrbs
+                    state.buff["Dmg Red against Normals"] += buffFromOrbs                
 
 
 class Nullification(PassiveAbility):
