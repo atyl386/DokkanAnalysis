@@ -1733,7 +1733,7 @@ class AfterAttackReceived(PassiveAbility):
                     state.aaPSuper.append(cappedTurnBuff * self.superChance)
         self.turnsSinceActivated += 1
         # If not still going to be active next turn
-        if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot]:
+        if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
             # Reset it to not be active
             self.turnsSinceActivated = 0
         else:
