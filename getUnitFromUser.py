@@ -13,7 +13,6 @@ import xml.etree.ElementTree as ET
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
 # - Instead of asking user how many of something, should ask until they enteran exit key ak a while loop instead of for loop
 # - Should read up on python optimisation techniques once is running and se how long it takes. But try be efficient you go.
-# - I think the 20x3 state matrix needs to be used to compute the best path
 # - Should put at may not be relevant tag onto end of the prompts that may not always be relevant.
 # - Ideally would just pull data from database, but not up in time for new units. Would be amazing for old units though.
 # - Leader skill weight should decrease from 5 as new structure adds more variability between leader skills

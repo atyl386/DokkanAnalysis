@@ -106,6 +106,7 @@ overallEvaluator = Evaluator(overallTurnWeights, overallAttributeWeights)
 
 reCalc = True
 analyseHiPo = False
+optimiseSlots = False
 if reCalc:
     dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
     if os.path.exists(dokkanUnitsPath):
@@ -127,6 +128,28 @@ if reCalc:
     for ID in User.keys():
         attributeValues[ID - 1, :, :, -1] = normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
         evaluations[ID - 1][-1] = overallEvaluator.evaluate(units[-1][ID - 1])
+    if optimiseSlots:
+        for ID in User.keys():
+            best_slots = User[ID]["Slots"]
+            stateIdx = 0
+            nextTurn = 1
+            while nextTurn < MAX_TURN:
+                best_eval = -np.inf
+                for slot in SLOTS:
+                    best_slots[stateIdx] = slot
+                    unit = Unit(ID, User[ID]["Common Name"], NUM_COPIES_MAX, User[ID]["BRZ Equip"], User[ID]["HiPo Choice # 1"], User[ID]["HiPo Choice # 2"], best_slots, save=False)
+                    normalizeUnit(unit, rainbowMeans, rainbowStds)
+                    evaluation = overallEvaluator.evaluate(unit)
+                    if evaluation > best_eval:
+                        best_slot = slot
+                        best_eval = evaluation
+                best_slots[stateIdx] = best_slot
+                stateIdx += 1
+                nextTurn += RETURN_PERIOD_PER_SLOT[best_slot]
+            if best_slots == User[ID]["Slots"]:
+                print(ID, "default Slots", User[ID]["Common Name"])
+            else:
+                print(ID, best_slots, User[ID]["Common Name"])
     if analyseHiPo:
         for ID in User.keys():
             best_HiPo = None
