@@ -200,6 +200,7 @@ class Unit:
         self.getHiPo()
         self.getSBR()
         self.getStates()
+        self.interpStates()
         self.saveUnit()
 
     def getConstants(self):
@@ -445,6 +446,12 @@ class Unit:
         for i, state in enumerate(self.states):
             for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
                 state.attributes[attributeName] = attributes[i, j]
+    
+    def interpStates(self):
+        stateTurns = [state.turn for state in self.states]
+        attributes = self.getAttributes()
+        interpAttrs = np.array([np.interp(EVAL_TURNS, stateTurns, attributes[:, i]) for i in range(NUM_ATTRIBUTES)]).T
+        self.setAttributes(interpAttrs)
 
     def saveUnit(self):
         if self.save:

@@ -15,13 +15,6 @@ def save_object(obj, filename):
     outp.close()
 
 
-def interpStates(unit):
-    stateTurns = [state.turn for state in unit.states]
-    attributes = unit.getAttributes()
-    interpAttrs = np.array([np.interp(EVAL_TURNS, stateTurns, attributes[:, i]) for i in range(NUM_ATTRIBUTES)]).T
-    return interpAttrs
-
-
 def summaryStats(attributeValues):
     # Compute means and stds for each attribute
     means = np.zeros((NUM_EVAL_TURNS, NUM_ATTRIBUTES))
@@ -48,7 +41,6 @@ def normalizeUnit(unit, means, stds):
         + unit.id
         + ".pkl",
     )
-    return normalisedAttributes
 
 
 def writeSummary(units, attributeValues, evaluations):
@@ -122,11 +114,11 @@ if reCalc:
     for ID in User.keys():
         print(ID)
         units[-1][ID - 1] = Unit(ID, User[ID]["Common Name"], NUM_COPIES_MAX, User[ID]["BRZ Equip"], User[ID]["HiPo Choice # 1"], User[ID]["HiPo Choice # 2"], User[ID]["Slots"])
-        attributeValues[ID - 1, :, :, -1] = interpStates(units[-1][ID - 1])
+        attributeValues[ID - 1, :, :, -1] = units[-1][ID - 1].getAttributes()
 
     [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
     for ID in User.keys():
-        attributeValues[ID - 1, :, :, -1] = normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
+        normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
         evaluations[ID - 1][-1] = overallEvaluator.evaluate(units[-1][ID - 1])
     if optimiseSlots:
         for ID in User.keys():
