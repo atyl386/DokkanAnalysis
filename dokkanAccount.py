@@ -15,7 +15,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
     },
     3: {
         "Common Name": "DFLR_STR_GT_Duo",
@@ -31,7 +31,7 @@ User = {
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 1, 1, 1, 3, 1, 1, 1, 1],
     },
     5: {
         "Common Name": "DF_TEQ_Super_Trunks",
@@ -39,7 +39,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_2
+        "Slots": [2, 2, 2, 1, 3, 2, 2, 2, 2, 2]
     },
     6: {
         "Common Name": "BU_STR_SS_Gohan",
@@ -47,7 +47,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_2,
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     7: {
         "Common Name": "DF_STR_Super_17",
@@ -63,7 +63,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "Slots": [1, 2, 2, 2, 1, 2, 2, 2, 2, 2],
     },
     9: {
         "Common Name": "DF_STR_Super_Vegeta",
@@ -71,7 +71,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "Slots": SLOT_1,
     },
     10: {
         "Common Name": "DF_AGL_Sword_Trunks",
@@ -103,7 +103,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 1, 3, 1, 1, 1, 1, 1, 1],
     },
     14: {
         "Common Name": "LR_AGL_Future_Duo",
@@ -111,7 +111,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     },
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
