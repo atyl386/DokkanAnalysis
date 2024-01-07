@@ -472,7 +472,6 @@ EFFECTS = [
     "Crit",
     "AdditionalSuper",
     "AAChance",
-    "SuperChance",
     "Guaranteed Hit",
     "Evasion",
     "Ki (Type Ki Sphere)",
