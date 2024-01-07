@@ -31,7 +31,7 @@ User = {
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": [1, 1, 1, 1, 1, 3, 1, 1, 1, 1],
+        "Slots": SLOT_1,
     },
     5: {
         "Common Name": "DF_TEQ_Super_Trunks",
@@ -108,7 +108,7 @@ User = {
     14: {
         "Common Name": "LR_AGL_Future_Duo",
         "# Copies": 1,
-        "BRZ Equip": "DGE",
+        "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
         "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -117,8 +117,8 @@ User = {
         "Common Name": "DF_INT_ToP_Androids",
         "# Copies": 0,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
         "Slots": SLOT_2,
     },
 
