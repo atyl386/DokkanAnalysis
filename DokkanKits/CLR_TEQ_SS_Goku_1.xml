@@ -229,7 +229,7 @@
 					<ability_1>
 						<input prompt="What type of buff does the unit get?" response="Crit" />
 						<input prompt="What is the probability this ability activates?" response="1.0" />
-						<input prompt="What is the value of the buff?" response="0.59" />
+						<input prompt="What is the value of the buff?" response="0.50" />
 						<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 					</ability_1>
 				</ability_1>

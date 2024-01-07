@@ -3,7 +3,6 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
-# - check the mN value passed to branchAPT from call from sa in getAPT() is correct. Seems to be incorrectly using usa.
 # - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
