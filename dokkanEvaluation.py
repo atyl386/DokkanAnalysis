@@ -98,7 +98,7 @@ overallEvaluator = Evaluator(overallTurnWeights, overallAttributeWeights)
 
 reCalc = True
 analyseHiPo = False
-optimiseSlots = True
+optimiseSlots = False
 if reCalc:
     dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
     if os.path.exists(dokkanUnitsPath):

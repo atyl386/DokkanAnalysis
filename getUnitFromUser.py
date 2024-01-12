@@ -1851,7 +1851,13 @@ class KiSphereDependent(PassiveAbility):
                 case "Dmg Red":
                     state.dmgRedA += buffFromOrbs
                     state.dmgRedB += buffFromOrbs
-                    state.buff["Dmg Red against Normals"] += buffFromOrbs                
+                    state.buff["Dmg Red against Normals"] += buffFromOrbs
+                case "AdditionalSuper":
+                    state.aaPSuper.append(effectFactor)
+                    state.aaPGuarantee.append(0)
+                case "AAChance":
+                    state.aaPGuarantee.append(effectFactor)
+                    state.aaPSuper.append(effectFactor * self.superChance)
 
 
 class Nullification(PassiveAbility):
@@ -1969,4 +1975,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(17, "DF_AGL_Berserk_Kale", 1, "DEF", "ADD", "CRT", SLOT_2)
+    unit = Unit(18, "DF_PHY_God_Goku", 1, "DEF", "ADD", "CRT", SLOT_1)
