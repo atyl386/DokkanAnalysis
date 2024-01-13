@@ -406,11 +406,10 @@
 				<ability_1>
 					<input prompt="What is the attack multiplier?" response="Ultimate" />
 					<input prompt="What is the additional attack buff when performing the attack?" response="0.0" />
-					<input prompt="How many conditions have to be met?" response="2" />
-					<input prompt="What is the condition logic?" response="AND" />
+					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="5" />
+						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="7" />
 					</condition_1>
 				</ability_1>
 			</active_skill_attack>

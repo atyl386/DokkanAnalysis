@@ -198,6 +198,7 @@
 						<input prompt="What type of condition is # 2?" response="Min HP" />
 						<input prompt="What is the minimum HP condition?" response="0.6" />
 					</condition_2>
+					<input prompt="Does this active skill trigger a transformation?" response="N" />
 				</ability_1>
 			</active_skill_attack>
 			<standby_finish_attack>
@@ -426,6 +427,7 @@
 						<input prompt="What type of condition is # 1?" response="Min HP" />
 						<input prompt="What is the minimum HP condition?" response="0.6" />
 					</condition_1>
+					<input prompt="Does this active skill trigger a transformation?" response="N" />
 				</ability_1>
 			</active_skill_attack>
 			<standby_finish_attack>

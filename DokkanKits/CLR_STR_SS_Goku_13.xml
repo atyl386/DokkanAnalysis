@@ -270,6 +270,7 @@
 						<input prompt="What type of condition is # 2?" response="Num Attacks Received" />
 						<input prompt="How many received attacks are required?" response="10" />
 					</condition_2>
+					<input prompt="Does this active skill trigger a transformation?" response="N" />
 				</ability_1>
 			</active_skill_attack>
 			<standby_finish_attack>

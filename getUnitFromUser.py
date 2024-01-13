@@ -3,6 +3,8 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
+# - Need to get god goku's crit on active skill in
+# - Godd Goku is tricky because he transforms on his active
 # - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
@@ -385,24 +387,24 @@ class Unit:
         stateIdx = -1
         self.fightPeak = False
         # Only non-zero in between activating the stanby finish skill attack and applying to subsequent state
-        self.standbyFinishSkillAPT = 0
-        nextForm = 1
+        self.transformationAttackAPT = 0
+        self.nextForm = 1
         applyFinishSkillAPT = False
         self.critMultiplier = (CRIT_MULTIPLIER + self.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR
         while turn <= MAX_TURN:
             stateIdx += 1
             slot = self.slots[stateIdx]
-            formIdx += nextForm
-            if nextForm == 1:
+            formIdx += self.nextForm
+            if self.nextForm == 1:
                 # Ignore case where turn == 1 as this is when nextForm == True doesn't mean transformation
                 if turn != 1:
                     form.transformed = True
                 self.inputHelper.parent = self.inputHelper.getChildElement(self.formsElement, f"form_{formIdx}")
                 form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms)
                 self.forms.append(form)
-            elif nextForm == -1:
+            elif self.nextForm == -1:
                 form = self.forms[-2]
-            nextForm = 0
+            self.nextForm = 0
             form.turn = turn
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
             form.nextTurnRelative = nextTurn - form.initialTurn + 1
@@ -411,7 +413,7 @@ class Unit:
             state = State(self, form, slot, turn)
             state.setState(self, form)
             # If have finished a standby
-            if self.standbyFinishSkillAPT != 0:
+            if self.transformationAttackAPT != 0:
                 # If the trigger condition for the finish is a revive, apply APT this turn, otherwise next.
                 try:
                     hasReviveCounter = form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "Revive"
@@ -419,21 +421,20 @@ class Unit:
                     hasReviveCounter = False
                 if hasReviveCounter:
                     applyFinishSkillAPT = True
-                    nextForm = -1
+                    self.nextForm = -1
                 if applyFinishSkillAPT:
-                    state.attributes["APT"] += self.standbyFinishSkillAPT
+                    state.attributes["APT"] += self.transformationAttackAPT
                     turn = nextTurn
-                    self.standbyFinishSkillAPT = 0
+                    self.transformationAttackAPT = 0
                     state.attacksPerformed += 1
                     state.superAttacksPerformed += 1
                     self.states.append(state)
-                else:  # Set this to True so apply APT in next turn (e.g. Buu Bois)
+                else:  # Set this to True so apply APT in next state (e.g. Buu Bois)
                     applyFinishSkillAPT = True
-                    nextForm = -1
                     stateIdx -= 1
             else:
                 form.numAttacksReceived += state.numAttacksReceived
-                nextForm = form.checkCondition(
+                self.nextForm = form.checkCondition(
                     form.formChangeCondition,
                     form.transformed,
                     form.newForm,
@@ -649,9 +650,10 @@ class Form:
                 [
                     "What is the attack multiplier?",
                     "What is the additional attack buff when performing the attack?",
+                    "Does this active skill trigger a transformation?",
                 ],
-                [clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False), None],
-                ["Ultimate", 0.0],
+                [clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False), None, clc.Choice(YES_NO)],
+                ["Ultimate", 0.0, "N"],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "standby_finish_attack")
@@ -1466,7 +1468,7 @@ class ActiveSkillBuff(SingleTurnAbility):
 class ActiveSkillAttack(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        attackMultiplier, attackBuff = args
+        attackMultiplier, attackBuff, self.triggersTransformation = args
         self.activeMult = specialAttackConversion[attackMultiplier] + attackBuff
 
     def applyToState(self, state, unit=None, form=None):
@@ -1475,8 +1477,7 @@ class ActiveSkillAttack(SingleTurnAbility):
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.superAttacksPerformed += 1
             state.activeSkillAttackActivated = True
-            state.APT += (
-                getActiveAtk(
+            activeAtk = getActiveAtk(
                     unit.kiMod12,
                     rarity2MaxKi[unit.rarity],
                     unit.ATK,
@@ -1487,10 +1488,12 @@ class ActiveSkillAttack(SingleTurnAbility):
                     state.p3Buff["ATK"],
                     self.activeMult,
                     unit.nCopies,
-                )
-                * state.atkModifier
-            )
-
+                ) * state.atkModifier
+            if yesNo2Bool[self.triggersTransformation]:
+                unit.transformationAttackAPT = activeAtk
+                unit.nextForm = 1
+            else:
+                state.APT += activeAtk
 
 # This skill is to apply to a unit already in it's standby mode.
 # The condition to enter & exit the standy mode will be controlled by regular form changes.
@@ -1505,7 +1508,7 @@ class StandbyFinishSkill(SingleTurnAbility):
         if form.checkCondition(self.condition, self.activated, True):
             self.activated = True
             self.activeMult += self.buffPerCharge * form.charge
-            unit.standbyFinishSkillAPT = (
+            unit.transformationAttackAPT = (
                 getActiveAtk(
                     unit.kiMod12,
                     rarity2MaxKi[unit.rarity],
@@ -1520,6 +1523,7 @@ class StandbyFinishSkill(SingleTurnAbility):
                 )
                 * state.atkModifier
             )
+            unit.nextForm = -1
 
 
 class RevivalCounterFinishSkill(StandbyFinishSkill):

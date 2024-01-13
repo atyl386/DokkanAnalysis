@@ -230,6 +230,7 @@
 						<input prompt="What type of condition is # 1?" response="Turn" />
 						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="6" />
 					</condition_1>
+					<input prompt="Does this active skill trigger a transformation?" response="N" />
 				</ability_1>
 			</active_skill_attack>
 			<standby_finish_attack>
