@@ -86,19 +86,16 @@
 					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.3" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.8" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_2>
 				<ability_3>
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.8" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_3>
 			</default>
 			<turn_dpendent>
@@ -115,7 +112,6 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.88" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What is the threshold health value?" response="0.88" />
@@ -123,7 +119,7 @@
 					<input prompt="What type of buff does the unit get?" response="Orb Change" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+					<input prompt="How many turns does the effect last for?" response="1" />
 				</ability_2>
 			</health_dependent>
 			<health_scale>
@@ -169,7 +165,6 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_1>
 			</offensive_on_super>
 			<active_skill_attack>
@@ -194,7 +189,6 @@
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_1>
 			</defensive_on_super>
 			<ki_sphere_dependent>
@@ -206,7 +200,6 @@
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What type of ki spheres are required?" response="Any" />
@@ -215,7 +208,6 @@
 					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.2" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_2>
 			</ki_sphere_dependent>
 			<ki_dependent>

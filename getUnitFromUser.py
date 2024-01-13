@@ -54,11 +54,8 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
             else:
                 knownApriori = False
             buff = form.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=1.0)
-            effectDuration = form.inputHelper.getAndSaveUserInput(
-                "How many turns does it last for? Only applicable to abilities with a time limit.", default=1
-            )
             ability = abilityClass(
-                form, activationProbability, knownApriori, effect, buff, effectDuration, args=parameters
+                form, activationProbability, knownApriori, effect, buff, args=parameters
             )
         elif issubclass(abilityClass, SingleTurnAbility):
             ability = abilityClass(form, parameters)
@@ -724,6 +721,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after receiving an attack?",
                 AfterAttackReceived,
+                ["How many turns does the buff last?"],
+                [None],
+                [1]
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_received")
@@ -1445,10 +1445,10 @@ class Domain(SingleTurnAbility):
                 case "Increase Damage Received":
                     self.abilities.append(
                         TurnDependent(
-                            form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, self.duration, params
+                            form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, effectDuration=self.duration, args=params
                         )
                     )
-                    self.abilities.append(TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params))
+                    self.abilities.append(TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, effectDuration=1, args=params))
             form.abilities["Start of Turn"].extend(self.abilities)
 
 
@@ -1466,7 +1466,7 @@ class ActiveSkillBuff(SingleTurnAbility):
             params = [start, end]
             if self.effect in P3_EFFECTS_SUFFIX:
                 self.effect = "P3 " + self.effect
-            ability = TurnDependent(form, 1, False, self.effect, self.buff, self.duration, params)
+            ability = TurnDependent(form, 1, False, self.effect, self.buff, effectDuration=self.duration, args=params)
             form.abilities["Start of Turn"].append(ability)
 
 
@@ -1542,17 +1542,21 @@ class RevivalCounterFinishSkill(StandbyFinishSkill):
 
 
 class PassiveAbility(Ability):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration=1):
         super().__init__(form)
         self.activationProbability = aprioriProbMod(activationProbability, knownApriori)
         self.effect = effect
         self.effectDuration = effectDuration
         self.effectiveBuff = buff * self.activationProbability
-        self.supportBuff = self.effectiveBuff * np.minimum(self.effectDuration, RETURN_PERIOD_PER_SLOT)
         if effect == "AAChance":
             self.superChance = form.inputHelper.getAndSaveUserInput(
                 "What is the chance for this to become a super?", default=0.0
             )
+        if effect in SUPPORT_EFFECTS and effectDuration == 1:
+            self.effectDuration = form.inputHelper.getAndSaveUserInput(
+                "How many turns does the effect last for?", default=1
+            )
+        self.supportBuff = self.effectiveBuff * np.minimum(self.effectDuration, RETURN_PERIOD_PER_SLOT)
 
 
 class Buff(PassiveAbility):
@@ -1563,7 +1567,7 @@ class Buff(PassiveAbility):
         knownApriori,
         effect,
         buff,
-        effectDuration,
+        effectDuration=1,
         start=1,
         end=MAX_TURN,
         ki=0,
@@ -1658,47 +1662,47 @@ class Buff(PassiveAbility):
 
 
 class TurnDependent(Buff):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration=1, args=[]):
         start, end = args
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, start=start, end=end)
+        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration=effectDuration, start=start, end=end)
 
 
 class KiDependent(Buff):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         ki = args[0]
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, ki=ki)
+        super().__init__(form, activationProbability, knownApriori, effect, buff, ki=ki)
 
 
 class SlotDependent(Buff):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         slots = args[0]
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, slots=slots)
+        super().__init__(form, activationProbability, knownApriori, effect, buff, slots=slots)
 
 
 class HealthDependent(Buff):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         health, isMaxHpCondition = args
         p = maxHealthCDF(health)
         if yesNo2Bool[isMaxHpCondition]:
             activationProbability *= p
         else:
             activationProbability *= 1 - p
-        super().__init__(form, activationProbability, True, effect, buff, effectDuration)
+        super().__init__(form, activationProbability, True, effect, buff)
 
 
 class HealthScale(Buff):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         isMoreHPBetter = args[0]
         if yesNo2Bool[isMoreHPBetter]:
             expectedBuff = MORE_HEALTH_REMAINING_MIN + EXPECTED_HEALTH_FRAC * (buff - MORE_HEALTH_REMAINING_MIN)
         else:
             expectedBuff = LESS_HEALTH_REMAINING_MIN + (1 - EXPECTED_HEALTH_FRAC) * (buff - LESS_HEALTH_REMAINING_MIN)
-        super().__init__(form, activationProbability, True, effect, expectedBuff, effectDuration)
+        super().__init__(form, activationProbability, True, effect, expectedBuff)
 
 
 class AttackReceivedThreshold(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.threshold = args[0]
 
     def applyToState(self, state, unit=None, form=None):
@@ -1711,8 +1715,8 @@ class AttackReceivedThreshold(PassiveAbility):
 
 
 class AttackPerformedThreshold(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.threshold, self.requiresSuperAttack = args
 
     def applyToState(self, state, unit=None, form=None):
@@ -1727,15 +1731,15 @@ class AttackPerformedThreshold(PassiveAbility):
 
 
 class PerEvent(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, max):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, max):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.max = max
         self.applied = 0
 
 
 class PerAttackPerformed(PerEvent):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, args[0])
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
         self.requiresSuperAttack = yesNo2Bool[args[1]]
         self.withinTheSameTurn = yesNo2Bool[args[2]]
 
@@ -1772,8 +1776,8 @@ class PerAttackPerformed(PerEvent):
 
 
 class PerAttackReceived(PerEvent):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, args[0])
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
 
     def applyToState(self, state, unit=None, form=None):
         turnBuff = self.effectiveBuff * state.numAttacksReceived
@@ -1791,8 +1795,9 @@ class PerAttackReceived(PerEvent):
 
 
 class AfterAttackReceived(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args=[]):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
+        self.effectDuration = args[0]
         self.turnsSinceActivated = 0
         self.applied = 0
         self.hitFactor = 1
@@ -1819,7 +1824,6 @@ class AfterAttackReceived(PassiveAbility):
             match self.effect:
                 case "DEF":
                     state.p2Buff["DEF"] += cappedTurnBuff
-                # These addiotnal super abilities won't be applied correctly if self.effectDuration > 2.
                 case "AdditionalSuper":
                     state.aaPSuper.append(cappedTurnBuff)
                     state.aaPGuarantee.append(0)
@@ -1838,8 +1842,8 @@ class AfterAttackReceived(PassiveAbility):
 
 
 class PerformingSuperAttackOffence(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args=[]):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
 
     def applyToState(self, state, unit=None, form=None):
         match self.effect:
@@ -1848,8 +1852,8 @@ class PerformingSuperAttackOffence(PassiveAbility):
 
 
 class PerformingSuperAttackDefence(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args=[]):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
 
     def applyToState(self, state, unit=None, form=None):
         match self.effect:
@@ -1867,8 +1871,8 @@ class PerformingSuperAttackDefence(PassiveAbility):
 
 
 class KiSphereDependent(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.orbType, self.required, self.whenAttacking = args
 
     def applyToState(self, state, unit=None, form=None):
@@ -1911,8 +1915,8 @@ class KiSphereDependent(PassiveAbility):
 
 
 class Nullification(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.hasCounter, self.healthFrac = args
 
     def applyToState(self, state, unit=None, form=None):

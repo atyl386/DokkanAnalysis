@@ -107,43 +107,38 @@
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.58" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.58" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_2>
 				<ability_3>
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.58" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_3>
 				<ability_4>
 					<input prompt="What type of buff does the unit get?" response="Ki" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="3.0" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_4>
 				<ability_5>
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.58" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_5>
 				<ability_6>
 					<input prompt="What type of buff does the unit get?" response="Ki Support" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="3.0" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+					<input prompt="How many turns does the effect last for?" response="1" />
 				</ability_6>
 				<ability_7>
 					<input prompt="What type of buff does the unit get?" response="DEF Support" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.58" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+					<input prompt="How many turns does the effect last for?" response="1" />
 				</ability_7>
 			</default>
 			<turn_dpendent>
@@ -220,7 +215,6 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.58" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_1>
 			</offensive_on_super>
 			<active_skill_attack>
@@ -244,7 +238,7 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.58" />
-					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+					<input prompt="How many turns does the buff last?" response="1" />
 				</ability_1>
 			</after_receive_attack>
 			<per_attack_received>
