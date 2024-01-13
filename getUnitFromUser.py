@@ -54,9 +54,7 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
             else:
                 knownApriori = False
             buff = form.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=1.0)
-            ability = abilityClass(
-                form, activationProbability, knownApriori, effect, buff, args=parameters
-            )
+            ability = abilityClass(form, activationProbability, knownApriori, effect, buff, args=parameters)
         elif issubclass(abilityClass, SingleTurnAbility):
             ability = abilityClass(form, parameters)
         abilities.append(ability)
@@ -723,7 +721,7 @@ class Form:
                 AfterAttackReceived,
                 ["How many turns does the buff last?"],
                 [None],
-                [1]
+                [1],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_received")
@@ -1445,10 +1443,10 @@ class Domain(SingleTurnAbility):
                 case "Increase Damage Received":
                     self.abilities.append(
                         TurnDependent(
-                            form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, effectDuration=self.duration, args=params
+                            form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, self.duration, params
                         )
                     )
-                    self.abilities.append(TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, effectDuration=1, args=params))
+                    self.abilities.append(TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params))
             form.abilities["Start of Turn"].extend(self.abilities)
 
 
@@ -1664,7 +1662,7 @@ class Buff(PassiveAbility):
 class TurnDependent(Buff):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration=1, args=[]):
         start, end = args
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration=effectDuration, start=start, end=end)
+        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, start=start, end=end)
 
 
 class KiDependent(Buff):
