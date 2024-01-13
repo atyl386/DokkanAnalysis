@@ -139,6 +139,17 @@
 			<attacks_received_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks received?" response="0" />
 			</attacks_received_threshold>
+			<attacks_performed_threshold>
+				<input prompt="How many different buffs does the form get after multiple attacks performed?" response="1" />
+				<ability_1>
+					<input prompt="How many attacks need to be performed?" response="4" />
+					<input prompt="Requires super attack?" response="Y" />
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+				</ability_1>
+			</attacks_performed_threshold>
 			<domain>
 				<input prompt="How many Domain skills does the form have?" response="0" />
 			</domain>
@@ -238,6 +249,95 @@
 			<revival_counter>
 				<input prompt="How many Revival Counterattack Finish Skills does the form have?" response="0" />
 			</revival_counter>
+			<form_1_change_condition>
+				<input prompt="How many conditions have to be met?" response="1" />
+				<condition_1>
+					<input prompt="What type of condition is # 1?" response="Turn" />
+					<input prompt="What is the turn condition (relative to the form's starting turn)?" response="7" />
+				</condition_1>
+			</form_1_change_condition>
 		</form_1>
+		<form_2>
+			<input prompt="Can this form attack?" response="Y" />
+			<input prompt="What is the unit's normal counter multiplier?" response="NA" />
+			<input prompt="What is the unit's super attack counter multiplier?" response="NA" />
+			<links>
+				<link_1>
+					<input prompt="What is the form's link # 1" response="Golden Warrior" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_1>
+				<link_2>
+					<input prompt="What is the form's link # 2" response="Experienced Fighters" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_2>
+				<link_3>
+					<input prompt="What is the form's link # 3" response="Super Saiyan" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_3>
+				<link_4>
+					<input prompt="What is the form's link # 4" response="Shocking Speed" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_4>
+				<link_5>
+					<input prompt="What is the form's link # 5" response="Kamehameha" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_5>
+				<link_6>
+					<input prompt="What is the form's link # 6" response="Prepared for Battle" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_6>
+				<link_7>
+					<input prompt="What is the form's link # 7" response="Fierce Battle" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_7>
+			</links>
+			<super_attack>
+				<regular_super_attack>
+					<input prompt="What is the form's 12 Ki super attack multiplier?" response="Immense" />
+					<input prompt="How many different 12 Ki super attacks does this form have?" response="1" />
+					<regular_super_attack_variations>
+						<regular_super_attack_variation_1>
+							<input prompt="How many effects does this form's 12 Ki super attack have?" response="2" />
+							<regular_super_attack_variation_1_effects>
+								<regular_super_attack_variation_1_effect_1>
+									<input prompt="What type of effect does the unit get on super?" response="ATK" />
+									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+									<input prompt="What is the value of the buff?" response="0.3" />
+									<input prompt="How many turns does it last for?" response="1" />
+								</regular_super_attack_variation_1_effect_1>
+								<regular_super_attack_variation_1_effect_2>
+									<input prompt="What type of effect does the unit get on super?" response="DEF" />
+									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+									<input prompt="What is the value of the buff?" response="0.3" />
+									<input prompt="How many turns does it last for?" response="1" />
+								</regular_super_attack_variation_1_effect_2>
+							</regular_super_attack_variation_1_effects>
+						</regular_super_attack_variation_1>
+					</regular_super_attack_variations>
+				</regular_super_attack>
+				<ultra_super_attack />
+			</super_attack>
+			<default>
+				<input prompt="How many unconditional buffs does the form have?" response="5" />
+				<ability_1>
+					<input prompt="What type of buff does the unit get?" response="Ki" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="2.0" />
+					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+				</ability_1>
+				<ability_2>
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.59" />
+					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+				</ability_2>
+				<ability_3>
+					<input prompt="What type of buff does the unit get?" response="DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.59" />
+					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
+				</ability_3>
+			</default>
+		</form_2>
 	</forms>
 </inputTree>

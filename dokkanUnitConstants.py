@@ -474,6 +474,8 @@ EFFECTS = [
     "AAChance",
     "Guaranteed Hit",
     "Evasion",
+    "EvasionA",
+    "EvasionB",
     "Ki (Type Ki Sphere)",
     "Ki (Ki Sphere)",
     "Ki (Ki Sphere)",
@@ -510,7 +512,7 @@ SUPPORT_FACTORS = [
 
 
 # Multi-Chance Effects
-MULTI_CHANCE_EFFECTS = ["Crit", "Evasion", "Nullify"]
+MULTI_CHANCE_EFFECTS = ["Crit", "EvasionA", "EvasionB", "Nullify"]
 MULTI_CHANCE_EFFECTS_NO_NULLIFY = [effect for effect in MULTI_CHANCE_EFFECTS if effect != "Nullify"]
 CRIT_CHANCES = ["HiPo", "Start of Turn", "Links", "On Super", "Active Skill", "Super Attack Effect"]
 EVASION_CHANCES = ["HiPo", "Start of Turn", "Links", "On Super", "Active Skill"]
@@ -638,7 +640,7 @@ NULL_CRIT_CHANCE_DICT = dict(zip(CRIT_CHANCES, np.zeros(len(CRIT_CHANCES))))
 NULL_EVASION_CHANCE_DICT = dict(zip(EVASION_CHANCES, np.zeros(len(EVASION_CHANCES))))
 NULL_NULLIFY_CHANCE_DICT = dict(zip(NULLIFY_CHANCES, np.zeros(len(NULLIFY_CHANCES))))
 NULL_MULTI_CHANCE_DICT = dict(
-    zip(MULTI_CHANCE_EFFECTS, [NULL_CRIT_CHANCE_DICT, NULL_EVASION_CHANCE_DICT, NULL_NULLIFY_CHANCE_DICT])
+    zip(MULTI_CHANCE_EFFECTS, [NULL_CRIT_CHANCE_DICT, NULL_EVASION_CHANCE_DICT, NULL_EVASION_CHANCE_DICT, NULL_NULLIFY_CHANCE_DICT])
 )
 
 # SBR

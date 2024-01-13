@@ -1005,9 +1005,10 @@ class State:
         for effect in MULTI_CHANCE_EFFECTS:
             self.multiChanceBuff[effect] = MultiChanceBuff(effect)
             if effect in MULTI_CHANCE_EFFECTS_NO_NULLIFY:
-                self.multiChanceBuff[effect].updateChance("HiPo", unit.pHiPo[effect], effect, self)
-                self.multiChanceBuff[effect].updateChance("Links", form.linkEffects[effect], effect, self)
-                self.multiChanceBuff[effect].updateChance("On Super", form.extraBuffs[effect], effect, self)
+                inputEffect = "Evasion" if "Evasion" in effect else effect
+                self.multiChanceBuff[effect].updateChance("HiPo", unit.pHiPo[inputEffect], effect, self)
+                self.multiChanceBuff[effect].updateChance("Links", form.linkEffects[inputEffect], effect, self)
+                self.multiChanceBuff[effect].updateChance("On Super", form.extraBuffs[inputEffect], effect, self)
         self.kiPerOtherTypeOrb = 1
         self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB
         self.kiPerRainbowKiSphere = 1  # Ki per orb
@@ -1207,7 +1208,7 @@ class State:
         )
         self.normalDamageTakenPreSuper = getDamageTaken(
             0,
-            self.multiChanceBuff["Evasion"].prob,
+            self.multiChanceBuff["EvasionA"].prob,
             self.buff["Guard"],
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1216,7 +1217,7 @@ class State:
         )
         self.normalDamageTakenPostSuper = getDamageTaken(
             0,
-            self.multiChanceBuff["Evasion"].prob,
+            self.multiChanceBuff["EvasionB"].prob,
             self.buff["Guard"],
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1225,7 +1226,7 @@ class State:
         )
         self.saDamageTakenPreSuper = getDamageTaken(
             self.multiChanceBuff["Nullify"].prob,
-            self.multiChanceBuff["Evasion"].prob,
+            self.multiChanceBuff["EvasionA"].prob,
             self.buff["Guard"],
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1234,7 +1235,7 @@ class State:
         )
         self.saDamageTakenPostSuper = getDamageTaken(
             self.multiChanceBuff["Nullify"].prob,
-            self.multiChanceBuff["Evasion"].prob,
+            self.multiChanceBuff["EvasionB"].prob,
             self.buff["Guard"],
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
@@ -1594,6 +1595,9 @@ class Buff(PassiveAbility):
                         state.dmgRedA += effectiveBuff
                         state.dmgRedB += effectiveBuff
                         state.buff["Dmg Red against Normals"] += effectiveBuff
+                    case "Evasion":
+                        state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
+                        state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
                     case "AdditionalSuper":
                         state.aaPSuper.append(activationProbability)
                         state.aaPGuarantee.append(0)
@@ -1621,7 +1625,8 @@ class Buff(PassiveAbility):
                         state.multiChanceBuff["Crit"].updateChance("Active Skill", effectiveBuff, "Crit", state)
                         state.atkModifier = state.getAvgAtkMod(form, unit)
                     case "P3 Evasion":
-                        state.multiChanceBuff["Evasion"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
+                        state.multiChanceBuff["EvasionA"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
+                        state.multiChanceBuff["EvasionB"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
                     case "P3 Disable Action":
                         state.multiChanceBuff["Nullify"].updateChance(
                             "Disable Action", P_NULLIFY_FROM_DISABLE_ACTIVE, "Nullify", state
@@ -1742,7 +1747,7 @@ class PerAttackPerformed(PerEvent):
                 state.dmgRedB += cappedTurnBuff
                 state.buff["Dmg Red against Normals"] += cappedTurnBuff
             case "Evasion":
-                state.multiChanceBuff[self.effect].updateChance("On Super", cappedTurnBuff, self.effect, state)
+                state.multiChanceBuff["EvasionB"].updateChance("On Super", cappedTurnBuff, self.effect, state)
         if not (self.withinTheSameTurn):
             form.extraBuffs[self.effect] += cappedTurnBuff
             self.applied += cappedTurnBuff

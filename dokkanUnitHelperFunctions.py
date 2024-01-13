@@ -493,5 +493,5 @@ class MultiChanceBuff:
     def updateChance(self, chanceKey, increment, effect, state=None):
         self.chances[chanceKey] += increment
         self.prob = self.calcProb()
-        if effect == "Evasion":
+        if "Evasion" in effect:
             self.updateAttacksReceived(state)
