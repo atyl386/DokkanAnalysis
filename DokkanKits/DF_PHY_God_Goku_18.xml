@@ -154,7 +154,18 @@
 				<input prompt="How many Domain skills does the form have?" response="0" />
 			</domain>
 			<active_skill_buffs>
-				<input prompt="How many active skill buffs does the form have?" response="0" />
+				<input prompt="How many active skill buffs does the form have?" response="1" />
+				<ability_1>
+					<input prompt="What type of buff does the unit get?" response="Crit" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="How many turns does it last?" response="1" />
+					<input prompt="How many times can it be activated?" response="1" />
+					<input prompt="How many conditions have to be met?" response="1" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="Turn" />
+						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="7" />
+					</condition_1>
+				</ability_1>
 			</active_skill_buffs>
 			<offensive_on_super>
 				<input prompt="How many different offensive buffs does the form get when performing a super attack / attacking?" response="1" />
@@ -166,7 +177,17 @@
 				</ability_1>
 			</offensive_on_super>
 			<active_skill_attack>
-				<input prompt="How many active skill attacks does the form have?" response="0" />
+				<input prompt="How many active skill attacks does the form have?" response="1" />
+				<ability_1>
+					<input prompt="What is the attack multiplier?" response="Ultimate" />
+					<input prompt="What is the additional attack buff when performing the attack?" response="0.0" />
+					<input prompt="How many conditions have to be met?" response="1" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="Turn" />
+						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="7" />
+					</condition_1>
+					<input prompt="Does this active skill trigger a transformation?" response="Y" />
+				</ability_1>
 			</active_skill_attack>
 			<standby_finish_attack>
 				<input prompt="How many Non-Revival Counterattack Standby Finish Skills does the form have?" response="0" />
@@ -402,16 +423,7 @@
 				</ability_1>
 			</offensive_on_super>
 			<active_skill_attack>
-				<input prompt="How many active skill attacks does the form have?" response="1" />
-				<ability_1>
-					<input prompt="What is the attack multiplier?" response="Ultimate" />
-					<input prompt="What is the additional attack buff when performing the attack?" response="0.0" />
-					<input prompt="How many conditions have to be met?" response="1" />
-					<condition_1>
-						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="7" />
-					</condition_1>
-				</ability_1>
+				<input prompt="How many active skill attacks does the form have?" response="0" />
 			</active_skill_attack>
 			<standby_finish_attack>
 				<input prompt="How many Non-Revival Counterattack Standby Finish Skills does the form have?" response="0" />

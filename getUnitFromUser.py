@@ -3,8 +3,6 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
-# - Need to get god goku's crit on active skill in
-# - Godd Goku is tricky because he transforms on his active
 # - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
