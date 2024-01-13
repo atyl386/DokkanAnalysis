@@ -151,11 +151,10 @@ class InputHelper:
         if os.path.exists(self.filePath):
             self.tree = ET.parse(self.filePath)
             self.parent = self.tree.getroot()
-            self.parentMap = {c: p for p in self.tree.iter() for c in p}
         else:
             self.parent = ET.Element("inputTree")
             self.tree = ET.ElementTree(self.parent)
-            self.parentMap = {}
+        self.parentMap = {}
 
     def getAndSaveUserInput(self, prompt, type=None, default=None):
         child = self.parent.find(f'./input[@prompt="{prompt}"]')
@@ -169,19 +168,20 @@ class InputHelper:
             child = ET.SubElement(self.parent, "input")
             child.set("prompt", prompt)
             child.set("response", str(response))
-            self.parentMap[child] = self.parent
             ET.indent(self.tree, space="\t", level=0)
             self.tree.write(self.filePath, encoding="utf-8")
         else:
             response = simplest_type(child.attrib["response"])
-
+        self.parentMap[child] = self.parent
         return response
 
     def getChildElement(self, parent, childTag):
         child = parent.find(f"{childTag}")
         if child == None:
-            child = ET.SubElement(parent, f"{childTag}")
-            self.parentMap[child] = parent
+            i = list(self.parentMap.values()).count(parent)
+            child = ET.Element(f"{childTag}")
+            parent.insert(i, child)
+        self.parentMap[child] = parent
         return child
 
 
@@ -581,6 +581,17 @@ class Form:
                 ["How many attacks need to be received?"],
                 [None],
                 [5],
+            )
+        )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "attacks_performed_threshold")
+        self.abilities["Start of Turn"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after multiple attacks performed?",
+                AttackPerformedThreshold,
+                ["How many attacks need to be performed?", "Requires super attack?"],
+                [None, clc.Choice(YES_NO)],
+                [5, "Y"],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "domain")
@@ -1058,8 +1069,6 @@ class State:
         self.attacksPerformed += pAttack + self.aa * pNextAttack
         # Assume Binomial distribution for aaSA for the expected value
         self.superAttacksPerformed += pAttack + self.aaSA * pNextAttack
-        form.attacksPerformed += self.attacksPerformed
-        form.superAttacksPerformed += self.superAttacksPerformed
         self.addStacks(form, unit)
         # Compute support bonuses from super attack effects
         for superAttackType in form.superAttacks.keys():
@@ -1266,6 +1275,8 @@ class State:
             self.slotFactor,
         ]
         self.attributes = dict(zip(ATTTRIBUTE_NAMES, attributeValues))
+        form.attacksPerformed += self.attacksPerformed
+        form.superAttacksPerformed += self.superAttacksPerformed
 
     def updateStackedStats(self, unit):
         # Removes stacks from previous states if worn out
@@ -1674,6 +1685,22 @@ class AttackReceivedThreshold(PassiveAbility):
                     state.buff["Ki"] += self.effectiveBuff
                 case "Scouter":
                     state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1]
+
+
+class AttackPerformedThreshold(PassiveAbility):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration)
+        self.threshold, self.requiresSuperAttack = args
+
+    def applyToState(self, state, unit=None, form=None):
+        if self.requiresSuperAttack:
+            numPerformed = form.superAttacksPerformed
+        else:
+            numPerformed = form.attacksPerformed
+        if numPerformed >= self.threshold:
+            match self.effect:
+                case "ATK":
+                    state.p2Buff[self.effect] += self.effectiveBuff
 
 
 class PerEvent(PassiveAbility):

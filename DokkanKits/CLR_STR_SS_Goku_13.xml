@@ -195,6 +195,9 @@
 					<input prompt="How many turns does it last for? Only applicable to abilities with a time limit." response="1" />
 				</ability_2>
 			</attacks_received_threshold>
+			<attacks_performed_threshold>
+				<input prompt="How many different buffs does the form get after multiple attacks performed?" response="0" />
+			</attacks_performed_threshold>
 			<domain>
 				<input prompt="How many Domain skills does the form have?" response="0" />
 			</domain>
