@@ -1533,7 +1533,7 @@ class PassiveAbility(Ability):
         self.supportBuff = self.effectiveBuff * np.minimum(self.effectDuration, RETURN_PERIOD_PER_SLOT)
         if effect == "AAChance":
             self.superChance = form.inputHelper.getAndSaveUserInput(
-                "What is the chance for this to become a super?", default=0
+                "What is the chance for this to become a super?", default=0.0
             )
 
 
