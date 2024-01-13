@@ -153,6 +153,14 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": SLOT_2,
     },
+    20: {
+        "Common Name": "DF_TEQ_Fusing_Kefla",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_2,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
