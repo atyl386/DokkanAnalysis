@@ -113,7 +113,15 @@ if reCalc:
     evaluations = np.zeros((nUnits, NUM_COPIES_MAX))
     for ID in User.keys():
         print(ID)
-        units[-1][ID - 1] = Unit(ID, User[ID]["Common Name"], NUM_COPIES_MAX, User[ID]["BRZ Equip"], User[ID]["HiPo Choice # 1"], User[ID]["HiPo Choice # 2"], User[ID]["Slots"])
+        units[-1][ID - 1] = Unit(
+            ID,
+            User[ID]["Common Name"],
+            NUM_COPIES_MAX,
+            User[ID]["BRZ Equip"],
+            User[ID]["HiPo Choice # 1"],
+            User[ID]["HiPo Choice # 2"],
+            User[ID]["Slots"],
+        )
         attributeValues[ID - 1, :, :, -1] = units[-1][ID - 1].getAttributes()
 
     [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
@@ -129,7 +137,16 @@ if reCalc:
                 best_eval = -np.inf
                 for slot in SLOTS:
                     best_slots[stateIdx] = slot
-                    unit = Unit(ID, User[ID]["Common Name"], NUM_COPIES_MAX, User[ID]["BRZ Equip"], User[ID]["HiPo Choice # 1"], User[ID]["HiPo Choice # 2"], best_slots, save=False)
+                    unit = Unit(
+                        ID,
+                        User[ID]["Common Name"],
+                        NUM_COPIES_MAX,
+                        User[ID]["BRZ Equip"],
+                        User[ID]["HiPo Choice # 1"],
+                        User[ID]["HiPo Choice # 2"],
+                        best_slots,
+                        save=False,
+                    )
                     normalizeUnit(unit, rainbowMeans, rainbowStds)
                     evaluation = overallEvaluator.evaluate(unit)
                     if evaluation > best_eval:
@@ -147,7 +164,16 @@ if reCalc:
             best_HiPo = None
             best_eval = evaluations[ID - 1][-1]
             for i, HiPo_build in enumerate(HIPO_BUILDS):
-                HiPo_unit = Unit(ID, User[ID]["Common Name"], NUM_COPIES_MAX, HiPo_build[0], HiPo_build[1], HiPo_build[2], User[ID]["Slots"], save=False)
+                HiPo_unit = Unit(
+                    ID,
+                    User[ID]["Common Name"],
+                    NUM_COPIES_MAX,
+                    HiPo_build[0],
+                    HiPo_build[1],
+                    HiPo_build[2],
+                    User[ID]["Slots"],
+                    save=False,
+                )
                 normalizeUnit(HiPo_unit, rainbowMeans, rainbowStds)
                 HiPo_evaluation = overallEvaluator.evaluate(HiPo_unit)
                 if HiPo_evaluation > best_eval:
@@ -160,7 +186,15 @@ if reCalc:
     for ID in User.keys():
         print(ID)
         for nCopies in range(1, NUM_COPIES_MAX):
-            units[nCopies - 1][ID - 1] = Unit(ID, User[ID]["Common Name"], nCopies, User[ID]["BRZ Equip"], User[ID]["HiPo Choice # 1"], User[ID]["HiPo Choice # 2"], User[ID]["Slots"])
+            units[nCopies - 1][ID - 1] = Unit(
+                ID,
+                User[ID]["Common Name"],
+                nCopies,
+                User[ID]["BRZ Equip"],
+                User[ID]["HiPo Choice # 1"],
+                User[ID]["HiPo Choice # 2"],
+                User[ID]["Slots"],
+            )
             attributeValues[ID - 1, :, :, nCopies - 1] = normalizeUnit(
                 units[nCopies - 1][ID - 1], rainbowMeans, rainbowStds
             )

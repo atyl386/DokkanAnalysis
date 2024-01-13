@@ -462,8 +462,7 @@ class Unit:
                 state = self.states[i]
             for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
                 state.attributes[attributeName] = attributes[i, j]
-        
-    
+
     def interpStates(self):
         stateTurns = [state.turn for state in self.states]
         attributes = self.getAttributes()
@@ -473,7 +472,9 @@ class Unit:
     def saveUnit(self):
         if self.save:
             # Output the unit's attributes to a .txt file
-            outputFilePath = os.path.join(CWD, "DokkanKitOutputs", HIPO_DUPES[self.nCopies - 1], self.commonName + "_" + self.id + ".txt")
+            outputFilePath = os.path.join(
+                CWD, "DokkanKitOutputs", HIPO_DUPES[self.nCopies - 1], self.commonName + "_" + self.id + ".txt"
+            )
             outputFile = open(outputFilePath, "w")
             for i, state in enumerate(self.states):
                 outputFile.write(f"State # {i} / Turn # {state.turn} \n \n")
@@ -1481,7 +1482,8 @@ class ActiveSkillAttack(SingleTurnAbility):
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.superAttacksPerformed += 1
             state.activeSkillAttackActivated = True
-            activeAtk = getActiveAtk(
+            activeAtk = (
+                getActiveAtk(
                     unit.kiMod12,
                     rarity2MaxKi[unit.rarity],
                     unit.ATK,
@@ -1492,12 +1494,15 @@ class ActiveSkillAttack(SingleTurnAbility):
                     state.p3Buff["ATK"],
                     self.activeMult,
                     unit.nCopies,
-                ) * state.atkModifier
+                )
+                * state.atkModifier
+            )
             if yesNo2Bool[self.triggersTransformation]:
                 unit.transformationAttackAPT = activeAtk
                 unit.nextForm = 1
             else:
                 state.APT += activeAtk
+
 
 # This skill is to apply to a unit already in it's standby mode.
 # The condition to enter & exit the standy mode will be controlled by regular form changes.
@@ -1933,6 +1938,7 @@ class NextTurnCondition(Condition):
     def __init__(self, turnCondition):
         self.conditionValue = turnCondition
         self.formAttr = "nextTurnRelative"
+
 
 class TurnCondition(Condition):
     def __init__(self, turnCondition):
