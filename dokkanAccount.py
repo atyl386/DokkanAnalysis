@@ -92,7 +92,7 @@ User = {
     12: {
         "Common Name": "CLR_AGL_Omega_Shenron",
         "# Copies": 0,
-        "BRZ Equip": "ATK",
+        "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_1,
@@ -142,7 +142,7 @@ User = {
         "# Copies": 1,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
+        "HiPo Choice # 2": "CRT",
         "Slots": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     },
 
