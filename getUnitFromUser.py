@@ -3,6 +3,10 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
+# Problem is that turn conditions except for form changes are happening a rotation early because I'm using the next turn as the conditional value because units won't know they were meant to transform on that turn until it's too late/
+# Two solutions:
+# 1) We do a state reversion like transformationAttacks for turn conditional transformations
+# 2) We have a seperate condition class for turnTransformationConditions and other turn condtions
 # - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
@@ -387,7 +391,7 @@ class Unit:
         # Only non-zero in between activating the stanby finish skill attack and applying to subsequent state
         self.transformationAttackAPT = 0
         self.nextForm = 1
-        applyFinishSkillAPT = False
+        applyTransformationAttackAPT = False
         self.critMultiplier = (CRIT_MULTIPLIER + self.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR
         while turn <= MAX_TURN:
             stateIdx += 1
@@ -418,9 +422,9 @@ class Unit:
                 except:
                     hasReviveCounter = False
                 if hasReviveCounter:
-                    applyFinishSkillAPT = True
+                    applyTransformationAttackAPT = True
                     self.nextForm = -1
-                if applyFinishSkillAPT:
+                if applyTransformationAttackAPT:
                     state.attributes["APT"] += self.transformationAttackAPT
                     turn = nextTurn
                     self.transformationAttackAPT = 0
@@ -428,7 +432,7 @@ class Unit:
                     state.superAttacksPerformed += 1
                     self.states.append(state)
                 else:  # Set this to True so apply APT in next state (e.g. Buu Bois)
-                    applyFinishSkillAPT = True
+                    applyTransformationAttackAPT = True
                     stateIdx -= 1
             else:
                 form.numAttacksReceived += state.numAttacksReceived
