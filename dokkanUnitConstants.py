@@ -88,7 +88,7 @@ SPECIAL_ATTACK_MULTIPLIER_NAMES = [
     "Ultimate",
     "Super-Ultimate",
 ]
-SPECIAL_ATTACK_MULTIPLIERS = [0, 4.4, 5.0, 5.5, 7.5]
+SPECIAL_ATTACK_MULTIPLIERS = [1, 4.4, 5.0, 5.5, 7.5]
 
 # Giant/Rage Form
 GIANT_RAGE_SUPPORT = 2  # Support for nullifying super attacks for a turn
@@ -442,6 +442,8 @@ REGULAR_SUPPORT_EFFECTS = [
     "Ki Support",
     "ATK Support",
     "DEF Support",
+    "Crit Support",
+    "Dmg Red Support",
     "Scouter",
     "Remove Status Effects",
     "Survive K.O. Attack",
@@ -489,6 +491,8 @@ P3_EFFECTS_SUFFIX = ["ATK", "DEF", "Crit", "Evasion", "Disable Action", "ATK Sup
 SUPPORT_SUPER_ATTACK_EFFECTS = ["Raise Allies ATK", "Raise Allies DEF"]
 ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
 DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
+CRIT_SUPPORT_100_FACTOR = CRIT_MULTIPLIER / AVG_TYPE_ADVANATGE * ATK_SUPPORT_100_FACTOR
+DMG_RED_SUPPORT_100_FACTOR = 20
 AVG_SA_MULT = 5
 SUPER_ATTACK_SUPPORT_FACTORS = [ATK_SUPPORT_100_FACTOR / AVG_SA_MULT, DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS]
 OTHER_SUPER_ATTACK_EFFECTS = ["Crit", "Disable Action", "Lowers ATK", "Lowers DEF", "Attack All"]
@@ -498,6 +502,8 @@ SUPPORT_FACTORS = [
     KI_SUPPORT_FACTOR,
     ATK_SUPPORT_100_FACTOR / AVG_SOT_STATS,
     DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS,
+    CRIT_SUPPORT_100_FACTOR,
+    DMG_RED_SUPPORT_100_FACTOR,
     1,
     0.125,
     0.25,
@@ -506,7 +512,7 @@ SUPPORT_FACTORS = [
     0.125,
     0.25,
     0.5,
-    6.0,
+    DMG_RED_SUPPORT_100_FACTOR,
 ]
 
 
