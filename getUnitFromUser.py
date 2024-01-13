@@ -119,6 +119,11 @@ def getCondition(inputHelper):
                     "How many performed attacks are required?", default=5
                 )
                 condition[i] = AttacksPerformedCondition(numAttacksPerformedCondition)
+            case "Num Super Attacks Performed":
+                numSupersPerformedCondition = inputHelper.getAndSaveUserInput(
+                    "How many performed supers are required?", default=4
+                )
+                condition[i] = SupersPerformedCondition(numSupersPerformedCondition)
             case "Num Attacks Received":
                 numAttacksReceivedCondition = inputHelper.getAndSaveUserInput(
                     "How many received attacks are required?", default=5
@@ -1963,6 +1968,12 @@ class AttacksPerformedCondition(Condition):
     def __init__(self, numAttacks):
         self.formAttr = "attacksPerformed"
         self.conditionValue = numAttacks
+
+
+class SupersPerformedCondition(Condition):
+    def __init__(self, numSupers):
+        self.formAttr = "superAttacksPerformed"
+        self.conditionValue = numSupers
 
 
 class AttacksReceivedCondition(Condition):

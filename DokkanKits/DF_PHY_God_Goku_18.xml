@@ -402,7 +402,17 @@
 				</ability_1>
 			</offensive_on_super>
 			<active_skill_attack>
-				<input prompt="How many active skill attacks does the form have?" response="0" />
+				<input prompt="How many active skill attacks does the form have?" response="1" />
+				<ability_1>
+					<input prompt="What is the attack multiplier?" response="Ultimate" />
+					<input prompt="What is the additional attack buff when performing the attack?" response="0.0" />
+					<input prompt="How many conditions have to be met?" response="2" />
+					<input prompt="What is the condition logic?" response="AND" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="Turn" />
+						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="5" />
+					</condition_1>
+				</ability_1>
 			</active_skill_attack>
 			<standby_finish_attack>
 				<input prompt="How many Non-Revival Counterattack Standby Finish Skills does the form have?" response="0" />

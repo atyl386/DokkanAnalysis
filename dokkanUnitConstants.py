@@ -526,6 +526,7 @@ CONDITIONS = [
     "Max Enemy HP",
     "Min Enemy HP",
     "Num Attacks Performed",
+    "Num Super Attacks Performed",
     "Num Attacks Received",
     "Finish Skill Activation",
 ]
