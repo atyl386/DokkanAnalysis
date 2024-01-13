@@ -191,7 +191,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="6" />
+						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="6" />
 					</condition_1>
 				</ability_1>
 				<ability_2>
@@ -202,7 +202,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="6" />
+						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="6" />
 					</condition_1>
 				</ability_2>
 				<ability_3>
@@ -213,7 +213,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="6" />
+						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="6" />
 					</condition_1>
 				</ability_3>
 			</active_skill_buffs>
@@ -228,7 +228,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="6" />
+						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="6" />
 					</condition_1>
 					<input prompt="Does this active skill trigger a transformation?" response="N" />
 				</ability_1>

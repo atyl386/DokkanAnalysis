@@ -283,8 +283,8 @@
 			<form_1_change_condition>
 				<input prompt="How many conditions have to be met?" response="1" />
 				<condition_1>
-					<input prompt="What type of condition is # 1?" response="Turn" />
-					<input prompt="What is the turn condition (relative to the form's starting turn)?" response="7" />
+					<input prompt="What type of condition is # 1?" response="TransformationTurn" />
+					<input prompt="What is the transformation turn condition (relative to the form's starting turn)?" response="7" />
 				</condition_1>
 			</form_1_change_condition>
 		</form_1>
@@ -432,7 +432,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the turn condition (relative to the form's starting turn)?" response="0" />
+						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="0" />
 					</condition_1>
 					<input prompt="How many additional buffs are there when this Domain is active?" response="0" />
 				</ability_1>
@@ -497,8 +497,8 @@
 			<form_2_change_condition>
 				<input prompt="How many conditions have to be met?" response="1" />
 				<condition_1>
-					<input prompt="What type of condition is # 1?" response="Turn" />
-					<input prompt="What is the turn condition (relative to the form's starting turn)?" response="6" />
+					<input prompt="What type of condition is # 1?" response="TransformationTurn" />
+					<input prompt="What is the transformation turn condition (relative to the form's starting turn)?" response="6" />
 				</condition_1>
 			</form_2_change_condition>
 		</form_2>

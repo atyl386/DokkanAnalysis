@@ -270,8 +270,8 @@
 						<input prompt="How many conditions have to be met?" response="2" />
 						<input prompt="What is the condition logic?" response="AND" />
 						<condition_1>
-							<input prompt="What type of condition is # 1?" response="Turn" />
-							<input prompt="What is the turn condition (relative to the form's starting turn)?" response="4" />
+							<input prompt="What type of condition is # 1?" response="TransformationTurn" />
+							<input prompt="What is the transformation turn condition (relative to the form's starting turn)?" response="4" />
 						</condition_1>
 						<condition_2>
 							<input prompt="What type of condition is # 2?" response="Num Attacks Performed" />

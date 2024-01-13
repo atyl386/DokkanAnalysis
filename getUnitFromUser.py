@@ -3,10 +3,7 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
-# Problem is that turn conditions except for form changes are happening a rotation early because I'm using the next turn as the conditional value because units won't know they were meant to transform on that turn until it's too late/
-# Two solutions:
-# 1) We do a state reversion like transformationAttacks for turn conditional transformations
-# 2) We have a seperate condition class for turnTransformationConditions and other turn condtions
+# Fix Omega - currently has skills activating after his active not his revive
 # - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
@@ -99,9 +96,14 @@ def getCondition(inputHelper):
         match conditionType:
             case "Turn":
                 turnCondition = inputHelper.getAndSaveUserInput(
-                    "What is the turn condition (relative to the form's starting turn)?", default=5
+                    "What is the ability turn condition (relative to the form's starting turn)?", default=5
                 )
                 condition[i] = TurnCondition(turnCondition)
+            case "TransformationTurn":
+                turnCondition = inputHelper.getAndSaveUserInput(
+                    "What is the transformation turn condition (relative to the form's starting turn)?", default=5
+                )
+                condition[i] = NextTurnCondition(turnCondition)
             case "Max HP":
                 maxHpCondition = inputHelper.getAndSaveUserInput("What is the maximum HP condition?", default=0.7)
                 condition[i] = MaxHpCondition(maxHpCondition)
@@ -136,6 +138,8 @@ def getCondition(inputHelper):
             case "Finish Skill Activation":
                 requiredCharge = inputHelper.getAndSaveUserInput("What is the required charge condition?", default=30)
                 condition[i] = FinishSkillActivatedCondition(requiredCharge)
+            case "NA":
+                condition[i] = Condition()
     if numConditions == 2:
         return CompositeCondition(operator, condition)
     else:
@@ -499,7 +503,6 @@ class Form:
         self.abilities = dict(zip(PHASES, [[] for i in range(len(PHASES))]))
         self.transformed = False
         self.newForm = True
-        self.formChangeCondition = [Condition()]
         self.intentional12Ki = False
         self.canAttack = yesNo2Bool[self.inputHelper.getAndSaveUserInput("Can this form attack?", default="Y")]
         if self.rarity == "LR":
@@ -1921,16 +1924,21 @@ class Condition:
     def __init__(self):
         # Just a default attributes so is always false upon itialisation
         self.formAttr = "numAttacksReceived"
-        self.conditionValue = LARGE_INT
+        self.conditionValue = 0
 
     def isSatisfied(self, form):
         return round(getattr(form, self.formAttr)) >= self.conditionValue
 
 
-class TurnCondition(Condition):
+class NextTurnCondition(Condition):
     def __init__(self, turnCondition):
         self.conditionValue = turnCondition
         self.formAttr = "nextTurnRelative"
+
+class TurnCondition(Condition):
+    def __init__(self, turnCondition):
+        self.conditionValue = turnCondition
+        self.formAttr = "turn"
 
 
 class ProbabilityCondition(Condition):
@@ -2011,7 +2019,7 @@ class CompositeCondition:
         self.operator = operator
         self.conditions = conditions
         if self.operator == "AFTER":
-            self.conditions[0].conditionValue += self.conditions[1].conditionValue
+            self.conditions[0].conditionValue += self.conditions[1].conditionValue - 1
 
     def isSatisfied(self, form):
         match self.operator:

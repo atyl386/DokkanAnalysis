@@ -138,7 +138,10 @@
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="How many turns does it last?" response="1" />
 					<input prompt="How many times can it be activated?" response="1" />
-					<input prompt="How many conditions have to be met?" response="0" />
+					<input prompt="How many conditions have to be met?" response="1" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="NA" />
+					</condition_1>
 				</ability_1>
 			</active_skill_buffs>
 			<offensive_on_super>

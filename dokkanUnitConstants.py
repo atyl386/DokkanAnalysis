@@ -21,7 +21,6 @@ HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 
 # Misc
 YES_NO = ["Y", "N"]
-LARGE_INT = 1000000
 
 # SBR
 ATT_DEBUFF_PASSIVE_CONVERSION_GRADIENT = 10  # 10% attack down for 2 turns = SBR score of +1
@@ -529,6 +528,7 @@ CONDITIONS = [
     "Num Super Attacks Performed",
     "Num Attacks Received",
     "Finish Skill Activation",
+    "NA",
 ]
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]
 
