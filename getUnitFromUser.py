@@ -1910,6 +1910,8 @@ class KiSphereDependent(PassiveAbility):
                 case "AAChance":
                     state.aaPGuarantee.append(effectFactor)
                     state.aaPSuper.append(effectFactor * self.superChance)
+                case "P2 ATK":
+                    state.p2Buff["ATK"] += buffFromOrbs
 
 
 class Nullification(PassiveAbility):
@@ -2039,4 +2041,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(19, "DF_PHY_Kid_Goku", 1, "DEF", "ADD", "DGE", SLOT_2)
+    unit = Unit(20, "DF_TEQ_Fusing_Kefla", 1, "DEF", "ADD", "DGE", SLOT_2)

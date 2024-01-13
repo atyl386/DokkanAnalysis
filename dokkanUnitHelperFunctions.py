@@ -65,7 +65,7 @@ def branchAPT(
     sa12Crit,
 ):
     """Returns the total remaining APT of a unit in a turn recursively"""
-    p2AtkFactor = (p2Atk + p2AtkBuff) / p2Atk
+    p2AtkFactor = (1 + p2Atk + p2AtkBuff) / (1 + p2Atk)
     normal = mN * n_0 * p2AtkFactor * atkModifier
     additional12Ki = m12 * a12_0 * p2AtkFactor * atkModifier
     if i == nAA - 1:  # If no more additional attacks
