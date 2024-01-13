@@ -111,7 +111,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
     },
     15: {
         "Common Name": "DF_INT_ToP_Androids",
@@ -119,7 +119,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": SLOT_2,
+        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     16: {
         "Common Name": "BU_STR_Universe_2",

@@ -97,7 +97,7 @@ overallAttributeWeights = np.array([5, 0.5, 2, 4, 1.5, 5, 10, 8, 8, 3])
 overallEvaluator = Evaluator(overallTurnWeights, overallAttributeWeights)
 
 reCalc = True
-analyseHiPo = True
+analyseHiPo = False
 optimiseSlots = False
 if reCalc:
     dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
