@@ -164,6 +164,9 @@
 			<after_receive_attack>
 				<input prompt="How many different buffs does the form get after receiving an attack?" response="0" />
 			</after_receive_attack>
+			<after_evade_attack>
+				<input prompt="How many different buffs does the form get after evading an attack?" response="0" />
+			</after_evade_attack>
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>
@@ -365,6 +368,9 @@
 					<input prompt="How many turns does the buff last?" response="3" />
 				</ability_2>
 			</after_receive_attack>
+			<after_evade_attack>
+				<input prompt="How many different buffs does the form get after evading an attack?" response="0" />
+			</after_evade_attack>
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>

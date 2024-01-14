@@ -729,6 +729,17 @@ class Form:
                 [1],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_evade_attack")
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after evading an attack?",
+                AfterAttackEvaded,
+                ["How many turns does the buff last?"],
+                [None],
+                [1],
+            )
+        )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_received")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
