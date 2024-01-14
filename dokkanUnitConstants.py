@@ -436,7 +436,7 @@ AVG_SOT_STATS = 3
 
 SPECIAL_SUPPORT_EFFECTS = ["Delay Target"]
 
-ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Rainbow Orb Change"]
+ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Triple Orb Change", "Rainbow Orb Change"]
 
 REGULAR_SUPPORT_EFFECTS = [
     "Ki Support",
@@ -511,6 +511,7 @@ SUPPORT_FACTORS = [
     DEF_SUPPORT_100_FACTOR,
     0.125,
     0.25,
+    0.375,
     0.5,
     DMG_RED_SUPPORT_100_FACTOR,
 ]
@@ -550,10 +551,12 @@ REVIVE_ROTATION_SUPPORT_BUFF = 1  # Revive whole rotation
 ORB_REQUIREMENTS = ["Any", "Type", "Rainbow", "Same Type", "Other Type"]
 ORB_CHANGING_TYPES = ["No Orb Change"] + ORB_CHANGING_EFFECTS
 ORB_TYPES = ["Other", "Same", "Rainbow"]
-ORB_COUNTS_NO_ORB_CHANGING = [1.75, 1.75, 1]
-ORB_COUNTS_TYPE_ORB_CHANGING = [0.5, 5.25, 1.5]
-ORB_COUNTS_DOUBLE_ORB_CHANGING = [0, 6.375, 2]
-ORB_COUNTS_RAINBOW_ORB_CHANGING = [2.05, 2.05, 2.7]
+# All orb counds are averaged across all slots in the turn
+ORB_COUNTS_NO_ORB_CHANGING = [1.75, 1.75, 1] # From DokkanAverageKi.xlsx
+ORB_COUNTS_TYPE_ORB_CHANGING = [0.5, 5.25, 1.5] # From DokkanAverageKi.xlsx
+ORB_COUNTS_DOUBLE_ORB_CHANGING = [0, 7.85, 1.85] # See numTypeOrbsCurveFit.py & numRainbowOrbsCurveFit.py
+ORB_COUNTS_TRIPLE_ORB_CHANGING = [0, 8.55, 1.93] # See numTypeOrbsCurveFit.py & numRainbowOrbsCurveFit.py
+ORB_COUNTS_RAINBOW_ORB_CHANGING = [2.05, 2.05, 2.7] # From DokkanAverageKi.xlsx
 
 KI_PER_SAME_TYPE_ORB = 2.0
 
@@ -670,6 +673,7 @@ superAttackSupportFactorConversion = dict(zip(SUPPORT_SUPER_ATTACK_EFFECTS, SUPE
 orbTypeNoOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_NO_ORB_CHANGING))
 orbTypeOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_TYPE_ORB_CHANGING))
 orbTypeDoubleOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_DOUBLE_ORB_CHANGING))
+orbTypeTripleOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_TRIPLE_ORB_CHANGING))
 orbTypeRainbowOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_RAINBOW_ORB_CHANGING))
 orbChangeConversion = dict(
     zip(
@@ -678,6 +682,7 @@ orbChangeConversion = dict(
             orbTypeNoOrbChangingConversion,
             orbTypeOrbChangingConversion,
             orbTypeDoubleOrbChangingConversion,
+            orbTypeTripleOrbChangingConversion,
             orbTypeRainbowOrbChangingConversion,
         ],
     )
