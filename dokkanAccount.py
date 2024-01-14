@@ -63,7 +63,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     9: {
         "Common Name": "DF_STR_Super_Vegeta",
@@ -135,7 +135,7 @@ User = {
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 1, 2, 1, 1, 1, 1, 1, 1, 1],
     },
     18: {
         "Common Name": "DF_PHY_God_Goku",
@@ -143,7 +143,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": [1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 3, 3, 1, 1, 1, 1, 1, 1, 1],
     },
     19: {
         "Common Name": "DF_PHY_Kid_Goku",
@@ -160,6 +160,14 @@ User = {
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
         "Slots": [2, 3, 2, 2, 2, 2, 2, 2, 2, 2],
+    },
+    21: {
+        "Common Name": "DF_STR_Costume_Videl",
+        "# Copies": 1,
+        "BRZ Equip": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
     },
 
 }
