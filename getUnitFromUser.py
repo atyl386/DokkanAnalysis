@@ -891,7 +891,7 @@ class Form:
                         )
                         buff = self.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=0.0)
                         duration = self.inputHelper.getAndSaveUserInput(
-                            "How many turns does it last for?", default=MAX_TURN
+                            "How many turns does it last for?", default=99
                         )
                         avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
                         if i == 0:
