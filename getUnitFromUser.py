@@ -3,6 +3,7 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
+# - Try factor out some code within ability class into class functions
 # - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
@@ -141,12 +142,14 @@ def getCondition(inputHelper):
 
 
 # Overwrite this class function as has additional
-def updateAttacksReceived(self, state):
+def updateAttacksReceivedAndEvaded(self, state):
     state.numAttacksReceived = NUM_ATTACKS_DIRECTED[state.slot - 1] * (1 - self.prob)
     state.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * (1 - self.prob)
+    state.numAttacksEvaded = NUM_ATTACKS_DIRECTED[state.slot - 1] * self.prob
+    state.numAttacksEvadedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * self.prob
 
 
-MultiChanceBuff.updateAttacksReceived = updateAttacksReceived
+MultiChanceBuff.updateAttacksReceivedAndEvaded = updateAttacksReceivedAndEvaded
 
 
 ######################################################### Classes #################################################################
@@ -434,6 +437,7 @@ class Unit:
                     stateIdx -= 1
             else:
                 form.numAttacksReceived += state.numAttacksReceived
+                form.numAttacksEvaded += state.numAttacksEvaded
                 self.nextForm = form.checkCondition(
                     form.formChangeCondition,
                     form.transformed,
@@ -490,6 +494,7 @@ class Form:
         self.extraBuffs = dict(zip(EXTRA_BUFF_EFFECTS, np.zeros(len(EXTRA_BUFF_EFFECTS))))
         self.linkEffects = dict(zip(LINK_EFFECT_NAMES, np.zeros(len(LINK_EFFECT_NAMES))))
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
+        self.numAttacksEvaded = 0
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
         self.charge = 0
@@ -1792,13 +1797,18 @@ class PerAttackReceived(PerEvent):
         self.applied += cappedTurnBuff
 
 
-class AfterAttackReceived(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+class AfterEvent(PassiveAbility):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
-        self.effectDuration = args[0]
+        self.effectDuration = effectDuration
         self.turnsSinceActivated = 0
         self.applied = 0
-        self.hitFactor = 1
+        self.eventFactor = 1
+
+
+class AfterAttackReceived(AfterEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
 
     def applyToState(self, state, unit=None, form=None):
         if self.turnsSinceActivated == 0:
@@ -1807,13 +1817,13 @@ class AfterAttackReceived(PassiveAbility):
                 self.applied = 0
             # If buff is a defensive one
             if self.effect in ["DEF", "Dmg Red"]:
-                self.hitFactor = (
+                self.eventFactor = (
                     state.numAttacksReceived - 1
                 ) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
             else:
-                self.hitFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
+                self.eventFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
         # geometric cdf
-        turnBuff = self.effectiveBuff * self.hitFactor
+        turnBuff = self.effectiveBuff * self.eventFactor
         buffToGo = self.effectiveBuff - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
         if self.effect in state.buff.keys():
@@ -1836,7 +1846,51 @@ class AfterAttackReceived(PassiveAbility):
         else:
             form.extraBuffs[self.effect] += cappedTurnBuff
             self.applied += cappedTurnBuff
-            self.hitFactor = 1
+            self.eventFactor = 1
+
+
+class AfterAttackEvaded(AfterEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+
+    def applyToState(self, state, unit=None, form=None):
+        if self.turnsSinceActivated == 0:
+            if self.applied > 0:
+                form.extraBuffs[self.effect] -= self.applied
+                self.applied = 0
+            # If buff is a defensive one
+            if self.effect in ["DEF", "Dmg Red"]:
+                # Use expected value of geometric distribution of number of failues before successful dodge
+                self.eventFactor = max(
+                    state.numAttacksReceived - (1 - state.multiChanceBuff["EvadeA"].prob) / state.multiChanceBuff["EvadeA"].prob
+                , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
+            else:
+                self.eventFactor = min(state.numAttacksEvadedBeforeAttacking, 1)
+        # geometric cdf
+        turnBuff = self.effectiveBuff * self.eventFactor
+        buffToGo = self.effectiveBuff - self.applied
+        cappedTurnBuff = min(buffToGo, turnBuff)
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += cappedTurnBuff
+        else:
+            match self.effect:
+                case "DEF":
+                    state.p2Buff["DEF"] += cappedTurnBuff
+                case "AdditionalSuper":
+                    state.aaPSuper.append(cappedTurnBuff)
+                    state.aaPGuarantee.append(0)
+                case "AAChance":
+                    state.aaPGuarantee.append(cappedTurnBuff)
+                    state.aaPSuper.append(cappedTurnBuff * self.superChance)
+        self.turnsSinceActivated += 1
+        # If not still going to be active next turn
+        if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+            # Reset it to not be active
+            self.turnsSinceActivated = 0
+        else:
+            form.extraBuffs[self.effect] += cappedTurnBuff
+            self.applied += cappedTurnBuff
+            self.eventFactor = min(state.numAttacksEvaded, 1)
 
 
 class PerformingSuperAttackOffence(PassiveAbility):
@@ -2041,4 +2095,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(20, "DF_TEQ_Fusing_Kefla", 1, "DEF", "ADD", "DGE", SLOT_2)
+    unit = Unit(21, "DF_STR_Costume_Videl", 1, "DEF", "ADD", "DGE", SLOT_1)
