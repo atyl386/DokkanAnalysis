@@ -136,8 +136,8 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-#OmegaShenron = Banner([141, 61, 26, 108, 38, 84, 38, 38, 38, 38], "cyan", SSR_rate=0.2)
-#print(OmegaShenron.summonScore)
+OmegaShenron = Banner([12, 22, 23, 11, 11, 11, 11, 11, 11, 11], "cyan", SSR_rate=0.2)
+print(OmegaShenron.summonScore)
 #Androids = Banner([163, 162, 123, 122, 5, 28, 81], "red")
 #print(Androids.summonScore)
 # WWDL_1 = Banner([14,68,67,20,13,11,13,96,81,57,86,25,58,60,59,137,13,158,13,13,13,13,98,13,13,13,88,93,13,13,67,13,13,13,97,13,13,13,13,13,13,13,13,13,13,13,13,13,13],'red')

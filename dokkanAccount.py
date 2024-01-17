@@ -91,7 +91,7 @@ User = {
     },
     12: {
         "Common Name": "CLR_AGL_Omega_Shenron",
-        "# Copies": 0,
+        "# Copies": 2,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
