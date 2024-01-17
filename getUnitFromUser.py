@@ -1728,6 +1728,8 @@ class AttackReceivedThreshold(PassiveAbility):
                     state.buff["Ki"] += self.effectiveBuff
                 case "ATK":
                     state.p2Buff["ATK"] += self.effectiveBuff
+                case "DEF":
+                    state.p2Buff["DEF"] += self.effectiveBuff
                 case "AdditionalSuper":
                     state.aaPSuper.append(self.effectiveBuff)
                     state.aaPGuarantee.append(0)
@@ -1812,6 +1814,9 @@ class PerAttackReceived(PerEvent):
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "DEF":
                 state.p2Buff["DEF"] += min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
+            case "Crit":
+                state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
+                state.atkModifier = state.getAvgAtkMod(form, unit)
         self.applied += cappedTurnBuff
 
 
@@ -2113,4 +2118,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(22, "CLR_INT_Kid_Gohan", 1, "DEF", "ADD", "DGE", SLOT_1)
+    unit = Unit(23, "CLR_AGL_Kai_Goku", 1, "DEF", "ADD", "DGE", SLOT_1)
