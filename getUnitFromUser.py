@@ -1726,6 +1726,11 @@ class AttackReceivedThreshold(PassiveAbility):
             match self.effect:
                 case "Ki":
                     state.buff["Ki"] += self.effectiveBuff
+                case "ATK":
+                    state.p2Buff["ATK"] += self.effectiveBuff
+                case "AdditionalSuper":
+                    state.aaPSuper.append(self.effectiveBuff)
+                    state.aaPGuarantee.append(0)
                 case "Scouter":
                     state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1]
 
