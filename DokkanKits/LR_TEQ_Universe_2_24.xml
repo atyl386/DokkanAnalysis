@@ -1,0 +1,108 @@
+<inputTree>
+	<constants>
+		<input prompt="What is the unit's exclusivity?" response="LR" />
+		<input prompt="What is the unit's name?" response="Ribrianne &amp; Kakunsa &amp; Rosie" />
+		<input prompt="What is the unit's class?" response="S" />
+		<input prompt="What is the unit's type?" response="TEQ" />
+		<input prompt="Has the unit EZA'd?" response="N" />
+		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="10/23" />
+		<input prompt="When did the unit release on the Global version of Dokkan? (MM/YY)" response="2/24" />
+		<input prompt="What is the unit's Max Level HP stat?" response="17325" />
+		<input prompt="What is the unit's Max Level ATK stat?" response="13150" />
+		<input prompt="What is the unit's Max Level DEF stat?" response="12525" />
+		<input prompt="How would you rate the unit's leader skill on a scale of 1-10? 200% limited - e.g. LR Hatchiyak Goku 200% small - e.g. LR Metal Cooler 200% medium - e.g. PHY God Goku 200% large - e.g. LR Vegeta and Trunks" response="2 x 150%" />
+		<input prompt="How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account." response="4" />
+		<input prompt="What is the unit's 12 ki attck modifer?" response="1.5" />
+		<input prompt="How many turns does the unit's giant/rage mode last for?" response="2" />
+	</constants>
+	<SBR>
+		<input prompt="Does the unit have any SBR abilities?" response="N" />
+	</SBR>
+	<forms>
+		<input prompt="How many forms does the unit have?" response="2" />
+		<form_1>
+			<input prompt="Can this form attack?" response="Y" />
+			<input prompt="Should a 12 Ki be targetted for this form?" response="N" />
+			<input prompt="What is the unit's normal counter multiplier?" response="NA" />
+			<input prompt="What is the unit's super attack counter multiplier?" response="NA" />
+			<links>
+				<link_1>
+					<input prompt="What is the form's link # 1" response="More Than Meets the Eye" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_1>
+				<link_2>
+					<input prompt="What is the form's link # 2" response="Metamorphosis" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_2>
+				<link_3>
+					<input prompt="What is the form's link # 3" response="Battlefield Diva" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_3>
+				<link_4>
+					<input prompt="What is the form's link # 4" response="Fierce Battle" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_4>
+				<link_5>
+					<input prompt="What is the form's link # 5" response="Signature Pose" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_5>
+				<link_6>
+					<input prompt="What is the form's link # 6" response="Tournament of Power" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_6>
+				<link_7>
+					<input prompt="What is the form's link # 7" response="Legendary Power" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_7>
+			</links>
+			<super_attack>
+				<regular_super_attack>
+					<input prompt="What is the form's 12 Ki super attack multiplier?" response="Colossal" />
+					<input prompt="How many different 12 Ki super attacks does this form have?" response="1" />
+					<regular_super_attack_variations>
+						<regular_super_attack_variation_1>
+							<input prompt="How many effects does this form's 12 Ki super attack have?" response="2" />
+							<regular_super_attack_variation_1_effects>
+								<regular_super_attack_variation_1_effect_1>
+									<input prompt="What type of effect does the unit get on super?" response="ATK" />
+									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+									<input prompt="What is the value of the buff?" response="0.3" />
+									<input prompt="How many turns does it last for?" response="1" />
+								</regular_super_attack_variation_1_effect_1>
+								<regular_super_attack_variation_1_effect_2>
+									<input prompt="What type of effect does the unit get on super?" response="DEF" />
+									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+									<input prompt="What is the value of the buff?" response="0.3" />
+									<input prompt="How many turns does it last for?" response="1" />
+								</regular_super_attack_variation_1_effect_2>
+							</regular_super_attack_variation_1_effects>
+						</regular_super_attack_variation_1>
+					</regular_super_attack_variations>
+				</regular_super_attack>
+				<ultra_super_attack>
+					<input prompt="What is the form's 18 Ki super attack multiplier?" response="Mega-Colossal" />
+					<input prompt="How many different 18 Ki super attacks does this form have?" response="1" />
+					<ultra_super_attack_variations>
+						<ultra_super_attack_variation_1>
+							<input prompt="How many effects does this form's 18 Ki super attack have?" response="2" />
+							<ultra_super_attack_variation_1_effects>
+								<ultra_super_attack_variation_1_effect_1>
+									<input prompt="What type of effect does the unit get on super?" response="ATK" />
+									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+									<input prompt="What is the value of the buff?" response="0.5" />
+									<input prompt="How many turns does it last for?" response="1" />
+								</ultra_super_attack_variation_1_effect_1>
+								<ultra_super_attack_variation_1_effect_2>
+									<input prompt="What type of effect does the unit get on super?" response="DEF" />
+									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+									<input prompt="What is the value of the buff?" response="0.5" />
+									<input prompt="How many turns does it last for?" response="1" />
+								</ultra_super_attack_variation_1_effect_2>
+							</ultra_super_attack_variation_1_effects>
+						</ultra_super_attack_variation_1>
+					</ultra_super_attack_variations>
+				</ultra_super_attack>
+			</super_attack>
+		</form_1>
+	</forms>
+</inputTree>

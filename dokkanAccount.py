@@ -169,6 +169,14 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_1,
     },
+    22: {
+        "Common Name": "CLR_INT_Kid_Gohan",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
