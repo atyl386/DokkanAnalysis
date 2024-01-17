@@ -167,7 +167,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
     },
     22: {
         "Common Name": "CLR_INT_Kid_Gohan",
@@ -175,6 +175,14 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
+        "Slots": [1, 1, 3, 2, 2, 2, 2, 2, 2, 1],
+    },
+    23: {
+        "Common Name": "CLR_AGL_Kai_Goku",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
         "Slots": SLOT_1,
     },
 
