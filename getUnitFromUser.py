@@ -1631,6 +1631,8 @@ class Buff(PassiveAbility):
                         state.dmgRedA += effectiveBuff
                         state.dmgRedB += effectiveBuff
                         state.buff["Dmg Red against Normals"] += effectiveBuff
+                    case "Dmg Red B":
+                        state.dmgRedB += effectiveBuff
                     case "Evasion":
                         state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
                         state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
@@ -2106,4 +2108,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(22, "LR_TEQ_Universe_2", 1, "DEF", "ADD", "DGE", SLOT_1)
+    unit = Unit(22, "LR_Carnival_Kid_Gohan", 1, "DEF", "ADD", "DGE", SLOT_1)
