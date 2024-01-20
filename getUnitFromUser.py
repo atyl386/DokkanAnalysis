@@ -705,7 +705,7 @@ class Form:
                     "What is the maximum buff?"
                 ],
                 [clc.Choice(ORB_REQUIREMENTS), None, clc.Choice(YES_NO), clc.Choice(YES_NO), None],
-                ["Any", 0, "N", "Y", 99],
+                ["Any", 0, "N", "Y", 99.0],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "ki_dependent")
@@ -1993,6 +1993,8 @@ class KiSphereDependent(PerEvent):
                     state.aaPSuper.append(effectFactor * self.superChance)
                 case "P2 ATK":
                     state.p2Buff["ATK"] += buffFromOrbs
+                case "P2 DEF":
+                    state.p2Buff["DEF"] += buffFromOrbs
         if not (self.withinTheSameTurn):
             form.extraBuffs[self.effect] += buffFromOrbs
             self.applied += buffFromOrbs
