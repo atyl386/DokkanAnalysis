@@ -252,6 +252,8 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="Does the buff only apply within that turn?" response="Y" />
+					<input prompt="What is the maximum buff?" response="99" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What type of ki spheres are required?" response="Any" />
@@ -260,6 +262,8 @@
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="Does the buff only apply within that turn?" response="Y" />
+					<input prompt="What is the maximum buff?" response="99" />
 				</ability_2>
 				<ability_3>
 					<input prompt="What type of ki spheres are required?" response="Any" />
@@ -268,6 +272,8 @@
 					<input prompt="What type of buff does the unit get?" response="Ki" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="Does the buff only apply within that turn?" response="Y" />
+					<input prompt="What is the maximum buff?" response="99" />
 				</ability_3>
 				<ability_4>
 					<input prompt="What type of ki spheres are required?" response="Any" />
@@ -276,6 +282,8 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.17" />
+					<input prompt="Does the buff only apply within that turn?" response="Y" />
+					<input prompt="What is the maximum buff?" response="99" />
 				</ability_4>
 				<ability_5>
 					<input prompt="What type of ki spheres are required?" response="Any" />
@@ -284,6 +292,8 @@
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.18" />
+					<input prompt="Does the buff only apply within that turn?" response="Y" />
+					<input prompt="What is the maximum buff?" response="99" />
 				</ability_5>
 				<ability_6>
 					<input prompt="What type of ki spheres are required?" response="Any" />
@@ -293,6 +303,8 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="How many turns does the effect last for?" response="1" />
+					<input prompt="Does the buff only apply within that turn?" response="Y" />
+					<input prompt="What is the maximum buff?" response="99" />
 				</ability_6>
 				<ability_7>
 					<input prompt="What type of ki spheres are required?" response="Any" />
@@ -302,6 +314,8 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.17" />
 					<input prompt="How many turns does the effect last for?" response="1" />
+					<input prompt="Does the buff only apply within that turn?" response="Y" />
+					<input prompt="What is the maximum buff?" response="99" />
 				</ability_7>
 				<ability_8>
 					<input prompt="What type of ki spheres are required?" response="Any" />
@@ -311,6 +325,8 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.18" />
 					<input prompt="How many turns does the effect last for?" response="1" />
+					<input prompt="Does the buff only apply within that turn?" response="Y" />
+					<input prompt="What is the maximum buff?" response="99" />
 				</ability_8>
 			</ki_sphere_dependent>
 			<ki_dependent>
