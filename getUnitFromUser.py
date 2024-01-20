@@ -701,9 +701,11 @@ class Form:
                     "What type of ki spheres are required?",
                     "What is the required amount?",
                     "Is buff applied when attacking?",
+                    "Does the buff only apply within that turn?",
+                    "What is the maximum buff?"
                 ],
-                [clc.Choice(ORB_REQUIREMENTS), None, clc.Choice(YES_NO)],
-                ["Any", 0, "N"],
+                [clc.Choice(ORB_REQUIREMENTS), None, clc.Choice(YES_NO), clc.Choice(YES_NO), None],
+                ["Any", 0, "N", "Y", 99],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "ki_dependent")
@@ -1945,11 +1947,11 @@ class PerformingSuperAttackDefence(PassiveAbility):
                     state.dmgRedA += self.effectiveBuff
 
 
-class KiSphereDependent(PassiveAbility):
+class KiSphereDependent(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff)
-        self.orbType, self.required, self.whenAttacking = args
-
+        self.orbType, self.required, self.whenAttacking, self.withinTheSameTurn, max = args
+        super().__init__(form, activationProbability, knownApriori, effect, buff, max)
+        
     def applyToState(self, state, unit=None, form=None):
         match self.orbType:
             case "Any":
@@ -1966,7 +1968,9 @@ class KiSphereDependent(PassiveAbility):
             effectFactor = numOrbs
         else:  # If fixed buff if obtain X orbs
             effectFactor = 1 - poisson.cdf(self.required - 1, numOrbs)
-        buffFromOrbs = self.effectiveBuff * effectFactor
+        buffToGo = self.max - self.applied
+        cappedTurnBuff = min(buffToGo, self.effectiveBuff)
+        buffFromOrbs = cappedTurnBuff * effectFactor
         if self.effect in REGULAR_SUPPORT_EFFECTS:
             state.support += supportFactorConversion[self.effect] * buffFromOrbs
         elif self.effect in state.buff.keys():
@@ -1989,6 +1993,9 @@ class KiSphereDependent(PassiveAbility):
                     state.aaPSuper.append(effectFactor * self.superChance)
                 case "P2 ATK":
                     state.p2Buff["ATK"] += buffFromOrbs
+        if not (self.withinTheSameTurn):
+            form.extraBuffs[self.effect] += buffFromOrbs
+            self.applied += buffFromOrbs
 
 
 class Nullification(PassiveAbility):
@@ -2118,4 +2125,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(23, "CLR_AGL_Kai_Goku", 1, "DEF", "ADD", "DGE", SLOT_1)
+    unit = Unit(24, "LR_TEQ_Universe_2", 1, "DEF", "ADD", "DGE", SLOT_1)
