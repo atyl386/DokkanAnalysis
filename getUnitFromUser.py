@@ -483,7 +483,7 @@ class Unit:
 
 
 class Form:
-    def __init__(self, inputHelper, initialTurn, rarity, eza, formIdx, numForms, giantRageDuration=0):
+    def __init__(self, inputHelper, initialTurn, rarity, eza, formIdx, numForms, giantRageDuration=0, giantRageMode=False):
         self.formElement = inputHelper.parent
         self.inputHelper = inputHelper
         self.initialTurn = initialTurn
@@ -491,6 +491,7 @@ class Form:
         self.EZA = eza
         self.formIdx = formIdx
         self.giantRageDuration = giantRageDuration
+        self.giantRageMode = giantRageMode
         self.linkNames = [""] * MAX_NUM_LINKS
         self.linkCommonality = 0
         self.extraBuffs = dict(zip(EXTRA_BUFF_EFFECTS, np.zeros(len(EXTRA_BUFF_EFFECTS))))
@@ -1031,7 +1032,10 @@ class State:
         self.p2Buff = {}
         self.p3Buff = {}
         for effect in STACK_EFFECTS:
-            self.p1Buff[effect] = ATK_DEF_SUPPORT
+            if form.giantRageMode:
+                self.p1Buff[effect] = 0
+            else:
+                self.p1Buff[effect] = ATK_DEF_SUPPORT
             self.p2Buff[effect] = form.extraBuffs[effect]
             self.p3Buff[effect] = 0
         self.p2Buff["ATK"] += form.linkEffects["On Super ATK"]
@@ -1373,7 +1377,7 @@ class State:
 
     def getRandomKi(self, form):
         return (
-            KI_SUPPORT
+            (0 if form.giantRageMode else KI_SUPPORT)
             + self.kiPerOtherTypeOrb * self.numOtherTypeOrbs
             + self.kiPerSameTypeOrb * self.numSameTypeOrbs
             + self.kiPerOtherTypeOrb * self.numRainbowOrbs
@@ -1405,7 +1409,7 @@ class GiantRageMode(SingleTurnAbility):
         super().__init__(form)
         self.ATK = args[0]
         form.inputHelper.parent = form.inputHelper.parentMap[form.inputHelper.parent]        
-        self.giantRageForm = Form(form.inputHelper, 1, form.rarity, form.EZA, form.formIdx + 1, 0)
+        self.giantRageForm = Form(form.inputHelper, 1, form.rarity, form.EZA, form.formIdx + 1, 0, giantRageMode=True)
 
     def applyToState(self, state, unit=None, form=None):
         if form.checkCondition(self.condition, self.activated, True) and unit.fightPeak:
