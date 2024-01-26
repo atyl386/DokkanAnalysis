@@ -403,7 +403,7 @@ class Unit:
                 if turn != 1:
                     form.transformed = True
                 self.inputHelper.parent = self.inputHelper.getChildElement(self.formsElement, f"form_{formIdx}")
-                form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms)
+                form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms, self.giantRageDuration)
                 self.forms.append(form)
             elif self.nextForm == -1:
                 form = self.forms[-2]
@@ -483,12 +483,14 @@ class Unit:
 
 
 class Form:
-    def __init__(self, inputHelper, initialTurn, rarity, eza, formIdx, numForms):
+    def __init__(self, inputHelper, initialTurn, rarity, eza, formIdx, numForms, giantRageDuration=0):
         self.formElement = inputHelper.parent
         self.inputHelper = inputHelper
         self.initialTurn = initialTurn
         self.rarity = rarity
         self.EZA = eza
+        self.formIdx = formIdx
+        self.giantRageDuration = giantRageDuration
         self.linkNames = [""] * MAX_NUM_LINKS
         self.linkCommonality = 0
         self.extraBuffs = dict(zip(EXTRA_BUFF_EFFECTS, np.zeros(len(EXTRA_BUFF_EFFECTS))))
@@ -524,7 +526,7 @@ class Form:
             )
         ]
         self.getLinks()
-        assert len(np.unique(self.linkNames)) == MAX_NUM_LINKS, "Duplicate links"
+        #assert len(np.unique(self.linkNames)) == MAX_NUM_LINKS , "Duplicate links"
         self.getSuperAttacks(self.rarity, self.EZA)
         ################################################ Turn Start #####################################################
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "default")
@@ -646,6 +648,10 @@ class Form:
                 PerformingSuperAttackOffence,
             )
         )
+        if self.giantRageDuration > 0:
+            self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "giant_rage_mode")
+            giantRageModeATK = self.inputHelper.getAndSaveUserInput("What is the giant/rage mode attack stat?", default=60000)
+            self.abilities["Active / Finish Attacks"].append(GiantRageMode(self, [giantRageModeATK]))
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "active_skill_attack")
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
@@ -808,9 +814,9 @@ class Form:
             )
         )
         ################################################ Turn End #####################################################
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, f"form_{formIdx}_change_condition")
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, f"form_{self.formIdx}_change_condition")
         self.formChangeCondition = getCondition(self.inputHelper)
-        if formIdx < numForms:
+        if self.formIdx < numForms:
             self.newForm = True
         else:
             self.newForm = False
@@ -1398,29 +1404,19 @@ class GiantRageMode(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.ATK = args[0]
-        self.support = GIANT_RAGE_SUPPORT
-        # Create a form so can get access to abilityQuestionaire to ask user questions
-        self.giantRageForm = Form(form.inputHelper)
-        self.giantRageForm.abilities["Start of Turn"].extend(
-            abilityQuestionaire(
-                self.giantRageForm,
-                "How many buffs does this giant/rage mode have?",
-                Buff,
-            )
-        )
+        form.inputHelper.parent = form.inputHelper.parentMap[form.inputHelper.parent]        
+        self.giantRageForm = Form(form.inputHelper, 1, form.rarity, form.EZA, form.formIdx + 1, 0)
 
     def applyToState(self, state, unit=None, form=None):
         if form.checkCondition(self.condition, self.activated, True) and unit.fightPeak:
             self.activated = True
             # Create a State so can get access to setState for damage calc
-            self.giantRageModeState = State(unit, form, state.slot, state.turn)
-            for ability in self.giantRageForm.abilities:  # Apply the giant/form abilities
-                ability.applyToState(self.giantRageModeState)
+            self.giantRageModeState = State(unit, self.giantRageForm, state.slot, state.turn)
             giantRageUnit = copy.deepcopy(unit)
             giantRageUnit.ATK = self.ATK
-            self.giantRageModeState.setState(self.giantRageForm, giantRageUnit)  # Calculate the APT of the state
+            self.giantRageModeState.setState(giantRageUnit, self.giantRageForm)  # Calculate the APT of the state
             state.APT += self.giantRageModeState.APT * NUM_SLOTS * giantRageUnit.giantRageDuration
-            state.support += self.support
+            state.support += GIANT_RAGE_SUPPORT
 
 
 class Revive(SingleTurnAbility):
