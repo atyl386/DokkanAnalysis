@@ -363,7 +363,7 @@
 				<input prompt="How many different defensive buffs does the form get when performing a super attack / attacking?" response="0" />
 			</defensive_on_super>
 			<ki_sphere_dependent>
-				<input prompt="How many ki sphere dependent buffs does the form have?" response="4" />
+				<input prompt="How many ki sphere dependent buffs does the form have?" response="5" />
 				<ability_1>
 					<input prompt="What type of ki spheres are required?" response="Type" />
 					<input prompt="What is the required amount?" response="2" />
@@ -380,7 +380,7 @@
 					<input prompt="Is buff applied when attacking?" response="Y" />
 					<input prompt="Does the buff only apply within that turn?" response="Y" />
 					<input prompt="What is the maximum buff?" response="99" />
-					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What type of buff does the unit get?" response="P2 ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.22" />
 				</ability_2>
@@ -404,6 +404,16 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.22" />
 				</ability_4>
+				<ability_5>
+					<input prompt="What type of ki spheres are required?" response="Type" />
+					<input prompt="What is the required amount?" response="2" />
+					<input prompt="Is buff applied when attacking?" response="N" />
+					<input prompt="Does the buff only apply within that turn?" response="Y" />
+					<input prompt="What is the maximum buff?" response="99.0" />
+					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.22" />
+				</ability_5>
 			</ki_sphere_dependent>
 			<ki_dependent>
 				<input prompt="How many ki dependent buffs does the form have?" response="0" />
