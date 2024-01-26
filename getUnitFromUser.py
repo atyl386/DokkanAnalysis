@@ -1991,7 +1991,7 @@ class KiSphereDependent(PerEvent):
                     state.p2Buff["ATK"] += buffFromOrbs
                 case "P2 DEF":
                     state.p2Buff["DEF"] += buffFromOrbs
-        if not (self.withinTheSameTurn):
+        if not (yesNo2Bool[self.withinTheSameTurn]):
             form.extraBuffs[self.effect] += buffFromOrbs
             self.applied += buffFromOrbs
 
