@@ -540,6 +540,7 @@ CONDITIONS = [
     "Num Super Attacks Performed",
     "Num Attacks Received",
     "Finish Skill Activation",
+    "Deliver Final Blow",
     "Revive",
     "NA",
 ]

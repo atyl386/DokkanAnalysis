@@ -133,6 +133,8 @@ def getCondition(inputHelper):
             case "Finish Skill Activation":
                 requiredCharge = inputHelper.getAndSaveUserInput("What is the required charge condition?", default=30)
                 condition[i] = FinishSkillActivatedCondition(requiredCharge)
+            case "Deliver Final Blow":
+                condition[i] = FinalBlowCondition()
             case "Revive":
                 condition[i] = ReviveCondition()
             case "NA":
@@ -2122,6 +2124,12 @@ class EnemyMinHpCondition(ProbabilityCondition):
         super().__init__(conditionProbability)
 
 
+class FinalBlowCondition(ProbabilityCondition):
+    def __init__(self):
+        conditionProbability = PROBABILITY_KILL_ENEMY_PER_TURN / NUM_SLOTS
+        super().__init__(conditionProbability)
+
+
 class AttacksPerformedCondition(Condition):
     def __init__(self, numAttacks):
         self.formAttr = "attacksPerformed"
@@ -2182,4 +2190,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(33, "DF_AGL_Captain_Ginyu", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(34, "DF_PHY_Raditz_", 1, "DEF", "DGE", "ADD", SLOT_1)
