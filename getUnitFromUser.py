@@ -2009,7 +2009,7 @@ class KiSphereDependent(PerEvent):
         cappedTurnBuff = min(buffToGo, self.effectiveBuff)
         buffFromOrbs = cappedTurnBuff * effectFactor
         if self.effect in REGULAR_SUPPORT_EFFECTS:
-            state.support += supportFactorConversion[self.effect] * buffFromOrbs
+            state.support += supportFactorConversion[self.effect] * min(buffToGo, self.supportBuff[state.slot - 1]) * effectFactor
         elif self.effect in state.buff.keys():
             state.buff[self.effect] += buffFromOrbs
         elif self.effect in state.p1Buff.keys():
