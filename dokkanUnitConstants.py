@@ -247,7 +247,8 @@ PROBABILITY_KILL_ENEMY_PER_ATTACK = (
     PROBABILITY_KILL_ENEMY_PER_TURN / NUM_SLOTS / NUM_ATTACKS_PERFORMED_PER_UNIT_PER_TURN
 )
 
-# Enemy Damage
+# Enemy
+ENEMY_DODGE_CHANCE = 0.05
 LOOK_AHEAD_FACTOR = 1.2  # Want to know which units will be good in the future when enemies hit even harder
 AVG_DAM_VARIANCE = 1.015
 MAX_T1_NORMAL_DAM = 550000  # Not including divine wrath and mortal will as can just spam items
@@ -465,6 +466,7 @@ EFFECTS = [
     "Seal",
     "Stun",
     "Disable Action",
+    "Attacks Guaranteed to Hit",
     "AEAAT",
     "Dmg Red",
     "Dmg Red A",
@@ -475,7 +477,6 @@ EFFECTS = [
     "Crit",
     "AdditionalSuper",
     "AAChance",
-    "Guaranteed Hit",
     "Evasion",
     "EvasionA",
     "EvasionB",

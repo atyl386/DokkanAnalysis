@@ -368,8 +368,7 @@ class Unit:
                 )
             ]:
                 sbrActiveSkillTurn = self.inputHelper.getAndSaveUserInput("What turn can it be activated?", default=1)
-                sbrActiveSkillEffect = self.getSBR()
-                sbrActiveSkillBuff += SBR_DF ** (sbrActiveSkillTurn - 1) * sbrActiveSkillEffect
+                sbrActiveSkillBuff += SBR_DF ** (sbrActiveSkillTurn - 1)
 
             self.SBR = (
                 attackAllDebuffConversion[attackAll] * (seal + stun + attDebuffOnAtk)
@@ -1042,6 +1041,7 @@ class State:
             "Disable Guard": 0,
             "Dmg Red against Normals": form.extraBuffs["Dmg Red"],
             "Heal": 0,
+            "Attacks Guaranteed to Hit": 0
         }
         self.p1Buff = {}
         self.p2Buff = {}
@@ -1389,7 +1389,7 @@ class State:
             * (
                 self.buff["Disable Guard"] * (DISABLE_GUARD_MULTIPLIER + unit.TAB * DISABLE_GUARD_TAB_INC)
                 + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + unit.TAB * DEFAULT_TAB_INC)
-            )
+            ) * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
         )
 
     def getRandomKi(self, form):
@@ -2182,4 +2182,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(31, "DF_TEQ_Bardock_", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(32, "DF_INT_Yamcha_", 1, "DEF", "DGE", "ADD", SLOT_1)
