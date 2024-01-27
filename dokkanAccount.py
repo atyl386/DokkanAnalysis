@@ -201,6 +201,14 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": SLOT_1,
     },
+    26: {
+        "Common Name": "LR_AGL_Caulifla_Kale",
+        "# Copies": 1,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+        "Slots": SLOT_1,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
