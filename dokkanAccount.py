@@ -233,6 +233,14 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_3,
     },
+    30: {
+        "Common Name": "DF_PHY_Turles_",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+        "Slots": SLOT_2,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
