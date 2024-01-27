@@ -249,6 +249,14 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": SLOT_2,
     },
+    32: {
+        "Common Name": "DF_INT_Yamcha_",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
