@@ -1593,7 +1593,7 @@ class Buff(PassiveAbility):
         knownApriori,
         effect,
         buff,
-        effectDuration=1,
+        effectDuration=None,
         start=1,
         end=MAX_TURN,
         ki=0,
@@ -1690,7 +1690,7 @@ class Buff(PassiveAbility):
 
 
 class TurnDependent(Buff):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration=1, args=[]):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration=None, args=[]):
         start, end = args
         super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, start=start, end=end)
 
