@@ -1568,17 +1568,17 @@ class RevivalCounterFinishSkill(StandbyFinishSkill):
 
 
 class PassiveAbility(Ability):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration=1):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration=None):
         super().__init__(form)
         self.activationProbability = aprioriProbMod(activationProbability, knownApriori)
         self.effect = effect
-        self.effectDuration = effectDuration
+        self.effectDuration = effectDuration if effectDuration != None else 1
         self.effectiveBuff = buff * self.activationProbability
         if effect == "AAChance":
             self.superChance = form.inputHelper.getAndSaveUserInput(
                 "What is the chance for this to become a super?", default=0.0
             )
-        if effect in SUPPORT_EFFECTS and effectDuration == 1:
+        if effect in SUPPORT_EFFECTS and effectDuration == None:
             self.effectDuration = form.inputHelper.getAndSaveUserInput(
                 "How many turns does the effect last for?", default=1
             )
