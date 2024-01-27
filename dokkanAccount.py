@@ -225,6 +225,14 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": SLOT_2,
     },
+    29: {
+        "Common Name": "BU_TEQ_Vegeta_Nappa",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+        "Slots": SLOT_3,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
