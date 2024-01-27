@@ -133,6 +133,8 @@ def getCondition(inputHelper):
             case "Finish Skill Activation":
                 requiredCharge = inputHelper.getAndSaveUserInput("What is the required charge condition?", default=30)
                 condition[i] = FinishSkillActivatedCondition(requiredCharge)
+            case "Revive":
+                condition[i] = ReviveCondition()
             case "NA":
                 condition[i] = Condition()
     if numConditions == 2:
@@ -388,6 +390,7 @@ class Unit:
         turn = 1
         formIdx = 0
         stateIdx = -1
+        self.transformationTriggered = False
         self.fightPeak = False
         # Only non-zero in between activating the stanby finish skill attack and applying to subsequent state
         self.transformationAttackAPT = 0
@@ -416,7 +419,7 @@ class Unit:
             state = State(self, form, slot, turn)
             state.setState(self, form)
             # If have finished a standby
-            if self.transformationAttackAPT != 0:
+            if self.transformationTriggered:
                 # If the trigger condition for the finish is a revive, apply APT this turn, otherwise next.
                 try:
                     hasReviveCounter = form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "Revive"
@@ -507,6 +510,7 @@ class Form:
         self.transformed = False
         self.newForm = True
         self.intentional12Ki = False
+        self.revived = False
         self.canAttack = yesNo2Bool[self.inputHelper.getAndSaveUserInput("Can this form attack?", default="Y")]
         if self.rarity == "LR":
             self.intentional12Ki = yesNo2Bool[
@@ -1449,6 +1453,7 @@ class Revive(SingleTurnAbility):
             else:
                 state.support += REVIVE_ROTATION_SUPPORT_BUFF
             form.abilities["Start of Turn"].extend(self.abilities)
+            form.revived = True
 
 
 class Domain(SingleTurnAbility):
@@ -1525,6 +1530,7 @@ class ActiveSkillAttack(SingleTurnAbility):
             )
             if yesNo2Bool[self.triggersTransformation]:
                 unit.transformationAttackAPT = activeAtk
+                unit.transformationTriggered = True
                 unit.nextForm = 1
             else:
                 state.APT += activeAtk
@@ -1558,6 +1564,7 @@ class StandbyFinishSkill(SingleTurnAbility):
                 )
                 * state.atkModifier
             )
+            unit.transformationTriggered = True
             unit.nextForm = -1
 
 
@@ -1667,6 +1674,8 @@ class Buff(PassiveAbility):
                         state.kiPerRainbowKiSphere += effectiveBuff
                     case "P2 ATK":
                         state.p2Buff["ATK"] += effectiveBuff
+                    case "P2 DEF":
+                        state.p2Buff["DEF"] += effectiveBuff
                     case "P3 ATK":
                         state.p3Buff["ATK"] += effectiveBuff
                     case "P3 DEF":
@@ -2134,6 +2143,12 @@ class FinishSkillActivatedCondition(Condition):
         self.conditionValue = requiredCharge
 
 
+class ReviveCondition(Condition):
+    def __init__(self):
+        self.formAttr = "revived"
+        self.conditionValue = True
+
+
 # Too niche to conform to a generalised case because there is no formAttr for the charge condtion
 class DoubleSameRainbowKiSphereCondition(Condition):
     def __init__(self, chargeCondition):
@@ -2164,4 +2179,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(27, "BU_TEQ_Frost_FinalForm", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(28, "DF_STR_Piccolo_Gohan", 1, "DEF", "DGE", "ADD", SLOT_1)

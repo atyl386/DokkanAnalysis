@@ -539,6 +539,7 @@ CONDITIONS = [
     "Num Super Attacks Performed",
     "Num Attacks Received",
     "Finish Skill Activation",
+    "Revive",
     "NA",
 ]
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]
