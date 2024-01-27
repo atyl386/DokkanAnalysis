@@ -436,7 +436,7 @@ AVG_SOT_STATS = 3
 
 SPECIAL_SUPPORT_EFFECTS = ["Delay Target"]
 
-ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Triple Orb Change", "Rainbow Orb Change"]
+ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Triple Orb Change", "Complete Orb Change", "Rainbow Orb Change"]
 
 REGULAR_SUPPORT_EFFECTS = [
     "Ki Support",
@@ -513,6 +513,7 @@ SUPPORT_FACTORS = [
     0.125,
     0.25,
     0.375,
+    0,
     0.5,
     DMG_RED_SUPPORT_100_FACTOR,
 ]
@@ -557,6 +558,7 @@ ORB_COUNTS_NO_ORB_CHANGING = [1.75, 1.75, 1] # From DokkanAverageKi.xlsx
 ORB_COUNTS_TYPE_ORB_CHANGING = [0.5, 5.25, 1.5] # From DokkanAverageKi.xlsx
 ORB_COUNTS_DOUBLE_ORB_CHANGING = [0, 7.85, 1.85] # See numTypeOrbsCurveFit.py & numRainbowOrbsCurveFit.py
 ORB_COUNTS_TRIPLE_ORB_CHANGING = [0, 8.55, 1.93] # See numTypeOrbsCurveFit.py & numRainbowOrbsCurveFit.py
+ORB_COUNTS_COMPLETE_ORB_CHANGING = [0, 23, 0]
 ORB_COUNTS_RAINBOW_ORB_CHANGING = [2.05, 2.05, 2.7] # From DokkanAverageKi.xlsx
 
 KI_PER_SAME_TYPE_ORB = 2.0
@@ -675,6 +677,7 @@ orbTypeNoOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_NO_ORB_CHANGING)
 orbTypeOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_TYPE_ORB_CHANGING))
 orbTypeDoubleOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_DOUBLE_ORB_CHANGING))
 orbTypeTripleOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_TRIPLE_ORB_CHANGING))
+orbTypeCompleteOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_COMPLETE_ORB_CHANGING))
 orbTypeRainbowOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_RAINBOW_ORB_CHANGING))
 orbChangeConversion = dict(
     zip(
@@ -684,6 +687,7 @@ orbChangeConversion = dict(
             orbTypeOrbChangingConversion,
             orbTypeDoubleOrbChangingConversion,
             orbTypeTripleOrbChangingConversion,
+            orbTypeCompleteOrbChangingConversion,
             orbTypeRainbowOrbChangingConversion,
         ],
     )
