@@ -209,6 +209,14 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_1,
     },
+    27: {
+        "Common Name": "BU_TEQ_Frost_FinalForm",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_2,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
