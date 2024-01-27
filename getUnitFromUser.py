@@ -586,6 +586,17 @@ class Form:
                 ["Y"],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_turn")
+        self.abilities["Start of Turn"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get per turn?",
+                PerTurn,
+                ["What is the maximum buff?"],
+                [None],
+                [1.0],
+            )
+        )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "attacks_received_threshold")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
@@ -773,7 +784,7 @@ class Form:
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "nullification")
-        self.abilities["Attack Enemy"].extend(
+        self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
                 "How many different nullification abilities does the form have?",
@@ -1136,7 +1147,32 @@ class State:
                 * form.superAttacks[superAttackType].effects["Disable Action"].buff,
                 "Nullify",
             )
-
+        self.avgDefPreSuper = getDefStat(
+            unit.DEF,
+            self.p1Buff["DEF"],
+            form.linkEffects["DEF"],
+            self.p2Buff["DEF"],
+            self.p3Buff["DEF"],
+            self.stackedStats["DEF"],
+        )
+        self.normalDamageTakenPreSuper = getDamageTaken(
+            0,
+            self.multiChanceBuff["EvasionA"].prob,
+            self.buff["Guard"],
+            MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
+            unit.TDB,
+            self.buff["Dmg Red against Normals"],
+            self.avgDefPreSuper,
+        )
+        self.saDamageTakenPreSuper = getDamageTaken(
+            self.multiChanceBuff["Nullify"].prob,
+            self.multiChanceBuff["EvasionA"].prob,
+            self.buff["Guard"],
+            MAX_SA_DAM_PER_TURN[self.turn - 1],
+            unit.TDB,
+            self.dmgRedA,
+            self.avgDefPreSuper,
+        )
         for ability in form.abilities["Attack Enemy"]:
             ability.applyToState(self, unit, form)
         self.normal = getNormal(
@@ -1227,14 +1263,6 @@ class State:
             form.superAttacks["18 Ki"].effects["Crit"].buff,
         )
         self.getAvgDefMult(form, unit)
-        self.avgDefPreSuper = getDefStat(
-            unit.DEF,
-            self.p1Buff["DEF"],
-            form.linkEffects["DEF"],
-            self.p2Buff["DEF"],
-            self.p3Buff["DEF"],
-            self.stackedStats["DEF"],
-        )
         self.p2Buff["DEF"] += self.p2DefB
         self.avgDefPostSuper = getDefStat(
             unit.DEF,
@@ -1244,15 +1272,6 @@ class State:
             self.p3Buff["DEF"],
             self.avgDefMult,
         )
-        self.normalDamageTakenPreSuper = getDamageTaken(
-            0,
-            self.multiChanceBuff["EvasionA"].prob,
-            self.buff["Guard"],
-            MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
-            unit.TDB,
-            self.buff["Dmg Red against Normals"],
-            self.avgDefPreSuper,
-        )
         self.normalDamageTakenPostSuper = getDamageTaken(
             0,
             self.multiChanceBuff["EvasionB"].prob,
@@ -1261,15 +1280,6 @@ class State:
             unit.TDB,
             self.buff["Dmg Red against Normals"],
             self.avgDefPostSuper,
-        )
-        self.saDamageTakenPreSuper = getDamageTaken(
-            self.multiChanceBuff["Nullify"].prob,
-            self.multiChanceBuff["EvasionA"].prob,
-            self.buff["Guard"],
-            MAX_SA_DAM_PER_TURN[self.turn - 1],
-            unit.TDB,
-            self.dmgRedA,
-            self.avgDefPreSuper,
         )
         self.saDamageTakenPostSuper = getDamageTaken(
             self.multiChanceBuff["Nullify"].prob,
@@ -1762,6 +1772,32 @@ class PerEvent(PassiveAbility):
         self.applied = 0
 
 
+class PerTurn(PerEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+
+    def applyToState(self, state, unit=None, form=None):
+        turnBuff = self.effectiveBuff
+        buffToGo = self.max - self.applied
+        cappedTurnBuff = min(buffToGo, turnBuff)
+        form.extraBuffs[self.effect] += cappedTurnBuff
+        match self.effect:
+            case "Ki":
+                state.buff["Ki"] += cappedTurnBuff
+            case "ATK":
+                state.p1Buff["ATK"] += cappedTurnBuff
+            case "DEF":
+                state.p1Buff["DEF"] += cappedTurnBuff
+            case "Crit":
+                state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
+                state.atkModifier = state.getAvgAtkMod(form, unit)
+            case "Dmg Red":
+                state.dmgRedA += cappedTurnBuff
+                state.dmgRedB += cappedTurnBuff
+                state.buff["Dmg Red against Normals"] += cappedTurnBuff
+        self.applied += cappedTurnBuff
+
+
 class PerAttackPerformed(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
@@ -1942,6 +1978,7 @@ class PerformingSuperAttackDefence(PassiveAbility):
                     state.p2DefB += self.effectiveBuff
             case "Dmg Red":
                 state.dmgRedB += self.effectiveBuff
+                state.buff["Dmg Red against Normals"] += self.effectiveBuff
                 # If have activated active skill attack this turn
                 if state.superAttacksPerformed > 0:
                     state.dmgRedA += self.effectiveBuff
@@ -2127,4 +2164,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(24, "LR_TEQ_Universe_2", 1, "DEF", "ADD", "DGE", SLOT_1)
+    unit = Unit(25, "LR_STR_Bulma_Youth", 1, "DEF", "DGE", "ADD", SLOT_1)

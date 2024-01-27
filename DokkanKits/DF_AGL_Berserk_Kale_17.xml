@@ -121,6 +121,9 @@
 			<health_scale>
 				<input prompt="How many health scale buffs does the form have?" response="0" />
 			</health_scale>
+			<per_turn>
+				<input prompt="How many different buffs does the form get per turn?" response="0" />
+			</per_turn>
 			<attacks_received_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks received?" response="0" />
 			</attacks_received_threshold>
@@ -318,6 +321,9 @@
 			<health_scale>
 				<input prompt="How many health scale buffs does the form have?" response="0" />
 			</health_scale>
+			<per_turn>
+				<input prompt="How many different buffs does the form get per turn?" response="0" />
+			</per_turn>
 			<attacks_received_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks received?" response="0" />
 			</attacks_received_threshold>
