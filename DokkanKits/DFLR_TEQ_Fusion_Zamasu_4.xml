@@ -249,6 +249,7 @@
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="What is the chance for this to become a super?" response="0.5" />
 					<input prompt="How many turns does the buff last?" response="1" />
+					<input prompt="How many different buffs does the form get after guarding an attack?" response="0" />
 				</ability_3>
 			</after_receive_attack>
 			<after_evade_attack>
@@ -478,6 +479,7 @@
 			</ki_dependent>
 			<after_receive_attack>
 				<input prompt="How many different buffs does the form get after receiving an attack?" response="0" />
+				<input prompt="How many different buffs does the form get after guarding an attack?" response="0" />
 			</after_receive_attack>
 			<after_evade_attack>
 				<input prompt="How many different buffs does the form get after evading attacks?" response="0" />

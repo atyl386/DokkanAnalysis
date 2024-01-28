@@ -756,6 +756,16 @@ class Form:
                 [1],
             )
         )
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after guarding an attack?",
+                AfterGuardActivated,
+                ["How many turns does the buff last?"],
+                [None],
+                [1],
+            )
+        )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_evade_attack")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
@@ -1978,6 +1988,49 @@ class AfterAttackReceived(AfterEvent):
             self.eventFactor = 1
 
 
+class AfterGuardActivated(AfterEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+
+    def applyToState(self, state, unit=None, form=None):
+        if self.turnsSinceActivated == 0:
+            if self.applied > 0:
+                form.extraBuffs[self.effect] -= self.applied
+                self.applied = 0
+            # If buff is a defensive one
+            if self.effect in ["DEF", "Dmg Red"]:
+                self.eventFactor = (
+                    state.numAttacksReceived - (1 - state.buff["Guard"]) / state.buff["Guard"]
+                ) / state.numAttacksReceived
+            else:
+                self.eventFactor = min(state.numAttacksReceivedBeforeAttacking * state.buff["Guard"], 1)
+        # geometric cdf
+        turnBuff = self.effectiveBuff * self.eventFactor
+        buffToGo = self.effectiveBuff - self.applied
+        cappedTurnBuff = min(buffToGo, turnBuff)
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += cappedTurnBuff
+        else:
+            match self.effect:
+                case "DEF":
+                    state.p2Buff["DEF"] += cappedTurnBuff
+                case "AdditionalSuper":
+                    state.aaPSuper.append(cappedTurnBuff)
+                    state.aaPGuarantee.append(0)
+                case "AAChance":
+                    state.aaPGuarantee.append(cappedTurnBuff)
+                    state.aaPSuper.append(cappedTurnBuff * self.superChance)
+        self.turnsSinceActivated += 1
+        # If not still going to be active next turn
+        if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+            # Reset it to not be active
+            self.turnsSinceActivated = 0
+        else:
+            form.extraBuffs[self.effect] += cappedTurnBuff
+            self.applied += cappedTurnBuff
+            self.eventFactor = 1
+
+
 class AfterAttackEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
@@ -2249,4 +2302,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(35, "DF_INT_Hirudegarn_", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(36, "DF_TEQ_WT_Goku", 1, "DEF", "DGE", "ADD", SLOT_1)

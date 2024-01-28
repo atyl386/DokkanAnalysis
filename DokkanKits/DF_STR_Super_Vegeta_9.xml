@@ -195,6 +195,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
 					<input prompt="How many turns does the buff last?" response="1" />
+					<input prompt="How many different buffs does the form get after guarding an attack?" response="0" />
 				</ability_2>
 			</after_receive_attack>
 			<after_evade_attack>
