@@ -760,11 +760,11 @@ class Form:
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
-                "How many different buffs does the form get after evading an attack?",
+                "How many different buffs does the form get after evading attacks?",
                 AfterAttackEvaded,
-                ["How many turns does the buff last?"],
-                [None],
-                [1],
+                ["How many turns does the buff last?", "How many evasions are required?", "Does the buff start from the next attacking turn?"],
+                [None, None, clc.Choice(YES_NO)],
+                [1, 1, "N"],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_received")
@@ -1981,17 +1981,18 @@ class AfterAttackReceived(AfterEvent):
 class AfterAttackEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+        self.required = args[1]
+        self.nextAttackingTurn = yesNo2Bool[args[2]]
 
     def applyToState(self, state, unit=None, form=None):
         if self.turnsSinceActivated == 0:
-            if self.applied > 0:
-                form.extraBuffs[self.effect] -= self.applied
-                self.applied = 0
+            if self.required > 1:
+                self.eventFactor = 1 - poisson.cdf(self.required - 1, state.numAttacksEvaded)
             # If buff is a defensive one
-            if self.effect in ["DEF", "Dmg Red"]:
-                # Factor to account for not having the buff on the fist hit
+            elif self.effect in ["DEF", "Dmg Red", "Evasion"]:
+                pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
                 self.eventFactor = max(
-                    state.numAttacksReceived - 1
+                    state.numAttacksReceived - (1 - pEvade) / pEvade
                 , 0) / state.numAttacksReceived
             else:
                 self.eventFactor = min(state.numAttacksEvadedBeforeAttacking, 1)
@@ -1999,23 +2000,27 @@ class AfterAttackEvaded(AfterEvent):
         turnBuff = self.effectiveBuff * self.eventFactor
         buffToGo = self.effectiveBuff - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        if self.effect in state.buff.keys():
-            state.buff[self.effect] += cappedTurnBuff
-        else:
-            match self.effect:
-                case "DEF":
-                    state.p2Buff["DEF"] += cappedTurnBuff
-                case "AdditionalSuper":
-                    state.aaPSuper.append(cappedTurnBuff)
-                    state.aaPGuarantee.append(0)
-                case "AAChance":
-                    state.aaPGuarantee.append(cappedTurnBuff)
-                    state.aaPSuper.append(cappedTurnBuff * self.superChance)
+        if not(self.nextAttackingTurn):
+            if self.effect in state.buff.keys():
+                state.buff[self.effect] += cappedTurnBuff
+            else:
+                match self.effect:
+                    case "DEF":
+                        state.p2Buff["DEF"] += cappedTurnBuff
+                    case "AdditionalSuper":
+                        state.aaPSuper.append(cappedTurnBuff)
+                        state.aaPGuarantee.append(0)
+                    case "AAChance":
+                        state.aaPGuarantee.append(cappedTurnBuff)
+                        state.aaPSuper.append(cappedTurnBuff * self.superChance)
         self.turnsSinceActivated += 1
         # If not still going to be active next turn
         if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
             # Reset it to not be active
             self.turnsSinceActivated = 0
+            if self.applied > 0:
+                form.extraBuffs[self.effect] -= self.applied
+                self.applied = 0
         else:
             form.extraBuffs[self.effect] += cappedTurnBuff
             self.applied += cappedTurnBuff
