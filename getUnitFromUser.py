@@ -1899,7 +1899,7 @@ class PerAttackEvaded(PerEvent):
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
             case "DEF":
-                pEvade = state.multiChanceBuff["EvadeA"].prob * (1 - DODGE_CANCEL_FACTOR)
+                pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
                 state.p2Buff["DEF"] += min((NUM_ATTACKS_DIRECTED[state.slot - 1] - 1) * pEvade * (1 - pEvade) * self.effectiveBuff / 2, buffToGo)
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo), "Crit", state)
