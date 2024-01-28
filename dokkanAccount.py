@@ -273,6 +273,14 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_2,
     },
+    35: {
+        "Common Name": "DF_INT_Hirudegarn_",
+        "# Copies": 0,
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_1,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
