@@ -783,9 +783,9 @@ class Form:
                 self,
                 "How many different buffs does the form get on attacks evaded?",
                 PerAttackEvaded,
-                ["What is the maximum buff?"],
-                [None],
-                [1.0],
+                ["What is the maximum buff?", "Within the same turn?"],
+                [None, YES_NO],
+                [1.0, "N"],
             )
         )
         ############################################## Attack Enemy ##################################################
@@ -1887,12 +1887,12 @@ class PerAttackReceived(PerEvent):
 class PerAttackEvaded(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+        self.withinTheSameTurn = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
         turnBuff = self.effectiveBuff * state.numAttacksEvaded
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        form.extraBuffs[self.effect] += cappedTurnBuff
         match self.effect:
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
@@ -1904,7 +1904,25 @@ class PerAttackEvaded(PerEvent):
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
-        self.applied += cappedTurnBuff
+            case "Evasion":
+                evasionA = copy.deepcopy(state.multiChanceBuff["EvasionA"])
+                numAttacksDirectedBeforeAttacking = round(NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1])
+                evasionAChance = [0] * numAttacksDirectedBeforeAttacking
+                evasionB = copy.deepcopy(state.multiChanceBuff["EvasionB"])
+                numAttacksDirected = round(NUM_ATTACKS_DIRECTED[state.slot - 1])
+                evasionBChance = [0] * numAttacksDirected
+                for i in range(numAttacksDirected):
+                    if i < numAttacksDirectedBeforeAttacking:
+                        evasionAChance[i] = evasionA.prob * (1 - DODGE_CANCEL_FACTOR)
+                        evasionA.updateChance("On Super", evasionAChance[i] * self.effectiveBuff, "Evasion", state)
+                    evasionBChance[i] = evasionB.prob * (1 - DODGE_CANCEL_FACTOR)
+                    evasionB.updateChance("On Super", evasionBChance[i] * self.effectiveBuff, "Evasion", state)
+                state.multiChanceBuff["EvasionA"].updateChance("On Super", min(np.mean(evasionAChance), buffToGo), "Evasion", state)
+                state.multiChanceBuff["EvasionB"].updateChance("On Super", min(np.mean(evasionBChance), buffToGo), "Evasion", state)
+                cappedTurnBuff = min(buffToGo, self.effectiveBuff * state.numAttacksEvaded)
+        if not (self.withinTheSameTurn):
+            form.extraBuffs[self.effect] += cappedTurnBuff
+            self.applied += cappedTurnBuff
 
 
 class AfterEvent(PassiveAbility):
