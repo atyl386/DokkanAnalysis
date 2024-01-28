@@ -221,6 +221,9 @@
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>
+			<per_attack_evaded>
+				<input prompt="How many different buffs does the form get on attacks evaded?" response="0" />
+			</per_attack_evaded>
 			<per_attack_super_performed>
 				<input prompt="How many different buffs does the form get per attack / super performed?" response="2" />
 				<ability_1>
@@ -442,6 +445,9 @@
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>
+			<per_attack_evaded>
+				<input prompt="How many different buffs does the form get on attacks evaded?" response="0" />
+			</per_attack_evaded>
 			<per_attack_super_performed>
 				<input prompt="How many different buffs does the form get per attack / super performed?" response="0" />
 			</per_attack_super_performed>

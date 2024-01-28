@@ -147,10 +147,11 @@ def getCondition(inputHelper):
 
 # Overwrite this class function as has additional
 def updateAttacksReceivedAndEvaded(self, state):
-    state.numAttacksReceived = NUM_ATTACKS_DIRECTED[state.slot - 1] * (1 - self.prob)
-    state.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * (1 - self.prob)
-    state.numAttacksEvaded = NUM_ATTACKS_DIRECTED[state.slot - 1] * self.prob
-    state.numAttacksEvadedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * self.prob
+    pEvade = self.prob * (1 - DODGE_CANCEL_FACTOR)
+    state.numAttacksReceived = NUM_ATTACKS_DIRECTED[state.slot - 1] * (1 - pEvade)
+    state.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * (1 - pEvade)
+    state.numAttacksEvaded = NUM_ATTACKS_DIRECTED[state.slot - 1] * pEvade
+    state.numAttacksEvadedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * pEvade
 
 
 MultiChanceBuff.updateAttacksReceivedAndEvaded = updateAttacksReceivedAndEvaded
@@ -771,6 +772,17 @@ class Form:
                 self,
                 "How many different buffs does the form get on attacks received?",
                 PerAttackReceived,
+                ["What is the maximum buff?"],
+                [None],
+                [1.0],
+            )
+        )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_evaded")
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get on attacks evaded?",
+                PerAttackEvaded,
                 ["What is the maximum buff?"],
                 [None],
                 [1.0],
@@ -1872,6 +1884,29 @@ class PerAttackReceived(PerEvent):
         self.applied += cappedTurnBuff
 
 
+class PerAttackEvaded(PerEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+
+    def applyToState(self, state, unit=None, form=None):
+        turnBuff = self.effectiveBuff * state.numAttacksEvaded
+        buffToGo = self.max - self.applied
+        cappedTurnBuff = min(buffToGo, turnBuff)
+        form.extraBuffs[self.effect] += cappedTurnBuff
+        match self.effect:
+            case "Ki":
+                state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
+            case "ATK":
+                state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
+            case "DEF":
+                pEvade = state.multiChanceBuff["EvadeA"].prob * (1 - DODGE_CANCEL_FACTOR)
+                state.p2Buff["DEF"] += min((NUM_ATTACKS_DIRECTED[state.slot - 1] - 1) * pEvade * (1 - pEvade) * self.effectiveBuff / 2, buffToGo)
+            case "Crit":
+                state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo), "Crit", state)
+                state.atkModifier = state.getAvgAtkMod(form, unit)
+        self.applied += cappedTurnBuff
+
+
 class AfterEvent(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
@@ -1935,10 +1970,10 @@ class AfterAttackEvaded(AfterEvent):
                 self.applied = 0
             # If buff is a defensive one
             if self.effect in ["DEF", "Dmg Red"]:
-                # Use expected value of geometric distribution of number of failues before successful dodge
+                # Factor to account for not having the buff on the fist hit
                 self.eventFactor = max(
-                    state.numAttacksReceived - (1 - state.multiChanceBuff["EvadeA"].prob) / state.multiChanceBuff["EvadeA"].prob
-                , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
+                    state.numAttacksReceived - 1
+                , 0) / state.numAttacksReceived
             else:
                 self.eventFactor = min(state.numAttacksEvadedBeforeAttacking, 1)
         # geometric cdf
@@ -2190,4 +2225,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(34, "DF_PHY_Raditz_", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(35, "DF_INT_Hirudegarn_", 1, "DEF", "DGE", "ADD", SLOT_1)
