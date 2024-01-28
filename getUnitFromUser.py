@@ -3,6 +3,7 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
+# -  Add in Hiredugarns 3 dodge guaranteed next turn abiltiy
 # - Try factor out some code within ability class into class functions
 # - Add giant form ability as currently unused
 # - Add multi-processing
@@ -784,7 +785,7 @@ class Form:
                 "How many different buffs does the form get on attacks evaded?",
                 PerAttackEvaded,
                 ["What is the maximum buff?", "Within the same turn?"],
-                [None, YES_NO],
+                [None, clc.Choice(YES_NO)],
                 [1.0, "N"],
             )
         )
