@@ -280,6 +280,7 @@
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.08" />
+					<input prompt="How many different buffs does the form get on attacks guarded?" response="0" />
 				</ability_2>
 			</per_attack_received>
 			<per_attack_evaded>

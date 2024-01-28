@@ -788,6 +788,16 @@ class Form:
                 [1.0],
             )
         )
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get on attacks guarded?",
+                PerAttackGuarded,
+                ["What is the maximum buff?"],
+                [None],
+                [1.0],
+            )
+        )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_evaded")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
@@ -1879,6 +1889,28 @@ class PerAttackReceived(PerEvent):
 
     def applyToState(self, state, unit=None, form=None):
         turnBuff = self.effectiveBuff * state.numAttacksReceived
+        buffToGo = self.max - self.applied
+        cappedTurnBuff = min(buffToGo, turnBuff)
+        form.extraBuffs[self.effect] += cappedTurnBuff
+        match self.effect:
+            case "Ki":
+                state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+            case "ATK":
+                state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+            case "DEF":
+                state.p2Buff["DEF"] += min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
+            case "Crit":
+                state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
+                state.atkModifier = state.getAvgAtkMod(form, unit)
+        self.applied += cappedTurnBuff
+
+
+class PerAttackGuarded(PerEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+
+    def applyToState(self, state, unit=None, form=None):
+        turnBuff = self.effectiveBuff * state.numAttacksReceived * state.buff["Guard"]
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
         form.extraBuffs[self.effect] += cappedTurnBuff
