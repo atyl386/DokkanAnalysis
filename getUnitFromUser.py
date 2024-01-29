@@ -6,7 +6,6 @@ import xml.etree.ElementTree as ET
 # -  Add in WT Goku's buffs after revive as a turn dependent buff
 # -  Currently assuming onyl one extraBuff for additional Super and AAChance
 # Need to add ATK effect for AfterEvent Abilities
-# - after guard actiavted doesn't have proper xml location
 # - Try factor out some code within ability class into class functions
 # - Add giant form ability as currently unused
 # - Add multi-processing
@@ -2009,6 +2008,8 @@ class AfterAttackReceived(AfterEvent):
                 state.buff[self.effect] += cappedTurnBuff
             else:
                 match self.effect:
+                    case "ATK":
+                        state.p2Buff["ATK"] += cappedTurnBuff
                     case "DEF":
                         state.p2Buff["DEF"] += cappedTurnBuff
                     case "AdditionalSuper":
