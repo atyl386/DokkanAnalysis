@@ -759,6 +759,7 @@ class Form:
                 [1],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_guard_attack")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -791,6 +792,7 @@ class Form:
                 [1.0],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_guarded")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,

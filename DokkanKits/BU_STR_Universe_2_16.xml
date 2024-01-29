@@ -172,15 +172,19 @@
 			</ki_dependent>
 			<after_receive_attack>
 				<input prompt="How many different buffs does the form get after receiving an attack?" response="0" />
-				<input prompt="How many different buffs does the form get after guarding an attack?" response="0" />
 			</after_receive_attack>
+			<after_guard_attack>
+				<input prompt="How many different buffs does the form get after guarding an attack?" response="0" />
+			</after_guard_attack>
 			<after_evade_attack>
 				<input prompt="How many different buffs does the form get after evading attacks?" response="0" />
 			</after_evade_attack>
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
-				<input prompt="How many different buffs does the form get on attacks guarded?" response="0" />
 			</per_attack_received>
+			<per_attack_guarded>
+				<input prompt="How many different buffs does the form get on attacks guarded?" response="0" />
+			</per_attack_guarded>
 			<per_attack_evaded>
 				<input prompt="How many different buffs does the form get on attacks evaded?" response="0" />
 			</per_attack_evaded>
