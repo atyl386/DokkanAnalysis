@@ -5,9 +5,7 @@ import xml.etree.ElementTree as ET
 # TODO:
 # -  Add in WT Goku's buffs after revive as a turn dependent buff
 # -  Currently assuming onyl one extraBuff for additional Super and AAChance
-# Need to add ATK effect for AfterEvent Abilities
 # - Try factor out some code within ability class into class functions
-# - Add giant form ability as currently unused
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
