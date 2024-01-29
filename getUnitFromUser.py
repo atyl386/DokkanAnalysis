@@ -3,7 +3,10 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
-# -  Add in Hiredugarns 3 dodge guaranteed next turn abiltiy
+# -  Add in WT Goku's buffs after revive as a turn dependent buff
+# -  Currently assuming onyl one extraBuff for additional Super and AAChance
+# Need to add ATK effect for AfterEvent Abilities
+# - after guard actiavted doesn't have proper xml location
 # - Try factor out some code within ability class into class functions
 # - Add giant form ability as currently unused
 # - Add multi-processing
@@ -1982,10 +1985,14 @@ class AfterAttackReceived(AfterEvent):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
 
     def applyToState(self, state, unit=None, form=None):
-        if self.turnsSinceActivated == 0:
-            if self.applied > 0:
+        buffToGo = self.effectiveBuff - self.applied
+        # Check if ability will be active next turn
+        if self.applied > 0:
+            if self.effectDuration < (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
                 form.extraBuffs[self.effect] -= self.applied
-                self.applied = 0
+                self.applied = 0        
+        # If abiltiy not already active
+        else:
             # If buff is a defensive one
             if self.effect in ["DEF", "Dmg Red"]:
                 self.eventFactor = (
@@ -1993,99 +2000,9 @@ class AfterAttackReceived(AfterEvent):
                 ) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
             else:
                 self.eventFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
-        # geometric cdf
-        turnBuff = self.effectiveBuff * self.eventFactor
-        buffToGo = self.effectiveBuff - self.applied
-        cappedTurnBuff = min(buffToGo, turnBuff)
-        if self.effect in state.buff.keys():
-            state.buff[self.effect] += cappedTurnBuff
-        else:
-            match self.effect:
-                case "DEF":
-                    state.p2Buff["DEF"] += cappedTurnBuff
-                case "AdditionalSuper":
-                    state.aaPSuper.append(cappedTurnBuff)
-                    state.aaPGuarantee.append(0)
-                case "AAChance":
-                    state.aaPGuarantee.append(cappedTurnBuff)
-                    state.aaPSuper.append(cappedTurnBuff * self.superChance)
-        self.turnsSinceActivated += 1
-        # If not still going to be active next turn
-        if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
-            # Reset it to not be active
-            self.turnsSinceActivated = 0
-        else:
-            form.extraBuffs[self.effect] += cappedTurnBuff
-            self.applied += cappedTurnBuff
-            self.eventFactor = 1
-
-
-class AfterGuardActivated(AfterEvent):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
-
-    def applyToState(self, state, unit=None, form=None):
-        if self.turnsSinceActivated == 0:
-            if self.applied > 0:
-                form.extraBuffs[self.effect] -= self.applied
-                self.applied = 0
-            # If buff is a defensive one
-            if self.effect in ["DEF", "Dmg Red"]:
-                self.eventFactor = (
-                    state.numAttacksReceived - (1 - state.buff["Guard"]) / state.buff["Guard"]
-                ) / state.numAttacksReceived
-            else:
-                self.eventFactor = min(state.numAttacksReceivedBeforeAttacking * state.buff["Guard"], 1)
-        # geometric cdf
-        turnBuff = self.effectiveBuff * self.eventFactor
-        buffToGo = self.effectiveBuff - self.applied
-        cappedTurnBuff = min(buffToGo, turnBuff)
-        if self.effect in state.buff.keys():
-            state.buff[self.effect] += cappedTurnBuff
-        else:
-            match self.effect:
-                case "DEF":
-                    state.p2Buff["DEF"] += cappedTurnBuff
-                case "AdditionalSuper":
-                    state.aaPSuper.append(cappedTurnBuff)
-                    state.aaPGuarantee.append(0)
-                case "AAChance":
-                    state.aaPGuarantee.append(cappedTurnBuff)
-                    state.aaPSuper.append(cappedTurnBuff * self.superChance)
-        self.turnsSinceActivated += 1
-        # If not still going to be active next turn
-        if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
-            # Reset it to not be active
-            self.turnsSinceActivated = 0
-        else:
-            form.extraBuffs[self.effect] += cappedTurnBuff
-            self.applied += cappedTurnBuff
-            self.eventFactor = 1
-
-
-class AfterAttackEvaded(AfterEvent):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
-        self.required = args[1]
-        self.nextAttackingTurn = yesNo2Bool[args[2]]
-
-    def applyToState(self, state, unit=None, form=None):
-        if self.turnsSinceActivated == 0:
-            if self.required > 1:
-                self.eventFactor = 1 - poisson.cdf(self.required - 1, state.numAttacksEvaded)
-            # If buff is a defensive one
-            elif self.effect in ["DEF", "Dmg Red", "Evasion"]:
-                pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
-                self.eventFactor = max(
-                    state.numAttacksReceived - (1 - pEvade) / pEvade
-                , 0) / state.numAttacksReceived
-            else:
-                self.eventFactor = min(state.numAttacksEvadedBeforeAttacking, 1)
-        # geometric cdf
-        turnBuff = self.effectiveBuff * self.eventFactor
-        buffToGo = self.effectiveBuff - self.applied
-        cappedTurnBuff = min(buffToGo, turnBuff)
-        if not(self.nextAttackingTurn):
+            # geometric cdf
+            turnBuff = self.effectiveBuff * self.eventFactor
+            cappedTurnBuff = min(buffToGo, turnBuff)
             if self.effect in state.buff.keys():
                 state.buff[self.effect] += cappedTurnBuff
             else:
@@ -2098,18 +2015,122 @@ class AfterAttackEvaded(AfterEvent):
                     case "AAChance":
                         state.aaPGuarantee.append(cappedTurnBuff)
                         state.aaPSuper.append(cappedTurnBuff * self.superChance)
-        self.turnsSinceActivated += 1
-        # If not still going to be active next turn
-        if self.effectDuration < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
-            # Reset it to not be active
+        # If abiltiy going to be active next turn
+        if self.effectDuration >= (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+            if self.effect in ["AAChance", "AdditionalSuper"]:
+                #np.append(form.extraBuffs["aaPSuper"], state.aaPSuper[-1])
+                #np.append(form.extraBuffs["aaPGuarantee"], state.aaPGuarantee[-1])
+                #self.applied = np.array([state.aaPSuper[-1], state.aaPGuarantee[-1]])
+                h = 1
+            else:
+                nextTurnBuff = min(buffToGo, self.effectiveBuff)
+                form.extraBuffs[self.effect] += nextTurnBuff
+                self.applied += nextTurnBuff
+            self.turnsSinceActivated += 1
+        else:
             self.turnsSinceActivated = 0
-            if self.applied > 0:
+
+
+class AfterGuardActivated(AfterEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+
+    def applyToState(self, state, unit=None, form=None):
+        buffToGo = self.effectiveBuff - self.applied
+        if self.applied > 0:
+            if self.effectDuration < (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
                 form.extraBuffs[self.effect] -= self.applied
                 self.applied = 0
         else:
-            form.extraBuffs[self.effect] += cappedTurnBuff
-            self.applied += cappedTurnBuff
-            self.eventFactor = min(state.numAttacksEvaded, 1)
+            # If buff is a defensive one
+            if self.effect in ["DEF", "Dmg Red"]:
+                self.eventFactor = (
+                    state.numAttacksReceived - (1 - state.buff["Guard"]) / state.buff["Guard"]
+                ) / state.numAttacksReceived
+            else:
+                self.eventFactor = min(state.numAttacksReceivedBeforeAttacking * state.buff["Guard"], 1)
+            # geometric cdf
+            turnBuff = self.effectiveBuff * self.eventFactor
+            cappedTurnBuff = min(buffToGo, turnBuff)
+            if self.effect in state.buff.keys():
+                state.buff[self.effect] += cappedTurnBuff
+            else:
+                match self.effect:
+                    case "DEF":
+                        state.p2Buff["DEF"] += cappedTurnBuff
+                    case "AdditionalSuper":
+                        state.aaPSuper.append(cappedTurnBuff)
+                        state.aaPGuarantee.append(0)
+                    case "AAChance":
+                        state.aaPGuarantee.append(cappedTurnBuff)
+                        state.aaPSuper.append(cappedTurnBuff * self.superChance)
+        if self.effectDuration >= (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+            if self.effect in ["AAChance", "AdditionalSuper"]:
+                #np.append(form.extraBuffs["aaPSuper"], state.aaPSuper[-1])
+                #np.append(form.extraBuffs["aaPGuarantee"], state.aaPGuarantee[-1])
+                #self.applied = np.array([state.aaPSuper[-1], state.aaPGuarantee[-1]])
+                h = 1
+            else:
+                nextTurnBuff = min(buffToGo, self.effectiveBuff)
+                form.extraBuffs[self.effect] += nextTurnBuff
+                self.applied += nextTurnBuff
+            self.turnsSinceActivated += 1
+        else:
+            self.turnsSinceActivated = 0
+
+
+class AfterAttackEvaded(AfterEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+        self.required = args[1]
+        self.nextAttackingTurn = yesNo2Bool[args[2]]
+
+    def applyToState(self, state, unit=None, form=None):
+        buffToGo = self.effectiveBuff - self.applied
+        if self.applied > 0:
+            if self.effectDuration < (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+                form.extraBuffs[self.effect] -= self.applied
+                self.applied = 0
+        else:
+            if self.required > 1:
+                self.eventFactor = 1 - poisson.cdf(self.required - 1, state.numAttacksEvaded)
+            # If buff is a defensive one
+            elif self.effect in ["DEF", "Dmg Red", "Evasion"]:
+                pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
+                self.eventFactor = max(
+                    state.numAttacksReceived - (1 - pEvade) / pEvade
+                , 0) / state.numAttacksReceived
+            else:
+                self.eventFactor = min(state.numAttacksEvadedBeforeAttacking, 1)
+            # geometric cdf
+            turnBuff = self.effectiveBuff * self.eventFactor
+            cappedTurnBuff = min(buffToGo, turnBuff)
+            if not(self.nextAttackingTurn):
+                if self.effect in state.buff.keys():
+                    state.buff[self.effect] += cappedTurnBuff
+                else:
+                    match self.effect:
+                        case "DEF":
+                            state.p2Buff["DEF"] += cappedTurnBuff
+                        case "AdditionalSuper":
+                            state.aaPSuper.append(cappedTurnBuff)
+                            state.aaPGuarantee.append(0)
+                        case "AAChance":
+                            state.aaPGuarantee.append(cappedTurnBuff)
+                            state.aaPSuper.append(cappedTurnBuff * self.superChance)
+        if self.effectDuration >= (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+            if self.effect in ["AAChance", "AdditionalSuper"]:
+                #np.append(form.extraBuffs["aaPSuper"], state.aaPSuper[-1])
+                #np.append(form.extraBuffs["aaPGuarantee"], state.aaPGuarantee[-1])
+                #self.applied = np.array([state.aaPSuper[-1], state.aaPGuarantee[-1]])
+                h = 1
+            else:
+                nextTurnBuff = min(buffToGo, self.effectiveBuff)
+                form.extraBuffs[self.effect] += nextTurnBuff
+                self.applied += nextTurnBuff
+            self.turnsSinceActivated += 1
+        else:
+            self.turnsSinceActivated = 0
 
 
 class PerformingSuperAttackOffence(PassiveAbility):
