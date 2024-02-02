@@ -3,8 +3,6 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
-# -  Add in WT Goku's buffs after revive as a turn dependent buff
-# -  Currently assuming onyl one extraBuff for additional Super and AAChance
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
@@ -500,7 +498,7 @@ class Form:
         self.giantRageMode = giantRageMode
         self.linkNames = [""] * MAX_NUM_LINKS
         self.linkCommonality = 0
-        self.extraBuffs = dict(zip(EXTRA_BUFF_EFFECTS, np.zeros(len(EXTRA_BUFF_EFFECTS))))
+        self.carryOverBuffs = dict(zip(EXTRA_BUFF_EFFECTS, [CarryOverBuff(effect) for effect in EXTRA_BUFF_EFFECTS]))
         self.linkEffects = dict(zip(LINK_EFFECT_NAMES, np.zeros(len(LINK_EFFECT_NAMES))))
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.numAttacksEvaded = 0
@@ -1030,6 +1028,31 @@ class Form:
         return charge
 
 
+class CarryOverBuff:
+    def __init__(self, effect):
+        self.effect = effect
+        if effect in ADDITIONAL_ATTACK_PARAMETERS:
+            self.value = []
+        else:
+            self.value = 0
+    def get(self):
+        if self.effect in ADDITIONAL_ATTACK_PARAMETERS:
+            return copy.copy(self.value)
+        else:
+            return self.value
+    def add(self, value):
+        if self.effect in ADDITIONAL_ATTACK_PARAMETERS:
+            self.value.append(value)
+        else:
+            self.value += value
+    def sub(self, value):
+        if self.value != []:
+            if self.effect in ADDITIONAL_ATTACK_PARAMETERS:
+                self.value.remove(value)
+            else:
+                self.value -= value
+
+
 class Link:
     def __init__(self, name, commonality):
         self.name = name
@@ -1072,11 +1095,11 @@ class State:
         self.turn = turn
         # Dictionary for variables which have a 1-1 relationship with Buff EFFECTS
         self.buff = {
-            "Ki": LEADER_SKILL_KI + form.extraBuffs["Ki"],
+            "Ki": LEADER_SKILL_KI + form.carryOverBuffs["Ki"].get(),
             "AEAAT": 0,
             "Guard": 0,
             "Disable Guard": 0,
-            "Dmg Red against Normals": form.extraBuffs["Dmg Red"],
+            "Dmg Red against Normals": form.carryOverBuffs["Dmg Red"].get(),
             "Heal": 0,
             "Attacks Guaranteed to Hit": 0
         }
@@ -1088,7 +1111,7 @@ class State:
                 self.p1Buff[effect] = 0
             else:
                 self.p1Buff[effect] = ATK_DEF_SUPPORT
-            self.p2Buff[effect] = form.extraBuffs[effect]
+            self.p2Buff[effect] = form.carryOverBuffs[effect].get()
             self.p3Buff[effect] = 0
         self.p2Buff["ATK"] += form.linkEffects["On Super ATK"]
         self.multiChanceBuff = {}
@@ -1098,7 +1121,9 @@ class State:
                 inputEffect = "Evasion" if "Evasion" in effect else effect
                 self.multiChanceBuff[effect].updateChance("HiPo", unit.pHiPo[inputEffect], effect, self)
                 self.multiChanceBuff[effect].updateChance("Links", form.linkEffects[inputEffect], effect, self)
-                self.multiChanceBuff[effect].updateChance("On Super", form.extraBuffs[inputEffect], effect, self)
+                self.multiChanceBuff[effect].updateChance("On Super", form.carryOverBuffs[inputEffect].get(), effect, self)
+        self.aaPSuper = form.carryOverBuffs["aaPSuper"].get()
+        self.aaPGuarantee = form.carryOverBuffs["aaPGuarantee"].get()
         self.kiPerOtherTypeOrb = 1
         self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB
         self.kiPerRainbowKiSphere = 1  # Ki per orb
@@ -1107,10 +1132,8 @@ class State:
         self.numSameTypeOrbs = orbChangeConversion["No Orb Change"]["Same"]
         self.p2DefB = 0
         self.support = 0  # Support score
-        self.aaPSuper = []  # Probabilities of doing additional super attacks and guaranteed additionals
-        self.aaPGuarantee = []
-        self.dmgRedA = form.extraBuffs["Dmg Red"]
-        self.dmgRedB = form.extraBuffs["Dmg Red"]
+        self.dmgRedA = form.carryOverBuffs["Dmg Red"].get()
+        self.dmgRedB = form.carryOverBuffs["Dmg Red"].get()
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
         # Required for getting APTs for individual attacks
@@ -1138,7 +1161,7 @@ class State:
             unit.DEF,
             self.p1Buff["DEF"],
             form.linkEffects["DEF"],
-            form.extraBuffs["DEF"],
+            form.carryOverBuffs["DEF"].get(),
             self.p3Buff["DEF"],
             self.stackedStats["DEF"],
         )
@@ -1188,6 +1211,7 @@ class State:
                 * form.superAttacks[superAttackType].effects["Disable Action"].buff,
                 "Nullify",
             )
+        self.buff["Guard"] = min(self.buff["Guard"], 1)
         self.avgDefPreSuper = getDefStat(
             unit.DEF,
             self.p1Buff["DEF"],
@@ -1829,7 +1853,7 @@ class PerTurn(PerEvent):
         turnBuff = self.effectiveBuff
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        form.extraBuffs[self.effect] += cappedTurnBuff
+        form.carryOverBuffs[self.effect].add(cappedTurnBuff)
         match self.effect:
             case "Ki":
                 state.buff["Ki"] += cappedTurnBuff
@@ -1881,7 +1905,7 @@ class PerAttackPerformed(PerEvent):
             case "Evasion":
                 state.multiChanceBuff["EvasionB"].updateChance("On Super", cappedTurnBuff, self.effect, state)
         if not (self.withinTheSameTurn):
-            form.extraBuffs[self.effect] += cappedTurnBuff
+            form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
 
 
@@ -1893,7 +1917,7 @@ class PerAttackReceived(PerEvent):
         turnBuff = self.effectiveBuff * state.numAttacksReceived
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        form.extraBuffs[self.effect] += cappedTurnBuff
+        form.carryOverBuffs[self.effect].add(cappedTurnBuff)
         match self.effect:
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
@@ -1915,7 +1939,7 @@ class PerAttackGuarded(PerEvent):
         turnBuff = self.effectiveBuff * state.numAttacksReceived * state.buff["Guard"]
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        form.extraBuffs[self.effect] += cappedTurnBuff
+        form.carryOverBuffs[self.effect].add(cappedTurnBuff)
         match self.effect:
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
@@ -1966,7 +1990,7 @@ class PerAttackEvaded(PerEvent):
                 state.multiChanceBuff["EvasionB"].updateChance("On Super", min(np.mean(evasionBChance), buffToGo), "Evasion", state)
                 cappedTurnBuff = min(buffToGo, self.effectiveBuff * state.numAttacksEvaded)
         if not (self.withinTheSameTurn):
-            form.extraBuffs[self.effect] += cappedTurnBuff
+            form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
 
 
@@ -1975,13 +1999,27 @@ class AfterEvent(PassiveAbility):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.effectDuration = effectDuration
         self.turnsSinceActivated = 0
-        self.applied = 0
+        if effect in ADDITIONAL_ATTACK_EFFECTS:
+            self.applied = [0, 0]
+        else:
+            self.applied = 0
         self.eventFactor = 1
+    
+    def updateBuffToGo(self):
+        if self.effect in ADDITIONAL_ATTACK_EFFECTS:
+            self.buffToGo = 1.0
+        else:
+            self.buffToGo = self.effectiveBuff - self.applied
 
     def resetAppliedBuffs(self, form, state):
         if self.effectDuration < (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
-            form.extraBuffs[self.effect] -= self.applied
-            self.applied = 0
+            if self.effect in ADDITIONAL_ATTACK_EFFECTS:
+                form.carryOverBuffs["aaPSuper"].sub(self.applied[0])
+                form.carryOverBuffs["aaPGuarantee"].sub(self.applied[1])
+                self.applied = [0, 0]
+            else:
+                form.carryOverBuffs[self.effect].sub(self.applied)
+                self.applied = 0
     
     def setTurnBuff(self, state):
         # geometric cdf
@@ -2004,15 +2042,14 @@ class AfterEvent(PassiveAbility):
 
     def nextTurnUpdate(self, form, state):
         # If abiltiy going to be active next turn
-        if self.effectDuration >= (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
-            if self.effect in ["AAChance", "AdditionalSuper"]:
-                #np.append(form.extraBuffs["aaPSuper"], state.aaPSuper[-1])
-                #np.append(form.extraBuffs["aaPGuarantee"], state.aaPGuarantee[-1])
-                #self.applied = np.array([state.aaPSuper[-1], state.aaPGuarantee[-1]])
-                h = 1
+        if self.effectDuration >= (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1] and not(np.any(self.applied)):
+            if self.effect in ADDITIONAL_ATTACK_EFFECTS:
+                form.carryOverBuffs["aaPSuper"].add(state.aaPSuper[-1])
+                form.carryOverBuffs["aaPGuarantee"].add(state.aaPGuarantee[-1])
+                self.applied = [state.aaPSuper[-1], state.aaPGuarantee[-1]]
             else:
                 nextTurnBuff = min(self.buffToGo, self.effectiveBuff)
-                form.extraBuffs[self.effect] += nextTurnBuff
+                form.carryOverBuffs[self.effect].add(nextTurnBuff)
                 self.applied += nextTurnBuff
             self.turnsSinceActivated += 1
         else:
@@ -2024,9 +2061,9 @@ class AfterAttackReceived(AfterEvent):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
 
     def applyToState(self, state, unit=None, form=None):
-        self.buffToGo = self.effectiveBuff - self.applied
+        self.updateBuffToGo()
         # Check if ability will be active next turn
-        if self.applied > 0:
+        if np.any(self.applied):
             self.resetAppliedBuffs(form, state)
         # If abiltiy not already active
         else:
@@ -2046,8 +2083,8 @@ class AfterGuardActivated(AfterEvent):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
 
     def applyToState(self, state, unit=None, form=None):
-        self.buffToGo = self.effectiveBuff - self.applied
-        if self.applied > 0:
+        self.updateBuffToGo()
+        if np.any(self.applied):
             self.resetAppliedBuffs(form, state)
         else:
             # If buff is a defensive one
@@ -2068,8 +2105,8 @@ class AfterAttackEvaded(AfterEvent):
         self.nextAttackingTurn = yesNo2Bool[args[2]]
 
     def applyToState(self, state, unit=None, form=None):
-        self.buffToGo = self.effectiveBuff - self.applied
-        if self.applied > 0:
+        self.updateBuffToGo()
+        if np.any(self.applied):
             self.resetAppliedBuffs(form, state)
         else:
             if self.required > 1:
@@ -2165,7 +2202,7 @@ class KiSphereDependent(PerEvent):
                 case "P2 DEF":
                     state.p2Buff["DEF"] += buffFromOrbs
         if not (yesNo2Bool[self.withinTheSameTurn]):
-            form.extraBuffs[self.effect] += buffFromOrbs
+            form.carryOverBuffs[self.effect].add(buffFromOrbs)
             self.applied += buffFromOrbs
 
 
