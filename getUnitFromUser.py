@@ -273,6 +273,12 @@ class Unit:
             "How many turns does the unit's giant/rage mode last for?",
             default=0.0,
         )
+        self.giantRageActivationForm = -1
+        if self.giantRageDuration != 0:
+            self.giantRageActivationForm = self.inputHelper.getAndSaveUserInput(
+            "What # form can turn giant/rage mode?",
+            default=1,
+        )
 
     def getHiPo(self):
         HiPoStats = hiddenPotentalStatsConverter[self._type][:, self.nCopies - 1]
@@ -408,7 +414,7 @@ class Unit:
                 if turn != 1:
                     form.transformed = True
                 self.inputHelper.parent = self.inputHelper.getChildElement(self.formsElement, f"form_{formIdx}")
-                form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms, self.giantRageDuration)
+                form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms, self.giantRageActivationForm)
                 self.forms.append(form)
             elif self.nextForm == -1:
                 form = self.forms[-2]
@@ -489,14 +495,14 @@ class Unit:
 
 
 class Form:
-    def __init__(self, inputHelper, initialTurn, rarity, eza, formIdx, numForms, giantRageDuration=0, giantRageMode=False):
+    def __init__(self, inputHelper, initialTurn, rarity, eza, formIdx, numForms, giantRageActivationForm=-1, giantRageMode=False):
         self.formElement = inputHelper.parent
         self.inputHelper = inputHelper
         self.initialTurn = initialTurn
         self.rarity = rarity
         self.EZA = eza
         self.formIdx = formIdx
-        self.giantRageDuration = giantRageDuration
+        self.giantRageActivationForm = giantRageActivationForm
         self.giantRageMode = giantRageMode
         self.linkNames = [""] * MAX_NUM_LINKS
         self.linkCommonality = 0
@@ -679,7 +685,7 @@ class Form:
                 PerformingSuperAttackOffence,
             )
         )
-        if self.giantRageDuration > 0:
+        if self.giantRageActivationForm == self.formIdx:
             self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "giant_rage_mode")
             giantRageModeATK = self.inputHelper.getAndSaveUserInput("What is the giant/rage mode attack stat?", default=60000)
             self.abilities["Active / Finish Attacks"].append(GiantRageMode(self, [giantRageModeATK]))
@@ -2412,4 +2418,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(45, "DF_TEQ_GT_Pan", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(46, "DF_AGL_Transforming_Cell", 1, "DEF", "DGE", "ADD", SLOT_1)
