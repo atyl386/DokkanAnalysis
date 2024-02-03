@@ -1,7 +1,7 @@
 <inputTree>
 	<constants>
 		<input prompt="What is the unit's exclusivity?" response="DF" />
-		<input prompt="What is the unit's name?" response="Super Saiyan God SS Goku" />
+		<input prompt="What is the unit's name?" response="Super Saiyan God SS Goku/Super Saiyan God SS Vegeta" />
 		<input prompt="What is the unit's class?" response="S" />
 		<input prompt="What is the unit's type?" response="INT" />
 		<input prompt="Has the unit EZA'd?" response="N" />
@@ -120,6 +120,9 @@
 			<attacks_received_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks received?" response="0" />
 			</attacks_received_threshold>
+			<attacks_guarded_threshold>
+				<input prompt="How many different buffs does the form get after multiple attacks guarded?" response="0" />
+			</attacks_guarded_threshold>
 			<attacks_performed_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks performed?" response="0" />
 			</attacks_performed_threshold>
@@ -310,6 +313,9 @@
 			<attacks_received_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks received?" response="0" />
 			</attacks_received_threshold>
+			<attacks_guarded_threshold>
+				<input prompt="How many different buffs does the form get after multiple attacks guarded?" response="0" />
+			</attacks_guarded_threshold>
 			<attacks_performed_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks performed?" response="0" />
 			</attacks_performed_threshold>

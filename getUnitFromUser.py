@@ -441,6 +441,7 @@ class Unit:
                     stateIdx -= 1
             else:
                 form.numAttacksReceived += state.numAttacksReceived
+                form.numAttacksGuarded += state.numAttacksReceived * state.buff["Guard"]
                 form.numAttacksEvaded += state.numAttacksEvaded
                 self.nextForm = form.checkCondition(
                     form.formChangeCondition,
@@ -501,6 +502,7 @@ class Form:
         self.carryOverBuffs = dict(zip(EXTRA_BUFF_EFFECTS, [CarryOverBuff(effect) for effect in EXTRA_BUFF_EFFECTS]))
         self.linkEffects = dict(zip(LINK_EFFECT_NAMES, np.zeros(len(LINK_EFFECT_NAMES))))
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
+        self.numAttacksGuarded = 0
         self.numAttacksEvaded = 0
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
@@ -609,6 +611,17 @@ class Form:
                 "How many different buffs does the form get after multiple attacks received?",
                 AttackReceivedThreshold,
                 ["How many attacks need to be received?"],
+                [None],
+                [5],
+            )
+        )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "attacks_guarded_threshold")
+        self.abilities["Start of Turn"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after multiple attacks guarded?",
+                AttackGuardedThreshold,
+                ["How many attacks need to be guarded?"],
                 [None],
                 [5],
             )
@@ -1822,6 +1835,29 @@ class AttackReceivedThreshold(PassiveAbility):
                     state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1]
 
 
+class AttackGuardedThreshold(PassiveAbility):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
+        self.threshold = args[0]
+
+    def applyToState(self, state, unit=None, form=None):
+        if form.numAttacksGuarded >= self.threshold:
+            match self.effect:
+                case "Ki":
+                    state.buff["Ki"] += self.effectiveBuff
+                case "ATK":
+                    state.p2Buff["ATK"] += self.effectiveBuff
+                case "DEF":
+                    state.p2Buff["DEF"] += self.effectiveBuff
+                case "AdditionalSuper":
+                    state.aaPSuper.append(self.effectiveBuff)
+                    state.aaPGuarantee.append(0)
+                case "Scouter":
+                    state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1]
+                case "Guard":
+                    state.buff["Guard"] += self.effectiveBuff
+
+
 class AttackPerformedThreshold(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
@@ -2345,4 +2381,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(38, "DF_INT_RoF_Blues", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(39, "DF_STR_Goku_Gohan", 1, "DEF", "DGE", "ADD", SLOT_1)

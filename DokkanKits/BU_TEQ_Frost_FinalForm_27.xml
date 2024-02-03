@@ -219,6 +219,9 @@
 			<attacks_received_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks received?" response="0" />
 			</attacks_received_threshold>
+			<attacks_guarded_threshold>
+				<input prompt="How many different buffs does the form get after multiple attacks guarded?" response="0" />
+			</attacks_guarded_threshold>
 			<attacks_performed_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks performed?" response="0" />
 			</attacks_performed_threshold>
