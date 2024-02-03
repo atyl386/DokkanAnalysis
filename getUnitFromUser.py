@@ -3,6 +3,7 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
+# - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing
 # - Make it ask if links have changed for a new form.
@@ -2223,6 +2224,9 @@ class KiSphereDependent(PerEvent):
             state.multiChanceBuff[self.effect].updateChance("Start of Turn", buffFromOrbs, self.effect, state)
         else:
             match self.effect:
+                case "Evasion":
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", buffFromOrbs, "Evasion", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", buffFromOrbs, "Evasion", state)
                 case "Dmg Red":
                     state.dmgRedA += buffFromOrbs
                     state.dmgRedB += buffFromOrbs
@@ -2381,4 +2385,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(40, "DF_STR_Kid_Buu", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(41, "DF_TEQ_Fat_Janemba", 1, "DEF", "DGE", "ADD", SLOT_1)
