@@ -289,6 +289,14 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_1,
     },
+    37: {
+        "Common Name": "DFLR_TEQ_Orange_Piccolo",
+        "# Copies": 1,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+        "Slots": SLOT_1,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
