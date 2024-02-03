@@ -105,12 +105,12 @@ def getCondition(inputHelper):
             case "Min HP":
                 minHpCondition = inputHelper.getAndSaveUserInput("What is the minimum HP condition?", default=0.7)
                 condition[i] = MinHpCondition(minHpCondition)
-            case "Enemy Max HP":
+            case "Max Enemy HP":
                 enemyMaxHpCondition = inputHelper.getAndSaveUserInput(
                     "What is the maximum enemy HP condition?", default=0.5
                 )
                 condition[i] = EnemyMaxHpCondition(enemyMaxHpCondition)
-            case "Enemy Min HP":
+            case "Min Enemy HP":
                 enemyMinHpCondition = inputHelper.getAndSaveUserInput(
                     "What is the minimum enemy HP condition?", default=0.5
                 )
@@ -2418,4 +2418,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(47, "DF_PHY_SS2_Goku", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(48, "DF_AGL_Paikuhan_", 1, "DEF", "DGE", "ADD", SLOT_1)
