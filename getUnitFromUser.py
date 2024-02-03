@@ -2418,4 +2418,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(46, "DF_AGL_Transforming_Cell", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(47, "DF_PHY_SS2_Goku", 1, "DEF", "DGE", "ADD", SLOT_1)
