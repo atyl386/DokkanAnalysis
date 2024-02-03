@@ -361,6 +361,14 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_1,
     },
+    46: {
+        "Common Name": "DF_AGL_Transforming_Cell",
+        "# Copies": 1,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+        "Slots": SLOT_2,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
