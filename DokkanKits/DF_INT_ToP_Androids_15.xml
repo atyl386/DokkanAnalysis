@@ -27,15 +27,15 @@
 			<links>
 				<link_1>
 					<input prompt="What is the form's link # 1" response="Android Assault" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="0.33333333333333" />
 				</link_1>
 				<link_2>
 					<input prompt="What is the form's link # 2" response="Twin Terrors" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="0.33333333333333" />
 				</link_2>
 				<link_3>
 					<input prompt="What is the form's link # 3" response="Infinite Energy" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="0.333333333333333" />
 				</link_3>
 				<link_4>
 					<input prompt="What is the form's link # 4" response="Shocking Speed" />
