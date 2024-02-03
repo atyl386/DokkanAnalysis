@@ -1753,6 +1753,8 @@ class Buff(PassiveAbility):
                         state.dmgRedA += effectiveBuff
                         state.dmgRedB += effectiveBuff
                         state.buff["Dmg Red against Normals"] += effectiveBuff
+                    case "Dmg Red A":
+                        state.dmgRedA += effectiveBuff
                     case "Dmg Red B":
                         state.dmgRedB += effectiveBuff
                     case "Evasion":
@@ -2410,4 +2412,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(44, "DFLR_PHY_Beast_Gohan", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(45, "DF_TEQ_GT_Pan", 1, "DEF", "DGE", "ADD", SLOT_1)
