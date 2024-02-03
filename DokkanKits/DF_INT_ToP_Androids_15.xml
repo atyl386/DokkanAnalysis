@@ -234,7 +234,7 @@
 				<input prompt="How many active skill attacks does the form have?" response="0" />
 			</active_skill_attack>
 			<standby_finish_attack>
-				<input prompt="How many Non-Revival Counterattack Standby Finish Skills does the form have?" response="0" />
+				<input prompt="How many Non-Counterattack Standby Finish Skills does the form have?" response="0" />
 			</standby_finish_attack>
 			<defensive_on_super>
 				<input prompt="How many different defensive buffs does the form get when performing a super attack / attacking?" response="2" />
@@ -368,6 +368,9 @@
 			<revival_counter>
 				<input prompt="How many Revival Counterattack Finish Skills does the form have?" response="0" />
 			</revival_counter>
+			<sa_counter>
+				<input prompt="How many Super Attack Counterattack Finish Skills does the form have?" response="0" />
+			</sa_counter>
 			<form_1_change_condition>
 				<input prompt="How many conditions have to be met?" response="-1" />
 				<input prompt="How many turns does the effect last for?" response="1" />

@@ -424,10 +424,10 @@ class Unit:
             if self.transformationTriggered:
                 # If the trigger condition for the finish is a revive, apply APT this turn, otherwise next.
                 try:
-                    hasReviveCounter = form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "Revive"
+                    hasFinishCounter = form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "Revive" or form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "SA Counter"
                 except:
-                    hasReviveCounter = False
-                if hasReviveCounter:
+                    hasFinishCounter = False
+                if hasFinishCounter:
                     applyTransformationAttackAPT = True
                     self.nextForm = -1
                 if applyTransformationAttackAPT:
@@ -702,7 +702,7 @@ class Form:
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
-                "How many Non-Revival Counterattack Standby Finish Skills does the form have?",
+                "How many Non-Counterattack Standby Finish Skills does the form have?",
                 StandbyFinishSkill,
                 [
                     "What is the type of the Finish Effect condition?",
@@ -877,6 +877,23 @@ class Form:
                 ["Super-Ultimate", 1.0],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "sa_counter")
+        self.abilities["Attack Enemy"].extend(
+            abilityQuestionaire(
+                self,
+                "How many Super Attack Counterattack Finish Skills does the form have?",
+                SACounterFinishSkill,
+                [
+                    "What is the attack multiplier?",
+                    "What is the attack buff when finish is activated?",
+                ],
+                [
+                    clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
+                    None,
+                ],
+                ["Super-Intense", 1.0],
+            )
+        )
         ################################################ Turn End #####################################################
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, f"form_{self.formIdx}_change_condition")
         self.formChangeCondition = getCondition(self.inputHelper)
@@ -1039,6 +1056,8 @@ class Form:
                     next(ability for ability in self.abilities["Attack Enemy"] if isinstance(ability, Revive)).activated
                     == True
                 )
+            case "SA Counter":
+                charge = len([ability for ability in self.abilities["Start of Turn"] if ability.effect == "Scouter"])
         return charge
 
 
@@ -1649,6 +1668,12 @@ class StandbyFinishSkill(SingleTurnAbility):
 class RevivalCounterFinishSkill(StandbyFinishSkill):
     def __init__(self, form, args):
         args = ["Revive"] + args + [0]
+        super().__init__(form, args)
+
+
+class SACounterFinishSkill(StandbyFinishSkill):
+    def __init__(self, form, args):
+        args = ["SA Counter"] + args + [0]
         super().__init__(form, args)
 
 
@@ -2385,4 +2410,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(41, "DF_TEQ_Fat_Janemba", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(42, "DF_STR_SS3_Goku", 1, "DEF", "DGE", "ADD", SLOT_1)
