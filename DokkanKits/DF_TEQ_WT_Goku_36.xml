@@ -295,8 +295,8 @@
 					<input prompt="What is the maximum HP condition?" response="0.59" />
 				</condition_1>
 				<condition_2>
-					<input prompt="What type of condition is # 2?" response="Turn" />
-					<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="6" />
+					<input prompt="What type of condition is # 2?" response="TransformationTurn" />
+					<input prompt="What is the transformation turn condition (relative to the form's starting turn)?" response="6" />
 				</condition_2>
 			</form_1_change_condition>
 		</form_1>
