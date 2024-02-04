@@ -1929,7 +1929,7 @@ class AttackPerformedThreshold(PassiveAbility):
         self.threshold, self.requiresSuperAttack = args
 
     def applyToState(self, state, unit=None, form=None):
-        if self.requiresSuperAttack:
+        if yesNo2Bool[self.requiresSuperAttack]:
             numPerformed = form.superAttacksPerformed
         else:
             numPerformed = form.attacksPerformed
@@ -2471,4 +2471,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(58, "DFLR_TEQ_SS_Gods", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(59, "DFLR_STR_FF_Cooler", 1, "DEF", "DGE", "ADD", SLOT_1)

@@ -189,8 +189,8 @@ def branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo):
         i += 1  # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
         # Add damage if don't get any additional attacks
-        tempAA0 = branchAS(i, nAA, pAA, nProcs, pSA, pG, pHiPo)
-        tempAA1 = branchAS(i, nAA, pAA + pHiPo * (1 - pHiPo) ** nProcs, nProcs + 1, pSA, pG, pHiPo)
+        tempAA0 = branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo)
+        tempAA1 = branchAA(i, nAA, pAA + pHiPo * (1 - pHiPo) ** nProcs, nProcs + 1, pSA, pG, pHiPo)
         return pSA[i] * (1 + tempAA1) + (1 - pSA[i]) * (pG[i] * (1 + tempAA1) + (1 - pG[i]) * tempAA0)
 
 
