@@ -338,7 +338,7 @@
 				</ability_1>
 			</turn_dpendent>
 			<slot_dependent>
-				<input prompt="How many slot specific buffs does the form have?" response="6" />
+				<input prompt="How many slot specific buffs does the form have?" response="7" />
 				<ability_1>
 					<input prompt="Which slot is required?" response="[1, 2]" />
 					<input prompt="What type of buff does the unit get?" response="Ki" />
@@ -377,12 +377,12 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_6>
-				<ability_6>
+				<ability_7>
 					<input prompt="Which slot is required?" response="[3]" />
 					<input prompt="What type of buff does the unit get?" response="EvasionB" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.7" />
-				</ability_6>
+				</ability_7>
 			</slot_dependent>
 			<health_dependent>
 				<input prompt="How many health threshold buffs does the form have?" response="0" />
