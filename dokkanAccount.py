@@ -425,6 +425,14 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": [2, 2, 1, 2, 2, 2, 2, 2, 2, 2],
     },
+    54: {
+        "Common Name": "DF_PHY_DBS_Broly",
+        "# Copies": 5,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_2,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
