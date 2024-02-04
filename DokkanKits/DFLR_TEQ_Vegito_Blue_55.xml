@@ -432,8 +432,8 @@
 					</condition_2>
 				</ability_2>
 				<ability_3>
-					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
-					<input prompt="What is the value of the buff?" response="0.3" />
+					<input prompt="What type of buff does the unit get?" response="Evasion" />
+					<input prompt="What is the value of the buff?" response="0.7" />
 					<input prompt="How many turns does it last?" response="1" />
 					<input prompt="How many times can it be activated?" response="1" />
 					<input prompt="How many conditions have to be met?" response="2" />

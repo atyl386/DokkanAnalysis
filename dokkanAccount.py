@@ -439,7 +439,7 @@ User = {
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 3, 3, 3, 3, 3, 3],
+        "Slots": [3, 1, 3, 1, 3, 3, 3, 3],
     },
 
 }
