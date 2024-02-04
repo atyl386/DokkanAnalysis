@@ -409,6 +409,14 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_2,
     },
+    52: {
+        "Common Name": "LR_INT_Turles_Goku",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_2,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
