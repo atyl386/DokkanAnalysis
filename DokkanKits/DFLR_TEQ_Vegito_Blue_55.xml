@@ -354,8 +354,9 @@
 				<ability_3>
 					<input prompt="Which slot is required?" response="[1, 2]" />
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.3" />
+					<input prompt="What is the probability this ability activates?" response="0.3" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
 				</ability_3>
 				<ability_4>
 					<input prompt="Which slot is required?" response="[3]" />
