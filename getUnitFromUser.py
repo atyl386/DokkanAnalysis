@@ -790,11 +790,19 @@ class Form:
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
-                "How many different buffs does the form get after evading attacks?",
+                "How many different buffs does the form get after evading an attack?",
                 AfterAttackEvaded,
                 ["How many turns does the buff last?", "How many evasions are required?", "Does the buff start from the next attacking turn?"],
                 [None, None, clc.Choice(YES_NO)],
                 [1, 1, "N"],
+            )
+        )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "until_recieve_attack")
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get until recieving an attack?",
+                UntilAttackRecieved,
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_received")
@@ -2216,6 +2224,36 @@ class AfterAttackEvaded(AfterEvent):
         self.nextTurnUpdate(form, state)
 
 
+class UntilEvent(PassiveAbility):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
+        self.eventFactor = 1
+    
+    def setTurnBuff(self, state):
+        # geometric cdf
+        turnBuff = self.effectiveBuff * self.eventFactor
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += turnBuff
+        else:
+            match self.effect:
+                case "Evasion":
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", turnBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", turnBuff, "Evasion", state)
+
+
+class UntilAttackRecieved(UntilEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
+
+    def applyToState(self, state, unit=None, form=None):
+        if self.effect == "Evasion":
+            pEvade = (state.multiChanceBuff["EvasionA"].prob + self.effectiveBuff) * (1 - DODGE_CANCEL_FACTOR)
+            self.eventFactor = min(pEvade / (1 - pEvade) / round(NUM_ATTACKS_DIRECTED[state.slot - 1]), 1)
+        else:
+            raise Exception
+        self.setTurnBuff(state)
+
+
 class PerformingSuperAttackOffence(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
@@ -2430,4 +2468,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(49, "LR_PHY_Broly_Trio", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(50, "LR_STR_UI_Goku", 1, "DEF", "DGE", "ADD", SLOT_1)
