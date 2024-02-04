@@ -401,9 +401,8 @@
 					<input prompt="Does the buff only apply within that turn?" response="Y" />
 					<input prompt="What is the maximum buff?" response="99.0" />
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
-					<input prompt="What is the probability this ability activates?" response="0.5" />
-					<input prompt="Is the status of this ability known beforehand?" response="N" />
-					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
 				</ability_2>
 			</ki_sphere_dependent>
 			<ki_dependent>

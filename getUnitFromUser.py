@@ -3,6 +3,7 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
+# - Update multichance buffs so if self.activationProbability is not 1, then don't add to existing phase.
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing
@@ -1128,6 +1129,43 @@ class SuperAttackEffectParams:
         self.duration += duration * superFrac
 
 
+class OrbCollect:
+    def __init__(self, orbType):
+        self.orbType = orbType
+        self.prob = [1]
+        self.num = [orbChangeConversion["No Orb Change"][orbType]]
+        self.expected = copy.copy(self.num)
+    
+    def getNumOrbs(self):
+        return sum(self.expected)
+
+
+class OrbCollection:
+    def __init__(self):
+        self.orbCollects = dict(zip(ORB_TYPES, [OrbCollect(orbType) for orbType in ORB_TYPES]))
+        self.kiPerOrb = dict(zip(ORB_TYPES, [1, KI_PER_SAME_TYPE_ORB, 1]))
+    
+    def getNumCategoryOrbs(self, orbCategory):
+        return [sum([self.orbCollects[orbType].expected[i] for orbType in orbRequirement2TypeConversion[orbCategory]]) for i in range(len(self.orbCollects["Same"].prob))]
+
+    def getCollectKi(self):
+        return sum([self.kiPerOrb[orbType] * self.orbCollects[orbType].getNumOrbs() for orbType in ORB_TYPES])
+    
+    def addOrbChange(self, orbChange, prob):
+        for orbType in ORB_TYPES:
+            numOrbs = orbChangeConversion[orbChange][orbType]
+            if prob == 1:
+                self.orbCollects[orbType].prob = [1]
+                self.orbCollects[orbType].num = [numOrbs]
+                self.orbCollects[orbType].expected = [numOrbs]
+            else:
+                self.orbCollects[orbType].prob = [p * (1 - prob) for p in self.orbCollects[orbType].prob] # Renormalise
+                self.orbCollects[orbType].prob.append(prob)
+                assert sum(self.orbCollects[orbType].prob) == 1
+                self.orbCollects[orbType].num.append(numOrbs)
+                self.orbCollects[orbType].expected = np.multiply(self.orbCollects[orbType].prob, self.orbCollects[orbType].num)
+
+
 class State:
     def __init__(self, unit, form, slot, turn):
         self.slot = slot  # Slot no.
@@ -1163,12 +1201,7 @@ class State:
                 self.multiChanceBuff[effect].updateChance("On Super", form.carryOverBuffs[inputEffect].get(), effect, self)
         self.aaPSuper = form.carryOverBuffs["aaPSuper"].get()
         self.aaPGuarantee = form.carryOverBuffs["aaPGuarantee"].get()
-        self.kiPerOtherTypeOrb = 1
-        self.kiPerSameTypeOrb = KI_PER_SAME_TYPE_ORB
-        self.kiPerRainbowKiSphere = 1  # Ki per orb
-        self.numRainbowOrbs = orbChangeConversion["No Orb Change"]["Rainbow"]
-        self.numOtherTypeOrbs = orbChangeConversion["No Orb Change"]["Other"]
-        self.numSameTypeOrbs = orbChangeConversion["No Orb Change"]["Same"]
+        self.orbCollection = OrbCollection()
         self.p2DefB = 0
         self.support = 0  # Support score
         self.dmgRedA = form.carryOverBuffs["Dmg Red"].get()
@@ -1401,7 +1434,7 @@ class State:
             + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA
             + (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1])
             * avgDefStartOfTurn
-            * self.numSameTypeOrbs
+            * self.orbCollection.orbCollects["Same"].getNumOrbs()
             / AVG_HEALTH
         )
         self.normalDamageTaken = (
@@ -1495,9 +1528,7 @@ class State:
     def getRandomKi(self, form):
         return (
             (0 if form.giantRageMode else KI_SUPPORT)
-            + self.kiPerOtherTypeOrb * self.numOtherTypeOrbs
-            + self.kiPerSameTypeOrb * self.numSameTypeOrbs
-            + self.kiPerOtherTypeOrb * self.numRainbowOrbs
+            + self.orbCollection.getCollectKi()
             + form.linkEffects["Ki"]
         )
 
@@ -1738,15 +1769,7 @@ class Buff(PassiveAbility):
                 state.support += supportFactorConversion[self.effect] * supportBuff
             elif self.effect in ORB_CHANGING_EFFECTS:
                 state.support += supportFactorConversion[self.effect] * supportBuff
-                state.numOtherTypeOrbs = orbChangeConversion[self.effect][
-                    "Other"
-                ] * activationProbability + state.numOtherTypeOrbs * (1 - activationProbability)
-                state.numSameTypeOrbs = orbChangeConversion[self.effect][
-                    "Same"
-                ] * activationProbability + state.numSameTypeOrbs * (1 - activationProbability)
-                state.numRainbowOrbs = orbChangeConversion[self.effect][
-                    "Rainbow"
-                ] * activationProbability + state.numRainbowOrbs * (1 - activationProbability)
+                state.orbCollection.addOrbChange(self.effect, activationProbability)
             elif self.effect in state.buff.keys():
                 state.buff[self.effect] += effectiveBuff
             elif self.effect in state.p1Buff.keys():
@@ -1773,16 +1796,16 @@ class Buff(PassiveAbility):
                         state.aaPGuarantee.append(activationProbability)
                         state.aaPSuper.append(activationProbability * self.superChance)
                     case "Ki (Type Ki Sphere)":
-                        state.kiPerOtherTypeOrb += effectiveBuff
-                        state.kiPerSameTypeOrb += effectiveBuff
+                        state.orbCollection.kiPerOrb["Other"] += effectiveBuff
+                        state.orbCollection.kiPerOrb["Same"] += effectiveBuff
                     case "Ki (Ki Sphere)":
-                        state.kiPerOtherTypeOrb += effectiveBuff
-                        state.kiPerSameTypeOrb += effectiveBuff
-                        state.kiPerRainbowKiSphere += effectiveBuff
+                        state.orbCollection.kiPerOrb["Other"] += effectiveBuff
+                        state.orbCollection.kiPerOrb["Same"] += effectiveBuff
+                        state.orbCollection.kiPerOrb["Rainbow"] += effectiveBuff
                     case "Ki (Same Type Ki Sphere)":
-                        state.kiPerSameTypeOrb += effectiveBuff
+                        state.orbCollection.kiPerOrb["Same"] += effectiveBuff
                     case "Ki (Rainbow Ki Sphere)":
-                        state.kiPerRainbowKiSphere += effectiveBuff
+                        state.orbCollection.kiPerOrb["Rainbow"] += effectiveBuff
                     case "P2 ATK":
                         state.p2Buff["ATK"] += effectiveBuff
                     case "P2 DEF":
@@ -2229,21 +2252,10 @@ class KiSphereDependent(PerEvent):
         super().__init__(form, activationProbability, knownApriori, effect, buff, max)
         
     def applyToState(self, state, unit=None, form=None):
-        match self.orbType:
-            case "Any":
-                numOrbs = state.numSameTypeOrbs + state.numOtherTypeOrbs + state.numRainbowOrbs
-            case "Type":
-                numOrbs = state.numSameTypeOrbs + state.numOtherTypeOrbs
-            case "Rainbow":
-                numOrbs = state.numRainbowOrbs
-            case "Same Type":
-                numOrbs = state.numSameTypeOrbs
-            case "Other Type":
-                numOrbs = state.numOtherTypeOrbs
-        if self.required == 0:  # If buff per orb
-            effectFactor = numOrbs
-        else:  # If fixed buff if obtain X orbs
-            effectFactor = 1 - poisson.cdf(self.required - 1, numOrbs)
+        if self.required == 0: # If buff per orb
+            effectFactor = sum(state.orbCollection.getNumCategoryOrbs(self.orbType))
+        else: # If fixed buff if obtain X orbs
+            effectFactor = 1 - np.prod([poisson.cdf(self.required - 1, state.orbCollection.getNumCategoryOrbs(self.orbType))])  
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, self.effectiveBuff)
         buffFromOrbs = cappedTurnBuff * effectFactor

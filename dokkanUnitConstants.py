@@ -560,6 +560,7 @@ REVIVE_ROTATION_SUPPORT_BUFF = 1  # Revive whole rotation
 ORB_REQUIREMENTS = ["Any", "Type", "Rainbow", "Same Type", "Other Type"]
 ORB_CHANGING_TYPES = ["No Orb Change"] + ORB_CHANGING_EFFECTS
 ORB_TYPES = ["Other", "Same", "Rainbow"]
+ORB_REQUIREMENT_TYPES = [ORB_TYPES, ["Other", "Same"], ["Rainbow"], ["Same"], ["Other"]]
 # All orb counds are averaged across all slots in the turn
 ORB_COUNTS_NO_ORB_CHANGING = [1.75, 1.75, 1] # From DokkanAverageKi.xlsx
 ORB_COUNTS_TYPE_ORB_CHANGING = [0.5, 5.25, 1.5] # From DokkanAverageKi.xlsx
@@ -680,6 +681,7 @@ supportFactorConversion = dict(zip(SUPPORT_EFFECTS, SUPPORT_FACTORS))
 superAttackSupportFactorConversion = dict(zip(SUPPORT_SUPER_ATTACK_EFFECTS, SUPER_ATTACK_SUPPORT_FACTORS))
 
 # Orb Changing
+orbRequirement2TypeConversion = dict(zip(ORB_REQUIREMENTS, ORB_REQUIREMENT_TYPES))
 orbTypeNoOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_NO_ORB_CHANGING))
 orbTypeOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_TYPE_ORB_CHANGING))
 orbTypeDoubleOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_DOUBLE_ORB_CHANGING))
