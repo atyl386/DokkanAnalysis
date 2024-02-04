@@ -3,7 +3,7 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 
 # TODO:
-# - Update multichance buffs so if self.activationProbability is not 1, then don't add to existing phase.
+# - Try removing the disable action from TEQ gogeta's 18ki to see if it is working.
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing
@@ -2471,4 +2471,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(57, "DFLR_PHY_Blue_Boys", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(58, "DFLR_TEQ_SS_Gods", 1, "DEF", "DGE", "ADD", SLOT_1)
