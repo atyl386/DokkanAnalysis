@@ -449,6 +449,14 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": [3, 1, 3, 1, 3, 3, 3, 3],
     },
+    57: {
+        "Common Name": "DFLR_PHY_Blue_Boys",
+        "# Copies": 3,
+        "BRZ Equip": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_2,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
