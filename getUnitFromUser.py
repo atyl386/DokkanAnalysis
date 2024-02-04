@@ -92,7 +92,7 @@ def getCondition(inputHelper):
         match conditionType:
             case "Turn":
                 turnCondition = inputHelper.getAndSaveUserInput(
-                    "What is the ability turn condition (relative to the form's starting turn)?", default=5
+                    "What is the ability turn condition?", default=5
                 )
                 condition[i] = TurnCondition(turnCondition)
             case "TransformationTurn":
@@ -2471,4 +2471,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(61, "DFLR_PHY_SS4_Gogeta", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(62, "DFLR_AGL_SS_Duo", 1, "DEF", "DGE", "ADD", SLOT_1)

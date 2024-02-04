@@ -204,7 +204,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="7" />
+						<input prompt="What is the ability turn condition?" response="7" />
 					</condition_1>
 				</ability_1>
 				<ability_2>
@@ -215,7 +215,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="7" />
+						<input prompt="What is the ability turn condition?" response="7" />
 					</condition_1>
 				</ability_2>
 				<ability_3>
@@ -226,7 +226,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="7" />
+						<input prompt="What is the ability turn condition?" response="7" />
 					</condition_1>
 				</ability_3>
 				<ability_4>
@@ -237,7 +237,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="7" />
+						<input prompt="What is the ability turn condition?" response="7" />
 					</condition_1>
 				</ability_4>
 				<ability_5>
@@ -248,7 +248,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="7" />
+						<input prompt="What is the ability turn condition?" response="7" />
 					</condition_1>
 				</ability_5>
 				<ability_6>
@@ -259,7 +259,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="7" />
+						<input prompt="What is the ability turn condition?" response="7" />
 					</condition_1>
 				</ability_6>
 				<ability_7>
@@ -270,7 +270,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="7" />
+						<input prompt="What is the ability turn condition?" response="7" />
 					</condition_1>
 				</ability_7>
 				<ability_8>
@@ -281,7 +281,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="7" />
+						<input prompt="What is the ability turn condition?" response="7" />
 					</condition_1>
 				</ability_8>
 				<ability_9>
@@ -292,7 +292,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="7" />
+						<input prompt="What is the ability turn condition?" response="7" />
 					</condition_1>
 				</ability_9>
 			</active_skill_buffs>

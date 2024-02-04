@@ -211,7 +211,7 @@
 					<input prompt="What is the condition logic?" response="AND" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="5" />
+						<input prompt="What is the ability turn condition?" response="5" />
 					</condition_1>
 					<condition_2>
 						<input prompt="What type of condition is # 2?" response="Num Attacks Received" />
@@ -227,7 +227,7 @@
 					<input prompt="What is the condition logic?" response="AND" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="5" />
+						<input prompt="What is the ability turn condition?" response="5" />
 					</condition_1>
 					<condition_2>
 						<input prompt="What type of condition is # 2?" response="Num Attacks Received" />
@@ -243,7 +243,7 @@
 					<input prompt="What is the condition logic?" response="AND" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="5" />
+						<input prompt="What is the ability turn condition?" response="5" />
 					</condition_1>
 					<condition_2>
 						<input prompt="What type of condition is # 2?" response="Num Attacks Received" />
@@ -263,7 +263,7 @@
 					<input prompt="What is the condition logic?" response="AND" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Turn" />
-						<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="5" />
+						<input prompt="What is the ability turn condition?" response="5" />
 					</condition_1>
 					<condition_2>
 						<input prompt="What type of condition is # 2?" response="Num Attacks Received" />

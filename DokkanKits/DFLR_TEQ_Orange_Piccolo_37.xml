@@ -239,7 +239,7 @@
 				<input prompt="How many conditions have to be met?" response="1" />
 				<condition_1>
 					<input prompt="What type of condition is # 1?" response="Turn" />
-					<input prompt="What is the ability turn condition (relative to the form's starting turn)?" response="6" />
+					<input prompt="What is the ability turn condition?" response="6" />
 				</condition_1>
 				<input prompt="Can this form attack?" response="Y" />
 				<input prompt="Should a 12 Ki be targetted for this form?" response="N" />
