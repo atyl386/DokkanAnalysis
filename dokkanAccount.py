@@ -441,6 +441,14 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": [3, 1, 3, 1, 3, 3, 3, 3],
     },
+    56: {
+        "Common Name": "DFLR_STR_Gogeta_Blue",
+        "# Copies": 5,
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": [3, 1, 3, 1, 3, 3, 3, 3],
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
