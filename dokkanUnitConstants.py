@@ -534,6 +534,7 @@ NULLIFY_CHANCES = ["Disable Action", "SA Counter", "Nullification"]
 # Conditions
 CONDITIONS = [
     "Turn",
+    "TransformationTurn",
     "Max HP",
     "Min HP",
     "Max Enemy HP",

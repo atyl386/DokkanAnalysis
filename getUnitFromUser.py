@@ -1937,6 +1937,9 @@ class AttackPerformedThreshold(PassiveAbility):
             match self.effect:
                 case "ATK":
                     state.p2Buff[self.effect] += self.effectiveBuff
+                case "AdditionalSuper":
+                    state.aaPSuper.append(self.effectiveBuff)
+                    state.aaPGuarantee.append(0)
 
 
 class PerEvent(PassiveAbility):
@@ -2468,4 +2471,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(53, "CLR_PHY_Future_Trunks", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(54, "DF_PHY_DBS_Broly", 1, "DEF", "DGE", "ADD", SLOT_1)
