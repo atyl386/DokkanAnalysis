@@ -306,7 +306,7 @@
 					<input prompt="What is the maximum buff?" response="99.0" />
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
 				</ability_11>
 			</ki_sphere_dependent>
 			<ki_dependent>
