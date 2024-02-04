@@ -463,7 +463,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": SLOT_2,
+        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     59: {
         "Common Name": "DFLR_STR_FF_Cooler",
@@ -476,6 +476,14 @@ User = {
     60: {
         "Common Name": "DF_AGL_Gogeta_Blue",
         "# Copies": 5,
+        "BRZ Equip": "ADD",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+    },
+    61: {
+        "Common Name": "DFLR_PHY_SS4_Gogeta",
+        "# Copies": 3,
         "BRZ Equip": "ADD",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
