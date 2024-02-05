@@ -73,7 +73,7 @@ def writeSummary(units, attributeValues, evaluations):
 class Evaluator:
     def __init__(self, turnWeights, attributeWeights):
         self.turnWeights = turnWeights
-        self.attributeWeights = attributeWeights
+        self.attributeWeights = np.array(list(attributeWeights))
         self.normaliseWeights()
 
     def normaliseWeights(self):
@@ -93,8 +93,19 @@ turnDistribution = truncnorm(a, b, AVG_PEAK_TURN, PEAK_TURN_STD)
 overallTurnWeights = turnDistribution.cdf(np.arange(2, NUM_EVAL_TURNS + 2)) - turnDistribution.cdf(
     np.arange(1, NUM_EVAL_TURNS + 1)
 )
-overallAttributeWeights = np.array([5, 0.5, 2, 4, 1.5, 5, 10, 8, 8, 1])
-overallEvaluator = Evaluator(overallTurnWeights, overallAttributeWeights)
+attributeDict = {
+    "Leader Skill": 5,
+    "SBR": 0.5,
+    "HP": 2,
+    "Useability": 4,
+    "Healing": 1.5,
+    "Support": 5,
+    "APT": 10,
+    "Normal Defence": 8,
+    "Super Attack Defence": 8,
+    "Slot Bonus": 1,
+}
+overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
 
 reCalc = True
 analyseHiPo = False
