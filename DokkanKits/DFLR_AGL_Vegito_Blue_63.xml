@@ -490,7 +490,7 @@
 				<input prompt="How many Domain skills does the form have?" response="0" />
 			</domain>
 			<active_skill_buffs>
-				<input prompt="How many active skill buffs does the form have?" response="2" />
+				<input prompt="How many active skill buffs does the form have?" response="4" />
 				<ability_1>
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
 					<input prompt="What is the value of the buff?" response="1.0" />
@@ -524,6 +524,41 @@
 						<input prompt="What is the maximum enemy HP condition?" response="0.5" />
 					</condition_2>
 				</ability_2>
+				<ability_3>
+					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="How many turns does it last?" response="1" />
+					<input prompt="How many times can it be activated?" response="1" />
+					<input prompt="How many conditions have to be met?" response="2" />
+					<input prompt="What is the condition logic?" response="OR" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="Max HP" />
+						<input prompt="What is the maximum HP condition?" response="0.5" />
+					</condition_1>
+					<condition_2>
+						<input prompt="What type of condition is # 2?" response="Max Enemy HP" />
+						<input prompt="What is the maximum enemy HP condition?" response="0.5" />
+					</condition_2>
+				</ability_3>
+				<ability_4>
+					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
+					<input prompt="What is the probability this ability activates?" response="0.3" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+										<input prompt="How many turns does it last?" response="1" />
+					<input prompt="How many times can it be activated?" response="1" />
+					<input prompt="How many conditions have to be met?" response="2" />
+					<input prompt="What is the condition logic?" response="OR" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="Max HP" />
+						<input prompt="What is the maximum HP condition?" response="0.5" />
+					</condition_1>
+					<condition_2>
+						<input prompt="What type of condition is # 2?" response="Max Enemy HP" />
+						<input prompt="What is the maximum enemy HP condition?" response="0.5" />
+					</condition_2>
+				</ability_4>
 			</active_skill_buffs>
 			<offensive_on_super>
 				<input prompt="How many different offensive buffs does the form get when performing a super attack / attacking?" response="0" />
