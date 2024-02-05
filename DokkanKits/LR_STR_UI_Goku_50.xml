@@ -227,6 +227,9 @@
 					<input prompt="What is the value of the buff?" response="0.77" />
 				</ability_2>
 			</after_evade_attack>
+			<after_recieve_or_evade_attack>
+				<input prompt="How many different buffs does the form get after receiving or evading an attack?" response="0" />
+			</after_recieve_or_evade_attack>
 			<until_recieve_attack>
 				<input prompt="How many different buffs does the form get until recieving an attack?" response="1" />
 				<ability_1>

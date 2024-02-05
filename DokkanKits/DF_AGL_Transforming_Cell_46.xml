@@ -176,6 +176,9 @@
 			<after_evade_attack>
 				<input prompt="How many different buffs does the form get after evading an attack?" response="0" />
 			</after_evade_attack>
+			<after_recieve_or_evade_attack>
+				<input prompt="How many different buffs does the form get after receiving or evading an attack?" response="0" />
+			</after_recieve_or_evade_attack>
 			<until_recieve_attack>
 				<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
 			</until_recieve_attack>
@@ -369,6 +372,9 @@
 			<after_evade_attack>
 				<input prompt="How many different buffs does the form get after evading an attack?" response="0" />
 			</after_evade_attack>
+			<after_recieve_or_evade_attack>
+				<input prompt="How many different buffs does the form get after receiving or evading an attack?" response="0" />
+			</after_recieve_or_evade_attack>
 			<until_recieve_attack>
 				<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
 			</until_recieve_attack>
@@ -673,6 +679,9 @@
 				<after_evade_attack>
 					<input prompt="How many different buffs does the form get after evading an attack?" response="0" />
 				</after_evade_attack>
+				<after_recieve_or_evade_attack>
+					<input prompt="How many different buffs does the form get after receiving or evading an attack?" response="0" />
+				</after_recieve_or_evade_attack>
 				<until_recieve_attack>
 					<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
 				</until_recieve_attack>
@@ -733,6 +742,9 @@
 			<after_evade_attack>
 				<input prompt="How many different buffs does the form get after evading an attack?" response="0" />
 			</after_evade_attack>
+			<after_recieve_or_evade_attack>
+				<input prompt="How many different buffs does the form get after receiving or evading an attack?" response="0" />
+			</after_recieve_or_evade_attack>
 			<until_recieve_attack>
 				<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
 			</until_recieve_attack>

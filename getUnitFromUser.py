@@ -797,6 +797,17 @@ class Form:
                 [1, 1, "N"],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_recieve_or_evade_attack")
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after receiving or evading an attack?",
+                AfterAttackReceivedOrEvaded,
+                ["How many turns does the buff last?"],
+                [None],
+                [1],
+            )
+        )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "until_recieve_attack")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
@@ -2120,7 +2131,7 @@ class AfterEvent(PassiveAbility):
                 form.carryOverBuffs[self.effect].sub(self.applied)
                 self.applied = 0
     
-    def setTurnBuff(self, state):
+    def setTurnBuff(self, unit, form, state):
         # geometric cdf
         turnBuff = self.effectiveBuff * self.eventFactor
         cappedTurnBuff = min(self.buffToGo, turnBuff)
@@ -2128,6 +2139,8 @@ class AfterEvent(PassiveAbility):
             state.buff[self.effect] += cappedTurnBuff
         else:
             match self.effect:
+                case "Ki":
+                    state.buff["Ki"] += cappedTurnBuff
                 case "ATK":
                     state.p2Buff["ATK"] += cappedTurnBuff
                 case "DEF":
@@ -2138,6 +2151,10 @@ class AfterEvent(PassiveAbility):
                 case "AAChance":
                     state.aaPGuarantee.append(cappedTurnBuff)
                     state.aaPSuper.append(cappedTurnBuff * self.superChance)
+                case "Crit":
+                    state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
+                    state.atkModifier = state.getAvgAtkMod(form, unit)
+
 
     def nextTurnUpdate(self, form, state):
         # If abiltiy going to be active next turn
@@ -2173,7 +2190,7 @@ class AfterAttackReceived(AfterEvent):
                 ) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
             else:
                 self.eventFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
-            self.setTurnBuff(state)
+            self.setTurnBuff(unit, form, state)
         self.nextTurnUpdate(form, state)
             
 
@@ -2193,7 +2210,7 @@ class AfterGuardActivated(AfterEvent):
                 ) / state.numAttacksReceived
             else:
                 self.eventFactor = min(state.numAttacksReceivedBeforeAttacking * state.buff["Guard"], 1)
-            self.setTurnBuff(state)
+            self.setTurnBuff(unit, form, state)
         self.nextTurnUpdate(form, state)
 
 
@@ -2218,7 +2235,26 @@ class AfterAttackEvaded(AfterEvent):
                 , 0) / state.numAttacksReceived
             else:
                 self.eventFactor = min(state.numAttacksEvadedBeforeAttacking, 1)
-            self.setTurnBuff(state)
+            self.setTurnBuff(unit, form, state)
+        self.nextTurnUpdate(form, state)
+
+
+class AfterAttackReceivedOrEvaded(AfterEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+
+    def applyToState(self, state, unit=None, form=None):
+        self.updateBuffToGo()
+        numAttacksDirected = round(NUM_ATTACKS_DIRECTED[state.slot - 1])
+        numAttacksDirectedBeforeAttacking = round(NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1])
+        if np.any(self.applied):
+            self.resetAppliedBuffs(form, state)
+        else:
+            if self.effect in ["DEF", "Dmg Red", "Evasion"]:
+                self.eventFactor = (numAttacksDirected - 1) / numAttacksDirected
+            else:
+                self.eventFactor = min(numAttacksDirectedBeforeAttacking, 1)
+            self.setTurnBuff(unit, form, state)
         self.nextTurnUpdate(form, state)
 
 
@@ -2466,4 +2502,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(64, "CLR_STR_Future_Gohan", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(65, "BU_INT_Golden_Frieza", 1, "DEF", "DGE", "ADD", SLOT_1)
