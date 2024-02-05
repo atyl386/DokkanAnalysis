@@ -513,6 +513,14 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
     },
+    65: {
+        "Common Name": "BU_INT_Golden_Frieza",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
