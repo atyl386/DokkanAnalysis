@@ -1877,6 +1877,10 @@ class Buff(PassiveAbility):
                         state.dmgRedA = 1
                         state.dmgRedB = 1
                         state.buff["Dmg Red against Normals"] = 1
+                        state.numAttacksReceived = 0
+                    case "Intercept":
+                        state.support += supportFactorConversion[self.effect] * supportBuff
+                        state.numAttacksReceived *= NUM_SLOTS
             state.randomKi = state.getRandomKi(form)
 
 
@@ -2536,4 +2540,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(66, "DFLR_AGL_DBS_Broly", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(67, "CLR_PHY_Gogeta_Blue", 1, "DEF", "DGE", "ADD", SLOT_1)

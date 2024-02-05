@@ -433,7 +433,7 @@ AVG_SOT_STATS = 3
 
 # Effects
 
-SPECIAL_SUPPORT_EFFECTS = ["Delay Target"]
+SPECIAL_SUPPORT_EFFECTS = ["Delay Target", "Intercept",]
 
 ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Triple Orb Change", "Complete Orb Change", "Rainbow Orb Change"]
 
@@ -520,6 +520,7 @@ SUPPORT_FACTORS = [
     0.375,
     0,
     0.5,
+    DMG_RED_SUPPORT_100_FACTOR,
     DMG_RED_SUPPORT_100_FACTOR,
 ]
 
