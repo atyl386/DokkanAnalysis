@@ -108,14 +108,14 @@ overallTurnWeights = turnDistribution.cdf(np.arange(2, NUM_EVAL_TURNS + 2)) - tu
 attributeDict = {
     "Leader Skill": 4, # 0
     "SBR": 0.5,
-    "HP": 2, # +
-    "Useability": 4, # +
+    "HP": 2, # 0
+    "Useability": 4, # 0
     "Healing": 1.5, # 0
     "Support": 5, # 0
     "APT": 10,
     "Normal Defence": 9, # 0
     "Super Attack Defence": 9, # 0
-    "Slot Bonus": 1
+    "Slot Bonus": 1 # 0
 }
 overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
 
