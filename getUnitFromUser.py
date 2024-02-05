@@ -1604,10 +1604,6 @@ class Domain(SingleTurnAbility):
         self.domainType, buff, prop, self.duration = args
         self.effectiveBuff = buff * aprioriProbMod(prop, True)
         form.inputHelper.parent = form.inputHelper.parentMap[form.inputHelper.parent]
-        self.abilities = abilityQuestionaire(
-            form, "How many additional buffs are there when this Domain is active?", TurnDependent
-        )
-
     def applyToState(self, state, unit=None, form=None):
         if form.checkCondition(self.condition, self.activated, True):
             self.activated = True
@@ -1616,13 +1612,12 @@ class Domain(SingleTurnAbility):
             params = [start, end]
             match self.domainType:
                 case "Increase Damage Received":
-                    self.abilities.append(
+                    form.abilities["Start of Turn"].append(
                         TurnDependent(
                             form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, self.duration, params
                         )
                     )
-                    self.abilities.append(TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params))
-            form.abilities["Start of Turn"].extend(self.abilities)
+                    form.abilities["Start of Turn"].append(TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params))
 
 
 class ActiveSkillBuff(SingleTurnAbility):
@@ -2471,4 +2466,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(63, "DFLR_AGL_Vegito_Blue", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(64, "CLR_STR_Future_Gohan", 1, "DEF", "DGE", "ADD", SLOT_1)
