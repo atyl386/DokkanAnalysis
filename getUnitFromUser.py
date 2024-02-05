@@ -1636,6 +1636,9 @@ class Domain(SingleTurnAbility):
                     explodRageMovBossBuff = 0.1 * aprioriProbMod(0.5 * math.factorial(NUM_CATEGORIES - 2) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 2)), True) # 0.5 to account for not all allies being exploding rage or movie bosses. The other part comes from calculating the probability an average enemy is not on the movie bosses or exploding rage categories.
                     form.abilities["Start of Turn"].extend([
                         TurnDependent(
+                            form, 1, False, "Dmg Red A", 0.26, self.duration, params
+                        ),
+                        TurnDependent(
                             form, 1, False, "Ki Support", 4 * KI_SUPPORT_FACTOR, self.duration, params
                         ),
                         TurnDependent(
