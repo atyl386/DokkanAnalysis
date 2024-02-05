@@ -113,8 +113,8 @@ attributeDict = {
     "Healing": 1.5, # 0
     "Support": 5, # 0
     "APT": 10,
-    "Normal Defence": 8, # +
-    "Super Attack Defence": 8, # +
+    "Normal Defence": 9, # 0
+    "Super Attack Defence": 9, # 0
     "Slot Bonus": 1
 }
 overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
