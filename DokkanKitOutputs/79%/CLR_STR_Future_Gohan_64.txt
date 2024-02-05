@@ -3,7 +3,7 @@ State # 0 / Turn # 1
 Leader Skill: 7.0 
 SBR: 0.0 
 HP: 28338.0 
-Useability: 1.0448979591836736 
+Useability: 0.9974025974025974 
 Healing: 0.018498152076923076 
 Support: 0.0 
 APT: 26463921.862123754 
@@ -16,7 +16,7 @@ State # 1 / Turn # 3
 Leader Skill: 7.0 
 SBR: 0.0 
 HP: 28338.0 
-Useability: 1.0448979591836736 
+Useability: 0.9974025974025974 
 Healing: 0.031672288580460464 
 Support: 0.0 
 APT: 40507632.61862913 
@@ -29,9 +29,9 @@ State # 2 / Turn # 5
 Leader Skill: 7.0 
 SBR: 0.0 
 HP: 28338.0 
-Useability: 1.1620408163265308 
+Useability: 1.0764935064935066 
 Healing: 0.13318669495384614 
-Support: 1.025 
+Support: 0.7249999999999999 
 APT: 96989882.2848325 
 Normal Defence: 0.0 
 Super Attack Defence: -0.023075614786683425 
@@ -42,9 +42,9 @@ State # 3 / Turn # 7
 Leader Skill: 7.0 
 SBR: 0.0 
 HP: 28338.0 
-Useability: 1.1620408163265308 
+Useability: 1.0764935064935066 
 Healing: 0.11098891246153846 
-Support: 1.025 
+Support: 0.7249999999999999 
 APT: 68228939.14406317 
 Normal Defence: -0.003986169423070836 
 Super Attack Defence: -0.29590662719621197 
@@ -55,9 +55,9 @@ State # 4 / Turn # 9
 Leader Skill: 7.0 
 SBR: 0.0 
 HP: 28338.0 
-Useability: 1.1620408163265308 
+Useability: 1.0764935064935066 
 Healing: 0.11098891246153846 
-Support: 1.025 
+Support: 0.7249999999999999 
 APT: 68228939.14406317 
 Normal Defence: -0.003986169423070836 
 Super Attack Defence: -0.29590662719621197 
@@ -68,7 +68,7 @@ State # 5 / Turn # 11
 Leader Skill: 7.0 
 SBR: 0.0 
 HP: 28338.0 
-Useability: 1.0448979591836736 
+Useability: 0.9974025974025974 
 Healing: 0.03699630415384615 
 Support: 0.0 
 APT: 40758064.63195396 
@@ -81,7 +81,7 @@ State # 6 / Turn # 13
 Leader Skill: 7.0 
 SBR: 0.0 
 HP: 28338.0 
-Useability: 1.0448979591836736 
+Useability: 0.9974025974025974 
 Healing: 0.03699630415384615 
 Support: 0.0 
 APT: 40758064.63195396 
@@ -94,7 +94,7 @@ State # 7 / Turn # 15
 Leader Skill: 7.0 
 SBR: 0.0 
 HP: 28338.0 
-Useability: 1.0448979591836736 
+Useability: 0.9974025974025974 
 Healing: 0.03699630415384615 
 Support: 0.0 
 APT: 40758064.63195396 
@@ -107,7 +107,7 @@ State # 8 / Turn # 17
 Leader Skill: 7.0 
 SBR: 0.0 
 HP: 28338.0 
-Useability: 1.0448979591836736 
+Useability: 0.9974025974025974 
 Healing: 0.03699630415384615 
 Support: 0.0 
 APT: 40758064.63195396 
@@ -120,7 +120,7 @@ State # 9 / Turn # 19
 Leader Skill: 7.0 
 SBR: 0.0 
 HP: 28338.0 
-Useability: 1.0448979591836736 
+Useability: 0.9974025974025974 
 Healing: 0.03699630415384615 
 Support: 0.0 
 APT: 40758064.63195396 

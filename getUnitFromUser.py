@@ -1,6 +1,7 @@
 import datetime as dt
 from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
+import math
 
 # TODO:
 # - Try removing the disable action from TEQ gogeta's 18ki to see if it is working.
@@ -1467,7 +1468,7 @@ class State:
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
         self.useability = (
             unit.teams
-            / NUM_TEAMS_MAX
+            / NUM_CATEGORIES_PER_UNIT_MAX
             * (1 + USEABILITY_SUPPORT_FACTOR * self.support + form.linkEffects["Commonality"])
         )
         attributeValues = [
@@ -1613,6 +1614,7 @@ class Domain(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.domainType, buff, prop, self.duration = args
+        self.prop = prop
         self.effectiveBuff = buff * aprioriProbMod(prop, True)
         form.inputHelper.parent = form.inputHelper.parentMap[form.inputHelper.parent]
     def applyToState(self, state, unit=None, form=None):
@@ -1623,13 +1625,42 @@ class Domain(SingleTurnAbility):
             params = [start, end]
             match self.domainType:
                 case "Increase Damage Received":
-                    form.abilities["Start of Turn"].append(
+                    form.abilities["Start of Turn"].extend([
                         TurnDependent(
-                            form, 1, False, "ATK Support", self.effectiveBuff * AVG_SOT_STATS, self.duration, params
-                        )
-                    )
-                    form.abilities["Start of Turn"].append(TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params))
-
+                            form, 1, False, "ATK Support", self.effectiveBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params)
+                    ])
+                case "Alternate Dimensional Space":
+                    extremeClassBuff = 0.1 * aprioriProbMod(self.prop, True) # prop to account for may be buffing enemies too
+                    explodRageMovBossBuff = 0.1 * aprioriProbMod(0.5 * math.factorial(NUM_CATEGORIES - 2) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 2)), True) # 0.5 to account for not all allies being exploding rage or movie bosses. The other part comes from calculating the probability an average enemy is not on the movie bosses or exploding rage categories.
+                    form.abilities["Start of Turn"].extend([
+                        TurnDependent(
+                            form, 1, False, "Ki Support", 4 * KI_SUPPORT_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "Ki", 4, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", extremeClassBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "DEF Support", extremeClassBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 0.5, True, "ATK Support", explodRageMovBossBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 0.5, True, "DEF Support", explodRageMovBossBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(form, 1, False, "P3 ATK", 0.2, 1, params),
+                        TurnDependent(form, 1, False, "P3 DEF", 0.2, 1, params),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", self.effectiveBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params)
+                    ])
+                    
 
 class ActiveSkillBuff(SingleTurnAbility):
     def __init__(self, form, args):
@@ -2502,4 +2533,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(65, "BU_INT_Golden_Frieza", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(66, "DFLR_AGL_DBS_Broly", 1, "DEF", "DGE", "ADD", SLOT_1)

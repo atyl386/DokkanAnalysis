@@ -94,7 +94,7 @@ SPECIAL_ATTACK_MULTIPLIERS = [1, 4.4, 5.0, 5.5, 7.5]
 GIANT_RAGE_SUPPORT = 2  # Support for nullifying super attacks for a turn
 
 # Domain
-DOMAIN_TYPES = ["Increase Damage Received"]
+DOMAIN_TYPES = ["Increase Damage Received", "Alternate Dimensional Space"]
 
 # Turns
 MAX_TURN = 20
@@ -130,7 +130,9 @@ SLOT_2 = [2] * round(MAX_TURN / RETURN_PERIOD_PER_SLOT[1])
 SLOT_3 = [3, 3, 3, 3, 3, 3, 3, 3]
 
 # Teams
-NUM_TEAMS_MAX = 21
+NUM_CATEGORIES_PER_UNIT_MAX = 22
+NUM_CATEGORIES = 92
+AVG_NUM_CATEGORIES_PER_UNIT = 10 # Guess
 
 # Attacking factors
 AVG_ENEMY_DEF = 100000
