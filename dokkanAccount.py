@@ -39,7 +39,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": [2, 2, 2, 1, 3, 2, 2, 2, 2, 2]
+        "Slots": [2, 2, 1, 2, 3, 2, 2, 2, 2, 2]
     },
     6: {
         "Common Name": "BU_STR_SS_Gohan",
@@ -47,7 +47,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [1, 2, 2, 2, 3, 2, 2, 2, 2, 2],
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     7: {
         "Common Name": "DF_STR_Super_17",
@@ -135,7 +135,7 @@ User = {
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     },
     18: {
         "Common Name": "DF_PHY_God_Goku",
@@ -351,7 +351,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_2,
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     45: {
         "Common Name": "DF_TEQ_GT_Pan",
@@ -407,7 +407,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": [1, 3, 3, 3, 2, 2, 2, 2, 2, 2],
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     52: {
         "Common Name": "LR_INT_Turles_Goku",
