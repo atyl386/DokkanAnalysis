@@ -93,6 +93,18 @@ turnDistribution = truncnorm(a, b, AVG_PEAK_TURN, PEAK_TURN_STD)
 overallTurnWeights = turnDistribution.cdf(np.arange(2, NUM_EVAL_TURNS + 2)) - turnDistribution.cdf(
     np.arange(1, NUM_EVAL_TURNS + 1)
 )
+# Old Weights
+"""attributeDict = {
+    "Leader Skill": 5, # 0.11
+    "SBR": 0.5, # 0.01
+    "Useability": 4, # 0.09
+    "Healing": 1.5, # 0.03
+    "Support": 5, # 0.11
+    "APT": 10, # 0.22
+    "Normal Defence": 8, # 0.17
+    "Super Attack Defence": 8, # 0.17
+    "Slot1": 4, # 0.09
+}"""
 attributeDict = {
     "Leader Skill": 5,
     "SBR": 0.5,
@@ -107,7 +119,7 @@ attributeDict = {
 }
 overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
 
-reCalc = True
+reCalc = False
 analyseHiPo = False
 optimiseSlots = False
 if reCalc:
@@ -222,5 +234,7 @@ for i in range(nUnits):
     pkl.close()
     scores[i] = overallEvaluator.evaluate(units[i])
 ranking = np.flip(np.argsort(scores))
+rankingFilePath = os.path.join(CWD, "DokkanKitOutputs", "ranking.txt")
+rankingFile = open(rankingFilePath, "w") 
 for rank in ranking:
-    print(units[rank].name, units[rank]._type)
+    rankingFile.write(f"{units[rank].commonName} \n")
