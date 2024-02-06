@@ -1537,6 +1537,8 @@ class State:
             self.avgDefMult += self.pUSA * form.superAttacks["18 Ki"].effects["DEF"].buff
 
     def getAvgAtkMod(self, form, unit):
+        assert self.multiChanceBuff["Crit"].prob <= 1
+        assert self.buff["AEAAT"] <= 1
         return self.multiChanceBuff["Crit"].prob * unit.critMultiplier + (1 - self.multiChanceBuff["Crit"].prob) * (
             self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
             + (1 - self.buff["AEAAT"])
