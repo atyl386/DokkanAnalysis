@@ -4,8 +4,6 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
-# - Make sure all abilties are capped properly , i.e. probability max = 1
-# - Try removing the disable action from TEQ gogeta's 18ki to see if it is working.
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing

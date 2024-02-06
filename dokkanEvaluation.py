@@ -134,7 +134,8 @@ if reCalc:
     attributeValues = np.zeros((nUnits, NUM_EVAL_TURNS, NUM_ATTRIBUTES, NUM_COPIES_MAX))
     units = [[None] * nUnits for i in range(NUM_COPIES_MAX)]
     evaluations = np.zeros((nUnits, NUM_COPIES_MAX))
-    for ID in User.keys():
+    reverseOrderIDs = np.flip(list(User.keys()))
+    for ID in reverseOrderIDs:
         print(ID)
         units[-1][ID - 1] = Unit(
             ID,
@@ -148,11 +149,11 @@ if reCalc:
         attributeValues[ID - 1, :, :, -1] = units[-1][ID - 1].getAttributes()
 
     [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
-    for ID in User.keys():
+    for ID in reverseOrderIDs:
         normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
         evaluations[ID - 1][-1] = overallEvaluator.evaluate(units[-1][ID - 1])
     if optimiseSlots:
-        for ID in User.keys():
+        for ID in reverseOrderIDs:
             best_slots = copy.copy(User[ID]["Slots"])
             stateIdx = 0
             nextTurn = 1
@@ -183,7 +184,7 @@ if reCalc:
             else:
                 print(ID, best_slots, User[ID]["Common Name"])
     if analyseHiPo:
-        for ID in User.keys():
+        for ID in reverseOrderIDs:
             best_HiPo = None
             best_eval = evaluations[ID - 1][-1]
             for i, HiPo_build in enumerate(HIPO_BUILDS):
@@ -206,7 +207,7 @@ if reCalc:
                 print(ID, "default HiPo", HiPo_unit.name)
             else:
                 print(ID, HIPO_BUILDS[best_HiPo], HiPo_unit.name)
-    for ID in User.keys():
+    for ID in reverseOrderIDs:
         print(ID)
         for nCopies in range(1, NUM_COPIES_MAX):
             units[nCopies - 1][ID - 1] = Unit(
