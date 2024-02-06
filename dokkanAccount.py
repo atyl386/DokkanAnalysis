@@ -529,6 +529,14 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
     },
+    67: {
+        "Common Name": "CLR_PHY_Gogeta_Blue",
+        "# Copies": 0,
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+    },
 
 }
 """ ['DEF','ADD','DGE',3], # PHYLR SS4s
