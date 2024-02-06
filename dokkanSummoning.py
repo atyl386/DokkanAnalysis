@@ -17,8 +17,7 @@ def SummonRating(ID):
     nCopies = User[ID]["# Copies"]
     evals = [0.0] * NUM_COPIES_MAX
     now = dt.datetime.today()
-    EZADiscountFactor = 0.5
-    scalingPower = 1
+    EZADiscountFactor = 1/3
     # This number is a fudge factor to get sensible dupe improvement
     match nCopies:
         case 5:
@@ -30,11 +29,11 @@ def SummonRating(ID):
         case 2:
             EZADI = 0.1
         case 1:
-            EZADI = 0.2
+            EZADI = 0.1
         case 0:
-            EZADI = 0.8
+            EZADI = 0.7
 
-    if unit.exclusivity in ["DFLR", "DF", "CLR", "DFLR", "DCLR"]:
+    if unit.exclusivity in ["DFLR", "DF", "CLR", "LR"]:
         rarityScore = 50  # These are summonRatings, have to be tuned
     else:
         rarityScore = 25
@@ -45,7 +44,7 @@ def SummonRating(ID):
     else:
         EZA = 1
         globalEZADate = unit.gbl_date + relativedelta(months=4 * 12)
-        futureEZA = rarityScore**scalingPower * EZADiscountFactor ** (relativedelta(globalEZADate, now).years) * EZADI
+        futureEZA = rarityScore * EZADiscountFactor ** (relativedelta(globalEZADate, now).years) * EZADI
     for i in range(NUM_COPIES_MAX):
         df = pd.read_excel("DokkanUnits/" + HiPo_dupes[i] + "/unitSummary.xlsx")
         evals[i] = df.at[ID - 1, "Evaluation"]
@@ -55,7 +54,7 @@ def SummonRating(ID):
         dupeImprovement = max((evals[nCopies] - evals[nCopies - 1]) / (evals[-1]), 0)
     else:
         dupeImprovement = max((evals[nCopies]) / (evals[-1]), 0)
-    summonRating = max(max(evals[-1] ** scalingPower, 0) * dupeImprovement * EZA, max(0.2, futureEZA), 0)
+    summonRating = max(max(evals[-1], 0) * dupeImprovement * EZA, max(0.2, futureEZA), 0)
     return summonRating
 
 
@@ -126,8 +125,6 @@ class Banner:
 
 
 SummonRatings()
-#SuperTrunks = Banner([5, 6, 7, 8, 9, 10, 11], coin='red')
-#print(SuperTrunks.summonScore)
 """ Halloween = Banner([115, 116, 83, 68, 64, 5, 78, 63, 62, 20], 'red')
 HalloweenStep2 = Banner([64, 78, 63, 62, 20], 'red')
 HalloweenStep3A = Banner([127, 128, 118, 108, 107, 124, 74, 73, 50, 52], 'red')
@@ -136,8 +133,6 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-#OmegaShenron = Banner([12, 22, 23, 11, 11, 11, 11, 11, 11, 11], "cyan", SSR_rate=0.2)
-#print(OmegaShenron.summonScore)
 Androids = Banner([15, 16, 18, 17, 20, 21, 19], "red")
 print(Androids.summonScore)
 # WWDL_1 = Banner([14,68,67,20,13,11,13,96,81,57,86,25,58,60,59,137,13,158,13,13,13,13,98,13,13,13,88,93,13,13,67,13,13,13,97,13,13,13,13,13,13,13,13,13,13,13,13,13,13],'red')
