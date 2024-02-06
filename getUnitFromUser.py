@@ -2135,7 +2135,8 @@ class PerAttackEvaded(PerEvent):
                         evasionA.updateChance("On Super", evasionAChance[i] * self.effectiveBuff, "Evasion", state)
                     evasionBChance[i] = evasionB.prob * (1 - DODGE_CANCEL_FACTOR)
                     evasionB.updateChance("On Super", evasionBChance[i] * self.effectiveBuff, "Evasion", state)
-                state.multiChanceBuff["EvasionA"].updateChance("On Super", min(np.mean(evasionAChance), buffToGo), "Evasion", state)
+                if numAttacksDirectedBeforeAttacking >= 1:
+                    state.multiChanceBuff["EvasionA"].updateChance("On Super", min(np.mean(evasionAChance), buffToGo), "Evasion", state)
                 state.multiChanceBuff["EvasionB"].updateChance("On Super", min(np.mean(evasionBChance), buffToGo), "Evasion", state)
                 cappedTurnBuff = min(buffToGo, self.effectiveBuff * state.numAttacksEvaded)
         if not (self.withinTheSameTurn):
@@ -2541,4 +2542,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(67, "CLR_PHY_Gogeta_Blue", 1, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(35, "DF_INT_Hirudegarn_", 1, "DGE", "DGE", "ADD", SLOT_3)
