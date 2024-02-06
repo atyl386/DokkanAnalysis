@@ -454,6 +454,9 @@ def getAPT(
 
 
 def getDamageTaken(pNullify, pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
+    assert pNullify <= 1
+    assert pEvade <= 1
+    assert guard <= 1
     return min(
         -(1 - (pNullify + (1 - pNullify) * (1 - DODGE_CANCEL_FACTOR) * pEvade))
         * (
