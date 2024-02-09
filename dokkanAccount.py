@@ -593,5 +593,13 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_1,
     },
+    75: {
+        "Common Name": "BU_TEQ_2ndForm_Cell",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_2,
+    },
 
 }
