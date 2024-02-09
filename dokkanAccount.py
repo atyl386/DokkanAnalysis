@@ -585,5 +585,13 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": SLOT_2,
     },
+    74: {
+        "Common Name": "BU_TEQ_Tien_",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "CRT",
+        "Slots": SLOT_1,
+    },
 
 }
