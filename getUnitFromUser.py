@@ -1446,7 +1446,7 @@ class State:
             self.dmgRedB,
             self.avgDefPostSuper,
         )
-        self.buff["Heal"] += (
+        self.buff["Heal"] += min(
             form.linkEffects["Heal"]
             + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA
             + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA
@@ -1455,7 +1455,7 @@ class State:
             * avgDefStartOfTurn
             * self.orbCollection.orbCollects["Same"].getNumOrbs()
             / AVG_HEALTH
-        )
+        , 1)
         self.normalDamageTaken = (
             NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.normalDamageTakenPreSuper
             + NUM_NORMAL_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.normalDamageTakenPostSuper
@@ -2542,4 +2542,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(35, "DF_INT_Hirudegarn_", 1, "DGE", "DGE", "ADD", SLOT_3)
+    unit = Unit(68, "BU_PHY_Gohan_Teen", 1, "DGE", "DGE", "ADD", SLOT_2)
