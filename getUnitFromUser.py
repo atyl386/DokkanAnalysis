@@ -1084,6 +1084,8 @@ class Form:
                 )
             case "SA Counter":
                 charge = len([ability for ability in self.abilities["Start of Turn"] if ability.effect == "Scouter"])
+            case "Turn":
+                charge = 1
         return charge
 
 

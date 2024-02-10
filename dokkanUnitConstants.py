@@ -82,13 +82,14 @@ COUNTER_ATTACK_MULTIPLIERS = [0, 3.0, 4.0]
 
 # Special Attacks
 SPECIAL_ATTACK_MULTIPLIER_NAMES = [
+    "No Damage",
     "NA",
     "Mega-Colossal",
     "Super-Intense",
     "Ultimate",
     "Super-Ultimate",
 ]
-SPECIAL_ATTACK_MULTIPLIERS = [1, 4.4, 5.0, 5.5, 7.5]
+SPECIAL_ATTACK_MULTIPLIERS = [0, 1, 4.4, 5.0, 5.5, 7.5]
 
 # Domain
 DOMAIN_TYPES = ["Increase Damage Received", "Alternate Dimensional Space"]
@@ -551,7 +552,7 @@ CONDITIONS = [
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]
 
 # Standby Finish Effect Conditions
-FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "Attack performed by allies"]
+FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "Attack performed by allies", "SA Counter", "Turn"]
 
 # Revive
 REVIVE_UNIT_SUPPORT_BUFF = 0.75  # Just revives this unit
