@@ -617,5 +617,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_1,
     },
-
+    78: {
+        "Common Name": "LR_TEQ_SS3_Goku",
+        "# Copies": 4,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
+    },
 }
