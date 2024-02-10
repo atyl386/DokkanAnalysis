@@ -452,9 +452,9 @@ User = {
     57: {
         "Common Name": "DFLR_PHY_Blue_Boys",
         "# Copies": 3,
-        "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
         "Slots": SLOT_2,
     },
     58: {
@@ -542,7 +542,7 @@ User = {
         "# Copies": 0,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "CRT",
+        "HiPo Choice # 2": "ADD",
         "Slots": [3, 1, 3, 1, 1, 1, 1, 1, 1, 1],
     },
     69: {
@@ -581,8 +581,8 @@ User = {
         "Common Name": "BU_STR_Hit_",
         "# Copies": 0,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
         "Slots": [3, 1, 3, 3, 2, 2, 2, 2, 2, 2],
     },
     74: {
@@ -590,15 +590,15 @@ User = {
         "# Copies": 0,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "CRT",
+        "HiPo Choice # 2": "ADD",
         "Slots": [3, 1, 3, 3, 1, 1, 1, 1, 1, 1],
     },
     75: {
         "Common Name": "BU_TEQ_2ndForm_Cell",
         "# Copies": 0,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
         "Slots": [3, 1, 3, 3, 2, 2, 2, 2, 2, 2],
     },
     76: {
