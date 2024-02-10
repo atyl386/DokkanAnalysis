@@ -452,9 +452,9 @@ User = {
     57: {
         "Common Name": "DFLR_PHY_Blue_Boys",
         "# Copies": 3,
-        "BRZ Equip": "DGE",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
         "Slots": SLOT_2,
     },
     58: {
