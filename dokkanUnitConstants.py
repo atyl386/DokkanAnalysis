@@ -250,10 +250,10 @@ PROBABILITY_KILL_ENEMY_PER_ATTACK = (
 ENEMY_DODGE_CHANCE = 0.05
 LOOK_AHEAD_FACTOR = 1.2  # Want to know which units will be good in the future when enemies hit even harder
 AVG_DAM_VARIANCE = 1.015
-MAX_T1_NORMAL_DAM = 600000  # Not including divine wrath and mortal will as can just spam items
-MAX_NORMAL_DAM = 700000  # Not including divine wrath and mortal will as can just spam items
-MAX_T1_SA_DAM = 1680000  # Not including divine wrath and mortal will as can just spam items
-MAX_SA_DAM = 2205000  # Not including divine wrath and mortal will as can just spam items
+MAX_T1_NORMAL_DAM = 600000
+MAX_NORMAL_DAM = 750000
+MAX_T1_SA_DAM = 1680000
+MAX_SA_DAM = 2250000
 MAX_NORMAL_DAM_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * AVG_DAM_VARIANCE
