@@ -1933,18 +1933,26 @@ class AttackReceivedThreshold(PassiveAbility):
 
     def applyToState(self, state, unit=None, form=None):
         if form.numAttacksReceived >= self.threshold:
-            match self.effect:
-                case "Ki":
-                    state.buff["Ki"] += self.effectiveBuff
-                case "ATK":
-                    state.p2Buff["ATK"] += self.effectiveBuff
-                case "DEF":
-                    state.p2Buff["DEF"] += self.effectiveBuff
-                case "AdditionalSuper":
-                    state.aaPSuper.append(self.effectiveBuff)
-                    state.aaPGuarantee.append(0)
-                case "Scouter":
-                    state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1]
+            if self.effect in REGULAR_SUPPORT_EFFECTS:
+                state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1]
+            else:
+                match self.effect:
+                    case "Ki":
+                        state.buff["Ki"] += self.effectiveBuff
+                    case "ATK":
+                        state.p2Buff["ATK"] += self.effectiveBuff
+                    case "DEF":
+                        state.p2Buff["DEF"] += self.effectiveBuff
+                    case "AdditionalSuper":
+                        state.aaPSuper.append(self.effectiveBuff)
+                        state.aaPGuarantee.append(0)
+                    case "Crit":
+                        state.multiChanceBuff["Crit"].updateChance("On Super", self.effectiveBuff, "Crit", state)
+                        state.atkModifier = state.getAvgAtkMod(form, unit)
+                    case "Dmg Red":
+                        state.dmgRedA += self.effectiveBuff
+                        state.dmgRedB += self.effectiveBuff
+                        state.buff["Dmg Red against Normals"] += self.effectiveBuff
 
 
 class AttackGuardedThreshold(PassiveAbility):
@@ -2548,4 +2556,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(79, "CLR_INT_SS_Trio", 1, "DEF", "ADD", "DGE", SLOT_2)
+    unit = Unit(81, "DFLR_STR_Beast_Gohan", 1, "DEF", "ADD", "DGE", SLOT_1)

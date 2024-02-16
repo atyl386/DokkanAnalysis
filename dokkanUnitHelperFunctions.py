@@ -352,9 +352,9 @@ def getAPT(
         crit.updateChance("Super Attack Effect", sa18Crit - sa12Crit, "Crit")
         critUSA = copy.copy(crit)
         if pCrit0 == 1:
-            atkModifierN = 1
-            atkModifierSA = 1
-            atkModifierUSA = 1
+            atkModifierN = critMultiplier
+            atkModifierSA = critMultiplier
+            atkModifierUSA = critMultiplier
         else:
             atkModifierN = (preAtkModifier - critMultiplier * pCrit0) / (1 - pCrit0) * (
                 1 - critN.prob
