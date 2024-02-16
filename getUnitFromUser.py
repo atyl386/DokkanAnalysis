@@ -1992,9 +1992,15 @@ class AttackPerformedThreshold(PassiveAbility):
             match self.effect:
                 case "ATK":
                     state.p2Buff[self.effect] += self.effectiveBuff
+                case "DEF":
+                    state.p2Buff[self.effect] += self.effectiveBuff
                 case "AdditionalSuper":
                     state.aaPSuper.append(self.effectiveBuff)
                     state.aaPGuarantee.append(0)
+                case "Dmg Red":
+                    state.dmgRedA += self.effectiveBuff
+                    state.dmgRedB += self.effectiveBuff
+                    state.buff["Dmg Red against Normals"] += self.effectiveBuff
 
 
 class PerEvent(PassiveAbility):
