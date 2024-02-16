@@ -2181,6 +2181,8 @@ class AfterEvent(PassiveAbility):
         cappedTurnBuff = min(self.buffToGo, turnBuff)
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
+        elif self.effect in REGULAR_SUPPORT_EFFECTS:
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1]
         else:
             match self.effect:
                 case "Ki":
