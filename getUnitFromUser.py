@@ -4,6 +4,9 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
+# - Fix Gamma 1 - maybe just see if final input isn't -1 to know if has another form after standby finishes.
+#  - Allow threshold bufss to occur in that same turn they trigger
+# - Core breaker doesn't seem to work
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing
@@ -1932,7 +1935,7 @@ class AttackReceivedThreshold(PassiveAbility):
         self.threshold = args[0]
 
     def applyToState(self, state, unit=None, form=None):
-        if form.numAttacksReceived >= self.threshold:
+        if form.numAttacksReceived + state.numAttacksReceived >= self.threshold:
             if self.effect in REGULAR_SUPPORT_EFFECTS:
                 state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1]
             else:
@@ -1961,7 +1964,7 @@ class AttackGuardedThreshold(PassiveAbility):
         self.threshold = args[0]
 
     def applyToState(self, state, unit=None, form=None):
-        if form.numAttacksGuarded >= self.threshold:
+        if form.numAttacksGuarded + state.numAttacksReceived * state.buff["Guard"] >= self.threshold:
             match self.effect:
                 case "Ki":
                     state.buff["Ki"] += self.effectiveBuff
@@ -1985,9 +1988,9 @@ class AttackPerformedThreshold(PassiveAbility):
 
     def applyToState(self, state, unit=None, form=None):
         if yesNo2Bool[self.requiresSuperAttack]:
-            numPerformed = form.superAttacksPerformed
+            numPerformed = form.superAttacksPerformed + state.superAttacksPerformed
         else:
-            numPerformed = form.attacksPerformed
+            numPerformed = form.attacksPerformed + state.attacksPerformed
         if numPerformed >= self.threshold:
             match self.effect:
                 case "ATK":

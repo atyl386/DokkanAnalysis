@@ -179,28 +179,7 @@
 				<input prompt="How many slot specific buffs does the form have?" response="0" />
 			</slot_dependent>
 			<health_dependent>
-				<input prompt="How many health threshold buffs does the form have?" response="3" />
-				<ability_1>
-					<input prompt="What is the threshold health value?" response="0.3" />
-					<input prompt="Is it a max HP condition?" response="N" />
-					<input prompt="What type of buff does the unit get?" response="Ki" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="3.0" />
-				</ability_1>
-				<ability_2>
-					<input prompt="What is the threshold health value?" response="0.3" />
-					<input prompt="Is it a max HP condition?" response="N" />
-					<input prompt="What type of buff does the unit get?" response="ATK" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="1.25" />
-				</ability_2>
-				<ability_3>
-					<input prompt="What is the threshold health value?" response="0.3" />
-					<input prompt="Is it a max HP condition?" response="N" />
-					<input prompt="What type of buff does the unit get?" response="DEF" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="1.25" />
-				</ability_3>
+				<input prompt="How many health threshold buffs does the form have?" response="0" />
 			</health_dependent>
 			<health_scale>
 				<input prompt="How many health scale buffs does the form have?" response="0" />
