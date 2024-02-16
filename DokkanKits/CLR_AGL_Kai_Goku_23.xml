@@ -269,12 +269,14 @@
 					<input prompt="What type of buff does the unit get?" response="Ki" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="Within the same turn?" response="N" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What is the maximum buff?" response="0.59" />
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.09" />
+					<input prompt="Within the same turn?" response="N" />
 				</ability_2>
 			</per_attack_received>
 			<per_attack_guarded>

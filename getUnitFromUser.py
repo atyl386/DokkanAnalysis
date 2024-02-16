@@ -822,9 +822,9 @@ class Form:
                 self,
                 "How many different buffs does the form get on attacks received?",
                 PerAttackReceived,
-                ["What is the maximum buff?"],
-                [None],
-                [1.0],
+                ["What is the maximum buff?", "Within the same turn?"],
+                [None, clc.Choice(YES_NO)],
+                [1.0, "N"],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_guarded")
@@ -2063,12 +2063,12 @@ class PerAttackPerformed(PerEvent):
 class PerAttackReceived(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+        self.withinTheSameTurn = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
         turnBuff = self.effectiveBuff * state.numAttacksReceived
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        form.carryOverBuffs[self.effect].add(cappedTurnBuff)
         match self.effect:
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
@@ -2079,7 +2079,9 @@ class PerAttackReceived(PerEvent):
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
-        self.applied += cappedTurnBuff
+        if not (self.withinTheSameTurn):
+            form.carryOverBuffs[self.effect].add(cappedTurnBuff)
+            self.applied += cappedTurnBuff
 
 
 class PerAttackGuarded(PerEvent):

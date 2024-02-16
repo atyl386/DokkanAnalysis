@@ -430,6 +430,7 @@
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.17" />
+					<input prompt="Within the same turn?" response="N" />
 				</ability_1>
 			</per_attack_received>
 			<per_attack_guarded>
