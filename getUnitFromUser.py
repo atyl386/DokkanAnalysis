@@ -1935,7 +1935,7 @@ class AttackReceivedThreshold(PassiveAbility):
         self.threshold = args[0]
 
     def applyToState(self, state, unit=None, form=None):
-        if form.numAttacksReceived + state.numAttacksReceived >= self.threshold:
+        if form.numAttacksReceived + state.numAttacksReceivedBeforeAttacking >= self.threshold:
             if self.effect in REGULAR_SUPPORT_EFFECTS:
                 state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1]
             else:
@@ -1964,7 +1964,7 @@ class AttackGuardedThreshold(PassiveAbility):
         self.threshold = args[0]
 
     def applyToState(self, state, unit=None, form=None):
-        if form.numAttacksGuarded + state.numAttacksReceived * state.buff["Guard"] >= self.threshold:
+        if form.numAttacksGuarded + state.numAttacksReceivedBeforeAttacking * state.buff["Guard"] >= self.threshold:
             match self.effect:
                 case "Ki":
                     state.buff["Ki"] += self.effectiveBuff
@@ -1988,9 +1988,13 @@ class AttackPerformedThreshold(PassiveAbility):
 
     def applyToState(self, state, unit=None, form=None):
         if yesNo2Bool[self.requiresSuperAttack]:
-            numPerformed = form.superAttacksPerformed + state.superAttacksPerformed
+            numPerformed = form.superAttacksPerformed
+            if self.effect in ["DEF", "Dmg Red"]:
+                numPerformed += state.superAttacksPerformed
         else:
-            numPerformed = form.attacksPerformed + state.attacksPerformed
+            numPerformed = form.attacksPerformed
+            if self.effect in ["DEF", "Dmg Red"]:
+                numPerformed += state.attacksPerformed
         if numPerformed >= self.threshold:
             match self.effect:
                 case "ATK":
