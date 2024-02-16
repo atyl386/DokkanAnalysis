@@ -2336,9 +2336,9 @@ class UntilAttackRecieved(UntilEvent):
     def applyToState(self, state, unit=None, form=None):
         if self.effect == "Evasion":
             pEvade = (state.multiChanceBuff["EvasionA"].prob + self.effectiveBuff) * (1 - DODGE_CANCEL_FACTOR)
-            self.eventFactor = min(pEvade / (1 - pEvade) / round(NUM_ATTACKS_DIRECTED[state.slot - 1]), 1)
         else:
-            raise Exception
+            pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
+        self.eventFactor = min(pEvade / (1 - pEvade) / round(NUM_ATTACKS_DIRECTED[state.slot - 1]), 1)
         self.setTurnBuff(state)
 
 

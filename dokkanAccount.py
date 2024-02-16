@@ -649,4 +649,12 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": SLOT_1,
     },
+    82: {
+        "Common Name": "BU_AGL_Krillin_Android18",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
+    },
 }
