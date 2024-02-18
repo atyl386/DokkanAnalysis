@@ -5,7 +5,8 @@ import math
 
 # TODO:
 # - Fix Gamma 1 - maybe just see if final input isn't -1 to know if has another form after standby finishes.
-#  - Allow threshold bufss to occur in that same turn they trigger
+# - Need to add new implementation of attacks recieved threshold buffs to SSJ STR LR Goku and Beast. and then rest of threshold buffs to new system.
+#  - Allow threshold bufss to occur in that same turn they trigger - should make them use extraBuffs instead of updating inside each state so tcan then move later in the order so state.attacksPerformed is calculated
 # - Core breaker doesn't seem to work
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
@@ -615,17 +616,6 @@ class Form:
                 [1.0],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "attacks_received_threshold")
-        self.abilities["Start of Turn"].extend(
-            abilityQuestionaire(
-                self,
-                "How many different buffs does the form get after multiple attacks received?",
-                AttackReceivedThreshold,
-                ["How many attacks need to be received?"],
-                [None],
-                [5],
-            )
-        )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "attacks_guarded_threshold")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
@@ -773,9 +763,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after receiving an attack?",
                 AfterAttackReceived,
-                ["How many turns does the buff last?"],
-                [None],
-                [1],
+                ["How many turns does the buff last?", "How many attacks received are required?"],
+                [None, None],
+                [1, 0],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_guard_attack")
@@ -1929,35 +1919,6 @@ class HealthScale(Buff):
         super().__init__(form, activationProbability, True, effect, expectedBuff)
 
 
-class AttackReceivedThreshold(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff)
-        self.threshold = args[0]
-
-    def applyToState(self, state, unit=None, form=None):
-        if form.numAttacksReceived + state.numAttacksReceivedBeforeAttacking >= self.threshold:
-            if self.effect in REGULAR_SUPPORT_EFFECTS:
-                state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1]
-            else:
-                match self.effect:
-                    case "Ki":
-                        state.buff["Ki"] += self.effectiveBuff
-                    case "ATK":
-                        state.p2Buff["ATK"] += self.effectiveBuff
-                    case "DEF":
-                        state.p2Buff["DEF"] += self.effectiveBuff
-                    case "AdditionalSuper":
-                        state.aaPSuper.append(self.effectiveBuff)
-                        state.aaPGuarantee.append(0)
-                    case "Crit":
-                        state.multiChanceBuff["Crit"].updateChance("On Super", self.effectiveBuff, "Crit", state)
-                        state.atkModifier = state.getAvgAtkMod(form, unit)
-                    case "Dmg Red":
-                        state.dmgRedA += self.effectiveBuff
-                        state.dmgRedB += self.effectiveBuff
-                        state.buff["Dmg Red against Normals"] += self.effectiveBuff
-
-
 class AttackGuardedThreshold(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
@@ -2170,9 +2131,11 @@ class PerAttackEvaded(PerEvent):
 
 
 class AfterEvent(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, threshold = 0):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.effectDuration = effectDuration
+        self.threshold = threshold
+        self.required = threshold
         self.turnsSinceActivated = 0
         if effect in ADDITIONAL_ATTACK_EFFECTS:
             self.applied = [0, 0]
@@ -2221,11 +2184,15 @@ class AfterEvent(PassiveAbility):
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.atkModifier = state.getAvgAtkMod(form, unit)
+                case "Dmg Red":
+                    state.dmgRedA += cappedTurnBuff
+                    state.dmgRedB += cappedTurnBuff
+                    state.buff["Dmg Red against Normals"] += cappedTurnBuff
 
 
     def nextTurnUpdate(self, form, state):
         # If abiltiy going to be active next turn
-        if self.effectDuration >= (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1] and not(np.any(self.applied)):
+        if self.effectDuration >= (self.turnsSinceActivated + 1) * RETURN_PERIOD_PER_SLOT[state.slot - 1] and not(np.any(self.applied)) and self.required == 0:
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 form.carryOverBuffs["aaPSuper"].add(state.aaPSuper[-1])
                 form.carryOverBuffs["aaPGuarantee"].add(state.aaPGuarantee[-1])
@@ -2241,23 +2208,40 @@ class AfterEvent(PassiveAbility):
 
 class AfterAttackReceived(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
+
+    def setEventFactor(self, state):
+        attacksToActivate = 1 if self.threshold == 0 else self.required
+        # If buff is a defensive one
+        if self.effect in ["DEF", "Dmg Red"]:
+            self.eventFactor = max(
+                state.numAttacksReceived - attacksToActivate
+            , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
+        else:
+            if self.threshold == 0:
+                self.eventFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
+            else:
+                if self.required == 0:
+                    self.eventFactor = 1
+                else:
+                    self.eventFactor = 0
+
 
     def applyToState(self, state, unit=None, form=None):
-        self.updateBuffToGo()
-        # Check if ability will be active next turn
-        if np.any(self.applied):
-            self.resetAppliedBuffs(form, state)
-        # If abiltiy not already active
-        else:
-            # If buff is a defensive one
-            if self.effect in ["DEF", "Dmg Red"]:
-                self.eventFactor = (
-                    state.numAttacksReceived - 1
-                ) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
+        if self.threshold == 0:
+            self.updateBuffToGo()
+            # Check if ability will be active next turn
+            if np.any(self.applied):
+                self.resetAppliedBuffs(form, state)
             else:
-                self.eventFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
-            self.setTurnBuff(unit, form, state)
+                self.setEventFactor(state)
+                self.setTurnBuff(unit, form, state)
+        else:
+            self.buffToGo = self.effectiveBuff
+            self.required = max(self.threshold - form.numAttacksReceived, 0)
+            if not(np.any(self.applied)):
+                self.setEventFactor(state)
+                self.setTurnBuff(unit, form, state)
         self.nextTurnUpdate(form, state)
             
 
@@ -2284,7 +2268,7 @@ class AfterGuardActivated(AfterEvent):
 class AfterAttackEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
-        self.required = args[1]
+        self.requiredWithinTurn = args[1]
         self.nextAttackingTurn = yesNo2Bool[args[2]]
 
     def applyToState(self, state, unit=None, form=None):
@@ -2292,7 +2276,7 @@ class AfterAttackEvaded(AfterEvent):
         if np.any(self.applied):
             self.resetAppliedBuffs(form, state)
         else:
-            if self.required > 1:
+            if self.requiredWithinTurn > 1:
                 self.eventFactor = 1 - poisson.cdf(self.required - 1, state.numAttacksEvaded)
             # If buff is a defensive one
             elif self.effect in ["DEF", "Dmg Red", "Evasion"]:

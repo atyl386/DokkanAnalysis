@@ -399,6 +399,7 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.58" />
+					<input prompt="How many attacks received are required?" response="0" />
 				</ability_1>
 			</after_receive_attack>
 			<after_guard_attack>
