@@ -198,34 +198,6 @@
 			<per_turn>
 				<input prompt="How many different buffs does the form get per turn?" response="0" />
 			</per_turn>
-			<attacks_received_threshold>
-				<input prompt="How many different buffs does the form get after multiple attacks received?" response="4" />
-				<ability_1>
-					<input prompt="How many attacks need to be received?" response="8" />
-					<input prompt="What type of buff does the unit get?" response="Crit" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.2" />
-				</ability_1>
-				<ability_2>
-					<input prompt="How many attacks need to be received?" response="8" />
-					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.2" />
-				</ability_2>
-				<ability_3>
-					<input prompt="How many attacks need to be received?" response="8" />
-					<input prompt="What type of buff does the unit get?" response="Ki" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="2.0" />
-				</ability_3>
-				<ability_4>
-					<input prompt="How many attacks need to be received?" response="8" />
-					<input prompt="What type of buff does the unit get?" response="Ki Support" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="2.0" />
-					<input prompt="How many turns does the effect last for?" response="1" />
-				</ability_4>
-			</attacks_received_threshold>
 			<attacks_guarded_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks guarded?" response="0" />
 			</attacks_guarded_threshold>
@@ -326,7 +298,7 @@
 				</ability_3>
 			</ki_dependent>
 			<after_receive_attack>
-				<input prompt="How many different buffs does the form get after receiving an attack?" response="2" />
+				<input prompt="How many different buffs does the form get after receiving an attack?" response="6" />
 				<ability_1>
 					<input prompt="How many turns does the buff last?" response="1" />
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
@@ -342,6 +314,35 @@
 					<input prompt="How many turns does the effect last for?" response="1" />
 					<input prompt="How many attacks received are required?" response="0" />
 				</ability_2>
+				<ability_3>
+					<input prompt="How many turns does the buff last?" response="99" />
+					<input prompt="How many attacks received are required?" response="8" />
+					<input prompt="What type of buff does the unit get?" response="Crit" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_3>
+				<ability_4>
+					<input prompt="How many turns does the buff last?" response="99" />
+					<input prompt="How many attacks received are required?" response="8" />
+					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_4>
+				<ability_5>
+					<input prompt="How many turns does the buff last?" response="99" />
+					<input prompt="How many attacks received are required?" response="8" />
+					<input prompt="What type of buff does the unit get?" response="Ki" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="2.0" />
+				</ability_5>
+				<ability_6>
+					<input prompt="How many turns does the buff last?" response="99" />
+					<input prompt="How many attacks received are required?" response="8" />
+					<input prompt="What type of buff does the unit get?" response="Ki Support" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="2.0" />
+					<input prompt="How many turns does the effect last for?" response="1" />
+				</ability_6>
 			</after_receive_attack>
 			<after_guard_attack>
 				<input prompt="How many different buffs does the form get after guarding an attack?" response="0" />
