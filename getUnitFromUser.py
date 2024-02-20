@@ -2166,7 +2166,7 @@ class AfterEvent(PassiveAbility):
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
         elif self.effect in REGULAR_SUPPORT_EFFECTS:
-            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1]
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
         else:
             match self.effect:
                 case "Ki":
@@ -2242,7 +2242,8 @@ class AfterAttackReceived(AfterEvent):
             if not(np.any(self.applied)):
                 self.setEventFactor(state)
                 self.setTurnBuff(unit, form, state)
-        self.nextTurnUpdate(form, state)
+        if self.effect not in REGULAR_SUPPORT_EFFECTS:
+            self.nextTurnUpdate(form, state)
             
 
 class AfterGuardActivated(AfterEvent):
