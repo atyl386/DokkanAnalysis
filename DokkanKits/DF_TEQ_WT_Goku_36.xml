@@ -232,6 +232,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="What is the chance for this to become a super?" response="0.7" />
+					<input prompt="How many attacks guarded are required?" response="0" />
 				</ability_1>
 			</after_guard_attack>
 			<after_evade_attack>
