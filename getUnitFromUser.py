@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
+# Update after attack performed to make defensive buffs 100% active
 # - Remove all threshold abilities from all input .xmls
 # - Fix Gamma 1 - maybe just see if final input isn't -1 to know if has another form after standby finishes.
 # - Core breaker doesn't seem to work
@@ -2154,7 +2155,7 @@ class AfterAttackPerformed(AfterEvent):
         self.requiresSuperAttack = args[2]
 
     def setEventFactor(self):
-        if self.required == 0:
+        if self.required == 0 or (self.required - self.increment <= 0 and self.effect in ["DEF", "Dmg Red", "Guard"]):
             self.eventFactor = 1
         else:
             self.eventFactor = 0
