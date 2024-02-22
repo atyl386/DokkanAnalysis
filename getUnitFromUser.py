@@ -4,11 +4,8 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
-# - Need to fix case where afterPerformingAttack buff affects number of attacks, as this won't be counted in def calcs sinceself.aaSA is calculated before.
 # - Remove all threshold abilities from all input .xmls
 # - Fix Gamma 1 - maybe just see if final input isn't -1 to know if has another form after standby finishes.
-# - Need to add new implementation of rest of threshold buffs to new system.
-#  - Allow threshold buffs to occur in that same turn they trigger - should make them use extraBuffs instead of updating inside each state so tcan then move later in the order so state.attacksPerformed is calculated
 # - Core breaker doesn't seem to work
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
@@ -162,6 +159,17 @@ def updateAttacksReceivedAndEvaded(self, state):
 
 
 MultiChanceBuff.updateAttacksReceivedAndEvaded = updateAttacksReceivedAndEvaded
+
+def setAttacksPerformed(unit, state):
+    state.aaSA = branchAS(
+        -1, len(state.aaPSuper), unit.pHiPo["AA"], 1, state.aaPSuper, state.aaPGuarantee, unit.pHiPo["AA"]
+    )
+    state.aa = branchAA(
+        -1, len(state.aaPSuper), unit.pHiPo["AA"], 1, state.aaPSuper, state.aaPGuarantee, unit.pHiPo["AA"]
+    )
+    state.attacksPerformed += state.pAttack + state.aa * state.pNextAttack
+    # Assume Binomial distribution for aaSA for the expected value
+    state.superAttacksPerformed += state.pAttack + state.aaSA * state.pNextAttack
 
 
 ######################################################### Classes #################################################################
@@ -1249,45 +1257,9 @@ class State:
         self.pN, self.pSA, self.pUSA = getAttackDistribution(
             self.buff["Ki"], self.randomKi, form.intentional12Ki, unit.rarity
         )
-        self.aaSA = branchAS(
-            -1, len(self.aaPSuper), unit.pHiPo["AA"], 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPo["AA"]
-        )
-        self.aa = branchAA(
-            -1, len(self.aaPSuper), unit.pHiPo["AA"], 1, self.aaPSuper, self.aaPGuarantee, unit.pHiPo["AA"]
-        )
-        pAttack = 1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]
-        pNextAttack = pAttack - PROBABILITY_KILL_ENEMY_PER_ATTACK
-        self.attacksPerformed += pAttack + self.aa * pNextAttack
-        # Assume Binomial distribution for aaSA for the expected value
-        self.superAttacksPerformed += pAttack + self.aaSA * pNextAttack
-        self.addStacks(form, unit)
-        # Compute support bonuses from super attack effects
-        for superAttackType in form.superAttacks.keys():
-            match superAttackType:
-                case "18 Ki":
-                    numSupers = pAttack * self.pUSA
-                case "12 Ki":
-                    numSupers = pAttack * self.pSA
-                case "AS":
-                    numSupers = pAttack * self.aaSA * pNextAttack
-            for superAttackEFfect in SUPPORT_SUPER_ATTACK_EFFECTS:
-                supportFactor = (
-                    superAttackSupportFactorConversion[superAttackEFfect]
-                    * form.superAttacks[superAttackType].effects[superAttackEFfect].buff
-                    * (
-                        form.superAttacks[superAttackType].effects[superAttackEFfect].duration
-                        - 1
-                        + (NUM_SLOTS - self.slot) / (NUM_SLOTS - 1)
-                    )
-                )
-                self.support += supportFactor * numSupers
-            self.multiChanceBuff["Nullify"].updateChance(
-                "Disable Action",
-                numSupers
-                * P_NULLIFY_FROM_DISABLE_SUPER[self.slot - 1]
-                * form.superAttacks[superAttackType].effects["Disable Action"].buff,
-                "Nullify",
-            )
+        self.pAttack = 1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]
+        self.pNextAttack = self.pAttack - PROBABILITY_KILL_ENEMY_PER_ATTACK
+        setAttacksPerformed(unit, self)
         self.buff["Guard"] = min(self.buff["Guard"], 1)
         self.avgDefPreSuper = getDefStat(
             unit.DEF,
@@ -1317,6 +1289,34 @@ class State:
         )
         for ability in form.abilities["Attack Enemy"]:
             ability.applyToState(self, unit, form)
+        self.addStacks(form, unit)
+        # Compute support bonuses from super attack effects
+        for superAttackType in form.superAttacks.keys():
+            match superAttackType:
+                case "18 Ki":
+                    numSupers = self.pAttack * self.pUSA
+                case "12 Ki":
+                    numSupers = self.pAttack * self.pSA
+                case "AS":
+                    numSupers = self.pAttack * self.aaSA * self.pNextAttack
+            for superAttackEFfect in SUPPORT_SUPER_ATTACK_EFFECTS:
+                supportFactor = (
+                    superAttackSupportFactorConversion[superAttackEFfect]
+                    * form.superAttacks[superAttackType].effects[superAttackEFfect].buff
+                    * (
+                        form.superAttacks[superAttackType].effects[superAttackEFfect].duration
+                        - 1
+                        + (NUM_SLOTS - self.slot) / (NUM_SLOTS - 1)
+                    )
+                )
+                self.support += supportFactor * numSupers
+            self.multiChanceBuff["Nullify"].updateChance(
+                "Disable Action",
+                numSupers
+                * P_NULLIFY_FROM_DISABLE_SUPER[self.slot - 1]
+                * form.superAttacks[superAttackType].effects["Disable Action"].buff,
+                "Nullify",
+            )
         self.normal = getNormal(
             unit.kiMod12,
             self.ki,
@@ -2170,6 +2170,9 @@ class AfterAttackPerformed(AfterEvent):
         if not(np.any(self.applied)):
             self.setEventFactor()
             self.setTurnBuff(unit, form, state)
+            if self.effect in ADDITIONAL_ATTACK_EFFECTS:
+                # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
+                setAttacksPerformed(unit, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
 
