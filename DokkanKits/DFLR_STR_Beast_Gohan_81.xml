@@ -380,6 +380,9 @@
 					<input prompt="What is the value of the buff?" response="0.2" />
 				</ability_3>
 			</per_attack_received>
+			<after_perform_attack>
+				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
+			</after_perform_attack>
 			<per_attack_guarded>
 				<input prompt="How many different buffs does the form get on attacks guarded?" response="0" />
 			</per_attack_guarded>

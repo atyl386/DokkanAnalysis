@@ -294,6 +294,9 @@
 					<input prompt="Within the same turn?" response="N" />
 				</ability_2>
 			</per_attack_received>
+			<after_perform_attack>
+				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
+			</after_perform_attack>
 			<per_attack_guarded>
 				<input prompt="How many different buffs does the form get on attacks guarded?" response="0" />
 			</per_attack_guarded>

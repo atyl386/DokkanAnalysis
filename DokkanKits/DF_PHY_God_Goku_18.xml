@@ -139,16 +139,6 @@
 			<attacks_guarded_threshold>
 				<input prompt="How many different buffs does the form get after multiple attacks guarded?" response="0" />
 			</attacks_guarded_threshold>
-			<attacks_performed_threshold>
-				<input prompt="How many different buffs does the form get after multiple attacks performed?" response="1" />
-				<ability_1>
-					<input prompt="How many attacks need to be performed?" response="4" />
-					<input prompt="Requires super attack?" response="Y" />
-					<input prompt="What type of buff does the unit get?" response="ATK" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.5" />
-				</ability_1>
-			</attacks_performed_threshold>
 			<domain>
 				<input prompt="How many Domain skills does the form have?" response="0" />
 			</domain>
@@ -269,6 +259,17 @@
 			<until_recieve_attack>
 				<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
 			</until_recieve_attack>
+			<after_perform_attack>
+				<input prompt="How many different buffs does the form get after performing an attack?" response="1" />
+				<ability_1>
+					<input prompt="How many turns does the buff last?" response="99" />
+					<input prompt="How many attacks performed are required?" response="4" />
+					<input prompt="Requires super attack?" response="Y" />
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+				</ability_1>
+			</after_perform_attack>
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>
@@ -473,6 +474,9 @@
 			<until_recieve_attack>
 				<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
 			</until_recieve_attack>
+			<after_perform_attack>
+				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
+			</after_perform_attack>
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>

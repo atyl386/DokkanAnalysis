@@ -281,6 +281,9 @@
 			<until_recieve_attack>
 				<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
 			</until_recieve_attack>
+			<after_perform_attack>
+				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
+			</after_perform_attack>
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>

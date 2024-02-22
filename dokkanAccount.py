@@ -309,8 +309,8 @@ User = {
         "Common Name": "DF_STR_Goku_Gohan",
         "# Copies": 3,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
         "Slots": [2, 2, 2, 1, 1, 2, 2, 2, 2, 2],
     },
     40: {

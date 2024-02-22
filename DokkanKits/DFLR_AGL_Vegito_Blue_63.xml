@@ -246,6 +246,9 @@
 			<until_recieve_attack>
 				<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
 			</until_recieve_attack>
+			<after_perform_attack>
+				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
+			</after_perform_attack>
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>
@@ -546,7 +549,7 @@
 					<input prompt="What is the probability this ability activates?" response="0.3" />
 					<input prompt="Is the status of this ability known beforehand?" response="N" />
 					<input prompt="What is the value of the buff?" response="1.0" />
-										<input prompt="How many turns does it last?" response="1" />
+					<input prompt="How many turns does it last?" response="1" />
 					<input prompt="How many times can it be activated?" response="1" />
 					<input prompt="How many conditions have to be met?" response="2" />
 					<input prompt="What is the condition logic?" response="OR" />
@@ -614,6 +617,9 @@
 			<until_recieve_attack>
 				<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
 			</until_recieve_attack>
+			<after_perform_attack>
+				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
+			</after_perform_attack>
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>
