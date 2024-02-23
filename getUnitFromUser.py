@@ -1863,6 +1863,10 @@ class Buff(PassiveAbility):
                     case "Evasion":
                         state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
                         state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
+                    case "EvasionA":
+                        state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
+                    case "EvasionB":
+                        state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
                     case "AdditionalSuper":
                         state.aaPSuper.append(activationProbability)
                         state.aaPGuarantee.append(0)
@@ -2323,7 +2327,8 @@ class AfterAttackEvaded(AfterEvent):
             else:
                 self.eventFactor = min(state.numAttacksEvadedBeforeAttacking, 1)
             self.setTurnBuff(unit, form, state)
-        self.nextTurnUpdate(form, state)
+        if self.effect not in REGULAR_SUPPORT_EFFECTS:
+            self.nextTurnUpdate(form, state)
 
 
 class AfterAttackReceivedOrEvaded(AfterEvent):
@@ -2442,6 +2447,11 @@ class PerformingSuperAttackDefence(PassiveAbility):
                 # If have activated active skill attack this turn
                 if state.superAttacksPerformed > 0:
                     state.dmgRedA += self.effectiveBuff
+            case "Evasion":
+                state.multiChanceBuff["EvasionA"].updateChance("On Super", self.effectiveBuff, "Evasion", state)
+                # If have activated active skill attack this turn
+                if state.superAttacksPerformed > 0:
+                    state.multiChanceBuff["EvasionB"].updateChance("On Super", self.effectiveBuff, "Evasion", state)
 
 
 class KiSphereDependent(PerEvent):
