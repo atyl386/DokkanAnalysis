@@ -552,7 +552,9 @@ CONDITIONS = [
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]
 
 # Standby Finish Effect Conditions
-FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "Attack performed by allies", "SA Counter", "Turn"]
+START_OF_TURN_FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "SA Counter", "Turn"]
+END_OF_TURN_FINISH_EFFECT_CONDITIONS = ["Attack performed by allies"]
+FINISH_EFFECT_CONDITIONS = START_OF_TURN_FINISH_EFFECT_CONDITIONS + END_OF_TURN_FINISH_EFFECT_CONDITIONS
 
 # Revive
 REVIVE_UNIT_SUPPORT_BUFF = 0.75  # Just revives this unit

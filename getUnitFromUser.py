@@ -4,11 +4,7 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
-# - Bug is that finish skill counter is incremented before it can be activated so assumes the counts are gotten instantly at start of turn, but some aren't.
-# - Gammas currently in .txt have transformed in turn 3, activated their standby immeditately and transformed back. I have now increase the threshold, so I think they will stay in that form for a while longer, I think this has also meant that the third form is being used.
 # - Remove all threshold abilities from all input .xmls
-# - Fix Gamma 1 - maybe just see if final input isn't -1 to know if has another form after standby finishes.
-# - Core breaker doesn't seem to work
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing
@@ -1715,7 +1711,8 @@ class StandbyFinishSkill(SingleTurnAbility):
         self.activeMult = specialAttackConversion[attackMultiplier]
 
     def applyToState(self, state, unit=None, form=None):
-        form.charge += form.getCharge(self.finishSkillChargeCondition)
+        if self.finishSkillChargeCondition in START_OF_TURN_FINISH_EFFECT_CONDITIONS:
+            form.charge += form.getCharge(self.finishSkillChargeCondition)
         if form.checkCondition(self.condition, self.activated, True):
             self.activated = True
             self.activeMult += self.buffPerCharge * form.charge
@@ -1739,6 +1736,8 @@ class StandbyFinishSkill(SingleTurnAbility):
                 unit.nextForm = 1
             else:
                 unit.nextForm = -1
+        if self.finishSkillChargeCondition in END_OF_TURN_FINISH_EFFECT_CONDITIONS:
+            form.charge += form.getCharge(self.finishSkillChargeCondition)
 
 
 class RevivalCounterFinishSkill(StandbyFinishSkill):
