@@ -2388,6 +2388,13 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                 case "AdditionalSuper":
                     state.aaPSuper.append(self.effectiveBuff)
                     state.aaPGuarantee.append(0)
+                case "DEF":
+                    state.p2Buff["DEF"] += self.effectiveBuff
+                case "Dmg Red":
+                    state.dmgRedA += self.effectiveBuff
+                    state.dmgRedB += self.effectiveBuff
+                    state.buff["Dmg Red against Normals"] += self.effectiveBuff
+
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
                 setAttacksPerformed(unit, state)
