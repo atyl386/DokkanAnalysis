@@ -470,7 +470,7 @@
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
 						<input prompt="What type of condition is # 1?" response="Finish Skill Activation" />
-						<input prompt="What is the required charge condition?" response="5" />
+						<input prompt="What is the required charge condition?" response="7" />
 					</condition_1>
 				</ability_1>
 			</standby_finish_attack>

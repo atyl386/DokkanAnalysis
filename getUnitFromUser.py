@@ -4,7 +4,8 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
-# Update after attack performed to make defensive buffs 100% active
+# - Bug is that finish skill counter is incremented before it can be activated so assumes the counts are gotten instantly at start of turn, but some aren't.
+# - Gammas currently in .txt have transformed in turn 3, activated their standby immeditately and transformed back. I have now increase the threshold, so I think they will stay in that form for a while longer, I think this has also meant that the third form is being used.
 # - Remove all threshold abilities from all input .xmls
 # - Fix Gamma 1 - maybe just see if final input isn't -1 to know if has another form after standby finishes.
 # - Core breaker doesn't seem to work
@@ -1058,13 +1059,12 @@ class Form:
                 )
             case "Attack performed by allies":
                 charge = (
-                    self.attacksPerformed
-                    + (NUM_SLOTS - 1)
+                    NUM_SLOTS
                     - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[1]
                     - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[2]
                     + (NUM_ATTACKS_PERFORMED_PER_UNIT_PER_TURN - 1)
                     * (
-                        (NUM_SLOTS - 1)
+                        NUM_SLOTS
                         - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[1]
                         - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[2]
                         - (NUM_SLOTS - 1) * PROBABILITY_KILL_ENEMY_PER_ATTACK
@@ -1735,7 +1735,10 @@ class StandbyFinishSkill(SingleTurnAbility):
                 * state.atkModifier
             )
             unit.transformationTriggered = True
-            unit.nextForm = -1
+            if unit.numForms > form.formIdx:
+                unit.nextForm = 1
+            else:
+                unit.nextForm = -1
 
 
 class RevivalCounterFinishSkill(StandbyFinishSkill):
@@ -2519,18 +2522,6 @@ class ReviveCondition(Condition):
     def __init__(self):
         self.formAttr = "revived"
         self.conditionValue = True
-
-
-# Too niche to conform to a generalised case because there is no formAttr for the charge condtion
-class DoubleSameRainbowKiSphereCondition(Condition):
-    def __init__(self, chargeCondition):
-        self.conditionValue = chargeCondition
-        self.currentValue = 0
-
-    def isSatisfied(self, form):
-        # NB: this line only works because the chargeCondition does not rely on form.attacksPerformed as that value will increase per turn, wheras here we are assuming the getCharge in constant
-        self.currentValue += form.getCharge(self.conditionValue)
-        return self.currentValue >= self.conditionValue
 
 
 class CompositeCondition:
