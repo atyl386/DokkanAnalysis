@@ -712,5 +712,13 @@ User = {
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_2,
+    },
+    90: {
+        "Common Name": "DFLR_AGL_MUI_Goku",
+        "# Copies": 5,
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_1,
     }
 }

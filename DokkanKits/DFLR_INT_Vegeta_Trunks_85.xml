@@ -10,7 +10,7 @@
 		<input prompt="What is the unit's Max Level HP stat?" response="17750" />
 		<input prompt="What is the unit's Max Level ATK stat?" response="15910" />
 		<input prompt="What is the unit's Max Level DEF stat?" response="8488" />
-		<input prompt="How would you rate the unit's leader skill on a scale of 1-10? 200% limited - e.g. LR Hatchiyak Goku 200% small - e.g. LR Metal Cooler 200% medium - e.g. PHY God Goku 200% large - e.g. LR Vegeta and Trunks" response="200% large" />
+		<input prompt="How would you rate the unit's leader skill on a scale of 1-10? 200% limited / 2 x 180% - e.g. LR Hatchiyak Goku 200% small - e.g. LR Metal Cooler 200% medium - e.g. PHY God Goku 200% large - e.g. LR Vegeta and Trunks" response="200% large" />
 		<input prompt="How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account." response="8" />
 		<input prompt="What is the unit's 12 ki attck modifer?" response="1.5" />
 		<input prompt="How many turns does the unit's giant/rage mode last for?" response="0.0" />
