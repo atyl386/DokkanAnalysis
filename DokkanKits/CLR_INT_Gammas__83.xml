@@ -292,6 +292,9 @@
 			<per_attack_evaded>
 				<input prompt="How many different buffs does the form get on attacks evaded?" response="0" />
 			</per_attack_evaded>
+			<after_x_attacks_in_battle>
+				<input prompt="How many different buffs does the form get after performing X attacks in battle?" response="0" />
+			</after_x_attacks_in_battle>
 			<per_attack_super_performed>
 				<input prompt="How many different buffs does the form get per attack / super performed?" response="0" />
 			</per_attack_super_performed>
@@ -575,6 +578,9 @@
 			<per_attack_evaded>
 				<input prompt="How many different buffs does the form get on attacks evaded?" response="0" />
 			</per_attack_evaded>
+			<after_x_attacks_in_battle>
+				<input prompt="How many different buffs does the form get after performing X attacks in battle?" response="0" />
+			</after_x_attacks_in_battle>
 			<per_attack_super_performed>
 				<input prompt="How many different buffs does the form get per attack / super performed?" response="0" />
 			</per_attack_super_performed>
@@ -881,6 +887,9 @@
 			<after_perform_attack>
 				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
 			</after_perform_attack>
+			<after_x_attacks_in_battle>
+				<input prompt="How many different buffs does the form get after performing X attacks in battle?" response="0" />
+			</after_x_attacks_in_battle>
 			<per_attack_super_performed>
 				<input prompt="How many different buffs does the form get per attack / super performed?" response="0" />
 			</per_attack_super_performed>

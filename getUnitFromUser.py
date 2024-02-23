@@ -840,6 +840,17 @@ class Form:
                 [1, 5, "Y"],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_x_attacks_in_battle")
+        self.abilities["Attack Enemy"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after performing X attacks in battle?",
+                EveryTimeXAttacksPerformedInBattle,
+                ["How many attacks performed are required?", "Requires super attack?"],
+                [None, clc.Choice(YES_NO)],
+                [5, "Y"],
+            )
+        )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_super_performed")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
@@ -1647,6 +1658,31 @@ class Domain(SingleTurnAbility):
                         ),
                         TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params)
                     ])
+                case "City (Future) (Rift in Time)":
+                    extremeClassBuff = 0.1 * aprioriProbMod(self.prop, True) # prop to account for may be buffing enemies too
+                    superBossesBuff = 0.1 * aprioriProbMod(math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # The other part comes from calculating the probability an average enemy is not on the super bosses category.
+                    form.abilities["Start of Turn"].extend([
+                        TurnDependent(
+                            form, 1, False, "Ki Support", 2 * KI_SUPPORT_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "Ki", 2, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", extremeClassBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "DEF Support", extremeClassBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", superBossesBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "DEF Support", superBossesBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(form, 1, False, "P3 ATK", 0.2, 1, params),
+                        TurnDependent(form, 1, False, "P3 DEF", 0.2, 1, params),
+                    ])
                     
 
 class ActiveSkillBuff(SingleTurnAbility):
@@ -2337,6 +2373,38 @@ class UntilAttackRecieved(UntilEvent):
             pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
         self.eventFactor = min(pEvade / (1 - pEvade) / round(NUM_ATTACKS_DIRECTED[state.slot - 1]), 1)
         self.setTurnBuff(state)
+
+
+class EveryTimeXEventsInBattle(PassiveAbility):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
+        self.threshold = args[0]
+        self.required = self.threshold
+
+    def applyBuff(self, unit, state):
+        self.required -= self.increment
+        if round(self.required) <= 0:
+            match self.effect:
+                case "AdditionalSuper":
+                    state.aaPSuper.append(self.effectiveBuff)
+                    state.aaPGuarantee.append(0)
+            if self.effect in ADDITIONAL_ATTACK_EFFECTS:
+                # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
+                setAttacksPerformed(unit, state)
+            self.required = self.threshold
+
+
+class EveryTimeXAttacksPerformedInBattle(EveryTimeXEventsInBattle):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args)
+        self.requiresSuperAttack = args[1]
+
+    def applyToState(self, state, unit=None, form=None):
+        if yesNo2Bool[self.requiresSuperAttack]:
+            self.increment = state.superAttacksPerformed
+        else:
+            self.increment = state.attacksPerformed
+        self.applyBuff(unit, state)
 
 
 class PerformingSuperAttackOffence(PassiveAbility):
