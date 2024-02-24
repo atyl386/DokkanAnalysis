@@ -736,5 +736,13 @@ User = {
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
         "Slots": SLOT_1,
+    },
+    93: {
+        "Common Name": "DF_STR_Transforming_Kelfa",
+        "# Copies": 2,
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_1,
     }
 }
