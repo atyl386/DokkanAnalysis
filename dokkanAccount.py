@@ -27,7 +27,7 @@ User = {
     },
     4: {
         "Common Name": "DFLR_TEQ_Fusion_Zamasu",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
