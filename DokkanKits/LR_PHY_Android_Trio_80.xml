@@ -285,6 +285,9 @@
 					<input prompt="What is the chance for this to become a super?" response="0.5" />
 				</ability_2>
 			</after_evade_attack>
+			<per_attack_received_or_evaded>
+				<input prompt="How many different buffs does the form get on attacks received or evaded?" response="0" />
+			</per_attack_received_or_evaded>
 			<after_recieve_or_evade_attack>
 				<input prompt="How many different buffs does the form get after receiving or evading an attack?" response="0" />
 			</after_recieve_or_evade_attack>
@@ -543,6 +546,9 @@
 			<after_evade_attack>
 				<input prompt="How many different buffs does the form get after evading an attack?" response="0" />
 			</after_evade_attack>
+			<per_attack_received_or_evaded>
+				<input prompt="How many different buffs does the form get on attacks received or evaded?" response="0" />
+			</per_attack_received_or_evaded>
 			<after_recieve_or_evade_attack>
 				<input prompt="How many different buffs does the form get after receiving or evading an attack?" response="0" />
 			</after_recieve_or_evade_attack>

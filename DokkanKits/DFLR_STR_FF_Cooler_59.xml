@@ -221,6 +221,9 @@
 			<after_recieve_or_evade_attack>
 				<input prompt="How many different buffs does the form get after receiving or evading an attack?" response="0" />
 			</after_recieve_or_evade_attack>
+			<per_attack_received_or_evaded>
+				<input prompt="How many different buffs does the form get on attacks received or evaded?" response="0" />
+			</per_attack_received_or_evaded>
 			<until_recieve_attack>
 				<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
 			</until_recieve_attack>

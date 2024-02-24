@@ -274,6 +274,9 @@
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>
+			<per_attack_received_or_evaded>
+				<input prompt="How many different buffs does the form get on attacks received or evaded?" response="0" />
+			</per_attack_received_or_evaded>
 			<per_attack_guarded>
 				<input prompt="How many different buffs does the form get on attacks guarded?" response="0" />
 			</per_attack_guarded>

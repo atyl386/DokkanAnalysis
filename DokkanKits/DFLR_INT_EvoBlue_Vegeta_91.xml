@@ -266,6 +266,16 @@
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>
+			<per_attack_received_or_evaded>
+				<input prompt="How many different buffs does the form get on attacks received or evaded?" response="1" />
+				<ability_1>
+					<input prompt="What is the maximum buff?" response="0.3" />
+					<input prompt="Within the same turn?" response="Y" />
+					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.1" />
+				</ability_1>
+			</per_attack_received_or_evaded>
 			<per_attack_guarded>
 				<input prompt="How many different buffs does the form get on attacks guarded?" response="0" />
 			</per_attack_guarded>

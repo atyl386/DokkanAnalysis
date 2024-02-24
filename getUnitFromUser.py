@@ -806,6 +806,17 @@ class Form:
                 [1.0, "N"],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_received_or_evaded")
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get on attacks received or evaded?",
+                PerAttackReceivedOrEvaded,
+                ["What is the maximum buff?", "Within the same turn?"],
+                [None, clc.Choice(YES_NO)],
+                [1.0, "N"],
+            )
+        )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_guarded")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
@@ -2043,6 +2054,27 @@ class PerAttackReceived(PerEvent):
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
+        if not (self.withinTheSameTurn):
+            form.carryOverBuffs[self.effect].add(cappedTurnBuff)
+            self.applied += cappedTurnBuff
+
+
+class PerAttackReceivedOrEvaded(PerEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+        self.withinTheSameTurn = yesNo2Bool[args[1]]
+
+    def applyToState(self, state, unit=None, form=None):
+        numAttacksDirected = round(NUM_ATTACKS_DIRECTED[state.slot - 1])
+        turnBuff = self.effectiveBuff * numAttacksDirected
+        buffToGo = self.max - self.applied
+        cappedTurnBuff = min(buffToGo, turnBuff)
+        defBuff = min((numAttacksDirected - 1) * self.effectiveBuff / 2, buffToGo)
+        match self.effect:
+            case "Dmg Red":
+                state.dmgRedA += defBuff
+                state.dmgRedB += defBuff
+                state.buff["Dmg Red against Normals"] += defBuff
         if not (self.withinTheSameTurn):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
