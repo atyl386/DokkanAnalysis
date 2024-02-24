@@ -733,16 +733,16 @@ User = {
         "Common Name": "BU_INT_Vados_",
         "# Copies": 5,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
         "Slots": SLOT_1,
     },
     93: {
         "Common Name": "DF_STR_Transforming_Kelfa",
         "# Copies": 2,
         "BRZ Equip": "ATK",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
-        "Slots": SLOT_1,
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_2,
     }
 }
