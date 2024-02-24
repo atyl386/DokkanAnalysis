@@ -4,7 +4,6 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
-# - Remove all threshold abilities from all input .xmls
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing

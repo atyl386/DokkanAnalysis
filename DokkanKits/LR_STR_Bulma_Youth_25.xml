@@ -182,15 +182,6 @@
 					<input prompt="What is the value of the buff?" response="0.07" />
 				</ability_1>
 			</per_turn>
-			<attacks_received_threshold>
-				<input prompt="How many different buffs does the form get after multiple attacks received?" response="0" />
-			</attacks_received_threshold>
-			<attacks_guarded_threshold>
-				<input prompt="How many different buffs does the form get after multiple attacks guarded?" response="0" />
-			</attacks_guarded_threshold>
-			<attacks_performed_threshold>
-				<input prompt="How many different buffs does the form get after multiple attacks performed?" response="0" />
-			</attacks_performed_threshold>
 			<domain>
 				<input prompt="How many Domain skills does the form have?" response="0" />
 			</domain>
