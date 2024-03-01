@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
+#  - Current bug that crit per attack need to be per attack not cumulative
 # - Apply 100% cap on Heal
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
@@ -2009,23 +2010,24 @@ class PerAttackPerformed(PerEvent):
         self.withinTheSameTurn = yesNo2Bool[args[2]]
 
     def applyToState(self, state, unit=None, form=None):
-        buffPerAttack = self.effectiveBuff * (np.arange(len(state.aaPSuper) + 1) + 1)
+        cumBuffPerAttack = self.effectiveBuff * (np.arange(len(state.aaPSuper) + 1) + 1)
         if self.requiresSuperAttack:
             turnBuff = self.effectiveBuff * state.superAttacksPerformed
         else:
             turnBuff = self.effectiveBuff * state.attacksPerformed
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        cappedBuffPerAttack = np.minimum(buffPerAttack, buffToGo)
+        cappedCumBuffPerAttack = np.minimum(cumBuffPerAttack, buffToGo)
+        cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         if not (self.requiresSuperAttack):
             match self.effect:
                 case "ATK":
-                    state.atkPerAttackPerformed = cappedBuffPerAttack
+                    state.atkPerAttackPerformed = cappedCumBuffPerAttack
                 case "Crit":
                     state.critPerAttackPerformed = cappedBuffPerAttack
         match self.effect:
             case "ATK":
-                state.atkPerSuperPerformed = cappedBuffPerAttack
+                state.atkPerSuperPerformed = cappedCumBuffPerAttack
             case "DEF":
                 state.p2DefB += cappedTurnBuff
             case "Crit":

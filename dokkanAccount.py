@@ -760,5 +760,13 @@ User = {
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
         "Slots": [2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    },
+    96: {
+        "Common Name": "BU_INT_Dodoria_",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_1,
     }
 }
