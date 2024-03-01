@@ -748,17 +748,17 @@ User = {
     94: {
         "Common Name": "DFLR_PHY_Buutenks_",
         "# Copies": 5,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     },
     95: {
         "Common Name": "DFLR_STR_SS_Vegito",
         "# Copies": 5,
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
-        "Slots": SLOT_1,
+        "HiPo Choice # 2": "CRT",
+        "Slots": [2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     }
 }
