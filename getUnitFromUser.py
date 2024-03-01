@@ -4,7 +4,6 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
-# - Add new ability to handle Buuhan
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing
@@ -663,6 +662,9 @@ class Form:
                 self,
                 "How many different offensive buffs does the form get when performing a super attack / attacking?",
                 PerformingSuperAttackOffence,
+                ["Does the buff only apply to the first attack?"],
+                [clc.Choice(YES_NO)],
+                ["N"],
             )
         )
         if self.giantRageActivationForm == self.formIdx:
@@ -1234,6 +1236,7 @@ class State:
         self.aaPSuper = form.carryOverBuffs["aaPSuper"].get()
         self.aaPGuarantee = form.carryOverBuffs["aaPGuarantee"].get()
         self.orbCollection = OrbCollection()
+        self.firstAttackBuff = 0
         self.p2DefB = 0
         self.support = 0  # Support score
         self.dmgRedA = form.carryOverBuffs["Dmg Red"].get()
@@ -1394,6 +1397,7 @@ class State:
             form.superAttacks["AS"].effects["ATK"].buff,
             form.superAttacks["12 Ki"].effects["ATK"].buff,
             form.superAttacks["18 Ki"].effects["ATK"].buff,
+            self.firstAttackBuff,
             self.stackedStats["ATK"],
             self.p1Buff["ATK"],
             self.p2Buff["ATK"],
@@ -2453,11 +2457,15 @@ class EveryTimeXAttacksPerformedInBattle(EveryTimeXEventsInBattle):
 class PerformingSuperAttackOffence(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
+        self.firstAttackOnly = yesNo2Bool[args[0]]
 
     def applyToState(self, state, unit=None, form=None):
         match self.effect:
             case "ATK":
-                state.p2Buff["ATK"] += self.effectiveBuff
+                if self.firstAttackOnly:
+                    state.firstAttackBuff += self.effectiveBuff
+                else:
+                    state.p2Buff["ATK"] += self.effectiveBuff
 
 
 class PerformingSuperAttackDefence(PassiveAbility):

@@ -154,6 +154,7 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="Does the buff only apply to the first attack?" response="N" />
 				</ability_1>
 			</offensive_on_super>
 			<active_skill_attack>

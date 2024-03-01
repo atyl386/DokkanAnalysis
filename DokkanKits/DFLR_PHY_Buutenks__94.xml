@@ -507,7 +507,14 @@
 				<input prompt="How many active skill buffs does the form have?" response="0" />
 			</active_skill_buffs>
 			<offensive_on_super>
-				<input prompt="How many different offensive buffs does the form get when performing a super attack / attacking?" response="0" />
+				<input prompt="How many different offensive buffs does the form get when performing a super attack / attacking?" response="1" />
+				<ability_1>
+					<input prompt="Does the buff only apply to the first attack?" response="Y" />
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the probability this ability activates?" response="0.75" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
+				</ability_1>
 			</offensive_on_super>
 			<active_skill_attack>
 				<input prompt="How many active skill attacks does the form have?" response="0" />
