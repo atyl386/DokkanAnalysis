@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
+# - Add new ability to handle Buuhan
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing
@@ -2183,8 +2184,6 @@ class AfterEvent(PassiveAbility):
             state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
         else:
             match self.effect:
-                case "Ki":
-                    state.buff["Ki"] += cappedTurnBuff
                 case "ATK":
                     state.p2Buff["ATK"] += cappedTurnBuff
                 case "DEF":
@@ -2202,8 +2201,9 @@ class AfterEvent(PassiveAbility):
                     state.dmgRedA += cappedTurnBuff
                     state.dmgRedB += cappedTurnBuff
                     state.buff["Dmg Red against Normals"] += cappedTurnBuff
-                case "Guard":
-                    state.buff["Guard"] += cappedTurnBuff
+                case "Evasion":
+                    state.multiChanceBuff["EvasionA"].updateChance("On Super", cappedTurnBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("On Super", cappedTurnBuff, "Evasion", state)
 
 
     def nextTurnUpdate(self, form, state):

@@ -744,5 +744,13 @@ User = {
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_2,
+    },
+    94: {
+        "Common Name": "DFLR_PHY_Buutenks_",
+        "# Copies": 5,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
     }
 }
