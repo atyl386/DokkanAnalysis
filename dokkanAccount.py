@@ -752,5 +752,13 @@ User = {
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_1,
+    },
+    95: {
+        "Common Name": "DFLR_STR_SS_Vegito",
+        "# Copies": 5,
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_1,
     }
 }
