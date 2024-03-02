@@ -764,9 +764,17 @@ User = {
     96: {
         "Common Name": "BU_INT_Dodoria_",
         "# Copies": 0,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+    },
+    97: {
+        "Common Name": "DF_AGL_1stForm_Frieza",
+        "# Copies": 0,
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": SLOT_1,
+        "Slots": [2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
     }
 }
