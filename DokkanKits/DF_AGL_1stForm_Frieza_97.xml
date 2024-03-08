@@ -131,7 +131,7 @@
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="0.34375" />
 					<input prompt="Is the status of this ability known beforehand?" response="Y" />
-					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="What is the value of the buff?" response="0.3" />
 				</ability_7>
 				<ability_8>
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
