@@ -4,8 +4,6 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
-#  - Current bug that crit per attack need to be per attack not cumulative
-# - Apply 100% cap on Heal
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
 # - Add multi-processing
