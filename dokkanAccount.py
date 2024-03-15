@@ -784,5 +784,13 @@ User = {
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
         "Slots": [2, 1, 1, 1, 1, 2, 2, 2, 2, 2],
-    }
+    },
+    99: {
+        "Common Name": "BU_AGL_King_Vegeta",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_2,
+    },
 }
