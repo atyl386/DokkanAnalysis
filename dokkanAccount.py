@@ -801,4 +801,12 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": SLOT_1,
     },
+    101: {
+        "Common Name": "DF_AGL_DragonFist_Goku",
+        "# Copies": 2,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_2,
+    },
 }
