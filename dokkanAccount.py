@@ -814,7 +814,7 @@ User = {
         "# Copies": 1,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "CRT",
+        "HiPo Choice # 2": "DGE",
         "Slots": SLOT_1,
     },
 }
