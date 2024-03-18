@@ -420,7 +420,7 @@
 				<input prompt="How many active skill attacks does the form have?" response="1" />
 				<ability_1>
 					<input prompt="What is the attack multiplier?" response="Ultimate" />
-					<input prompt="What is the additional attack buff when performing the attack?" response="0.5" />
+					<input prompt="What is the additional attack buff when performing the attack?" response="1.0" />
 					<input prompt="Does this active skill trigger a transformation?" response="N" />
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
