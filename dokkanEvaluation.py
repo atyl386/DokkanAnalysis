@@ -93,18 +93,6 @@ turnDistribution = truncnorm(a, b, AVG_PEAK_TURN, PEAK_TURN_STD)
 overallTurnWeights = turnDistribution.cdf(np.arange(2, NUM_EVAL_TURNS + 2)) - turnDistribution.cdf(
     np.arange(1, NUM_EVAL_TURNS + 1)
 )
-# Old Weights
-"""attributeDict = {
-    "Leader Skill": 5, # 0.11
-    "SBR": 0.5, # 0.01
-    "Useability": 4, # 0.09
-    "Healing": 1.5, # 0.03
-    "Support": 5, # 0.11
-    "APT": 10, # 0.22
-    "Normal Defence": 8, # 0.17
-    "Super Attack Defence": 8, # 0.17
-    "Slot1": 4, # 0.09
-}"""
 attributeDict = {
     "Leader Skill": 4,
     "SBR": 0.5,

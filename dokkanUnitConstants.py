@@ -96,11 +96,11 @@ DOMAIN_TYPES = ["Increase Damage Received", "Alternate Dimensional Space", "City
 
 # Turns
 MAX_TURN = 20
-PEAK_TURN = 5  # Most important turn
+PEAK_TURN = 7  # Most important turn
 
 # Evaluation
 NUM_COPIES_MAX = 5
-AVG_PEAK_TURN = 3.471591
+AVG_PEAK_TURN = 3.75744
 PEAK_TURN_STD = 1.857813
 ATTTRIBUTE_NAMES = [
     "Leader Skill",
@@ -161,7 +161,7 @@ MORE_HEALTH_REMAINING_MIN = 0.1
 # Enemy Attacks
 NUM_ATTACKS_PER_TURN = 8
 NUM_SUPER_ATTACKS_PER_TURN = 1
-NUM_ENEMY_PHASES = 2  # Average number of enemy phases (in Red Zone fights)
+NUM_ENEMY_PHASES = 3  # Average number of enemy phases (in Red Zone fights)
 PROBABILITY_KILL_ENEMY_PER_TURN = NUM_ENEMY_PHASES / PEAK_TURN
 PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING = np.array(
     [0, PROBABILITY_KILL_ENEMY_PER_TURN / 3, PROBABILITY_KILL_ENEMY_PER_TURN * 2 / 3]

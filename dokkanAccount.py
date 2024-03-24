@@ -639,7 +639,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 2, 1, 3, 3, 2, 1, 2, 1, 2],
+        "Slots": [1, 2, 1, 2, 3, 2, 1, 2, 1, 2],
     },
     81: {
         "Common Name": "DFLR_STR_Beast_Gohan",
