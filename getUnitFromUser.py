@@ -1926,6 +1926,8 @@ class Buff(PassiveAbility):
                         state.p2Buff["ATK"] += effectiveBuff
                     case "P2 DEF":
                         state.p2Buff["DEF"] += effectiveBuff
+                    case "P2 DEF B":
+                        state.p2DefB += effectiveBuff
                     case "P3 ATK":
                         state.p3Buff["ATK"] += effectiveBuff
                     case "P3 DEF":

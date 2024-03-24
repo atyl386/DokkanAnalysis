@@ -150,7 +150,7 @@
 				<ability_7>
 					<input prompt="What turn does the buff start from?" response="1" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="7" />
-					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
+					<input prompt="What type of buff does the unit get?" response="P2 DEF B" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.5" />
 				</ability_7>
@@ -172,7 +172,7 @@
 				<ability_10>
 					<input prompt="What turn does the buff start from?" response="8" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
-					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
+					<input prompt="What type of buff does the unit get?" response="P2 DEF B" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_10>

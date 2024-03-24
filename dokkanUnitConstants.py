@@ -458,6 +458,7 @@ EFFECTS = [
     "P2 ATK",
     "DEF",
     "P2 DEF",
+    "P2 DEF B",
     "Ki",
     "Lower ATK",
     "Lower DEF",
