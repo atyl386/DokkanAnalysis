@@ -837,8 +837,8 @@ User = {
         "Common Name": "LR_INT_Fusion_Zamasu",
         "# Copies": 0,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
         "Slots": SLOT_2,
     },
 }
