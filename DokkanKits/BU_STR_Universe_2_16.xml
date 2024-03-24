@@ -192,6 +192,9 @@
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>
+			<after_x_attacks_received_in_battle>
+				<input prompt="How many different buffs does the form get after receiving X attacks in battle?" response="0" />
+			</after_x_attacks_received_in_battle>
 			<per_attack_guarded>
 				<input prompt="How many different buffs does the form get on attacks guarded?" response="0" />
 			</per_attack_guarded>

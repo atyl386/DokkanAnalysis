@@ -842,6 +842,17 @@ class Form:
                 [1.0, "N"],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_x_attacks_received_in_battle")
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after receiving X attacks in battle?",
+                EveryTimeXAttacksReceivedInBattle,
+                ["How many attacks received are required?"],
+                [None],
+                [5],
+            )
+        )
         ############################################## Attack Enemy ##################################################
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_perform_attack")
         self.abilities["Attack Enemy"].extend(
@@ -2050,13 +2061,18 @@ class PerAttackReceived(PerEvent):
         turnBuff = self.effectiveBuff * state.numAttacksReceived
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
+        defBuff = min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
         match self.effect:
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "DEF":
-                state.p2Buff["DEF"] += min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
+                state.p2Buff["DEF"] += defBuff
+            case "Dmg Red":
+                state.dmgRedA += defBuff
+                state.dmgRedB += defBuff
+                state.buff["Dmg Red against Normals"] += defBuff
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
@@ -2467,10 +2483,13 @@ class EveryTimeXEventsInBattle(PassiveAbility):
         self.threshold = args[0]
         self.required = self.threshold
 
-    def applyBuff(self, unit, state):
+    def applyBuff(self, unit, state, form):
         self.required -= self.increment
         if round(self.required) <= 0:
             match self.effect:
+                case "Ki":
+                    state.buff["Ki"] += self.effectiveBuff
+                    form.carryOverBuffs["Ki"].add(self.effectiveBuff)
                 case "AdditionalSuper":
                     state.aaPSuper.append(self.effectiveBuff)
                     state.aaPGuarantee.append(0)
@@ -2480,7 +2499,8 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                     state.dmgRedA += self.effectiveBuff
                     state.dmgRedB += self.effectiveBuff
                     state.buff["Dmg Red against Normals"] += self.effectiveBuff
-
+                case "Heal":
+                    state.buff["Heal"] += self.effectiveBuff
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
                 setAttacksPerformed(unit, state)
@@ -2497,8 +2517,16 @@ class EveryTimeXAttacksPerformedInBattle(EveryTimeXEventsInBattle):
             self.increment = state.superAttacksPerformed
         else:
             self.increment = state.attacksPerformed
-        self.applyBuff(unit, state)
+        self.applyBuff(unit, state, form)
 
+
+class EveryTimeXAttacksReceivedInBattle(EveryTimeXEventsInBattle):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args)
+
+    def applyToState(self, state, unit=None, form=None):
+        self.increment = state.numAttacksReceived
+        self.applyBuff(unit, state, form)
 
 class PerformingSuperAttackOffence(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
