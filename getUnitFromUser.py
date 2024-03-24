@@ -745,6 +745,17 @@ class Form:
                 [24],
             )
         )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_ki")
+        self.abilities["Collect Ki"].extend(
+            abilityQuestionaire(
+                self,
+                "How many per ki buffs does the form have?",
+                PerKi,
+                ["What is the maximum buff?"],
+                [None],
+                [1.0],
+            )
+        )
         ############################################## Receive Attacks ##################################################
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_receive_attack")
         self.abilities["Receive Attacks"].extend(
@@ -1985,6 +1996,16 @@ class PerEvent(PassiveAbility):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.max = max
         self.applied = 0
+
+class PerKi(PerEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+
+    def applyToState(self, state, unit=None, form=None):
+        ki = min(round(state.buff["Ki"] + state.randomKi), rarity2MaxKi[unit.rarity])
+        self.effectiveBuff = min(self.effectiveBuff * ki, self.max)
+        if self.effect in STACK_EFFECTS:
+            state.p2Buff[self.effect] += self.effectiveBuff
 
 
 class PerTurn(PerEvent):

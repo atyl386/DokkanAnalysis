@@ -193,6 +193,9 @@
 			<ki_dependent>
 				<input prompt="How many ki dependent buffs does the form have?" response="0" />
 			</ki_dependent>
+			<per_ki>
+				<input prompt="How many per ki buffs does the form have?" response="0" />
+			</per_ki>
 			<after_receive_attack>
 				<input prompt="How many different buffs does the form get after receiving an attack?" response="0" />
 			</after_receive_attack>

@@ -165,6 +165,9 @@
 			<ki_sphere_dependent>
 				<input prompt="How many ki sphere dependent buffs does the form have?" response="0" />
 			</ki_sphere_dependent>
+			<per_ki>
+				<input prompt="How many per ki buffs does the form have?" response="0" />
+			</per_ki>
 			<ki_dependent>
 				<input prompt="How many ki dependent buffs does the form have?" response="0" />
 			</ki_dependent>
@@ -366,6 +369,9 @@
 			<ki_sphere_dependent>
 				<input prompt="How many ki sphere dependent buffs does the form have?" response="0" />
 			</ki_sphere_dependent>
+			<per_ki>
+				<input prompt="How many per ki buffs does the form have?" response="0" />
+			</per_ki>
 			<ki_dependent>
 				<input prompt="How many ki dependent buffs does the form have?" response="0" />
 			</ki_dependent>

@@ -203,6 +203,9 @@
 			<defensive_on_super>
 				<input prompt="How many different defensive buffs does the form get when performing a super attack / attacking?" response="0" />
 			</defensive_on_super>
+			<per_ki>
+				<input prompt="How many per ki buffs does the form have?" response="0" />
+			</per_ki>
 			<ki_sphere_dependent>
 				<input prompt="How many ki sphere dependent buffs does the form have?" response="0" />
 			</ki_sphere_dependent>
