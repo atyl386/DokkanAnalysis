@@ -2134,13 +2134,18 @@ class PerAttackGuarded(PerEvent):
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
         form.carryOverBuffs[self.effect].add(cappedTurnBuff)
+        defBuff = min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
         match self.effect:
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "DEF":
-                state.p2Buff["DEF"] += min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
+                state.p2Buff["DEF"] += defBuff
+            case "Dmg Red":
+                state.dmgRedA += defBuff
+                state.dmgRedB += defBuff
+                state.buff["Dmg Red against Normals"] += defBuff
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
