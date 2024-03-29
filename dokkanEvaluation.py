@@ -99,7 +99,7 @@ attributeDict = {
     "HP": 2,
     "Useability": 4,
     "Healing": 1.5,
-    "Support": 4,
+    "Support": 5,
     "APT": 10,
     "Normal Defence": 10,
     "Super Attack Defence": 10,
@@ -107,7 +107,7 @@ attributeDict = {
 }
 overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
 
-reCalc = True
+reCalc = False
 analyseHiPo = False
 optimiseSlots = False
 if reCalc:
