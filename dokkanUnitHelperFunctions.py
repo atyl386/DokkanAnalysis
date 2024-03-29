@@ -368,7 +368,7 @@ def getAPT(
             ) + critUSA.prob * critMultiplier
 
         apt = pN * (
-            normal * preAtkModifier * (1 + atk1Buff)
+            normal * atkModifierN * (1 + atk1Buff)
             + branchAPT(
                 i,
                 nAA,
@@ -394,7 +394,7 @@ def getAPT(
                 addSACrit,
             )
         ) + pSA * (
-            sa * preAtkModifier * (1 + atk1Buff)
+            sa * atkModifierSA * (1 + atk1Buff)
             + branchAPT(
                 i,
                 nAA,
@@ -422,7 +422,7 @@ def getAPT(
         )
         if rarity == "LR":  # If  is a LR
             apt += pUSA * (
-                usa * preAtkModifier * (1 + atk1Buff)
+                usa * atkModifierUSA * (1 + atk1Buff)
                 + branchAPT(
                     i,
                     nAA,
