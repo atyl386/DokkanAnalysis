@@ -4,6 +4,9 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
+# - Support weight is too high, e.g. CLR SS STR GOku > STR UI Goku
+# - Why is it telling me to have CRT on Super Vegeta?
+# - There is something wrong with DF Piccolo/Gohan - not seeing guaraneteed dodge turn, maybe not transforming into gohan?
 # - Implement Super EZA summoning bonuses
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
