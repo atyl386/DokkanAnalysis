@@ -401,7 +401,7 @@
 				</ability_5>
 				<ability_6>
 					<input prompt="What type of buff does the unit get?" response="Ki Support" />
-					<input prompt="What is the probability this ability activates?" response="0.34375" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="Is the status of this ability known beforehand?" response="Y" />
 					<input prompt="What is the value of the buff?" response="2.0" />
 					<input prompt="How many turns does the effect last for?" response="1" />

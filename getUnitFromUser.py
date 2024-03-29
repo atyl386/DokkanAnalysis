@@ -4,8 +4,7 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
-# - Support weight is too high, e.g. CLR SS STR GOku > STR UI Goku
-# - There is something wrong with DF Piccolo/Gohan - not seeing guaraneteed dodge turn, maybe not transforming into gohan?
+# - New damage formula is wrong, because 50% dodge characters should have at elast -0.5.
 # - Implement Super EZA summoning bonuses
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
@@ -1634,7 +1633,8 @@ class Revive(SingleTurnAbility):
         self.abilities = abilityQuestionaire(form, "How many additional constant buffs does this revive have?", Buff)
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkCondition(self.condition, self.activated, True) and unit.fightPeak:
+        # Usually want to revive the turn before fight peak
+        if form.checkCondition(self.condition, self.activated, True) and abs(PEAK_TURN - RETURN_PERIOD_PER_SLOT[0] - state.turn) < abs(state.turn + RETURN_PERIOD_PER_SLOT[state.slot -1] - PEAK_TURN + RETURN_PERIOD_PER_SLOT[0]):
             self.activated = True
             state.buff["Heal"] = min(state.buff["Heal"] + self.hpRegen, 1)
             if self.isThisCharacterOnly:
