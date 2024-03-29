@@ -459,14 +459,13 @@ def getDamageTaken(pNullify, pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
     assert pEvade <= 1
     assert guard <= 1
     return max(min(
-        -(1 - (pNullify + (1 - pNullify) * (1 - DODGE_CANCEL_FACTOR) * pEvade))
-        * (
+        -(
             guard * GUARD_MOD * (maxDamage * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
             + (1 - guard) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
         )
         / AVG_HEALTH,
         0,
-    ), -1)
+    ), -(1 - (pNullify + (1 - pNullify) * (1 - DODGE_CANCEL_FACTOR) * pEvade)))
 
 
 def aprioriProbMod(p, knownApriori):

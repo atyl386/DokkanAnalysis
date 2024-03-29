@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import math
 
 # TODO:
-# - New damage formula is wrong, because 50% dodge characters should have at elast -0.5.
+# - New damage formula is wrong, because 50% dodge characters should have at least -0.5.
 # - Implement Super EZA summoning bonuses
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
