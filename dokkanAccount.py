@@ -198,7 +198,7 @@ User = {
         "# Copies": 2,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "CRT",
+        "HiPo Choice # 2": "DGE",
         "Slots": [3, 3, 3, 2, 2, 2, 2, 1, 1, 1],
     },
     26: {
@@ -686,7 +686,7 @@ User = {
         "# Copies": 3,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "CRT",
+        "HiPo Choice # 2": "DGE",
         "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     },
     87: {
@@ -781,8 +781,8 @@ User = {
         "Common Name": "DF_AGL_SS_Bardock",
         "# Copies": 5,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
         "Slots": [2, 1, 1, 1, 1, 2, 2, 2, 2, 2],
     },
     99: {
