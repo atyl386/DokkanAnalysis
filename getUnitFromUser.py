@@ -2083,13 +2083,13 @@ class PerAttackReceived(PerEvent):
     def applyToState(self, state, unit=None, form=None):
         turnBuff = self.effectiveBuff * state.numAttacksReceived
         buffToGo = self.max - self.applied
-        cappedTurnBuff = min(buffToGo, turnBuff)
-        defBuff = min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
+        cappedTurnBuff = min(buffToGo, turnBuff, key=abs)
+        defBuff = min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo, key=abs)
         match self.effect:
             case "Ki":
-                state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+                state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs)
             case "ATK":
-                state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+                state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs)
             case "DEF":
                 state.p2Buff["DEF"] += defBuff
             case "Dmg Red":
@@ -2097,7 +2097,7 @@ class PerAttackReceived(PerEvent):
                 state.dmgRedB += defBuff
                 state.buff["Dmg Red against Normals"] += defBuff
             case "Crit":
-                state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
+                state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key = abs), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
         if not (self.withinTheSameTurn):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)

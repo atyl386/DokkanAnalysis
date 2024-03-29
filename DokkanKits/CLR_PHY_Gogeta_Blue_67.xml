@@ -553,7 +553,7 @@
 					<input prompt="How much health is restored if nullified?" response="0.0" />
 					<input prompt="What type of buff does the unit get?" response="Nullify Ki-Blast" />
 					<input prompt="What is the probability this ability activates?" response="0.7" />
-					<input prompt="Is the status of this ability known beforehand?" response="Y" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_1>
 			</nullification>
