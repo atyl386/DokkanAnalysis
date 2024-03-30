@@ -1025,4 +1025,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_1,
     },
+    129: {
+        "Common Name": "DF_PHY_Transforming_Vegeta",
+        "# Copies": 5,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": SLOT_2,
+    },
 }
