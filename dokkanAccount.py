@@ -970,7 +970,7 @@ User = {
         "Slots": SLOT_1,
     },
     122: {
-        "Common Name": "LR_AGL_SS2_Gohan",
+        "Common Name": "DFLR_AGL_SS2_Gohan",
         "# Copies": 5,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
