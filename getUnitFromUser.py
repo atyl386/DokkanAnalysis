@@ -2020,7 +2020,7 @@ class PerTurn(PerEvent):
     def applyToState(self, state, unit=None, form=None):
         turnBuff = self.effectiveBuff
         buffToGo = self.max - self.applied
-        cappedTurnBuff = min(buffToGo, turnBuff)
+        cappedTurnBuff = min(buffToGo, turnBuff, key=abs)
         form.carryOverBuffs[self.effect].add(cappedTurnBuff)
         match self.effect:
             case "Ki":
