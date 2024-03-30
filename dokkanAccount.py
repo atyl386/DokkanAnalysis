@@ -881,4 +881,12 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": [2, 1, 1, 3, 3, 2, 2, 2, 2, 1],
     },
+    111: {
+        "Common Name": "DFLR_INT_Perfect_Cell",
+        "# Copies": 5,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_2,
+    },
 }

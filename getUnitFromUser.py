@@ -2634,8 +2634,8 @@ class KiSphereDependent(PerEvent):
                     state.aaPSuper.append(effectFactor * self.superChance)
                 case "P2 ATK":
                     state.p2Buff["ATK"] += buffFromOrbs
-                case "P2 DEF":
-                    state.p2Buff["DEF"] += buffFromOrbs
+                case "P2 DEF B":
+                    state.p2DefB += buffFromOrbs
         if not (yesNo2Bool[self.withinTheSameTurn]):
             form.carryOverBuffs[self.effect].add(buffFromOrbs)
             self.applied += buffFromOrbs
