@@ -30,7 +30,7 @@
 		<input prompt="How many forms does the unit have?" response="2" />
 		<form_1>
 			<input prompt="Can this form attack?" response="Y" />
-			<input prompt="Should a 12 Ki be targetted for this form?" response="N" />
+			<input prompt="Should a 12 Ki be targetted for this form?" response="Y" />
 			<input prompt="What is the unit's normal counter multiplier?" response="NA" />
 			<input prompt="What is the unit's super attack counter multiplier?" response="NA" />
 			<links>
