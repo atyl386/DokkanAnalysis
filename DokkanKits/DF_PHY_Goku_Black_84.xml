@@ -267,6 +267,8 @@
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What is the maximum buff?" response="99.0" />
+					<input prompt="Within the same turn?" response="Y" />
 				</ability_1>
 			</after_x_attacks_in_battle>
 			<per_attack_super_performed>
@@ -567,6 +569,8 @@
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What is the maximum buff?" response="99.0" />
+					<input prompt="Within the same turn?" response="Y" />
 				</ability_1>
 			</after_x_attacks_in_battle>
 			<per_attack_super_performed>

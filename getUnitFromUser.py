@@ -861,9 +861,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after receiving X attacks in battle?",
                 EveryTimeXAttacksReceivedInBattle,
-                ["How many attacks received are required?"],
-                [None],
-                [5],
+                ["How many attacks received are required?", "What is the maximum buff?", "Within the same turn?"],
+                [None, None, clc.Choice(YES_NO)],
+                [5, 1.0, "Y"],
             )
         )
         ############################################## Attack Enemy ##################################################
@@ -884,9 +884,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after performing X attacks in battle?",
                 EveryTimeXAttacksPerformedInBattle,
-                ["How many attacks performed are required?", "Requires super attack?"],
-                [None, clc.Choice(YES_NO)],
-                [5, "Y"],
+                ["How many attacks performed are required?", "What is the maximum buff?", "Within the same turn?", "Requires super attack?"],
+                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
+                [5, 1.0, "Y", "Y"],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_super_performed")
@@ -2510,37 +2510,45 @@ class UntilAttackRecieved(UntilEvent):
 class EveryTimeXEventsInBattle(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
-        self.threshold = args[0]
+        self.threshold, self.max, self.withinTheSameTurn = args
         self.required = self.threshold
+        self.applied = 0
 
     def applyBuff(self, unit, state, form):
         self.required -= self.increment
         if round(self.required) <= 0:
+            buffToGo = self.max - self.applied
+            cappedTurnBuff = min(buffToGo, self.effectiveBuff)
             match self.effect:
                 case "Ki":
-                    state.buff["Ki"] += self.effectiveBuff
-                    form.carryOverBuffs["Ki"].add(self.effectiveBuff)
+                    state.buff["Ki"] += cappedTurnBuff
                 case "AdditionalSuper":
-                    state.aaPSuper.append(self.effectiveBuff)
+                    state.aaPSuper.append(cappedTurnBuff)
                     state.aaPGuarantee.append(0)
                 case "DEF":
-                    state.p2Buff["DEF"] += self.effectiveBuff
+                    state.p2Buff["DEF"] += cappedTurnBuff
                 case "Dmg Red":
-                    state.dmgRedA += self.effectiveBuff
-                    state.dmgRedB += self.effectiveBuff
-                    state.buff["Dmg Red against Normals"] += self.effectiveBuff
+                    state.dmgRedA += cappedTurnBuff
+                    state.dmgRedB += cappedTurnBuff
+                    state.buff["Dmg Red against Normals"] += cappedTurnBuff
                 case "Heal":
-                    state.buff["Heal"] += self.effectiveBuff
+                    state.buff["Heal"] += cappedTurnBuff
+                case "Crit":
+                    state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
+                    state.atkModifier = state.getAvgAtkMod(form, unit)
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
                 setAttacksPerformed(unit, state)
             self.required = self.threshold
+            if not(yesNo2Bool[self.withinTheSameTurn]):
+                form.carryOverBuffs[self.effect].add(cappedTurnBuff)
+                self.applied += cappedTurnBuff
 
 
 class EveryTimeXAttacksPerformedInBattle(EveryTimeXEventsInBattle):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, args)
-        self.requiresSuperAttack = args[1]
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[:3])
+        self.requiresSuperAttack = args[3]
 
     def applyToState(self, state, unit=None, form=None):
         if yesNo2Bool[self.requiresSuperAttack]:

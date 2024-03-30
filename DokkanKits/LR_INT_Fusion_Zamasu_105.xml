@@ -270,12 +270,16 @@
 					<input prompt="What type of buff does the unit get?" response="Ki" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What is the maximum buff?" response="5.0" />
+					<input prompt="Within the same turn?" response="N" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many attacks received are required?" response="5" />
 					<input prompt="What type of buff does the unit get?" response="Heal" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
+					<input prompt="What is the maximum buff?" response="99.0" />
+					<input prompt="Within the same turn?" response="Y" />
 				</ability_2>
 			</after_x_attacks_received_in_battle>
 			<after_perform_attack>
