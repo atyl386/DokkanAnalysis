@@ -5,7 +5,7 @@ import math
 import click as clc
 
 # TODO:
-# - Add multiprocessing to second half of evaluation, i.e. 55%-90%
+# - Add multiprocessing to evaluation
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
