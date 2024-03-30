@@ -1570,7 +1570,7 @@ class State:
 
     def getAvgAtkMod(self, form, unit):
         assert self.multiChanceBuff["Crit"].prob <= 1
-        assert self.buff["AEAAT"] <= 1
+        self.buff["AEAAT"] = min(self.buff["AEAAT"], 1)
         return self.multiChanceBuff["Crit"].prob * unit.critMultiplier + (1 - self.multiChanceBuff["Crit"].prob) * (
             self.buff["AEAAT"] * (AEAAT_MULTIPLIER + unit.TAB * AEAAT_TAB_INC)
             + (1 - self.buff["AEAAT"])
@@ -2634,6 +2634,9 @@ class KiSphereDependent(PerEvent):
                 case "Dmg Red":
                     state.dmgRedA += buffFromOrbs
                     state.dmgRedB += buffFromOrbs
+                    state.buff["Dmg Red against Normals"] += buffFromOrbs
+                case "Dmg Red A":
+                    state.dmgRedA += buffFromOrbs
                     state.buff["Dmg Red against Normals"] += buffFromOrbs
                 case "AdditionalSuper":
                     state.aaPSuper.append(effectFactor)
