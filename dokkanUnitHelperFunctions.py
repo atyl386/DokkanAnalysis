@@ -1,4 +1,3 @@
-import click as clc
 from scipy.stats import poisson
 import copy
 from dokkanUnitConstants import *

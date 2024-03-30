@@ -2,6 +2,7 @@ import datetime as dt
 from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 import math
+import click as clc
 
 # TODO:
 # - Implement Super EZA summoning bonuses
@@ -2225,6 +2226,8 @@ class AfterEvent(PassiveAbility):
             else:
                 form.carryOverBuffs[self.effect].sub(self.applied)
                 self.applied = 0
+            self.turnsLeft = self.effectDuration
+            self.turnsSinceActivated = 0
     
     def setTurnBuff(self, unit, form, state):
         # geometric cdf
@@ -2260,7 +2263,7 @@ class AfterEvent(PassiveAbility):
 
     def nextTurnUpdate(self, form, state):
         # If abiltiy going to be active next turn
-        if self.turnsLeft >= self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot - 1] and not(np.any(self.applied)) and self.required - self.increment <= 0:
+        if not(np.any(self.applied)) and self.required - self.increment <= 0 and self.effectDuration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 form.carryOverBuffs["aaPSuper"].add(state.aaPSuper[-1])
                 form.carryOverBuffs["aaPGuarantee"].add(state.aaPGuarantee[-1])
@@ -2270,9 +2273,6 @@ class AfterEvent(PassiveAbility):
                 form.carryOverBuffs[self.effect].add(nextTurnBuff)
                 self.applied += nextTurnBuff
             self.turnsSinceActivated += 1
-        else:
-            self.turnsLeft = self.effectDuration
-            self.turnsSinceActivated = 0
 
 
 class AfterAttackPerformed(AfterEvent):
@@ -2287,7 +2287,6 @@ class AfterAttackPerformed(AfterEvent):
             self.eventFactor = 0
 
     def applyToState(self, state, unit=None, form=None):
-        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
         self.buffToGo = self.effectiveBuff
         if yesNo2Bool[self.requiresSuperAttack]:
             self.increment = state.superAttacksPerformed
@@ -2303,6 +2302,7 @@ class AfterAttackPerformed(AfterEvent):
                 setAttacksPerformed(unit, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
+        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 
 class AfterAttackReceived(AfterEvent):
@@ -2312,7 +2312,7 @@ class AfterAttackReceived(AfterEvent):
     def setEventFactor(self, state):
         attacksToActivate = 1 if self.threshold == 0 else self.required
         # If buff is a defensive one
-        if self.effect in ["DEF", "Dmg Red"]:
+        if self.effect in ["DEF", "Dmg Red", "Evasion"]:
             self.eventFactor = max(
                 state.numAttacksReceived - attacksToActivate
             , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
@@ -2327,7 +2327,6 @@ class AfterAttackReceived(AfterEvent):
 
 
     def applyToState(self, state, unit=None, form=None):
-        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
         self.increment = state.numAttacksReceived
         if self.threshold == 0:
             self.updateBuffToGo()
@@ -2345,6 +2344,7 @@ class AfterAttackReceived(AfterEvent):
                 self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
+        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
             
 
 class AfterGuardActivated(AfterEvent):
@@ -2373,7 +2373,6 @@ class AfterGuardActivated(AfterEvent):
 
 
     def applyToState(self, state, unit=None, form=None):
-        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
         self.increment = state.numAttacksReceived * state.buff["Guard"]
         if self.threshold == 0:
             self.updateBuffToGo()
@@ -2390,6 +2389,7 @@ class AfterGuardActivated(AfterEvent):
                 self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
+        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 
 class AfterAttackEvaded(AfterEvent):
@@ -2420,7 +2420,6 @@ class AfterAttackEvaded(AfterEvent):
 
 
     def applyToState(self, state, unit=None, form=None):
-        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
         self.increment = state.numAttacksEvaded
         if self.threshold == 0:
             self.updateBuffToGo()
@@ -2437,6 +2436,7 @@ class AfterAttackEvaded(AfterEvent):
                 self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
+        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 
 class AfterAttackReceivedOrEvaded(AfterEvent):
@@ -2459,7 +2459,6 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
                     self.eventFactor = 0
 
     def applyToState(self, state, unit=None, form=None):
-        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
         self.numAttacksDirected = round(NUM_ATTACKS_DIRECTED[state.slot - 1])
         self.increment = self.numAttacksDirected
         if self.threshold == 0:
@@ -2474,6 +2473,7 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
             raise Exception("Need to implement form.numAttacksDirected")
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
+        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 
 class UntilEvent(PassiveAbility):
