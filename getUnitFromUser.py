@@ -1235,7 +1235,6 @@ class State:
             "AEAAT": 0,
             "Guard": form.carryOverBuffs["Guard"].get(),
             "Disable Guard": 0,
-            "Dmg Red against Normals": form.carryOverBuffs["Dmg Red"].get(),
             "Heal": 0,
             "Attacks Guaranteed to Hit": 0
         }
@@ -1264,6 +1263,8 @@ class State:
         self.firstAttackBuff = 0
         self.p2DefB = 0
         self.support = 0  # Support score
+        self.dmgRedNormalA = form.carryOverBuffs["Dmg Red"].get()
+        self.dmgRedNormalB = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedA = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedB = form.carryOverBuffs["Dmg Red"].get()
         self.attacksPerformed = 0
@@ -1322,7 +1323,7 @@ class State:
             self.buff["Guard"],
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
-            self.buff["Dmg Red against Normals"],
+            self.dmgRedNormalA,
             self.avgDefPreSuper,
         )
         self.saDamageTakenPreSuper = getDamageTaken(
@@ -1468,7 +1469,7 @@ class State:
             self.buff["Guard"],
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
-            self.buff["Dmg Red against Normals"],
+            self.dmgRedNormalB,
             self.avgDefPostSuper,
         )
         self.saDamageTakenPostSuper = getDamageTaken(
@@ -1893,14 +1894,20 @@ class Buff(PassiveAbility):
                 state.multiChanceBuff[self.effect].updateChance("Start of Turn", effectiveBuff, self.effect, state)
             else:  # Edge cases
                 match self.effect:
+                    case "Dmg Red against Normals":
+                        state.dmgRedNormalA += effectiveBuff
+                        state.dmgRedNormalB += effectiveBuff
                     case "Dmg Red":
                         state.dmgRedA += effectiveBuff
                         state.dmgRedB += effectiveBuff
-                        state.buff["Dmg Red against Normals"] += effectiveBuff
+                        state.dmgRedNormalA += effectiveBuff
+                        state.dmgRedNormalB += effectiveBuff
                     case "Dmg Red A":
                         state.dmgRedA += effectiveBuff
+                        state.dmgRedNormalA += effectiveBuff
                     case "Dmg Red B":
                         state.dmgRedB += effectiveBuff
+                        state.dmgRedNormalB += effectiveBuff
                     case "Evasion":
                         state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
                         state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
@@ -1949,7 +1956,8 @@ class Buff(PassiveAbility):
                         state.support += supportFactorConversion[self.effect] * supportBuff
                         state.dmgRedA = 1
                         state.dmgRedB = 1
-                        state.buff["Dmg Red against Normals"] = 1
+                        state.dmgRedNormalA = 1
+                        state.dmgRedNormalB = 1
                         state.numAttacksReceived = 0
                     case "Intercept":
                         state.support += supportFactorConversion[self.effect] * supportBuff
@@ -2035,7 +2043,8 @@ class PerTurn(PerEvent):
             case "Dmg Red":
                 state.dmgRedA += cappedTurnBuff
                 state.dmgRedB += cappedTurnBuff
-                state.buff["Dmg Red against Normals"] += cappedTurnBuff
+                state.dmgRedNormalA += cappedTurnBuff
+                state.dmgRedNormalB += cappedTurnBuff
         self.applied += cappedTurnBuff
 
 
@@ -2070,7 +2079,7 @@ class PerAttackPerformed(PerEvent):
                 state.critPerSuperPerformed = cappedBuffPerAttack
             case "Dmg Red":
                 state.dmgRedB += cappedTurnBuff
-                state.buff["Dmg Red against Normals"] += cappedTurnBuff
+                state.dmgRedNormalB += cappedTurnBuff
             case "Evasion":
                 state.multiChanceBuff["EvasionB"].updateChance("On Super", cappedTurnBuff, self.effect, state)
         if not (self.withinTheSameTurn):
@@ -2098,7 +2107,8 @@ class PerAttackReceived(PerEvent):
             case "Dmg Red":
                 state.dmgRedA += defBuff
                 state.dmgRedB += defBuff
-                state.buff["Dmg Red against Normals"] += defBuff
+                state.dmgRedNormalA += defBuff
+                state.dmgRedNormalB += defBuff
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key = abs), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
@@ -2122,7 +2132,8 @@ class PerAttackReceivedOrEvaded(PerEvent):
             case "Dmg Red":
                 state.dmgRedA += defBuff
                 state.dmgRedB += defBuff
-                state.buff["Dmg Red against Normals"] += defBuff
+                state.dmgRedNormalA += defBuff
+                state.dmgRedNormalB += defBuff
         if not (self.withinTheSameTurn):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2148,7 +2159,8 @@ class PerAttackGuarded(PerEvent):
             case "Dmg Red":
                 state.dmgRedA += defBuff
                 state.dmgRedB += defBuff
-                state.buff["Dmg Red against Normals"] += defBuff
+                state.dmgRedNormalA += defBuff
+                state.dmgRedNormalB += defBuff
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
@@ -2256,7 +2268,8 @@ class AfterEvent(PassiveAbility):
                 case "Dmg Red":
                     state.dmgRedA += cappedTurnBuff
                     state.dmgRedB += cappedTurnBuff
-                    state.buff["Dmg Red against Normals"] += cappedTurnBuff
+                    state.dmgRedNormalA += cappedTurnBuff
+                    state.dmgRedNormalB += cappedTurnBuff
                 case "Evasion":
                     state.multiChanceBuff["EvasionA"].updateChance("On Super", cappedTurnBuff, "Evasion", state)
                     state.multiChanceBuff["EvasionB"].updateChance("On Super", cappedTurnBuff, "Evasion", state)
@@ -2530,7 +2543,8 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                 case "Dmg Red":
                     state.dmgRedA += cappedTurnBuff
                     state.dmgRedB += cappedTurnBuff
-                    state.buff["Dmg Red against Normals"] += cappedTurnBuff
+                    state.dmgRedNormalA += cappedTurnBuff
+                    state.dmgRedNormalB += cappedTurnBuff
                 case "Heal":
                     state.buff["Heal"] += cappedTurnBuff
                 case "Crit":
@@ -2594,7 +2608,7 @@ class PerformingSuperAttackDefence(PassiveAbility):
                     state.p2DefB += self.effectiveBuff
             case "Dmg Red":
                 state.dmgRedB += self.effectiveBuff
-                state.buff["Dmg Red against Normals"] += self.effectiveBuff
+                state.dmgRedNormalB += self.effectiveBuff
                 # If have activated active skill attack this turn
                 if state.superAttacksPerformed > 0:
                     state.dmgRedA += self.effectiveBuff
@@ -2631,13 +2645,17 @@ class KiSphereDependent(PerEvent):
                 case "Evasion":
                     state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", buffFromOrbs, "Evasion", state)
                     state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", buffFromOrbs, "Evasion", state)
+                case "Dmg Red against Normals":
+                    state.dmgRedNormalA += buffFromOrbs
+                    state.dmgRedNormalB += buffFromOrbs
                 case "Dmg Red":
                     state.dmgRedA += buffFromOrbs
                     state.dmgRedB += buffFromOrbs
-                    state.buff["Dmg Red against Normals"] += buffFromOrbs
+                    state.dmgRedNormalA += buffFromOrbs
+                    state.dmgRedNormalB += buffFromOrbs
                 case "Dmg Red A":
                     state.dmgRedA += buffFromOrbs
-                    state.buff["Dmg Red against Normals"] += buffFromOrbs
+                    state.dmgRedNormalA += buffFromOrbs
                 case "AdditionalSuper":
                     state.aaPSuper.append(effectFactor)
                     state.aaPGuarantee.append(0)

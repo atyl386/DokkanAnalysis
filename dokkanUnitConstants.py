@@ -472,6 +472,8 @@ EFFECTS = [
     "Dmg Red A",
     "Dmg Red B",
     "Dmg Red against Normals",
+    "Dmg Red against Normals A",
+    "Dmg Red against Normals B",
     "Guard",
     "Disable Guard",
     "Crit",
