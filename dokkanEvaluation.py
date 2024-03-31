@@ -107,7 +107,7 @@ attributeDict = {
 }
 overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
 
-reCalc = False
+reCalc = True
 analyseHiPo = False
 optimiseSlots = False
 if reCalc:
