@@ -789,7 +789,7 @@ class Form:
                 AfterAttackEvaded,
                 ["How many turns does the buff last?", "How many evasions are required?", "Does the buff start from the next attacking turn?"],
                 [None, None, clc.Choice(YES_NO)],
-                [1, 1, "N"],
+                [1, 0, "N"],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_recieve_or_evade_attack")
@@ -2408,15 +2408,14 @@ class AfterGuardActivated(AfterEvent):
 
 class AfterAttackEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
-        self.requiredWithinTurn = args[1]
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
         self.nextAttackingTurn = yesNo2Bool[args[2]]
 
     def setEventFactor(self, state):
         pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
         numHitsBeforeDodgeOnce = (1 - pEvade) / pEvade
         attacksToActivate = numHitsBeforeDodgeOnce if self.threshold == 0 else self.required * numHitsBeforeDodgeOnce
-        if self.requiredWithinTurn > 1:
+        if self.threshold > 1:
             self.eventFactor = 1 - poisson.cdf(self.required - 1, state.numAttacksEvaded)
         # If buff is a defensive one
         elif self.effect in ["DEF", "Dmg Red", "Evasion"]:

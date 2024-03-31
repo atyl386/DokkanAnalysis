@@ -234,7 +234,7 @@
 				<input prompt="How many different buffs does the form get after evading an attack?" response="3" />
 				<ability_1>
 					<input prompt="How many turns does the buff last?" response="4" />
-					<input prompt="How many evasions are required?" response="1" />
+					<input prompt="How many evasions are required?" response="0" />
 					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
@@ -242,7 +242,7 @@
 				</ability_1>
 				<ability_2>
 					<input prompt="How many turns does the buff last?" response="4" />
-					<input prompt="How many evasions are required?" response="1" />
+					<input prompt="How many evasions are required?" response="0" />
 					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
@@ -250,7 +250,7 @@
 				</ability_2>
 				<ability_3>
 					<input prompt="How many turns does the buff last?" response="4" />
-					<input prompt="How many evasions are required?" response="1" />
+					<input prompt="How many evasions are required?" response="0" />
 					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />

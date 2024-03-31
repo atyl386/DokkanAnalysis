@@ -429,8 +429,9 @@ MAX_KI = [12, 24]
 KI_SUPPORT = 1
 ATK_DEF_SUPPORT = 0.2
 USEABILITY_SUPPORT_FACTOR = 0.2
-KI_SUPPORT_FACTOR = 0.25  # Guess
-AVG_SOT_STATS = 3
+KI_SUPPORT_FACTOR = 0.25 # Guess
+AVG_SOT_STATS = 3 # Guess
+AVG_P2_STATS = 2 # Guess
 
 # Effects
 
@@ -447,6 +448,8 @@ REGULAR_SUPPORT_EFFECTS = [
     "Scouter",
     "Remove Status Effects",
     "Survive K.O. Attack",
+    "P2 ATK Support",
+    "P2 DEF Support",
     "P3 ATK Support",
     "P3 DEF Support",
     "AEAAT Support",
@@ -516,6 +519,8 @@ SUPPORT_FACTORS = [
     1,
     0.125,
     0.25,
+    ATK_SUPPORT_100_FACTOR / AVG_P2_STATS,
+    DEF_SUPPORT_100_FACTOR / AVG_P2_STATS,
     ATK_SUPPORT_100_FACTOR,
     DEF_SUPPORT_100_FACTOR,
     ATK_SUPPORT_100_FACTOR * AEAAT_MULTIPLIER / AVG_TYPE_ADVANATGE,

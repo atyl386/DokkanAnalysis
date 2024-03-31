@@ -192,7 +192,7 @@
 					<input prompt="How many turns does the buff last?" response="99" />
 					<input prompt="How many evasions are required?" response="6" />
 					<input prompt="Does the buff start from the next attacking turn?" response="N" />
-					<input prompt="What type of buff does the unit get?" response="ATK Support" />
+					<input prompt="What type of buff does the unit get?" response="P2 ATK Support" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.16" />
 					<input prompt="How many turns does the effect last for?" response="2" />
