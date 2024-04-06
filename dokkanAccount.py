@@ -275,7 +275,7 @@ User = {
     },
     35: {
         "Common Name": "DF_INT_Hirudegarn_",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
@@ -331,7 +331,7 @@ User = {
     },
     42: {
         "Common Name": "DF_STR_SS3_Goku",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
@@ -363,7 +363,7 @@ User = {
     },
     46: {
         "Common Name": "DF_AGL_Transforming_Cell",
-        "# Copies": 1,
+        "# Copies": 2,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
