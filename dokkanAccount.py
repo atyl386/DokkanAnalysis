@@ -1177,4 +1177,12 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_1,
     },
+    148: {
+        "Common Name": "BU_AGL_Cell_Jr",
+        "# Copies": 5,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_2,
+    },
 }
