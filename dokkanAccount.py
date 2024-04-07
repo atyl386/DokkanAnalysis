@@ -1156,7 +1156,7 @@ User = {
     145: {
         "Common Name": "DF_AGL_Fusion_Zamasu",
         "# Copies": 5,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
         "Slots": [2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -1181,8 +1181,16 @@ User = {
         "Common Name": "BU_AGL_Cell_Jr",
         "# Copies": 5,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "CRT",
+        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+    },
+    149: {
+        "Common Name": "BU_AGL_SFPS4LB_Vegito",
+        "# Copies": 2,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "Slots": [3, 2, 3, 2, 2, 2, 2, 2, 2, 2],
     },
 }
