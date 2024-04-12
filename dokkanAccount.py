@@ -1183,7 +1183,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
     },
     149: {
         "Common Name": "BU_AGL_SFPS4LB_Vegito",
@@ -1208,5 +1208,13 @@ User = {
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_1,
+    },
+    152: {
+        "Common Name": "BU_PHY_Giant_Ribrianne",
+        "# Copies": 5,
+        "BRZ Equip": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "CRT",
+        "Slots": SLOT_2,
     },
 }

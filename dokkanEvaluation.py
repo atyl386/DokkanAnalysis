@@ -108,7 +108,7 @@ attributeDict = {
 overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
 
 reCalc = True
-analyseHiPo = True
+analyseHiPo = False
 optimiseSlots = False
 if reCalc:
     dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
