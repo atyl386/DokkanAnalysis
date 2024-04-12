@@ -1217,4 +1217,12 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_2,
     },
+    153: {
+        "Common Name": "BU_INT_Pride_Troopers",
+        "# Copies": 3,
+        "BRZ Equip": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_2,
+    },
 }
