@@ -4,6 +4,7 @@ from scipy.stats import truncnorm
 from dokkanAccount import User
 import shutil
 import pickle
+import multiprocessing
 
 nUnits = len(User)
 
@@ -41,6 +42,7 @@ def normalizeUnit(unit, means, stds):
         + unit.id
         + ".pkl",
     )
+    return unit
 
 
 def writeSummary(units, attributeValues, evaluations):
@@ -86,144 +88,159 @@ class Evaluator:
             score += self.attributeWeights[i] * np.dot(self.turnWeights, attribute)
         return score
 
+def processRainbowUnit(ID, User, NUM_COPIES_MAX):
+    print(ID)
+    unit = Unit(
+        ID,
+        User[ID]["Common Name"],
+        NUM_COPIES_MAX,
+        User[ID]["BRZ Equip"],
+        User[ID]["HiPo Choice # 1"],
+        User[ID]["HiPo Choice # 2"],
+        User[ID]["Slots"],
+    )
+    attributeValues = unit.getAttributes()
+    return unit, attributeValues
 
-a, b = (1 - AVG_PEAK_TURN) / PEAK_TURN_STD, (99 - AVG_PEAK_TURN) / PEAK_TURN_STD
-turnDistribution = truncnorm(a, b, AVG_PEAK_TURN, PEAK_TURN_STD)
-
-overallTurnWeights = turnDistribution.cdf(np.arange(2, NUM_EVAL_TURNS + 2)) - turnDistribution.cdf(
-    np.arange(1, NUM_EVAL_TURNS + 1)
-)
-attributeDict = {
-    "Leader Skill": 3,
-    "SBR": 0.5,
-    "HP": 2,
-    "Useability": 4,
-    "Healing": 1.5,
-    "Support": 5,
-    "APT": 10,
-    "Normal Defence": 11,
-    "Super Attack Defence": 9,
-    "Slot Bonus": 2
-}
-overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
-
-reCalc = True
-analyseHiPo = False
-optimiseSlots = False
-if reCalc:
-    dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
-    if os.path.exists(dokkanUnitsPath):
-        for item in os.listdir(dokkanUnitsPath):
-            shutil.rmtree(os.path.join(dokkanUnitsPath, item))
-    else:
-        os.mkdir(dokkanUnitsPath)
-    for dir in HIPO_DUPES:
-        os.mkdir(os.path.join(dokkanUnitsPath, dir))
-    attributeValues = np.zeros((nUnits, NUM_EVAL_TURNS, NUM_ATTRIBUTES, NUM_COPIES_MAX))
-    units = [[None] * nUnits for i in range(NUM_COPIES_MAX)]
-    evaluations = np.zeros((nUnits, NUM_COPIES_MAX))
-    reverseOrderIDs = np.flip(list(User.keys()))
-    for ID in reverseOrderIDs:
-        print(ID)
-        units[-1][ID - 1] = Unit(
+def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX):
+    print(ID)
+    units = [None] * (NUM_COPIES_MAX - 1)
+    attributeValues = np.zeros((NUM_EVAL_TURNS, NUM_ATTRIBUTES, NUM_COPIES_MAX - 1))
+    evaluations = np.zeros(NUM_COPIES_MAX - 1)
+    for nCopies in range(1, NUM_COPIES_MAX):
+        units[nCopies - 1] = Unit(
             ID,
             User[ID]["Common Name"],
-            NUM_COPIES_MAX,
+            nCopies,
             User[ID]["BRZ Equip"],
             User[ID]["HiPo Choice # 1"],
             User[ID]["HiPo Choice # 2"],
             User[ID]["Slots"],
         )
-        attributeValues[ID - 1, :, :, -1] = units[-1][ID - 1].getAttributes()
+        attributeValues[:, :, nCopies - 1] = units[nCopies - 1].getAttributes()
+        normalizeUnit(units[nCopies - 1], rainbowMeans, rainbowStds)
+        evaluations[nCopies - 1] = overallEvaluator.evaluate(units[nCopies - 1])
+    return units, attributeValues, evaluations
 
-    [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
-    for ID in reverseOrderIDs:
-        normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
-        evaluations[ID - 1][-1] = overallEvaluator.evaluate(units[-1][ID - 1])
-    if optimiseSlots:
-        for ID in reverseOrderIDs:
-            best_slots = copy.copy(User[ID]["Slots"])
-            stateIdx = 0
-            nextTurn = 1
-            while nextTurn < MAX_TURN:
-                best_eval = -np.inf
-                for slot in SLOTS:
-                    best_slots[stateIdx] = slot
-                    unit = Unit(
+if __name__ == '__main__':
+    a, b = (1 - AVG_PEAK_TURN) / PEAK_TURN_STD, (99 - AVG_PEAK_TURN) / PEAK_TURN_STD
+    turnDistribution = truncnorm(a, b, AVG_PEAK_TURN, PEAK_TURN_STD)
+
+    overallTurnWeights = turnDistribution.cdf(np.arange(2, NUM_EVAL_TURNS + 2)) - turnDistribution.cdf(
+        np.arange(1, NUM_EVAL_TURNS + 1)
+    )
+    attributeDict = {
+        "Leader Skill": 3,
+        "SBR": 0.5,
+        "HP": 2,
+        "Useability": 4,
+        "Healing": 1.5,
+        "Support": 5,
+        "APT": 10,
+        "Normal Defence": 11,
+        "Super Attack Defence": 9,
+        "Slot Bonus": 2
+    }
+    overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
+
+    reCalc = True
+    analyseHiPo = False
+    optimiseSlots = False
+    if reCalc:
+        dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
+        if os.path.exists(dokkanUnitsPath):
+            for item in os.listdir(dokkanUnitsPath):
+                shutil.rmtree(os.path.join(dokkanUnitsPath, item))
+        else:
+            os.mkdir(dokkanUnitsPath)
+        for dir in HIPO_DUPES:
+            os.mkdir(os.path.join(dokkanUnitsPath, dir))
+        attributeValues = np.zeros((nUnits, NUM_EVAL_TURNS, NUM_ATTRIBUTES, NUM_COPIES_MAX))
+        units = [[None] * nUnits for i in range(NUM_COPIES_MAX)]
+        evaluations = np.zeros((nUnits, NUM_COPIES_MAX))
+        reverseOrderIDs = np.flip(list(User.keys()))
+        with multiprocessing.Pool() as pool:
+            output = np.asarray(pool.starmap(processRainbowUnit, [(ID, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
+            units[-1] = np.array(list(output[:,0]))
+            attributeValues[:, :, :, -1] = list(output[:,1])
+        [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
+        with multiprocessing.Pool() as pool:
+            # This doesn't appear to be actually updating the attributes in units[-1]
+            units[-1] = np.array(pool.starmap(normalizeUnit, [(units[-1][ID - 1], rainbowMeans, rainbowStds) for ID in reverseOrderIDs]))
+            evaluations[:, -1] = pool.map(overallEvaluator.evaluate, units[-1])
+        if optimiseSlots:
+            for ID in reverseOrderIDs:
+                best_slots = copy.copy(User[ID]["Slots"])
+                stateIdx = 0
+                nextTurn = 1
+                while nextTurn < MAX_TURN:
+                    best_eval = -np.inf
+                    for slot in SLOTS:
+                        best_slots[stateIdx] = slot
+                        unit = Unit(
+                            ID,
+                            User[ID]["Common Name"],
+                            NUM_COPIES_MAX,
+                            User[ID]["BRZ Equip"],
+                            User[ID]["HiPo Choice # 1"],
+                            User[ID]["HiPo Choice # 2"],
+                            best_slots,
+                            save=False,
+                        )
+                        normalizeUnit(unit, rainbowMeans, rainbowStds)
+                        evaluation = overallEvaluator.evaluate(unit)
+                        if evaluation > best_eval:
+                            best_slot = slot
+                            best_eval = evaluation
+                    best_slots[stateIdx] = best_slot
+                    stateIdx += 1
+                    nextTurn += RETURN_PERIOD_PER_SLOT[best_slot - 1]
+                if best_slots == User[ID]["Slots"]:
+                    print(ID, "default Slots", User[ID]["Common Name"])
+                else:
+                    print(ID, best_slots, User[ID]["Common Name"])
+        if analyseHiPo:
+            for ID in reverseOrderIDs:
+                best_HiPo = None
+                best_eval = evaluations[ID - 1][-1]
+                for i, HiPo_build in enumerate(HIPO_BUILDS):
+                    HiPo_unit = Unit(
                         ID,
                         User[ID]["Common Name"],
                         NUM_COPIES_MAX,
-                        User[ID]["BRZ Equip"],
-                        User[ID]["HiPo Choice # 1"],
-                        User[ID]["HiPo Choice # 2"],
-                        best_slots,
+                        HiPo_build[0],
+                        HiPo_build[1],
+                        HiPo_build[2],
+                        User[ID]["Slots"],
                         save=False,
                     )
-                    normalizeUnit(unit, rainbowMeans, rainbowStds)
-                    evaluation = overallEvaluator.evaluate(unit)
-                    if evaluation > best_eval:
-                        best_slot = slot
-                        best_eval = evaluation
-                best_slots[stateIdx] = best_slot
-                stateIdx += 1
-                nextTurn += RETURN_PERIOD_PER_SLOT[best_slot - 1]
-            if best_slots == User[ID]["Slots"]:
-                print(ID, "default Slots", User[ID]["Common Name"])
-            else:
-                print(ID, best_slots, User[ID]["Common Name"])
-    if analyseHiPo:
-        for ID in reverseOrderIDs:
-            best_HiPo = None
-            best_eval = evaluations[ID - 1][-1]
-            for i, HiPo_build in enumerate(HIPO_BUILDS):
-                HiPo_unit = Unit(
-                    ID,
-                    User[ID]["Common Name"],
-                    NUM_COPIES_MAX,
-                    HiPo_build[0],
-                    HiPo_build[1],
-                    HiPo_build[2],
-                    User[ID]["Slots"],
-                    save=False,
-                )
-                normalizeUnit(HiPo_unit, rainbowMeans, rainbowStds)
-                HiPo_evaluation = overallEvaluator.evaluate(HiPo_unit)
-                if HiPo_evaluation > best_eval:
-                    best_HiPo = i
-                    best_eval = HiPo_evaluation
-            if best_HiPo == None:
-                print(ID, "default HiPo", HiPo_unit.name)
-            else:
-                print(ID, HIPO_BUILDS[best_HiPo], HiPo_unit.name)
-    for ID in reverseOrderIDs:
-        print(ID)
-        for nCopies in range(1, NUM_COPIES_MAX):
-            units[nCopies - 1][ID - 1] = Unit(
-                ID,
-                User[ID]["Common Name"],
-                nCopies,
-                User[ID]["BRZ Equip"],
-                User[ID]["HiPo Choice # 1"],
-                User[ID]["HiPo Choice # 2"],
-                User[ID]["Slots"],
-            )
-            attributeValues[ID - 1, :, :, nCopies - 1] = normalizeUnit(
-                units[nCopies - 1][ID - 1], rainbowMeans, rainbowStds
-            )
-            evaluations[ID - 1][nCopies - 1] = overallEvaluator.evaluate(units[nCopies - 1][ID - 1])
-    maxEvaluation = max(evaluations[:, -1])
-    evaluations = logisticMap(evaluations, maxEvaluation)
-    writeSummary(units, attributeValues, evaluations)
+                    normalizeUnit(HiPo_unit, rainbowMeans, rainbowStds)
+                    HiPo_evaluation = overallEvaluator.evaluate(HiPo_unit)
+                    if HiPo_evaluation > best_eval:
+                        best_HiPo = i
+                        best_eval = HiPo_evaluation
+                if best_HiPo == None:
+                    print(ID, "default HiPo", HiPo_unit.name)
+                else:
+                    print(ID, HIPO_BUILDS[best_HiPo], HiPo_unit.name)
+        with multiprocessing.Pool() as pool:
+            output = np.asarray(pool.starmap(processOtherUnit, [(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
+            units[:-1] = np.array(list(output[:, 0])).T
+            attributeValues[:, :, :, :-1] = list(output[:, 1])
+            evaluations[:, :-1] = list(output[:, 2])
+        maxEvaluation = max(evaluations[:, -1])
+        evaluations = logisticMap(evaluations, maxEvaluation)
+        writeSummary(units, attributeValues, evaluations)
 
-scores = [0.0] * nUnits
-units = [None] * nUnits
-for i in range(nUnits):
-    pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(i + 1) + ".pkl", "rb")
-    units[i] = pickle.load(pkl)
-    pkl.close()
-    scores[i] = overallEvaluator.evaluate(units[i])
-ranking = np.flip(np.argsort(scores))
-rankingFilePath = os.path.join(CWD, "DokkanKitOutputs", "ranking.txt")
-rankingFile = open(rankingFilePath, "w") 
-for rank in ranking:
-    rankingFile.write(f"{units[rank].commonName} \n")
+    scores = [0.0] * nUnits
+    units = [None] * nUnits
+    for i in range(nUnits):
+        pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(i + 1) + ".pkl", "rb")
+        units[i] = pickle.load(pkl)
+        pkl.close()
+        scores[i] = overallEvaluator.evaluate(units[i])
+    ranking = np.flip(np.argsort(scores))
+    rankingFilePath = os.path.join(CWD, "DokkanKitOutputs", "ranking.txt")
+    rankingFile = open(rankingFilePath, "w") 
+    for rank in ranking:
+        rankingFile.write(f"{units[rank].commonName} \n")
