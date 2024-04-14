@@ -161,13 +161,12 @@ if __name__ == '__main__':
         reverseOrderIDs = np.flip(list(User.keys()))
         with multiprocessing.Pool() as pool:
             output = np.asarray(pool.starmap(processRainbowUnit, [(ID, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
-            units[-1] = np.array(list(output[:,0]))
-            attributeValues[:, :, :, -1] = list(output[:,1])
+        units[-1] = np.array(list(output[:,0]))
+        attributeValues[:, :, :, -1] = list(output[:,1])
         [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
-        with multiprocessing.Pool() as pool:
-            # This doesn't appear to be actually updating the attributes in units[-1]
-            units[-1] = np.array(pool.starmap(normalizeUnit, [(units[-1][ID - 1], rainbowMeans, rainbowStds) for ID in reverseOrderIDs]))
-            evaluations[:, -1] = pool.map(overallEvaluator.evaluate, units[-1])
+        for ID in reverseOrderIDs:
+            normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
+            evaluations[ID - 1, -1] = overallEvaluator.evaluate(units[-1][ID - 1])
         if optimiseSlots:
             for ID in reverseOrderIDs:
                 best_slots = copy.copy(User[ID]["Slots"])
@@ -225,9 +224,9 @@ if __name__ == '__main__':
                     print(ID, HIPO_BUILDS[best_HiPo], HiPo_unit.name)
         with multiprocessing.Pool() as pool:
             output = np.asarray(pool.starmap(processOtherUnit, [(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
-            units[:-1] = np.array(list(output[:, 0])).T
-            attributeValues[:, :, :, :-1] = list(output[:, 1])
-            evaluations[:, :-1] = list(output[:, 2])
+        units[:-1] = np.array(list(output[:, 0])).T
+        attributeValues[:, :, :, :-1] = list(output[:, 1])
+        evaluations[:, :-1] = list(output[:, 2])
         maxEvaluation = max(evaluations[:, -1])
         evaluations = logisticMap(evaluations, maxEvaluation)
         writeSummary(units, attributeValues, evaluations)
