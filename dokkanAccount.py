@@ -1241,4 +1241,12 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": [2, 1, 2, 1, 1, 1, 1, 1, 1, 1],
     },
+    156: {
+        "Common Name": "DF_TEQ_SS3_Gotenks",
+        "# Copies": 2,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_2,
+    },
 }
