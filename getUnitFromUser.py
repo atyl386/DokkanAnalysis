@@ -1481,16 +1481,8 @@ class State:
             self.dmgRedB,
             self.avgDefPostSuper,
         )
-        self.buff["Heal"] += min(
-            form.linkEffects["Heal"]
-            + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA
-            + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA
-            + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA
-            + (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1])
-            * avgDefStartOfTurn
-            * self.orbCollection.orbCollects["Same"].getNumOrbs()
-            / AVG_HEALTH
-        , 1)
+        self.buff["Heal"] += form.linkEffects["Heal"] + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() / AVG_HEALTH
+        self.buff["Heal"] = min(self.buff["Heal"], 1)
         self.normalDamageTaken = (
             NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.normalDamageTakenPreSuper
             + NUM_NORMAL_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.normalDamageTakenPostSuper
@@ -2797,4 +2789,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(157, "LR_INT_Ginyu_Force", 0, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(161, "DF_AGL_SS3_Goku", 0, "DEF", "DGE", "ADD", SLOT_1)
