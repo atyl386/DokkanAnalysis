@@ -51,7 +51,7 @@ def writeSummary(units, attributeValues, evaluations):
         df1 = pd.DataFrame(
             data=[
                 [
-                    str(i + 1),
+                    units[nCopies - 1][i].id,
                     units[nCopies - 1][i].commonName,
                     evaluations[i, nCopies - 1],
                 ]

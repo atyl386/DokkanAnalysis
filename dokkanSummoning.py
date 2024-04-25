@@ -11,6 +11,8 @@ nUnits = len(User)
 
 
 def SummonRating(ID):
+    if ID == 81:
+        f = 2
     pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(ID) + ".pkl", "rb")
     unit = pickle.load(pkl)
     pkl.close()
@@ -46,8 +48,8 @@ def SummonRating(ID):
         globalEZADate = unit.gbl_date + relativedelta(months=4 * 12)
         futureEZA = rarityScore * EZADiscountFactor ** (relativedelta(globalEZADate, now).years) * EZADI
     for i in range(NUM_COPIES_MAX):
-        df = pd.read_excel("DokkanUnits/" + HiPo_dupes[i] + "/unitSummary.xlsx")
-        evals[i] = df.at[ID - 1, "Evaluation"]
+        df = pd.read_excel("DokkanUnits/" + HiPo_dupes[i] + "/unitSummary.xlsx", index_col="ID")
+        evals[i] = df.at[ID, "Evaluation"]
     if nCopies == 5:
         dupeImprovement = 0
     elif nCopies > 0:
@@ -64,9 +66,6 @@ def SummonRatings():
     nCopies = [0] * nUnits
     summonRatings = [0.0] * nUnits
     for ID in IDs:
-        pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(ID) + ".pkl", "rb")
-        unit = pickle.load(pkl)
-        pkl.close()
         commonName[ID - 1] = User[ID]["Common Name"]
         nCopies[ID - 1] = User[ID]["# Copies"]
         summonRatings[ID - 1] = SummonRating(ID)
@@ -133,14 +132,14 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-BigBangVegeta = Banner([100, 99, 102, 18, 8, 61, 98], "red")
-print(BigBangVegeta.summonScore)
 FirstFormFrieza = Banner([97, 96, 98, 39, 33, 31, 30], "red")
 print(FirstFormFrieza.summonScore)
-DragonFistGoku = Banner([42, 44, 43, 46, 45, 47, 48], "red", threePlus1=True, tickets=True)
-print(DragonFistGoku.summonScore)
-Hirudegarn = Banner([35, 37, 36, 38, 39, 40, 41], "red", threePlus1=True, tickets=True)
-print(Hirudegarn.summonScore)
+# Fat Buu, Evil Buu, Super Trunks, WT Goku, Beastless, Kid Buu, throwaway
+FatBuu = Banner([160, 158, 5, 36, 44, 40, 40], "red", threePlus1=True)
+print(FatBuu.summonScore)
+# SS3 Goku, Gotenks, Android 21, Piccolo Jr., Orange Piccolo, SS2 Goku, throwaway
+SS3GokuAngel = Banner([161, 159, 162, 43, 37, 47, 47], "red", threePlus1=True)
+print(SS3GokuAngel.summonScore)
 DBS_Broly = Banner([54, 55, 56, 57, 58, 59, 2, 4, 65, 66], "red", threePlus1=True, tickets=True)
 print(DBS_Broly.summonScore)
 Blue_Gogeta = Banner([54, 54, 49, 50, 54, 51, 22, 52, 53, 67], "cyan", threePlus1=True, tickets=True)
