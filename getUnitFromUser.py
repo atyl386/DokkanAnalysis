@@ -5,11 +5,9 @@ import math
 import click as clc
 
 # TODO:
-# - Add multiprocessing to evaluation
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
-# - Add multi-processing
 # - Make it ask if links have changed for a new form.
 # - Change question from last turn buff ends on to duration as more explicit
 # - Also might want to include attack all in atk calcs.
@@ -17,7 +15,6 @@ import click as clc
 # - Add some functionality that can update existing input .txt files with new questions (assuming not relevant to exisiting unit)
 # - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
 # - Instead of asking user how many of something, should ask until they enteran exit key ak a while loop instead of for loop
-# - Should read up on python optimisation techniques once is running and se how long it takes. But try be efficient you go.
 # - Should put at may not be relevant tag onto end of the prompts that may not always be relevant.
 # - Ideally would just pull data from database, but not up in time for new units. Would be amazing for old units though.
 # - Leader skill weight should decrease from 5 as new structure adds more variability between leader skills
@@ -2789,4 +2786,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(161, "DF_AGL_SS3_Goku", 0, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(162, "DF_AGL_Android_21", 0, "DEF", "DGE", "ADD", SLOT_2)

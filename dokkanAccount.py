@@ -1261,8 +1261,8 @@ User = {
         "Common Name": "BU_TEQ_Evil_Buu",
         "# Copies": 0,
         "BRZ Equip": "ATK",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
         "Slots": SLOT_1,
     },
     159: {
@@ -1288,5 +1288,13 @@ User = {
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
         "Slots": [2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
+    },
+    162: {
+        "Common Name": "DF_AGL_Android_21",
+        "# Copies": 0,
+        "BRZ Equip": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "CRT",
+        "Slots": [2, 3, 3, 1, 2, 2, 2, 2, 2, 2],
     },
 }
