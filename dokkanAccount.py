@@ -291,7 +291,7 @@ User = {
     },
     37: {
         "Common Name": "DFLR_TEQ_Orange_Piccolo",
-        "# Copies": 1,
+        "# Copies": 3,
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
@@ -339,7 +339,7 @@ User = {
     },
     43: {
         "Common Name": "DF_INT_Piccolo_Jr",
-        "# Copies": 3,
+        "# Copies": 5,
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
@@ -1259,7 +1259,7 @@ User = {
     },
     158: {
         "Common Name": "BU_TEQ_Evil_Buu",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
@@ -1275,7 +1275,7 @@ User = {
     },
     160: {
         "Common Name": "DF_INT_Fat_Buu",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
@@ -1283,7 +1283,7 @@ User = {
     },
     161: {
         "Common Name": "DF_AGL_SS3_Goku",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",

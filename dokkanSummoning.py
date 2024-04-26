@@ -134,11 +134,11 @@ Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
 FirstFormFrieza = Banner([97, 96, 98, 39, 33, 31, 30], "red")
 print(FirstFormFrieza.summonScore)
-# Fat Buu, Evil Buu, Super Trunks, Piccolo Jr., Orange Piccolo, Kid Buu, throwaway
-FatBuu = Banner([160, 158, 5, 43, 37, 40, 40], "red", threePlus1=True, tickets=True)
+# Fat Buu, Evil Buu, Android 21, Piccolo Jr., Orange Piccolo, SS2 Goku, Fat Buu
+FatBuu = Banner([160, 158, 162, 43, 37, 40, 86], "red", threePlus1=True)
 print(FatBuu.summonScore)
-# SS3 Goku, Gotenks, SS2 Goku, WT Goku, Beastless, SS2 Goku, throwaway
-SS3GokuAngel = Banner([161, 159, 47, 36, 44, 47, 47], "red", threePlus1=True, tickets=True)
+# SS3 Goku, Gotenks, Super Trunks, WT Goku, Beastless, TEQ Ultimate Gohan, Kid Buu
+SS3GokuAngel = Banner([161, 159, 5, 36, 44, 47, 47], "red", threePlus1=True)
 print(SS3GokuAngel.summonScore)
 DBS_Broly = Banner([54, 55, 56, 57, 58, 59, 2, 4, 65, 66], "red", threePlus1=True, tickets=True)
 print(DBS_Broly.summonScore)
