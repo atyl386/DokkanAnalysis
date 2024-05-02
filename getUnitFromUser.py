@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Maybe chance damage attributes to be total damage taken rather than average and then increase importance of slot 1
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
@@ -2786,4 +2787,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(163, "DF_TEQ_Exchange_Buu", 3, "DEF", "ADD", "DGE", SLOT_2)
+    unit = Unit(164, "DF_TEQ_Ultimate_Gohan", 5, "DEF", "ADD", "DGE", SLOT_2)
