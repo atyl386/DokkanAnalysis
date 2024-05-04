@@ -198,7 +198,7 @@
 				<ability_1>
 					<input prompt="What is the threshold health value?" response="0.5" />
 					<input prompt="Is it a max HP condition?" response="N" />
-					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
+					<input prompt="What type of buff does the unit get?" response="Dmg Red B" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.2" />
 				</ability_1>

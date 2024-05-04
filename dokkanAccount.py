@@ -759,7 +759,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": [2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
     },
     96: {
         "Common Name": "BU_INT_Dodoria_",
