@@ -1313,4 +1313,12 @@ User = {
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_1,
     },
+    165: {
+        "Common Name": "LR_AGL_Ultimate_Gohan",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "DGE",
+        "Slots": [1, 2, 2, 3, 2, 2, 2, 2, 2, 2],
+    },
 }

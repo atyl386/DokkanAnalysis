@@ -520,7 +520,7 @@
 				<input prompt="How many ki dependent buffs does the form have?" response="2" />
 				<ability_1>
 					<input prompt="What is the required ki?" response="24" />
-					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What type of buff does the unit get?" response="P2 ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_1>
