@@ -1318,7 +1318,7 @@ User = {
         "# Copies": 0,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "CRT",
-        "HiPo Choice # 2": "DGE",
-        "Slots": [1, 2, 2, 3, 2, 2, 2, 2, 2, 2],
+        "HiPo Choice # 2": "ADD",
+        "Slots": [2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
     },
 }
