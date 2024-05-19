@@ -691,7 +691,7 @@ User = {
     },
     87: {
         "Common Name": "BU_STR_Future_Mai",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
