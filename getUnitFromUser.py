@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Maybe chance damage attributes to be total damage taken rather than average and then increase importance of slot 1
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
@@ -294,7 +295,10 @@ class Unit:
         )
 
     def getHiPo(self):
-        HiPoStats = hiddenPotentalStatsConverter[self._type][:, self.nCopies - 1]
+        if self.exclusivity == "DF_Old":
+            HiPoStats = oldHiddenPotentalStatsConverter[self._type][:, self.nCopies - 1]
+        else:
+            HiPoStats = hiddenPotentalStatsConverter[self._type][:, self.nCopies - 1]
         HiPoAbilities = np.array(HIPO_D0[self._type]) + HIPO_BRZ[self.brz] + HIPO_SLV[self.HiPo1]
         if self.nCopies > 1:
             HiPoAbilities += HIPO_D1[(self.HiPo1, self.HiPo2)]
@@ -2787,4 +2791,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(168, "BU_INT_SS_Goten", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(170, "DF_PHY_Kid_Buu", 5, "DEF", "DGE", "ADD", SLOT_2)

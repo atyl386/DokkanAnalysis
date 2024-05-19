@@ -11,9 +11,9 @@ CWD = os.getcwd()
 PHASES = ["Start of Turn", "Active / Finish Attacks", "Collect Ki", "Receive Attacks", "Attack Enemy"]
 
 # High-level Unit constants
-EXCLUSIVITIES = ["DF", "DFLR", "LR", "CLR", "BU", "F2P", "F2PLR", "Super Strike"]
+EXCLUSIVITIES = ["DF", "DFLR", "LR", "CLR", "BU", "F2P", "F2PLR", "Super_Strike", "DF_Old"]
 # elements correspond to EXCLUSIVITIES
-RARITIES = ["TUR", "LR", "LR", "LR", "TUR", "TUR", "LR", "TUR"]
+RARITIES = ["TUR", "LR", "LR", "LR", "TUR", "TUR", "LR", "TUR", "TUR"]
 UNIQUE_RARITIES = ["TUR", "LR"]
 CLASSES = ["S", "E"]
 TYPES = ["AGL", "INT", "PHY", "STR", "TEQ"]
@@ -620,6 +620,41 @@ HIPO_INT = np.array(
         [2000, 3700, 4000, 4310, 5000],
     ]
 )
+HIPO_PHY_OLD = np.array(
+    [
+        [2800, 5740, 6160, 6594, 7560],
+        [2800, 5180, 5600, 6580, 7000],
+        [2800, 4620, 5040, 5474, 6440],
+    ]
+)
+HIPO_STR_OLD = np.array(
+    [
+        [2800, 5180, 5600, 6580, 7000],
+        [2800, 5740, 6160, 6594, 7560],
+        [2800, 4620, 5040, 5474, 6440],
+    ]
+)
+HIPO_AGL_OLD = np.array(
+    [
+        [2800, 4620, 5040, 5474, 6440],
+        [2800, 5180, 5600, 6580, 7000],
+        [2800, 5740, 6160, 6594, 7560],
+    ]
+)
+HIPO_TEQ_OLD = np.array(
+    [
+        [2800, 4620, 5040, 5474, 6440],
+        [2800, 5740, 6160, 6594, 7560],
+        [2800, 5180, 5600, 6580, 7000],
+    ]
+)
+HIPO_INT_OLD = np.array(
+    [
+        [2800, 5180, 5600, 6580, 7000],
+        [2800, 5180, 5600, 6580, 7000],
+        [2800, 5180, 5600, 6580, 7000],
+    ]
+)
 HIPO_SA_BOOST = [6, 7, 8, 14, 15]
 HIPO_RECOVERY_BOOST = [7, 7, 8, 9, 15]
 HIPO_TYPE_DEF_BOOST = [5, 6, 7, 8, 10]
@@ -743,6 +778,7 @@ saFracConversion = dict(zip(SUPER_ATTACK_NULLIFICATION_TYPES, PROBABILITY_SUPER_
 
 # Hidden-Potential + Equips
 hiddenPotentalStatsConverter = dict(zip(TYPES, [HIPO_AGL, HIPO_INT, HIPO_PHY, HIPO_STR, HIPO_TEQ]))
+oldHiddenPotentalStatsConverter = dict(zip(TYPES, [HIPO_AGL_OLD, HIPO_INT_OLD, HIPO_PHY_OLD, HIPO_STR_OLD, HIPO_TEQ_OLD]))
 # ATK, DEF, ADD, CRT, DGE
 HIPO_D0 = {
     "AGL": [0, 0, 0.1, 0, 0],

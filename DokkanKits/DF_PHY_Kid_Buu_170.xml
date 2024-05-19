@@ -1,0 +1,311 @@
+<inputTree>
+	<constants>
+		<input prompt="What is the unit's exclusivity?" response="DF_Old" />
+		<input prompt="What is the unit's name?" response="Buu (Kid)" />
+		<input prompt="What is the unit's class?" response="E" />
+		<input prompt="What is the unit's type?" response="PHY" />
+		<input prompt="Has the unit EZA'd?" response="Y" />
+		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="5/24" />
+		<input prompt="When did the unit release on the Global version of Dokkan? (MM/YY)" response="5/24" />
+		<input prompt="What is the unit's Max Level HP stat?" response="13915" />
+		<input prompt="What is the unit's Max Level ATK stat?" response="9064" />
+		<input prompt="What is the unit's Max Level DEF stat?" response="3764" />
+		<input prompt="How would you rate the unit's leader skill on a scale of 1-10? 200% limited / 2 x 180% - e.g. LR Hatchiyak Goku 200% small - e.g. LR Metal Cooler 200% medium - e.g. PHY God Goku 200% large - e.g. LR Vegeta and Trunks" response="&lt;150%" />
+		<input prompt="How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account." response="12" />
+		<input prompt="What is the unit's 12 ki attck modifer?" response="1.4" />
+		<input prompt="How many turns does the unit's giant/rage mode last for?" response="0.0" />
+	</constants>
+	<SBR>
+		<input prompt="Does the unit have any SBR abilities?" response="N" />
+	</SBR>
+	<forms>
+		<input prompt="How many forms does the unit have?" response="1" />
+		<form_1>
+			<input prompt="Can this form attack?" response="Y" />
+			<input prompt="What is the unit's normal counter multiplier?" response="NA" />
+			<input prompt="What is the unit's super attack counter multiplier?" response="NA" />
+			<links>
+				<link_1>
+					<input prompt="What is the form's link # 1" response="Majin" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_1>
+				<link_2>
+					<input prompt="What is the form's link # 2" response="Brutal Beatdown" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_2>
+				<link_3>
+					<input prompt="What is the form's link # 3" response="More Than Meets the Eye" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_3>
+				<link_4>
+					<input prompt="What is the form's link # 4" response="Big Bad Bosses" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_4>
+				<link_5>
+					<input prompt="What is the form's link # 5" response="Infinite Regeneration" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_5>
+				<link_6>
+					<input prompt="What is the form's link # 6" response="Fierce Battle" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_6>
+				<link_7>
+					<input prompt="What is the form's link # 7" response="The Wall Standing Tall" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+				</link_7>
+			</links>
+			<super_attack>
+				<regular_super_attack>
+					<input prompt="What is the form's 12 Ki super attack multiplier?" response="Supreme" />
+					<input prompt="How many different 12 Ki super attacks does this form have?" response="1" />
+					<regular_super_attack_variations>
+						<regular_super_attack_variation_1>
+							<input prompt="How many effects does this form's 12 Ki super attack have?" response="1" />
+							<regular_super_attack_variation_1_effects>
+								<regular_super_attack_variation_1_effect_1>
+									<input prompt="What type of effect does the unit get on super?" response="Lowers DEF" />
+									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+									<input prompt="What is the value of the buff?" response="0.4" />
+									<input prompt="How many turns does it last for?" response="3" />
+								</regular_super_attack_variation_1_effect_1>
+							</regular_super_attack_variation_1_effects>
+						</regular_super_attack_variation_1>
+					</regular_super_attack_variations>
+				</regular_super_attack>
+				<ultra_super_attack />
+			</super_attack>
+			<default>
+				<input prompt="How many unconditional buffs does the form have?" response="10" />
+				<ability_1>
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.5" />
+				</ability_1>
+				<ability_2>
+					<input prompt="What type of buff does the unit get?" response="DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.5" />
+				</ability_2>
+				<ability_3>
+					<input prompt="What type of buff does the unit get?" response="Crit" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_3>
+				<ability_4>
+					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_4>
+				<ability_5>
+					<input prompt="What type of buff does the unit get?" response="Ki" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="2.0" />
+				</ability_5>
+				<ability_6>
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+				</ability_6>
+				<ability_7>
+					<input prompt="What type of buff does the unit get?" response="DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+				</ability_7>
+				<ability_8>
+					<input prompt="What type of buff does the unit get?" response="Ki Support" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="2.0" />
+					<input prompt="How many turns does the effect last for?" response="1" />
+				</ability_8>
+				<ability_9>
+					<input prompt="What type of buff does the unit get?" response="ATK Support" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="How many turns does the effect last for?" response="1" />
+				</ability_9>
+				<ability_10>
+					<input prompt="What type of buff does the unit get?" response="DEF Support" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="How many turns does the effect last for?" response="1" />
+				</ability_10>
+			</default>
+			<turn_dpendent>
+				<input prompt="How many turn dependent buffs does the form have?" response="0" />
+			</turn_dpendent>
+			<slot_dependent>
+				<input prompt="How many slot specific buffs does the form have?" response="0" />
+			</slot_dependent>
+			<health_dependent>
+				<input prompt="How many health threshold buffs does the form have?" response="6" />
+				<ability_1>
+					<input prompt="What is the threshold health value?" response="0.7" />
+					<input prompt="Is it a max HP condition?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="Ki" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="2.0" />
+				</ability_1>
+				<ability_2>
+					<input prompt="What is the threshold health value?" response="0.7" />
+					<input prompt="Is it a max HP condition?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_2>
+				<ability_3>
+					<input prompt="What is the threshold health value?" response="0.7" />
+					<input prompt="Is it a max HP condition?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_3>
+				<ability_4>
+					<input prompt="What is the threshold health value?" response="0.7" />
+					<input prompt="Is it a max HP condition?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="Ki Support" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="2.0" />
+					<input prompt="How many turns does the effect last for?" response="1" />
+				</ability_4>
+				<ability_5>
+					<input prompt="What is the threshold health value?" response="0.7" />
+					<input prompt="Is it a max HP condition?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="ATK Support" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+					<input prompt="How many turns does the effect last for?" response="1" />
+				</ability_5>
+				<ability_6>
+					<input prompt="What is the threshold health value?" response="0.7" />
+					<input prompt="Is it a max HP condition?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="DEF Support" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+					<input prompt="How many turns does the effect last for?" response="1" />
+				</ability_6>
+			</health_dependent>
+			<health_scale>
+				<input prompt="How many health scale buffs does the form have?" response="0" />
+			</health_scale>
+			<per_turn>
+				<input prompt="How many different buffs does the form get per turn?" response="0" />
+			</per_turn>
+			<domain>
+				<input prompt="How many Domain skills does the form have?" response="0" />
+			</domain>
+			<active_skill_buffs>
+				<input prompt="How many active skill buffs does the form have?" response="0" />
+			</active_skill_buffs>
+			<offensive_on_super>
+				<input prompt="How many different offensive buffs does the form get when performing a super attack / attacking?" response="1" />
+				<ability_1>
+					<input prompt="Does the buff only apply to the first attack?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="2.5" />
+				</ability_1>
+			</offensive_on_super>
+			<active_skill_attack>
+				<input prompt="How many active skill attacks does the form have?" response="0" />
+			</active_skill_attack>
+			<standby_finish_attack>
+				<input prompt="How many Non-Counterattack Standby Finish Skills does the form have?" response="0" />
+			</standby_finish_attack>
+			<defensive_on_super>
+				<input prompt="How many different defensive buffs does the form get when performing a super attack / attacking?" response="1" />
+				<ability_1>
+					<input prompt="What type of buff does the unit get?" response="DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="2.5" />
+				</ability_1>
+			</defensive_on_super>
+			<ki_sphere_dependent>
+				<input prompt="How many ki sphere dependent buffs does the form have?" response="0" />
+			</ki_sphere_dependent>
+			<ki_dependent>
+				<input prompt="How many ki dependent buffs does the form have?" response="0" />
+			</ki_dependent>
+			<per_ki>
+				<input prompt="How many per ki buffs does the form have?" response="0" />
+			</per_ki>
+			<after_receive_attack>
+				<input prompt="How many different buffs does the form get after receiving an attack?" response="0" />
+			</after_receive_attack>
+			<after_guard_attack>
+				<input prompt="How many different buffs does the form get after guarding an attack?" response="0" />
+			</after_guard_attack>
+			<after_evade_attack>
+				<input prompt="How many different buffs does the form get after evading an attack?" response="0" />
+			</after_evade_attack>
+			<after_recieve_or_evade_attack>
+				<input prompt="How many different buffs does the form get after receiving or evading an attack?" response="0" />
+			</after_recieve_or_evade_attack>
+			<until_recieve_attack>
+				<input prompt="How many different buffs does the form get until recieving an attack?" response="0" />
+			</until_recieve_attack>
+			<per_attack_received>
+				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
+			</per_attack_received>
+			<per_attack_received_or_evaded>
+				<input prompt="How many different buffs does the form get on attacks received or evaded?" response="0" />
+			</per_attack_received_or_evaded>
+			<per_attack_guarded>
+				<input prompt="How many different buffs does the form get on attacks guarded?" response="0" />
+			</per_attack_guarded>
+			<per_attack_evaded>
+				<input prompt="How many different buffs does the form get on attacks evaded?" response="0" />
+			</per_attack_evaded>
+			<after_x_attacks_received_in_battle>
+				<input prompt="How many different buffs does the form get after receiving X attacks in battle?" response="3" />
+				<ability_1>
+					<input prompt="How many attacks received are required?" response="2" />
+					<input prompt="What is the maximum buff?" response="0.4" />
+					<input prompt="Within the same turn?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="Crit" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_1>
+				<ability_2>
+					<input prompt="How many attacks received are required?" response="2" />
+					<input prompt="What is the maximum buff?" response="0.4" />
+					<input prompt="Within the same turn?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_2>
+				<ability_3>
+					<input prompt="How many attacks received are required?" response="2" />
+					<input prompt="What is the maximum buff?" response="1.0" />
+					<input prompt="Within the same turn?" response="Y" />
+					<input prompt="What type of buff does the unit get?" response="Heal" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.1" />
+				</ability_3>
+			</after_x_attacks_received_in_battle>
+			<after_perform_attack>
+				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
+			</after_perform_attack>
+			<after_x_attacks_in_battle>
+				<input prompt="How many different buffs does the form get after performing X attacks in battle?" response="0" />
+			</after_x_attacks_in_battle>
+			<per_attack_super_performed>
+				<input prompt="How many different buffs does the form get per attack / super performed?" response="0" />
+			</per_attack_super_performed>
+			<nullification>
+				<input prompt="How many different nullification abilities does the form have?" response="0" />
+			</nullification>
+			<revive>
+				<input prompt="How many revive skills does the form have?" response="0" />
+			</revive>
+			<revival_counter>
+				<input prompt="How many Revival Counterattack Finish Skills does the form have?" response="0" />
+			</revival_counter>
+			<sa_counter>
+				<input prompt="How many Super Attack Counterattack Finish Skills does the form have?" response="0" />
+			</sa_counter>
+			<form_1_change_condition>
+				<input prompt="How many conditions have to be met?" response="-1" />
+			</form_1_change_condition>
+		</form_1>
+	</forms>
+</inputTree>

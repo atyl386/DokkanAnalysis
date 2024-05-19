@@ -1,6 +1,6 @@
 <inputTree>
 	<constants>
-		<input prompt="What is the unit's exclusivity?" response="DF" />
+		<input prompt="What is the unit's exclusivity?" response="DF_Old" />
 		<input prompt="What is the unit's name?" response="Super Saiyan 3 Goku" />
 		<input prompt="What is the unit's class?" response="S" />
 		<input prompt="What is the unit's type?" response="AGL" />
