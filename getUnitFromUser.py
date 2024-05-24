@@ -2794,4 +2794,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(173, "BU_PHY_Android_21", 3, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(174, "F2PLR_PHY_Babidi_Buu", 5, "DEF", "DGE", "ADD", SLOT_2)

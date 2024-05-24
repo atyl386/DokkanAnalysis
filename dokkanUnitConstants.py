@@ -24,10 +24,10 @@ YES_NO = ["Y", "N"]
 
 # SBR
 ATT_DEBUFF_PASSIVE_CONVERSION_GRADIENT = 10  # 10% attack down for 2 turns = SBR score of +1
-DEBUFF_DURATIONS = [0, 1, 2]  # [turns]
-SEAL_SCORE_PER_TURN = [0, 0.25, 0.75]  # [SBR metric/chance to seal]
-STUN_SCORE_PER_TURN = [0, 0.5, 1.5]  # [SBR metric/chance to stun]
-ATT_DEBUFF_SCORE_PER_TURN = [0, 1 / 3, 1]  # [SBR metirc/attack debuff score]
+DEBUFF_DURATIONS = [0, 1, 2, 3, 4]  # [turns]
+SEAL_SCORE_PER_TURN = [0, 0.25, 0.75, 1.0, 1.25]  # [SBR metric/chance to seal]
+STUN_SCORE_PER_TURN = [0, 0.5, 1.5, 2.0, 2.5]  # [SBR metric/chance to stun]
+ATT_DEBUFF_SCORE_PER_TURN = [0, 1 / 3, 1, 4 / 3, 5 / 3]  # [SBR metirc/attack debuff score]
 ATT_DEBUFF_ON_ATT_NAMES = ["Lowers", "Greatly Lowers"]
 ATT_DEBUFF_ON_ATT_SCORE = [
     0.25,

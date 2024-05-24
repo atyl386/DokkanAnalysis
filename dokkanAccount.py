@@ -1385,4 +1385,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": [3, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
+    174: {
+        "Common Name": "F2PLR_PHY_Babidi_Buu",
+        "# Copies": 5,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+    },
 }
