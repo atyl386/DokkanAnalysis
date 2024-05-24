@@ -6,7 +6,13 @@ import shutil
 import pickle
 import multiprocessing
 
+HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 nUnits = len(User)
+
+reCalc = False
+analyseHiPo = False
+optimiseSlots = False
+accountRanking = True
 
 
 def save_object(obj, filename):
@@ -141,11 +147,21 @@ if __name__ == '__main__':
         "Super Attack Defence": 9,
         "Slot Bonus": 2
     }
+    top100AttributeDict = {
+        "Leader Skill": 0,
+        "SBR": 0,
+        "HP": 2,
+        "Useability": 4,
+        "Healing": 1.5,
+        "Support": 5,
+        "APT": 10,
+        "Normal Defence": 11,
+        "Super Attack Defence": 9,
+        "Slot Bonus": 2
+    }
     overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
+    top100Evaluator = Evaluator(overallTurnWeights, top100AttributeDict.values())
 
-    reCalc = True
-    analyseHiPo = False
-    optimiseSlots = False
     if reCalc:
         dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
         if os.path.exists(dokkanUnitsPath):
@@ -231,6 +247,7 @@ if __name__ == '__main__':
         evaluations = logisticMap(evaluations, maxEvaluation)
         writeSummary(units, attributeValues, evaluations)
 
+    # Calculate Overall Rankings
     scores = [0.0] * nUnits
     units = [None] * nUnits
     for i in range(nUnits):
@@ -239,7 +256,24 @@ if __name__ == '__main__':
         pkl.close()
         scores[i] = overallEvaluator.evaluate(units[i])
     ranking = np.flip(np.argsort(scores))
-    rankingFilePath = os.path.join(CWD, "DokkanKitOutputs", "ranking.txt")
+    rankingFilePath = os.path.join(CWD, "DokkanKitOutputs", "overallRanking.txt")
     rankingFile = open(rankingFilePath, "w") 
     for rank in ranking:
         rankingFile.write(f"{units[rank].commonName} \n")
+
+    if accountRanking:
+        # Calculate Account Rankings
+        scores = []
+        units = []
+        for ID in range(1, nUnits + 1):
+            numCopies = User[ID]["# Copies"]
+            if numCopies > 0:
+                pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/" + HIPO_DUPES[numCopies - 1] + "/unit_" + str(ID) + ".pkl", "rb")
+                units.append(pickle.load(pkl))
+                pkl.close()
+                scores.append(top100Evaluator.evaluate(units[-1]))
+        ranking = np.flip(np.argsort(scores))
+        rankingFilePath = os.path.join(CWD, "DokkanKitOutputs", "accountRanking.txt")
+        rankingFile = open(rankingFilePath, "w") 
+        for rank in ranking:
+            rankingFile.write(f"{units[rank].commonName} \n")
