@@ -10,7 +10,7 @@ HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 nUnits = len(User)
 
 reCalc = True
-analyseHiPo = True
+analyseHiPo = False
 optimiseSlots = False
 accountRanking = True
 
