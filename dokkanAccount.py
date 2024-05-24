@@ -1361,4 +1361,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": [1, 1, 3, 2, 2, 2, 2, 2, 2, 2],
     },
+    171: {
+        "Common Name": "DF_STR_SS3_Vegeta",
+        "# Copies": 5,
+        "BRZ Equip": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
+    },
 }
