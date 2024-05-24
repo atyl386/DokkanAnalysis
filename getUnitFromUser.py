@@ -298,6 +298,8 @@ class Unit:
     def getHiPo(self):
         if self.exclusivity == "DF_Old":
             HiPoStats = oldHiddenPotentalStatsConverter[self._type][:, self.nCopies - 1]
+        elif self.exclusivity == "F2P":
+            HiPoStats = f2pHiddenPotentalStatsConverter[self._type][:, self.nCopies - 1]
         else:
             HiPoStats = hiddenPotentalStatsConverter[self._type][:, self.nCopies - 1]
         HiPoAbilities = np.array(HIPO_D0[self._type]) + HIPO_BRZ[self.brz] + HIPO_SLV[self.HiPo1]

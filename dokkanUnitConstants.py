@@ -655,6 +655,41 @@ HIPO_INT_OLD = np.array(
         [2800, 5180, 5600, 6580, 7000],
     ]
 )
+HIPO_PHY_F2P = np.array(
+    [
+        [1200, 2460, 2640, 2826, 3240],
+        [1200, 2220, 2400, 2820, 3000],
+        [1200, 1980, 2160, 2347, 2760],
+    ]
+)
+HIPO_STR_F2P = np.array(
+    [
+        [1200, 2220, 2400, 2820, 3000],
+        [1200, 2460, 2640, 2826, 3240],
+        [1200, 1980, 2160, 2347, 2760],
+    ]
+)
+HIPO_AGL_F2P = np.array(
+    [
+        [1200, 1980, 2160, 2347, 2760],
+        [1200, 2220, 2400, 2820, 3000],
+        [1200, 2460, 2640, 2826, 3240],
+    ]
+)
+HIPO_TEQ_F2P = np.array(
+    [
+        [1200, 1980, 2160, 2347, 2760],
+        [1200, 2460, 2640, 2826, 3240],
+        [1200, 2220, 2400, 2820, 3000],
+    ]
+)
+HIPO_INT_F2P = np.array(
+    [
+        [1200, 2220, 2400, 2820, 3000],
+        [1200, 2220, 2400, 2820, 3000],
+        [1200, 2220, 2400, 2820, 3000],
+    ]
+)
 HIPO_SA_BOOST = [6, 7, 8, 14, 15]
 HIPO_RECOVERY_BOOST = [7, 7, 8, 9, 15]
 HIPO_TYPE_DEF_BOOST = [5, 6, 7, 8, 10]
@@ -779,6 +814,7 @@ saFracConversion = dict(zip(SUPER_ATTACK_NULLIFICATION_TYPES, PROBABILITY_SUPER_
 # Hidden-Potential + Equips
 hiddenPotentalStatsConverter = dict(zip(TYPES, [HIPO_AGL, HIPO_INT, HIPO_PHY, HIPO_STR, HIPO_TEQ]))
 oldHiddenPotentalStatsConverter = dict(zip(TYPES, [HIPO_AGL_OLD, HIPO_INT_OLD, HIPO_PHY_OLD, HIPO_STR_OLD, HIPO_TEQ_OLD]))
+f2pHiddenPotentalStatsConverter = dict(zip(TYPES, [HIPO_AGL_F2P, HIPO_INT_F2P, HIPO_PHY_F2P, HIPO_STR_F2P, HIPO_TEQ_F2P]))
 # ATK, DEF, ADD, CRT, DGE
 HIPO_D0 = {
     "AGL": [0, 0, 0.1, 0, 0],
