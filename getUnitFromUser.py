@@ -2797,4 +2797,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(182, "BU_STR_Pan_GT", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(183, "BU_STR_Whis_", 3, "DEF", "DGE", "ADD", SLOT_1)
