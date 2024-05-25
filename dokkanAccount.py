@@ -707,7 +707,7 @@ User = {
     },
     89: {
         "Common Name": "BU_PHY_Zamasu_",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
