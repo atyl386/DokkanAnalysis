@@ -1401,4 +1401,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": [2, 2, 2, 2, 2, 3, 2, 2, 2, 2],
     },
+    176: {
+        "Common Name": "F2P_PHY_Gohan_Goku",
+        "# Copies": 5,
+        "BRZ Equip": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
+    },
 }
