@@ -1441,4 +1441,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_1,
     },
+    181: {
+        "Common Name": "BU_PHY_Kid_Chichi",
+        "# Copies": 3,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+    },
 }
