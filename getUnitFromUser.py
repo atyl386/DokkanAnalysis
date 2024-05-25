@@ -2042,6 +2042,9 @@ class PerTurn(PerEvent):
                 state.dmgRedB += cappedTurnBuff
                 state.dmgRedNormalA += cappedTurnBuff
                 state.dmgRedNormalB += cappedTurnBuff
+            case "Evasion":
+                state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
+                state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
         self.applied += cappedTurnBuff
 
 
@@ -2794,4 +2797,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(181, "BU_PHY_Kid_Chichi", 3, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(182, "BU_STR_Pan_GT", 5, "DEF", "DGE", "ADD", SLOT_2)
