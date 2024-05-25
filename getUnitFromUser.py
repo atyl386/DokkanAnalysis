@@ -2242,7 +2242,7 @@ class AfterEvent(PassiveAbility):
     def setTurnBuff(self, unit, form, state):
         # geometric cdf
         turnBuff = self.effectiveBuff * self.eventFactor
-        cappedTurnBuff = min(self.buffToGo, turnBuff)
+        cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
         elif self.effect in REGULAR_SUPPORT_EFFECTS:
@@ -2794,4 +2794,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(174, "F2PLR_PHY_Babidi_Buu", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(175, "F2P_PHY_Buyon_", 5, "DEF", "DGE", "ADD", SLOT_2)
