@@ -134,8 +134,10 @@ AVG_NUM_CATEGORIES_PER_UNIT = 10 # Guess
 
 # Attacking factors
 AVG_ENEMY_DEF = 100000
+AVG_ENEMY_DMG_RED = 0.7
 AVG_ATK_STAT = 5000000
 BYPASS_DEFENSE_FACTOR = 1 + AVG_ENEMY_DEF / AVG_ATK_STAT
+APT_2_DPT_FACTOR = (1 - AVG_ENEMY_DMG_RED) / BYPASS_DEFENSE_FACTOR # This is a bad approximation
 CRIT_MULTIPLIER = 1.875  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
 AEAAT_MULTIPLIER = 1.5  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
 DISABLE_GUARD_MULTIPLIER = 1.12  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
@@ -491,6 +493,7 @@ EFFECTS = [
     "Ki (Same Type Ki Sphere)",
     "Ki (Rainbow Ki Sphere)",
     "Heal",
+    "Damage Dealt Heal",
 ]
 EFFECTS.extend(SUPPORT_EFFECTS)
 EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)

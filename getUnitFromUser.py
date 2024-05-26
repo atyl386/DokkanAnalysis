@@ -1241,6 +1241,7 @@ class State:
             "Guard": form.carryOverBuffs["Guard"].get(),
             "Disable Guard": 0,
             "Heal": 0,
+            "Damage Dealt Heal": 0,
             "Attacks Guaranteed to Hit": 0
         }
         self.p1Buff = {}
@@ -1486,7 +1487,7 @@ class State:
             self.dmgRedB,
             self.avgDefPostSuper,
         )
-        self.buff["Heal"] += form.linkEffects["Heal"] + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() / AVG_HEALTH
+        self.buff["Heal"] += form.linkEffects["Heal"] + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + ((0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR) / AVG_HEALTH
         self.buff["Heal"] = min(self.buff["Heal"], 1)
         self.normalDamageTaken = (
             NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.normalDamageTakenPreSuper
@@ -2797,4 +2798,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(183, "BU_STR_Whis_", 3, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(184, "BU_INT_Masked_King", 2, "DEF", "DGE", "ADD", SLOT_2)

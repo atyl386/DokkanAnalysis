@@ -1428,7 +1428,7 @@ User = {
     179: {
         "Common Name": "BU_PHY_Whirus_",
         "# Copies": 5,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
         "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -1464,5 +1464,13 @@ User = {
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_1,
+    },
+    184: {
+        "Common Name": "BU_INT_Masked_King",
+        "# Copies": 2,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": [1, 3, 1, 1, 1, 1, 1, 1, 1, 1],
     },
 }
