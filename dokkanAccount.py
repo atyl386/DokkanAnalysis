@@ -1489,4 +1489,12 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": [1, 1, 2, 1, 1, 1, 1, 1, 1, 1],
     },
+    187: {
+        "Common Name": "F2PLR_TEQ_Trunks_Broly",
+        "# Copies": 5,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_3,
+    },
 }
