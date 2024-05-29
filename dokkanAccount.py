@@ -1481,4 +1481,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": [1, 1, 1, 2, 2, 2, 2, 1, 1, 1],
     },
+    186: {
+        "Common Name": "BU_AGL_SS2_Trunks",
+        "# Copies": 0,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": [1, 1, 2, 1, 1, 1, 1, 1, 1, 1],
+    },
 }
