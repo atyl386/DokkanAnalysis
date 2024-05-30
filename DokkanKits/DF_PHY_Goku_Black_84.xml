@@ -260,7 +260,7 @@
 				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
 			</after_perform_attack>
 			<after_x_attacks_in_battle>
-				<input prompt="How many different buffs does the form get after performing X attacks in battle?" response="1" />
+				<input prompt="How many different buffs does the form get after performing X attacks in battle?" response="2" />
 				<ability_1>
 					<input prompt="How many attacks performed are required?" response="5" />
 					<input prompt="Requires super attack?" response="N" />
@@ -270,6 +270,15 @@
 					<input prompt="What is the maximum buff?" response="99.0" />
 					<input prompt="Within the same turn?" response="Y" />
 				</ability_1>
+				<ability_2>
+					<input prompt="How many attacks performed are required?" response="10" />
+					<input prompt="Requires super attack?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What is the maximum buff?" response="99.0" />
+					<input prompt="Within the same turn?" response="Y" />
+				</ability_2>
 			</after_x_attacks_in_battle>
 			<per_attack_super_performed>
 				<input prompt="How many different buffs does the form get per attack / super performed?" response="2" />
@@ -562,7 +571,7 @@
 				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
 			</after_perform_attack>
 			<after_x_attacks_in_battle>
-				<input prompt="How many different buffs does the form get after performing X attacks in battle?" response="1" />
+				<input prompt="How many different buffs does the form get after performing X attacks in battle?" response="2" />
 				<ability_1>
 					<input prompt="How many attacks performed are required?" response="5" />
 					<input prompt="Requires super attack?" response="N" />
@@ -572,6 +581,15 @@
 					<input prompt="What is the maximum buff?" response="99.0" />
 					<input prompt="Within the same turn?" response="Y" />
 				</ability_1>
+				<ability_2>
+					<input prompt="How many attacks performed are required?" response="10" />
+					<input prompt="Requires super attack?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What is the maximum buff?" response="99.0" />
+					<input prompt="Within the same turn?" response="Y" />
+				</ability_2>
 			</after_x_attacks_in_battle>
 			<per_attack_super_performed>
 				<input prompt="How many different buffs does the form get per attack / super performed?" response="2" />

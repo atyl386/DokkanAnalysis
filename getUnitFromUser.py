@@ -167,9 +167,9 @@ def setAttacksPerformed(unit, state):
     state.aa = branchAA(
         -1, len(state.aaPSuper), unit.pHiPo["AA"], 1, state.aaPSuper, state.aaPGuarantee, unit.pHiPo["AA"]
     )
-    state.attacksPerformed += state.pAttack + state.aa * state.pNextAttack
+    state.attacksPerformed = state.pAttack + state.aa * state.pNextAttack
     # Assume Binomial distribution for aaSA for the expected value
-    state.superAttacksPerformed += state.pAttack + state.aaSA * state.pNextAttack
+    state.superAttacksPerformed = state.pAttack + state.aaSA * state.pNextAttack
 
 
 ######################################################### Classes #################################################################
