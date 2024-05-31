@@ -132,14 +132,8 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-FirstFormFrieza = Banner([97, 96, 98, 39, 33, 31, 30], "red")
+FirstFormFrieza = Banner([97, 96, 98, 28, 186, 31, 30], "red", discount=6*50/(35+40+45))
 print(FirstFormFrieza.summonScore)
-# Fat Buu, Evil Buu, Android 21, Piccolo Jr., Orange Piccolo, SS2 Goku, Fat Buu
-FatBuu = Banner([160, 158, 162, 43, 37, 40, 86], "red", threePlus1=True)
-print(FatBuu.summonScore)
-# SS3 Goku, Gotenks, Super Trunks, WT Goku, Beastless, TEQ Ultimate Gohan, Kid Buu
-SS3GokuAngel = Banner([161, 159, 5, 36, 44, 47, 47], "red", threePlus1=True)
-print(SS3GokuAngel.summonScore)
 DBS_Broly = Banner([54, 55, 56, 57, 58, 59, 2, 4, 65, 66], "red", threePlus1=True, tickets=True)
 print(DBS_Broly.summonScore)
 Blue_Gogeta = Banner([54, 54, 49, 50, 54, 51, 22, 52, 53, 67], "cyan", threePlus1=True, tickets=True)

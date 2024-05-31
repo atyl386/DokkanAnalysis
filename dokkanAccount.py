@@ -219,7 +219,7 @@ User = {
     },
     28: {
         "Common Name": "DF_STR_Piccolo_Gohan",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
@@ -571,7 +571,7 @@ User = {
     },
     72: {
         "Common Name": "BU_STR_SS_Cabba",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
@@ -603,7 +603,7 @@ User = {
     },
     76: {
         "Common Name": "BU_INT_Kid_Gohan",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
@@ -763,7 +763,7 @@ User = {
     },
     96: {
         "Common Name": "BU_INT_Dodoria_",
-        "# Copies": 0,
+        "# Copies": 3,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
@@ -771,7 +771,7 @@ User = {
     },
     97: {
         "Common Name": "DF_AGL_1stForm_Frieza",
-        "# Copies": 0,
+        "# Copies": 1,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
@@ -1483,7 +1483,7 @@ User = {
     },
     186: {
         "Common Name": "BU_AGL_SS2_Trunks",
-        "# Copies": 0,
+        "# Copies": 2,
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
@@ -1495,6 +1495,6 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_3,
+        "Slots": SLOT_2, # Should be SLOT_3 but breaks optimisation
     },
 }
