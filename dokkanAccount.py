@@ -1503,6 +1503,14 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1, # Should be SLOT_3 but breaks optimisation
+        "Slots": SLOT_1,
+    },
+    189: {
+        "Common Name": "BU_PHY_WT_Tien",
+        "# Copies": 2,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
     },
 }
