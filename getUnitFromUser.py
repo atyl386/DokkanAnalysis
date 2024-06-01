@@ -2327,7 +2327,7 @@ class AfterAttackReceived(AfterEvent):
     def setEventFactor(self, state):
         attacksToActivate = 1 if self.threshold == 0 else self.required
         # If buff is a defensive one
-        if self.effect in ["DEF", "Dmg Red", "Evasion"]:
+        if self.effect in ["DEF", "Dmg Red", "Evasion", "Guard"]:
             self.eventFactor = max(
                 state.numAttacksReceived - attacksToActivate
             , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
@@ -2798,4 +2798,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(187, "F2PLR_TEQ_Trunks_Broly", 5, "DEF", "DGE", "ADD", SLOT_3)
+    unit = Unit(188, "BU_PHY_SS_Bardock", 5, "DEF", "DGE", "ADD", SLOT_2)
