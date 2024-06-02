@@ -1537,4 +1537,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_1,
     },
+    193: {
+        "Common Name": "DF_TEQ_Golden_Frieza",
+        "# Copies": 3,
+        "BRZ Equip": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "CRT",
+        "Slots": SLOT_1,
+    },
 }
