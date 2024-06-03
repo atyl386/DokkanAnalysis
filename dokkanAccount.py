@@ -1577,4 +1577,12 @@ User = {
         "HiPo Choice # 2": "DGE",
         "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
     },
+    198: {
+        "Common Name": "BU_INT_Whis_",
+        "# Copies": 4,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
+    },
 }
