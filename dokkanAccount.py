@@ -1561,4 +1561,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
     },
+    196: {
+        "Common Name": "F2P_TEQ_Candy_Vegito",
+        "# Copies": 5,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
+    },
 }
