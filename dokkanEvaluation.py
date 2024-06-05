@@ -155,8 +155,8 @@ if __name__ == '__main__':
         "Healing": 1.5,
         "Support": 6,
         "APT": 11,
-        "Normal Defence": 9,
-        "Super Attack Defence": 9,
+        "Normal Defence": 7,
+        "Super Attack Defence": 7,
         "Slot Bonus": 9
     }
     overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
