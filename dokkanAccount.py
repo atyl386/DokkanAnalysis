@@ -1601,4 +1601,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_2,
     },
+    201: {
+        "Common Name": "F2P_INT_Bulma_Youth",
+        "# Copies": 5,
+        "BRZ Equip": "DEF",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    },
 }
