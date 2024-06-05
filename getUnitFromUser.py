@@ -5,7 +5,6 @@ import math
 import click as clc
 
 # TODO:
-# - Support weight is too high
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Maybe chance damage attributes to be total damage taken rather than average and then increase importance of slot 1
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
