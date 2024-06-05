@@ -6,40 +6,40 @@ User = {
         "# Copies": 1,
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "HiPo Choice # 2": "CRT",
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 1],
     },
     2: {
         "Common Name": "DFLR_PHY_Buu_Bois",
         "# Copies": 1,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
-        "Slots": [2, 2, 3, 2, 2, 1, 1, 1, 1, 1],
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": [2, 2, 1, 2, 2, 2, 2, 2, 1, 1],
     },
     3: {
         "Common Name": "DFLR_STR_GT_Duo",
         "# Copies": 1,
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "CRT",
-        "HiPo Choice # 2": "DGE",
+        "HiPo Choice # 2": "ADD",
         "Slots": [2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
     },
     4: {
         "Common Name": "DFLR_TEQ_Fusion_Zamasu",
         "# Copies": 1,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 2, 1, 1, 1, 2, 2, 2, 2],
     },
     5: {
         "Common Name": "DF_TEQ_Super_Trunks",
         "# Copies": 0,
-        "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 1, 3, 2, 2, 2, 2, 2]
+        "BRZ Equip": "ADD",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": [2, 2, 3, 1, 3, 2, 2, 2, 2, 2],
     },
     6: {
         "Common Name": "BU_STR_SS_Gohan",
@@ -47,7 +47,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [1, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 3, 3, 3, 3, 3, 1, 1, 1],
     },
     7: {
         "Common Name": "DF_STR_Super_17",
@@ -55,7 +55,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 2, 2]
+        "Slots": [3, 3, 2, 1, 2, 2, 2, 2, 2, 2]
     },
     8: {
         "Common Name": "DF_INT_Majin_Vegeta",
@@ -69,17 +69,17 @@ User = {
         "Common Name": "DF_STR_Super_Vegeta",
         "# Copies": 1,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
-        "Slots": [1, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     10: {
         "Common Name": "DF_AGL_Sword_Trunks",
         "# Copies": 1,
-        "BRZ Equip": "DGE",
+        "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [2, 3, 3, 3, 3, 3, 3, 2, 2, 2],
     },
     11: {
         "Common Name": "DF_AGL_Kid_Gohan",
@@ -87,7 +87,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 3, 3, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 3, 3, 2, 2, 2, 2, 2, 2, 1],
     },
     12: {
         "Common Name": "CLR_AGL_Omega_Shenron",
@@ -95,7 +95,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 1, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     13: {
         "Common Name": "CLR_STR_SS_Goku",
@@ -103,7 +103,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 1, 2, 3, 2, 2, 2, 2, 2],
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     14: {
         "Common Name": "LR_AGL_Future_Duo",
@@ -111,7 +111,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 3, 3, 2, 2, 2, 2, 3, 1, 1],
     },
     15: {
         "Common Name": "DF_INT_ToP_Androids",
@@ -127,7 +127,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 3, 1, 1, 1, 1, 1, 1, 1, 2],
+        "Slots": [3, 2, 3, 3, 3, 3, 3, 1, 1, 2],
     },
     17: {
         "Common Name": "DF_AGL_Berserk_Kale",
@@ -135,7 +135,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 1, 2, 2, 2, 2, 2, 2, 2, 1],
     },
     18: {
         "Common Name": "DF_PHY_God_Goku",
@@ -143,7 +143,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [1, 1, 1, 2, 2, 2, 2, 2, 2, 1],
     },
     19: {
         "Common Name": "DF_PHY_Kid_Goku",
@@ -151,7 +151,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 3, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     20: {
         "Common Name": "DF_TEQ_Fusing_Kefla",
@@ -159,15 +159,15 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 3, 1, 1, 1, 1, 1, 1, 1, 2],
+        "Slots": [2, 3, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     21: {
         "Common Name": "DF_STR_Costume_Videl",
         "# Copies": 1,
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
-        "Slots": [1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
+        "HiPo Choice # 2": "CRT",
+        "Slots": [3, 3, 3, 3, 3, 3, 3, 1, 1, 1],
     },
     22: {
         "Common Name": "CLR_INT_Kid_Gohan",
@@ -175,7 +175,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_1,
+        "Slots": SLOT_2,
     },
     23: {
         "Common Name": "CLR_AGL_Kai_Goku",
@@ -183,12 +183,12 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 1, 2, 1, 1, 1, 1, 1, 1],
+        "Slots": [1, 1, 1, 2, 2, 1, 1, 2, 1, 1],
     },
     24: {
         "Common Name": "LR_TEQ_Universe_2",
         "# Copies": 0,
-        "BRZ Equip": "DGE",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
         "Slots": [2, 3, 3, 2, 2, 2, 2, 2, 2, 2],
@@ -199,7 +199,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": [3, 3, 3, 2, 2, 2, 2, 1, 1, 1],
+        "Slots": [3, 3, 3, 2, 2, 2, 2, 2, 1, 1],
     },
     26: {
         "Common Name": "LR_AGL_Caulifla_Kale",
@@ -207,7 +207,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
     },
     27: {
         "Common Name": "BU_TEQ_Frost_FinalForm",
@@ -215,7 +215,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "Slots": [2, 2, 3, 3, 2, 2, 2, 2, 2, 2],
     },
     28: {
         "Common Name": "DF_STR_Piccolo_Gohan",
@@ -223,7 +223,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
+        "Slots": [2, 2, 2, 1, 2, 2, 2, 2, 2, 2],
     },
     29: {
         "Common Name": "BU_TEQ_Vegeta_Nappa",
@@ -239,7 +239,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 2, 3, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 2, 2, 3, 3, 3, 3, 1, 1],
     },
     31: {
         "Common Name": "DF_TEQ_Bardock_",
@@ -247,7 +247,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "Slots": [2, 2, 3, 3, 2, 2, 2, 2, 2, 2],
     },
     32: {
         "Common Name": "DF_INT_Yamcha_",
@@ -255,7 +255,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     33: {
         "Common Name": "DF_AGL_Captain_Ginyu",
@@ -263,7 +263,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 2, 2, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     34: {
         "Common Name": "DF_PHY_Raditz_",
@@ -271,7 +271,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "Slots": [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
     },
     35: {
         "Common Name": "DF_INT_Hirudegarn_",
@@ -279,7 +279,7 @@ User = {
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_1,
     },
     36: {
         "Common Name": "DF_TEQ_WT_Goku",
@@ -292,10 +292,10 @@ User = {
     37: {
         "Common Name": "DFLR_TEQ_Orange_Piccolo",
         "# Copies": 3,
-        "BRZ Equip": "DGE",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "CRT",
-        "Slots": [1, 1, 1, 3, 2, 1, 1, 1, 1, 1],
+        "BRZ Equip": "CRT",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
+        "Slots": [1, 1, 2, 3, 2, 2, 2, 2, 2, 2],
     },
     38: {
         "Common Name": "DF_INT_RoF_Blues",
@@ -303,7 +303,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 3, 3, 3, 3, 3, 1, 1, 1],
     },
     39: {
         "Common Name": "DF_STR_Goku_Gohan",
@@ -311,7 +311,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 1, 1, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     40: {
         "Common Name": "DF_STR_Kid_Buu",
@@ -319,7 +319,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     41: {
         "Common Name": "DF_TEQ_Fat_Janemba",
@@ -327,7 +327,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     42: {
         "Common Name": "DF_STR_SS3_Goku",
@@ -340,10 +340,10 @@ User = {
     43: {
         "Common Name": "DF_INT_Piccolo_Jr",
         "# Copies": 5,
-        "BRZ Equip": "DGE",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": [3, 3, 3, 2, 2, 2, 2, 2, 2, 2],
     },
     44: {
         "Common Name": "DFLR_PHY_Beast_Gohan",
@@ -351,7 +351,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 2, 2, 3, 2, 2, 2, 2, 2, 2],
+        "Slots": [1, 1, 2, 3, 2, 2, 2, 2, 2, 2],
     },
     45: {
         "Common Name": "DF_TEQ_GT_Pan",
@@ -359,7 +359,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 3, 3, 3, 3, 3, 1, 1, 1],
     },
     46: {
         "Common Name": "DF_AGL_Transforming_Cell",
@@ -375,7 +375,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "Slots": [2, 2, 3, 3, 3, 3, 3, 2, 2, 2],
     },
     48: {
         "Common Name": "DF_AGL_Paikuhan_",
@@ -383,7 +383,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 3, 3, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 3, 1, 2, 2, 2, 2, 2, 2, 1],
     },
     49: {
         "Common Name": "LR_PHY_Broly_Trio",
@@ -407,7 +407,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 3, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [1, 2, 3, 3, 2, 2, 2, 2, 2, 2],
     },
     52: {
         "Common Name": "LR_INT_Turles_Goku",
@@ -415,14 +415,14 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [2, 3, 3, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     53: {
         "Common Name": "CLR_PHY_Future_Trunks",
         "# Copies": 1,
-        "BRZ Equip": "DGE",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "CRT",
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "CRT",
+        "HiPo Choice # 2": "ADD",
         "Slots": [2, 2, 1, 3, 2, 2, 2, 2, 2, 2],
     },
     54: {
@@ -431,12 +431,12 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [3, 3, 3, 3, 3, 3, 2, 2, 2, 2],
     },
     55: {
         "Common Name": "DFLR_TEQ_Vegito_Blue",
         "# Copies": 3,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
         "Slots": [3, 1, 3, 1, 3, 3, 3, 3],
@@ -444,7 +444,7 @@ User = {
     56: {
         "Common Name": "DFLR_STR_Gogeta_Blue",
         "# Copies": 5,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
         "Slots": [3, 1, 3, 1, 3, 3, 3, 3],
@@ -455,7 +455,7 @@ User = {
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 3, 3, 2, 2, 2, 2, 2, 2],
+        "Slots": [3, 2, 3, 1, 2, 2, 2, 2, 2, 2],
     },
     58: {
         "Common Name": "DFLR_TEQ_SS_Gods",
@@ -463,7 +463,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 3, 1, 1, 1, 1, 1, 1, 1, 2],
+        "Slots": [3, 2, 3, 2, 2, 2, 2, 2, 2, 2],
     },
     59: {
         "Common Name": "DFLR_STR_FF_Cooler",
@@ -471,7 +471,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     60: {
         "Common Name": "DF_AGL_Gogeta_Blue",
@@ -479,7 +479,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 2, 2, 2, 1, 1, 1, 1, 1, 1],
     },
     61: {
         "Common Name": "DFLR_PHY_SS4_Gogeta",
@@ -495,23 +495,23 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [2, 3, 3, 2, 2, 2, 2, 2, 2, 2],
     },
     63: {
         "Common Name": "DFLR_AGL_Vegito_Blue",
         "# Copies": 1,
-        "BRZ Equip": "ATK",
+        "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 1, 3, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     },
     64: {
         "Common Name": "CLR_STR_Future_Gohan",
         "# Copies": 1,
         "BRZ Equip": "ATK",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 3, 3, 2, 2, 2, 2, 2, 2],
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": [1, 1, 1, 2, 3, 2, 2, 2, 2, 2],
     },
     65: {
         "Common Name": "BU_INT_Golden_Frieza",
@@ -519,15 +519,15 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
     },
     66: {
         "Common Name": "DFLR_AGL_DBS_Broly",
         "# Copies": 0,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 3, 3, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 1, 3, 2, 2, 2, 2, 2, 1],
     },
     67: {
         "Common Name": "CLR_PHY_Gogeta_Blue",
@@ -535,7 +535,7 @@ User = {
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [3, 3, 1, 1, 1, 1, 1, 1, 1, 2],
     },
     68: {
         "Common Name": "BU_PHY_Gohan_Teen",
@@ -543,7 +543,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 3, 3, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 2, 3, 3, 3, 3, 3, 1, 1, 1],
     },
     69: {
         "Common Name": "BU_PHY_Super_Buu",
@@ -551,7 +551,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 2, 3, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": [3, 2, 3, 3, 2, 2, 2, 2, 2, 2],
     },
     70: {
         "Common Name": "BU_AGL_Pan_GT",
@@ -559,7 +559,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 1, 3, 1, 1, 1, 1, 1, 2],
+        "Slots": [3, 2, 3, 3, 2, 2, 2, 3, 1, 2],
     },
     71: {
         "Common Name": "BU_AGL_General_Rilldo",
@@ -567,7 +567,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 2, 3, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": [3, 2, 3, 3, 2, 2, 2, 2, 2, 2],
     },
     72: {
         "Common Name": "BU_STR_SS_Cabba",
@@ -575,7 +575,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [1, 1, 2, 1, 2, 2, 2, 2, 2, 2],
     },
     73: {
         "Common Name": "BU_STR_Hit_",
@@ -583,7 +583,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 2, 3, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": [3, 2, 3, 3, 2, 2, 2, 2, 2, 2],
     },
     74: {
         "Common Name": "BU_TEQ_Tien_",
@@ -591,7 +591,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 3, 3, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 2, 3, 3, 3, 3, 3, 1, 1, 1],
     },
     75: {
         "Common Name": "BU_TEQ_2ndForm_Cell",
@@ -599,7 +599,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 2, 3, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": [3, 2, 3, 3, 2, 2, 2, 2, 2, 2],
     },
     76: {
         "Common Name": "BU_INT_Kid_Gohan",
@@ -607,7 +607,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 3, 3, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [1, 1, 2, 1, 2, 2, 2, 2, 2, 2],
     },
     77: {
         "Common Name": "BU_INT_Namek_Vegeta",
@@ -615,7 +615,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 3, 3, 1, 1, 1, 1, 1, 1],
+        "Slots": [3, 2, 3, 3, 3, 3, 3, 1, 1, 1],
     },
     78: {
         "Common Name": "LR_TEQ_SS3_Goku",
@@ -636,10 +636,10 @@ User = {
     80: {
         "Common Name": "LR_PHY_Android_Trio",
         "# Copies": 2,
-        "BRZ Equip": "DGE",
+        "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 2, 1, 2, 2, 1, 1, 1, 1, 1],
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2] ,
     },
     81: {
         "Common Name": "DFLR_STR_Beast_Gohan",
@@ -655,7 +655,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     83: {
         "Common Name": "CLR_INT_Gammas_",
@@ -663,15 +663,15 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": [2, 2, 1, 1, 2, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
     },
     84: {
         "Common Name": "DF_PHY_Goku_Black",
         "# Copies": 0,
-        "BRZ Equip": "ATK",
+        "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 1, 2, 2, 2, 2, 2, 2, 1],
+        "Slots": [3, 1, 1, 2, 2, 2, 1, 2, 1, 1],
     },
     85: {
         "Common Name": "DFLR_INT_Vegeta_Trunks",
@@ -687,7 +687,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 2, 2, 2, 2, 2, 2, 2, 1],
+        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     87: {
         "Common Name": "BU_STR_Future_Mai",
@@ -695,7 +695,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 2, 3, 3, 2, 2, 2, 3, 2, 2],
+        "Slots": [3, 2, 3, 2, 2, 2, 2, 2, 2, 2],
     },
     88: {
         "Common Name": "BU_PHY_Gowasu_Zamasu",
@@ -703,7 +703,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     89: {
         "Common Name": "BU_PHY_Zamasu_",
@@ -711,7 +711,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": SLOT_2,
     },
     90: {
         "Common Name": "DFLR_AGL_MUI_Goku",
@@ -724,10 +724,10 @@ User = {
     91: {
         "Common Name": "DFLR_INT_EvoBlue_Vegeta",
         "# Copies": 5,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": [1, 2, 1, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_1,
     },
     92: {
         "Common Name": "BU_INT_Vados_",
@@ -751,15 +751,15 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 2, 3, 1, 1, 1, 1, 1],
+        "Slots": SLOT_1,
     },
     95: {
         "Common Name": "DFLR_STR_SS_Vegito",
         "# Copies": 5,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
-        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": [2, 2, 1, 1, 3, 1, 3, 2, 1, 1],
     },
     96: {
         "Common Name": "BU_INT_Dodoria_",
@@ -772,10 +772,10 @@ User = {
     97: {
         "Common Name": "DF_AGL_1stForm_Frieza",
         "# Copies": 1,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": [1, 2, 3, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": [1, 2, 2, 3, 2, 2, 2, 2, 2, 2],
     },
     98: {
         "Common Name": "DF_AGL_SS_Bardock",
@@ -783,7 +783,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 1, 1, 1, 1, 2, 2, 2, 2, 2],
+        "Slots": [2, 2, 1, 1, 1, 2, 2, 2, 2, 2],
     },
     99: {
         "Common Name": "BU_AGL_King_Vegeta",
@@ -807,7 +807,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
     },
     102: {
         "Common Name": "DFLR_INT_SFPS4_Goku",
@@ -815,15 +815,15 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 1, 1, 2, 2, 1, 2, 1, 2],
     },
     103: {
         "Common Name": "DFLR_TEQ_Go_Bros",
         "# Copies": 3,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "CRT",
+        "Slots": [2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
     },
     104: {
         "Common Name": "DF_PHY_Piccolo_",
@@ -847,15 +847,15 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "Slots": [3, 2, 3, 3, 2, 2, 2, 2, 2, 2],
     },
     107: {
         "Common Name": "BU_INT_Android_16",
         "# Copies": 5,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "CRT",
-        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
     },
     108: {
         "Common Name": "BU_AGL_Super_Vegeta",
@@ -871,15 +871,15 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 2, 3, 1, 1, 1, 1, 2],
+        "Slots": [2, 2, 2, 2, 3, 3, 3, 3, 1, 2],
     },
     110: {
         "Common Name": "DF_PHY_God_Toppo",
         "# Copies": 0,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "CRT",
-        "Slots": [2, 1, 1, 3, 3, 2, 2, 2, 2, 1],
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_1,
     },
     111: {
         "Common Name": "DFLR_INT_Perfect_Cell",
@@ -895,7 +895,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     113: {
         "Common Name": "LR_PHY_Super_Janemba",
@@ -903,7 +903,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": SLOT_2,
     },
     114: {
         "Common Name": "LR_STR_Goku_Hit",
@@ -911,7 +911,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     115: {
         "Common Name": "LR_STR_Beerus_Whis",
@@ -919,7 +919,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 3, 2, 2, 1, 2, 1, 2, 1, 2],
+        "Slots": [1, 3, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     116: {
         "Common Name": "LR_INT_FP_Boujack",
@@ -927,7 +927,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     117: {
         "Common Name": "LR_TEQ_GreatApe_Vegeta",
@@ -935,7 +935,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [1, 1, 1, 1, 3, 1, 1, 1, 1, 2],
+        "Slots": [2, 2, 2, 2, 3, 2, 2, 2, 2, 2],
     },
     118: {
         "Common Name": "LR_AGL_Nappa_Vegeta",
@@ -943,12 +943,12 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 1, 3, 3, 2, 2, 2, 2],
+        "Slots": [2, 2, 2, 1, 2, 2, 2, 2, 2, 2],
     },
     119: {
         "Common Name": "LR_AGL_Super_Baby",
         "# Copies": 2,
-        "BRZ Equip": "DGE",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
         "Slots": [2, 2, 2, 2, 3, 2, 2, 2, 2, 2],
@@ -959,7 +959,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     121: {
         "Common Name": "LR_AGL_Golden_Frieza",
@@ -967,7 +967,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [1, 2, 2, 2, 2, 3, 2, 2, 2, 2],
     },
     122: {
         "Common Name": "DFLR_AGL_SS2_Gohan",
@@ -975,7 +975,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [2, 2, 1, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     123: {
         "Common Name": "LR_AGL_SBA_Goku",
@@ -983,7 +983,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
     },
     124: {
         "Common Name": "BU_PHY_SSR3_CMS",
@@ -991,7 +991,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     125: {
         "Common Name": "BU_PHY_SS4_Vegito",
@@ -1007,7 +1007,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     127: {
         "Common Name": "DF_PHY_Beerus_",
@@ -1015,7 +1015,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 2, 1, 2, 2, 2, 2, 2, 2],
     },
     128: {
         "Common Name": "DF_PHY_Android_17",
@@ -1023,14 +1023,14 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     129: {
         "Common Name": "DF_PHY_Transforming_Vegeta",
         "# Copies": 5,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "ADD",
-        "HiPo Choice # 2": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
         "Slots": [2, 2, 2, 2, 3, 2, 2, 2, 2, 2],
     },
     130: {
@@ -1039,7 +1039,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     131: {
         "Common Name": "DF_STR_Transforming_Cooler",
@@ -1047,7 +1047,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 3, 3, 3, 3, 3, 1, 1, 1],
     },
     132: {
         "Common Name": "DF_STR_Super_Buu",
@@ -1055,7 +1055,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     133: {
         "Common Name": "BU_STR_Nappa_",
@@ -1063,7 +1063,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "Slots": [2, 2, 3, 3, 3, 2, 3, 2, 2, 2],
     },
     134: {
         "Common Name": "DF_STR_Gamma_1",
@@ -1071,7 +1071,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     135: {
         "Common Name": "DF_STR_SSBK_Goku",
@@ -1079,7 +1079,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": [1, 1, 3, 1, 1, 1, 1, 1, 1, 2],
+        "Slots": [1, 2, 3, 3, 3, 3, 3, 2, 2, 2],
     },
     136: {
         "Common Name": "BU_STR_Kale_",
@@ -1087,7 +1087,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
     },
     137: {
         "Common Name": "BU_STR_Piccolo_Cooler",
@@ -1095,7 +1095,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     138: {
         "Common Name": "BU_STR_WT_Krillin",
@@ -1103,7 +1103,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     139: {
         "Common Name": "BU_INT_Kid_Pan",
@@ -1111,7 +1111,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     },
     140: {
         "Common Name": "DF_TEQ_Future_Androids",
@@ -1119,7 +1119,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 3, 3, 2, 2, 2, 2, 2, 2],
+        "Slots": [3, 3, 1, 2, 2, 2, 2, 2, 2, 2],
     },
     141: {
         "Common Name": "BU_TEQ_Caulifla_",
@@ -1143,7 +1143,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
     },
     144: {
         "Common Name": "BU_TEQ_BoG_Vegeta",
@@ -1151,7 +1151,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 1, 2, 3, 1, 1, 1, 1, 1],
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     145: {
         "Common Name": "DF_AGL_Fusion_Zamasu",
@@ -1159,7 +1159,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 1, 2, 2, 2, 2, 2, 2, 2, 1],
     },
     146: {
         "Common Name": "DF_AGL_Android_13",
@@ -1167,7 +1167,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     147: {
         "Common Name": "BU_AGL_Golden_Frieza",
@@ -1175,7 +1175,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 1, 2, 2, 2, 1, 2, 1, 1],
     },
     148: {
         "Common Name": "BU_AGL_Cell_Jr",
@@ -1183,7 +1183,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [1, 2, 2, 2, 2, 2, 1, 1, 1, 1],
     },
     149: {
         "Common Name": "BU_AGL_SFPS4LB_Vegito",
@@ -1191,7 +1191,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     150: {
         "Common Name": "DF_AGL_Gamma_2",
@@ -1207,12 +1207,12 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_1,
+        "Slots": [1, 2, 1, 1, 1, 1, 1, 1, 1, 1],
     },
     152: {
         "Common Name": "BU_PHY_Giant_Ribrianne",
         "# Copies": 5,
-        "BRZ Equip": "DGE",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
         "Slots": SLOT_2,
@@ -1239,7 +1239,7 @@ User = {
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": [2, 1, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
     },
     156: {
         "Common Name": "DF_TEQ_SS3_Gotenks",
@@ -1255,7 +1255,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 1, 2, 2, 1, 1, 2, 1, 1],
     },
     158: {
         "Common Name": "BU_TEQ_Evil_Buu",
@@ -1263,31 +1263,31 @@ User = {
         "BRZ Equip": "ATK",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 2, 2, 1, 1, 1, 1, 1, 1, 1],
     },
     159: {
         "Common Name": "BU_PHY_Gotenks_",
         "# Copies": 0,
-        "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
+        "BRZ Equip": "ATK",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
         "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     160: {
         "Common Name": "DF_INT_Fat_Buu",
         "# Copies": 1,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "ATK",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 3, 2, 2, 2, 2, 1, 2],
+        "Slots": [2, 2, 3, 1, 2, 2, 1, 1, 1, 1],
     },
     161: {
         "Common Name": "DF_AGL_SS3_Goku",
         "# Copies": 1,
         "BRZ Equip": "ATK",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 2, 2, 2, 2, 2, 1, 1],
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
+        "Slots": [2, 2, 2, 1, 2, 2, 2, 2, 2, 2],
     },
     162: {
         "Common Name": "DF_AGL_Android_21",
@@ -1295,7 +1295,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": [2, 3, 3, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     163: {
         "Common Name": "DF_TEQ_Exchange_Buu",
@@ -1303,7 +1303,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
+        "Slots": [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
     },
     164: {
         "Common Name": "DF_TEQ_Ultimate_Gohan",
@@ -1311,7 +1311,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_1,
+        "Slots": [1, 2, 2, 1, 1, 1, 1, 1, 1, 1],
     },
     165: {
         "Common Name": "LR_AGL_Ultimate_Gohan",
@@ -1319,15 +1319,15 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "CRT",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 3, 2, 2, 2, 2, 2, 2],
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     166: {
         "Common Name": "BU_INT_Hercule_",
         "# Copies": 5,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_1,
     },
     167: {
         "Common Name": "BU_PHY_Buutenks_",
@@ -1341,8 +1341,8 @@ User = {
         "Common Name": "BU_INT_SS_Goten",
         "# Copies": 5,
         "BRZ Equip": "DEF",
-        "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
+        "HiPo Choice # 1": "ADD",
+        "HiPo Choice # 2": "DGE",
         "Slots": SLOT_2,
     },
     169: {
@@ -1359,7 +1359,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 3, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     171: {
         "Common Name": "DF_STR_SS3_Vegeta",
@@ -1367,7 +1367,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [3, 2, 2, 2, 2, 3, 3, 3, 1, 1],
     },
     172: {
         "Common Name": "BU_INT_Cheelai_",
@@ -1375,7 +1375,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 2, 2, 2, 1, 1, 1, 1, 1, 1],
     },
     173: {
         "Common Name": "BU_PHY_Android_21",
@@ -1383,7 +1383,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     174: {
         "Common Name": "F2PLR_PHY_Babidi_Buu",
@@ -1391,7 +1391,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     175: {
         "Common Name": "F2P_PHY_Buyon_",
@@ -1399,7 +1399,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 2, 2, 2, 3, 2, 2, 2, 2],
+        "Slots": SLOT_2,
     },
     176: {
         "Common Name": "F2P_PHY_Gohan_Goku",
@@ -1407,7 +1407,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": SLOT_2,
     },
     177: {
         "Common Name": "F2PLR_INT_Babidi_",
@@ -1415,7 +1415,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": SLOT_2,
     },
     178: {
         "Common Name": "BU_PHY_Robelu_",
@@ -1423,7 +1423,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     179: {
         "Common Name": "BU_PHY_Whirus_",
@@ -1431,7 +1431,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     180: {
         "Common Name": "F2P_PHY_UI_Goku",
@@ -1439,7 +1439,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": SLOT_2,
     },
     181: {
         "Common Name": "BU_PHY_Kid_Chichi",
@@ -1447,7 +1447,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     182: {
         "Common Name": "BU_STR_Pan_GT",
@@ -1455,7 +1455,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": SLOT_2,
     },
     183: {
         "Common Name": "BU_STR_Whis_",
@@ -1463,7 +1463,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
     },
     184: {
         "Common Name": "BU_INT_Masked_King",
@@ -1471,7 +1471,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 3, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     185: {
         "Common Name": "BU_INT_Zamasu_",
@@ -1479,7 +1479,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [1, 1, 1, 2, 2, 2, 2, 1, 1, 1],
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     186: {
         "Common Name": "BU_AGL_SS2_Trunks",
@@ -1487,7 +1487,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": [1, 1, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_1,
     },
     187: {
         "Common Name": "F2PLR_TEQ_Trunks_Broly",
@@ -1495,7 +1495,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2, # Should be SLOT_3 but breaks optimisation
+        "Slots": [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
     },
     188: {
         "Common Name": "BU_PHY_SS_Bardock",
@@ -1503,7 +1503,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [2, 2, 3, 2, 2, 2, 2, 2, 3, 1],
     },
     189: {
         "Common Name": "BU_PHY_WT_Tien",
@@ -1511,7 +1511,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     190: {
         "Common Name": "BU_INT_Amond_Rasin",
@@ -1527,7 +1527,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_2,
+        "Slots": [2, 3, 3, 2, 2, 2, 2, 2, 2, 2],
     },
     192: {
         "Common Name": "BU_INT_Bota_Magetta",
@@ -1535,7 +1535,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     193: {
         "Common Name": "DF_TEQ_Golden_Frieza",
@@ -1543,7 +1543,7 @@ User = {
         "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "CRT",
-        "Slots": SLOT_1,
+        "Slots": [1, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     194: {
         "Common Name": "BU_TEQ_Bulla_",
@@ -1551,7 +1551,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [2, 2, 2, 2, 2, 1, 1, 1, 1, 1],
     },
     195: {
         "Common Name": "BU_TEQ_Tapion_",
@@ -1559,15 +1559,15 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     196: {
         "Common Name": "F2P_TEQ_Candy_Vegito",
         "# Copies": 5,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": [2, 2, 2, 2, 2, 1, 1, 1, 1, 1],
     },
     197: {
         "Common Name": "F2P_TEQ_SS3_Goku",
@@ -1575,15 +1575,15 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "DGE",
-        "Slots": [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     198: {
         "Common Name": "BU_INT_Whis_",
         "# Copies": 4,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": SLOT_1,
+        "Slots": SLOT_2,
     },
     199: {
         "Common Name": "F2PLR_TEQ_Dragon_Ball",
@@ -1591,7 +1591,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "DGE",
         "HiPo Choice # 2": "ADD",
-        "Slots": [3, 3, 3, 2, 2, 2, 2, 2, 2, 2],
+        "Slots": [3, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     200: {
         "Common Name": "BU_INT_Future_Mai",
@@ -1604,10 +1604,10 @@ User = {
     201: {
         "Common Name": "F2P_INT_Bulma_Youth",
         "# Copies": 5,
-        "BRZ Equip": "DEF",
+        "BRZ Equip": "DGE",
         "HiPo Choice # 1": "DGE",
-        "HiPo Choice # 2": "ADD",
-        "Slots": [3, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "HiPo Choice # 2": "CRT",
+        "Slots": [3, 1, 2, 2, 2, 2, 2, 2, 2, 2],
     },
     202: {
         "Common Name": "BU_TEQ_Future_Gohan",
@@ -1615,7 +1615,7 @@ User = {
         "BRZ Equip": "DEF",
         "HiPo Choice # 1": "ADD",
         "HiPo Choice # 2": "CRT",
-        "Slots": [2, 2, 2, 1, 1, 1, 1, 1, 1, 1],
+        "Slots": SLOT_2,
     },
     203: {
         "Common Name": "BU_AGL_Daiz_Cacao",

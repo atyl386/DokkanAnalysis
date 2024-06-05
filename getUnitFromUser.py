@@ -1492,11 +1492,11 @@ class State:
         self.normalDamageTaken = (
             NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.normalDamageTakenPreSuper
             + NUM_NORMAL_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.normalDamageTakenPostSuper
-        ) / (NUM_NORMAL_ATTACKS_DIRECTED[self.slot - 1])
+        )
         self.saDamageTaken = (
             NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.saDamageTakenPreSuper
             + NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.saDamageTakenPostSuper
-        ) / (NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1])
+        )
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
         self.useability = (
             unit.teams

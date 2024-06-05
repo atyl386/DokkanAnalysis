@@ -7,8 +7,8 @@ Useability: 0.9876623376623378
 Healing: 0.017382191884615383 
 Support: 0.0 
 APT: 7235540.992565907 
-Normal Defence: -0.5898013641148568 
-Super Attack Defence: -0.8005000000000001 
+Normal Defence: -0.7814868074521854 
+Super Attack Defence: -0.14294642857142859 
 Slot Bonus: 0.5 
 
 State # 1 / Turn # 3 
@@ -20,8 +20,8 @@ Useability: 0.9876623376623378
 Healing: 0.024918737810244233 
 Support: 0.0 
 APT: 9950706.984913334 
-Normal Defence: -0.6766504822346484 
-Super Attack Defence: -0.8005000000000001 
+Normal Defence: -0.8965618889609092 
+Super Attack Defence: -0.14294642857142859 
 Slot Bonus: 0.5 
 
 State # 2 / Turn # 5 
@@ -33,50 +33,37 @@ Useability: 0.9876623376623378
 Healing: 0.021710172623140244 
 Support: 0.0 
 APT: 7263474.743563486 
-Normal Defence: -0.7728181086610554 
-Super Attack Defence: -0.8005000000000001 
-Slot Bonus: 0.5 
+Normal Defence: -0.8427348628645815 
+Super Attack Defence: -0.11435714285714285 
+Slot Bonus: 0.3333333333333333 
 
-State # 3 / Turn # 7 
+State # 3 / Turn # 8 
  
 Leader Skill: 9.0 
 SBR: 0.0 
 HP: 16920.0 
-Useability: 1.046753246753247 
-Healing: 0.0293060576552348 
-Support: 0.5 
-APT: 10953993.711425455 
-Normal Defence: -0.8005 
-Super Attack Defence: -0.8005 
-Slot Bonus: 1.0 
+Useability: 1.0270562770562772 
+Healing: 0.02677409597786995 
+Support: 0.3333333333333333 
+APT: 9723820.722138133 
+Normal Defence: -0.8626082876215272 
+Super Attack Defence: -0.11435714285714285 
+Slot Bonus: 0.3333333333333333 
 
-State # 4 / Turn # 9 
+State # 4 / Turn # 11 
  
 Leader Skill: 9.0 
 SBR: 0.0 
 HP: 16920.0 
-Useability: 1.046753246753247 
-Healing: 0.0293060576552348 
-Support: 0.5 
-APT: 10953993.711425455 
-Normal Defence: -0.8005 
-Super Attack Defence: -0.8005 
-Slot Bonus: 1.0 
+Useability: 1.0270562770562772 
+Healing: 0.02677409597786995 
+Support: 0.33333333333333337 
+APT: 9723820.722138133 
+Normal Defence: -0.872545 
+Super Attack Defence: -0.11435714285714285 
+Slot Bonus: 0.3333333333333333 
 
-State # 5 / Turn # 11 
- 
-Leader Skill: 9.0 
-SBR: 0.0 
-HP: 16920.0 
-Useability: 0.9876623376623378 
-Healing: 0.021710172623140244 
-Support: 0.0 
-APT: 7263474.743563486 
-Normal Defence: -0.8005 
-Super Attack Defence: -0.8005 
-Slot Bonus: 1.0 
-
-State # 6 / Turn # 13 
+State # 5 / Turn # 14 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -85,11 +72,11 @@ Useability: 0.9876623376623378
 Healing: 0.021710172623140244 
 Support: 0.0 
 APT: 7263474.743563486 
-Normal Defence: -0.8005 
-Super Attack Defence: -0.8005 
-Slot Bonus: 1.0 
+Normal Defence: -0.872545 
+Super Attack Defence: -0.11435714285714285 
+Slot Bonus: 0.3333333333333333 
 
-State # 7 / Turn # 15 
+State # 6 / Turn # 17 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -98,11 +85,11 @@ Useability: 0.9876623376623378
 Healing: 0.021710172623140244 
 Support: 0.0 
 APT: 7263474.743563486 
-Normal Defence: -0.8005 
-Super Attack Defence: -0.8005 
-Slot Bonus: 1.0 
+Normal Defence: -0.872545 
+Super Attack Defence: -0.11435714285714285 
+Slot Bonus: 0.3333333333333333 
 
-State # 8 / Turn # 17 
+State # 7 / Turn # 20 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -111,11 +98,11 @@ Useability: 0.9876623376623378
 Healing: 0.021710172623140244 
 Support: 0.0 
 APT: 7263474.743563486 
-Normal Defence: -0.8005 
-Super Attack Defence: -0.8005 
-Slot Bonus: 1.0 
+Normal Defence: -0.872545 
+Super Attack Defence: -0.11435714285714285 
+Slot Bonus: 0.3333333333333333 
 
-State # 9 / Turn # 19 
+State # 8 / Turn # 20 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -124,7 +111,20 @@ Useability: 0.9876623376623378
 Healing: 0.021710172623140244 
 Support: 0.0 
 APT: 7263474.743563486 
-Normal Defence: -0.8005 
-Super Attack Defence: -0.8005 
-Slot Bonus: 1.0 
+Normal Defence: -0.872545 
+Super Attack Defence: -0.11435714285714285 
+Slot Bonus: 0.3333333333333333 
+
+State # 9 / Turn # 20 
+ 
+Leader Skill: 9.0 
+SBR: 0.0 
+HP: 16920.0 
+Useability: 0.9876623376623378 
+Healing: 0.021710172623140244 
+Support: 0.0 
+APT: 7263474.743563486 
+Normal Defence: -1.9051899999999997 
+Super Attack Defence: -0.2858928571428571 
+Slot Bonus: 0.7777777777777778 
 

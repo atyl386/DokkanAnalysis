@@ -7,8 +7,8 @@ Useability: 0.5227272727272727
 Healing: 0.059005061553846154 
 Support: 0.5 
 APT: 9851241.910619764 
-Normal Defence: -0.05301178984922476 
-Super Attack Defence: -0.3898149999999999 
+Normal Defence: -0.0702406215502228 
+Super Attack Defence: -0.06960982142857142 
 Slot Bonus: 0.5 
 
 State # 1 / Turn # 3 
@@ -20,37 +20,24 @@ Useability: 0.5227272727272727
 Healing: 0.059005061553846154 
 Support: 0.5 
 APT: 12472367.441327082 
-Normal Defence: -0.13808295539729787 
-Super Attack Defence: -0.3898149999999999 
-Slot Bonus: 0.3333333333333333 
+Normal Defence: -0.17889692482523117 
+Super Attack Defence: -0.06960982142857142 
+Slot Bonus: 0.5 
 
-State # 2 / Turn # 6 
- 
-Leader Skill: 7.0 
-SBR: 1.0 
-HP: 18270.0 
-Useability: 0.5499999999999999 
-Healing: 0.42725854779937156 
-Support: 0.5 
-APT: 19538317.70817227 
-Normal Defence: -0.060811613872504375 
-Super Attack Defence: -0.6163583333333333 
-Slot Bonus: 0.3333333333333333 
-
-State # 3 / Turn # 9 
+State # 2 / Turn # 5 
  
 Leader Skill: 7.0 
 SBR: 1.0 
 HP: 18270.0 
 Useability: 0.5636363636363636 
-Healing: 0.5113852909221343 
+Healing: 0.6113852909221342 
 Support: 0.5 
-APT: 28569528.264316365 
-Normal Defence: -0.04598822716597023 
-Super Attack Defence: -0.69922875 
-Slot Bonus: 0.5555555555555556 
+APT: 23071292.84159486 
+Normal Defence: -0.017048732844879542 
+Super Attack Defence: -0.13029107142857144 
+Slot Bonus: 0.5 
 
-State # 4 / Turn # 11 
+State # 3 / Turn # 7 
  
 Leader Skill: 7.0 
 SBR: 1.0 
@@ -59,24 +46,11 @@ Useability: 0.5636363636363636
 Healing: 0.3113852909221343 
 Support: 0.5 
 APT: 39565999.109759375 
-Normal Defence: -0.09361279527769548 
-Super Attack Defence: -0.63842625 
-Slot Bonus: 1.0 
-
-State # 5 / Turn # 13 
- 
-Leader Skill: 7.0 
-SBR: 1.0 
-HP: 18270.0 
-Useability: 0.5636363636363636 
-Healing: 0.3113852909221343 
-Support: 0.5 
-APT: 23071292.84159486 
-Normal Defence: -0.015634468033113153 
-Super Attack Defence: -0.72963 
+Normal Defence: -0.00830107003166604 
+Super Attack Defence: -0.1140046875 
 Slot Bonus: 0.5 
 
-State # 6 / Turn # 15 
+State # 4 / Turn # 9 
  
 Leader Skill: 7.0 
 SBR: 1.0 
@@ -85,11 +59,11 @@ Useability: 0.5636363636363636
 Healing: 0.3113852909221343 
 Support: 0.5 
 APT: 23071292.84159486 
-Normal Defence: -0.015634468033113153 
-Super Attack Defence: -0.72963 
+Normal Defence: -0.020715670143874928 
+Super Attack Defence: -0.13029107142857144 
 Slot Bonus: 0.5 
 
-State # 7 / Turn # 17 
+State # 5 / Turn # 11 
  
 Leader Skill: 7.0 
 SBR: 1.0 
@@ -98,11 +72,11 @@ Useability: 0.5636363636363636
 Healing: 0.3113852909221343 
 Support: 0.5 
 APT: 23071292.84159486 
-Normal Defence: -0.015634468033113153 
-Super Attack Defence: -0.72963 
+Normal Defence: -0.020715670143874928 
+Super Attack Defence: -0.13029107142857144 
 Slot Bonus: 0.5 
 
-State # 8 / Turn # 19 
+State # 6 / Turn # 13 
  
 Leader Skill: 7.0 
 SBR: 1.0 
@@ -111,8 +85,34 @@ Useability: 0.5636363636363636
 Healing: 0.3113852909221343 
 Support: 0.5 
 APT: 23071292.84159486 
-Normal Defence: -0.015634468033113153 
-Super Attack Defence: -0.72963 
+Normal Defence: -0.020715670143874928 
+Super Attack Defence: -0.13029107142857144 
+Slot Bonus: 0.5 
+
+State # 7 / Turn # 15 
+ 
+Leader Skill: 7.0 
+SBR: 1.0 
+HP: 18270.0 
+Useability: 0.5636363636363636 
+Healing: 0.3113852909221343 
+Support: 0.5 
+APT: 23071292.84159486 
+Normal Defence: -0.020715670143874928 
+Super Attack Defence: -0.13029107142857144 
+Slot Bonus: 0.5 
+
+State # 8 / Turn # 17 
+ 
+Leader Skill: 7.0 
+SBR: 1.0 
+HP: 18270.0 
+Useability: 0.5636363636363636 
+Healing: 0.3113852909221343 
+Support: 0.5 
+APT: 23071292.84159486 
+Normal Defence: -0.020715670143874928 
+Super Attack Defence: -0.13029107142857144 
 Slot Bonus: 0.5 
 
 State # 9 / Turn # 19 
@@ -124,7 +124,7 @@ Useability: 0.5636363636363636
 Healing: 0.3113852909221343 
 Support: 0.5 
 APT: 23071292.84159486 
-Normal Defence: -0.015634468033113153 
-Super Attack Defence: -0.72963 
+Normal Defence: -0.020715670143874928 
+Super Attack Defence: -0.13029107142857144 
 Slot Bonus: 0.5 
 
