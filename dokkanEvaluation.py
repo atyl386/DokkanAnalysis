@@ -216,8 +216,8 @@ if __name__ == '__main__':
                     print(ID, best_slots, User[ID]["Common Name"])
         if analyseHiPo:
             for ID in reverseOrderIDs:
-                best_HiPo = None
-                best_eval = evaluations[ID - 1][-1]
+                best_HiPo = -1
+                best_eval = -np.inf
                 for i, HiPo_build in enumerate(HIPO_BUILDS):
                     HiPo_unit = Unit(
                         ID,
@@ -234,7 +234,7 @@ if __name__ == '__main__':
                     if HiPo_evaluation > best_eval:
                         best_HiPo = i
                         best_eval = HiPo_evaluation
-                if best_HiPo == None:
+                if HIPO_BUILDS[best_HiPo] == [User[ID]["BRZ Equip"], User[ID]["HiPo Choice # 1"], User[ID]["HiPo Choice # 2"]]:
                     print(ID, "default HiPo", HiPo_unit.name)
                 else:
                     print(ID, HIPO_BUILDS[best_HiPo], HiPo_unit.name)
