@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Change dokkanAcount to be an .xml file so can write to it with optimised HiPo and Slots
 # - Add normal attack disable from disable action. Currently only counting as a SA nullification
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
@@ -1274,6 +1275,13 @@ class State:
         self.dmgRedB = form.carryOverBuffs["Dmg Red"].get()
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
+        self.numNormalAttacksDirectedBeforeAttacking = NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
+        self.numNormalAttacksDirectedAfterAttacking = NUM_NORMAL_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
+        self.numSuperAttacksDirectedBeforeAttacking = NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
+        self.numSuperAttacksDirectedAfterAttacking = NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
+        self.numAttacksDirectedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
+        self.numAttacksDirectedAfterAttacking = NUM_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
+        self.numAttacksDirected = NUM_ATTACKS_DIRECTED[self.slot - 1]
         # Required for getting APTs for individual attacks
         self.atkPerAttackPerformed = np.zeros(MAX_TURN)
         self.atkPerSuperPerformed = np.zeros(MAX_TURN)
@@ -1489,12 +1497,12 @@ class State:
         self.buff["Heal"] += form.linkEffects["Heal"] + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + ((0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR) / AVG_HEALTH
         self.buff["Heal"] = min(self.buff["Heal"], 1)
         self.normalDamageTaken = (
-            NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.normalDamageTakenPreSuper
-            + NUM_NORMAL_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.normalDamageTakenPostSuper
+            self.numNormalAttacksDirectedBeforeAttacking * self.normalDamageTakenPreSuper
+            + self.numNormalAttacksDirectedAfterAttacking * self.normalDamageTakenPostSuper
         )
         self.saDamageTaken = (
-            NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.saDamageTakenPreSuper
-            + NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.saDamageTakenPostSuper
+            self.numSuperAttacksDirectedBeforeAttacking * self.saDamageTakenPreSuper
+            + self.numSuperAttacksDirectedAfterAttacking * self.saDamageTakenPostSuper
         )
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
         self.useability = (
@@ -2123,7 +2131,7 @@ class PerAttackReceivedOrEvaded(PerEvent):
         self.withinTheSameTurn = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
-        numAttacksDirected = round(NUM_ATTACKS_DIRECTED[state.slot - 1])
+        numAttacksDirected = round(state.numAttacksDirected)
         turnBuff = self.effectiveBuff * numAttacksDirected
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
@@ -2183,16 +2191,16 @@ class PerAttackEvaded(PerEvent):
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
             case "DEF":
                 pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
-                state.p2Buff["DEF"] += min((NUM_ATTACKS_DIRECTED[state.slot - 1] - 1) * pEvade * (1 - pEvade) * self.effectiveBuff / 2, buffToGo)
+                state.p2Buff["DEF"] += min((state.numAttacksDirected - 1) * pEvade * (1 - pEvade) * self.effectiveBuff / 2, buffToGo)
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
             case "Evasion":
                 evasionA = copy.deepcopy(state.multiChanceBuff["EvasionA"])
-                numAttacksDirectedBeforeAttacking = round(NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1])
+                numAttacksDirectedBeforeAttacking = round(state.numAttacksDirectedBeforeAttacking)
                 evasionAChance = [0] * numAttacksDirectedBeforeAttacking
                 evasionB = copy.deepcopy(state.multiChanceBuff["EvasionB"])
-                numAttacksDirected = round(NUM_ATTACKS_DIRECTED[state.slot - 1])
+                numAttacksDirected = round(state.numAttacksDirected)
                 evasionBChance = [0] * numAttacksDirected
                 for i in range(numAttacksDirected):
                     if i < numAttacksDirectedBeforeAttacking:
@@ -2458,7 +2466,7 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
     
     def setEventFactor(self, state):
         attacksToActivate = 1 if self.threshold == 0 else self.required
-        numAttacksDirectedBeforeAttacking = round(NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1])
+        numAttacksDirectedBeforeAttacking = round(state.numAttacksDirectedBeforeAttacking)
         # If buff is a defensive one
         if self.effect in ["DEF", "Dmg Red", "Evasion"]:
             self.eventFactor = max(self.numAttacksDirected - attacksToActivate, 0) / self.numAttacksDirected  # Factor to account for not having the buff on the fist hit
@@ -2472,7 +2480,7 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
                     self.eventFactor = 0
 
     def applyToState(self, state, unit=None, form=None):
-        self.numAttacksDirected = round(NUM_ATTACKS_DIRECTED[state.slot - 1])
+        self.numAttacksDirected = round(state.numAttacksDirected)
         self.increment = self.numAttacksDirected
         if self.threshold == 0:
             self.updateBuffToGo()
@@ -2515,7 +2523,7 @@ class UntilAttackRecieved(UntilEvent):
             pEvade = (state.multiChanceBuff["EvasionA"].prob + self.effectiveBuff) * (1 - DODGE_CANCEL_FACTOR)
         else:
             pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
-        self.eventFactor = min(pEvade / (1 - pEvade) / round(NUM_ATTACKS_DIRECTED[state.slot - 1]), 1)
+        self.eventFactor = min(pEvade / (1 - pEvade) / round(state.numAttacksDirected), 1)
         self.setTurnBuff(state)
 
 
