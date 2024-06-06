@@ -6,7 +6,6 @@ import click as clc
 
 # TODO:
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
-# - Maybe chance damage attributes to be total damage taken rather than average and then increase importance of slot 1
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
