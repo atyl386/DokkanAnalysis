@@ -11,8 +11,6 @@ nUnits = len(User)
 
 
 def SummonRating(ID):
-    if ID == 81:
-        f = 2
     pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(ID) + ".pkl", "rb")
     unit = pickle.load(pkl)
     pkl.close()
