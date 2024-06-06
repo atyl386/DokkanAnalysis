@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Add normal attack disable from disable action. Currently only counting as a SA nullification
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
@@ -2548,6 +2549,8 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.atkModifier = state.getAvgAtkMod(form, unit)
+                case "Disable Action":
+                    state.multiChanceBuff["Nullify"].updateChance("Disable Action", P_NULLIFY_FROM_DISABLE_SUPER[state.slot - 1], "Nullify")
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
                 setAttacksPerformed(unit, state)
@@ -2796,4 +2799,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(209, "BU_STR_Fat_Buu", 3, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(210, "BU_INT_Hit_", 5, "DEF", "DGE", "ADD", SLOT_2)
