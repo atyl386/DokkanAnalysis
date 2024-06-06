@@ -1657,4 +1657,12 @@ User = {
         "HiPo Choice # 2": "ADD",
         "Slots": SLOT_2,
     },
+    208: {
+        "Common Name": "BU_STR_Future_Trunks",
+        "# Copies": 5,
+        "BRZ Equip": "DGE",
+        "HiPo Choice # 1": "DGE",
+        "HiPo Choice # 2": "ADD",
+        "Slots": SLOT_2,
+    },
 }
