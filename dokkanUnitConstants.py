@@ -220,12 +220,7 @@ NUM_ATTACKS_DIRECTED = (
     + NUM_ATTACKS_SLOT_SPECIFIC_AFTER_ATTACKING * (1 - PROBABILITY_KILL_ENEMY_BEFORE_RECEIVING_ALL_ATTACKS)
 )
 NUM_ATTACKS_DIRECTED_AFTER_ATTACKING = NUM_ATTACKS_DIRECTED - NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING
-P_NULLIFY_FROM_DISABLE_ACTIVE = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN
-P_NULLIFY_FROM_DISABLE_SUPER = (
-    (NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING)
-    / NUM_ATTACKS_PER_TURN
-    * P_NULLIFY_FROM_DISABLE_ACTIVE
-)
+P_DISABLE_SUPER = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN
 NUM_SUPER_ATTACKS_SLOT_SPECIFIC = NUM_SUPER_ATTACKS_PER_TURN / NUM_ATTACKS_PER_TURN * NUM_ATTACKS_SLOT_SPECIFIC
 NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING = np.array(
     [NUM_SUPER_ATTACKS_SLOT_SPECIFIC[0] * PRE_SLOT_1_ATTACK_FRAC, 0, 0]
@@ -438,7 +433,7 @@ AVG_P2_STATS = 2 # Guess
 
 # Effects
 
-SPECIAL_SUPPORT_EFFECTS = ["Delay Target", "Intercept",]
+SPECIAL_SUPPORT_EFFECTS = ["P3 Disable Action", "Delay Target", "Intercept"]
 
 ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Triple Orb Change", "Complete Orb Change", "Rainbow Orb Change"]
 
@@ -533,6 +528,7 @@ SUPPORT_FACTORS = [
     0.375,
     0,
     0.5,
+    DMG_RED_SUPPORT_100_FACTOR / (NUM_SLOTS - 1) * P_DISABLE_SUPER, # /2 as only can affect 1 unit out the two others, times chance of disabling super.
     DMG_RED_SUPPORT_100_FACTOR,
     DMG_RED_SUPPORT_100_FACTOR,
 ]
@@ -543,7 +539,7 @@ MULTI_CHANCE_EFFECTS = ["Crit", "EvasionA", "EvasionB", "Nullify"]
 MULTI_CHANCE_EFFECTS_NO_NULLIFY = [effect for effect in MULTI_CHANCE_EFFECTS if effect != "Nullify"]
 CRIT_CHANCES = ["HiPo", "Start of Turn", "Links", "On Super", "Active Skill", "Super Attack Effect"]
 EVASION_CHANCES = ["HiPo", "Start of Turn", "Links", "On Super", "Active Skill"]
-NULLIFY_CHANCES = ["Disable Action", "SA Counter", "Nullification"]
+NULLIFY_CHANCES = ["SA Counter", "Nullification"]
 
 # Conditions
 CONDITIONS = [
@@ -766,6 +762,7 @@ attackAllDebuffConversion = dict(zip(ATTACK_ALL_SCORE, ATTACK_ALL_DEBUFF_FACTOR)
 # Support
 supportFactorConversion = dict(zip(SUPPORT_EFFECTS, SUPPORT_FACTORS))
 superAttackSupportFactorConversion = dict(zip(SUPPORT_SUPER_ATTACK_EFFECTS, SUPER_ATTACK_SUPPORT_FACTORS))
+disableActionActiveSupportFactorConversion = dict(zip(SLOTS, [0, supportFactorConversion["P3 Disable Action"], supportFactorConversion["P3 Disable Action"]]))
 
 # Orb Changing
 orbRequirement2TypeConversion = dict(zip(ORB_REQUIREMENTS, ORB_REQUIREMENT_TYPES))
@@ -811,6 +808,8 @@ superAttackConversion = dict(zip(SUPER_ATTACK_MULTIPLIER_NAMES, superAttackMulti
 
 # Slot
 slot2ReturnPeriod = dict(zip(SLOTS, RETURN_PERIOD_PER_SLOT))
+disableActionActiveDisableSuper = dict(zip(SLOTS, [P_DISABLE_SUPER, 0, 0]))
+disableActionActiveDisableNormal = dict(zip(SLOTS, [1, 0, 0]))
 
 # Enemy Attacks
 saFracConversion = dict(zip(SUPER_ATTACK_NULLIFICATION_TYPES, PROBABILITY_SUPER_ATTACK_TYPE))

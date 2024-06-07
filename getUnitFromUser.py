@@ -5,8 +5,8 @@ import math
 import click as clc
 
 # TODO:
+# Lower DMG_RED_100_SUPPORT_FACTOR to 15 from 20
 # - Change dokkanAcount to be an .xml file so can write to it with optimised HiPo and Slots
-# - Add normal attack disable from disable action. Currently only counting as a SA nullification
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
@@ -1371,13 +1371,12 @@ class State:
                     )
                 )
                 self.support += supportFactor * numSupers
-            self.multiChanceBuff["Nullify"].updateChance(
-                "Disable Action",
-                numSupers
-                * P_NULLIFY_FROM_DISABLE_SUPER[self.slot - 1]
-                * form.superAttacks[superAttackType].effects["Disable Action"].buff,
-                "Nullify",
-            )
+            pDisableSuper = numSupers * P_DISABLE_SUPER * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
+            self.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
+            pDisableNormal = numSupers * min(1, self.numNormalAttacksDirectedAfterAttacking) * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
+            self.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
+            self.numAttacksDirected -= pDisableNormal
+            self.numAttacksDirectedAfterAttacking -= pDisableNormal
         self.normal = getNormal(
             unit.kiMod12,
             self.ki,
@@ -1954,9 +1953,10 @@ class Buff(PassiveAbility):
                         state.multiChanceBuff["EvasionA"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
                         state.multiChanceBuff["EvasionB"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
                     case "P3 Disable Action":
-                        state.multiChanceBuff["Nullify"].updateChance(
-                            "Disable Action", P_NULLIFY_FROM_DISABLE_ACTIVE, "Nullify", state
-                        )
+                        state.numSuperAttacksDirectedBeforeAttacking -= disableActionActiveDisableSuper[state.slot] * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                        state.numAttacksDirected -= disableActionActiveDisableNormal[state.slot]
+                        state.numNormalAttacksDirectedBeforeAttacking -= disableActionActiveDisableNormal[state.slot] * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                        state.support += disableActionActiveSupportFactorConversion[state.slot] * supportBuff
                     case "Delay Target":
                         state.support += supportFactorConversion[self.effect] * supportBuff
                         state.dmgRedA = 1
@@ -2558,7 +2558,12 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.atkModifier = state.getAvgAtkMod(form, unit)
                 case "Disable Action":
-                    state.multiChanceBuff["Nullify"].updateChance("Disable Action", P_NULLIFY_FROM_DISABLE_SUPER[state.slot - 1], "Nullify")
+                    pDisableSuper = P_DISABLE_SUPER * cappedTurnBuff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                    state.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
+                    pDisableNormal = min(1, state.numNormalAttacksDirectedAfterAttacking) * cappedTurnBuff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                    state.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
+                    state.numAttacksDirected -= pDisableNormal
+                    state.numAttacksDirectedAfterAttacking -= pDisableNormal
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
                 setAttacksPerformed(unit, state)
@@ -2807,4 +2812,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(210, "BU_INT_Hit_", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(58, "DFLR_TEQ_SS_Gods", 5, "DEF", "DGE", "ADD", SLOT_2)
