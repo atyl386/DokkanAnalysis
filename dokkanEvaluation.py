@@ -1,19 +1,34 @@
 from getUnitFromUser import *
 import pandas as pd
 from scipy.stats import truncnorm
-from dokkanAccount import User
 import shutil
 import pickle
 import multiprocessing
 
 HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
-nUnits = len(User)
 
 reCalc = True
 analyseHiPo = False
-optimiseSlots = False
+optimiseslots = False
 accountRanking = True
 
+def parseDokkanAccountXML(dokkanAccountXmlFilePath):
+    dokkanAccountXML = ET.parse(dokkanAccountXmlFilePath)
+    units = list(dokkanAccountXML.getroot())
+    dokkanAccountDict = {}
+    for unit in units:
+        _id = int(unit.tag[1:])
+        fields = list(unit)
+        unitDict = {}
+        for field in fields:
+            if field.tag == "num_copies":
+                unitDict[field.tag] = int(field.attrib['value'])
+            elif field.tag == "slots":
+                unitDict[field.tag] = literal_eval(field.attrib['value'])
+            else:
+                unitDict[field.tag] = field.attrib['value']
+        dokkanAccountDict[_id] = unitDict
+    return dokkanAccountDict
 
 def save_object(obj, filename):
     obj.inputHelper.file = None
@@ -63,7 +78,7 @@ def writeSummary(units, attributeValues, evaluations):
                 ]
                 for i in range(nUnits)
             ],
-            columns=["ID", "Common Name", "Evaluation"],
+            columns=["ID", "common_name", "Evaluation"],
         )
         weightedSums = np.zeros((nUnits, NUM_ATTRIBUTES))
         for turn in range(NUM_EVAL_TURNS):
@@ -98,12 +113,12 @@ def processRainbowUnit(ID, User, NUM_COPIES_MAX):
     print(ID)
     unit = Unit(
         ID,
-        User[ID]["Common Name"],
+        User[ID]["common_name"],
         NUM_COPIES_MAX,
-        User[ID]["BRZ Equip"],
-        User[ID]["HiPo Choice # 1"],
-        User[ID]["HiPo Choice # 2"],
-        User[ID]["Slots"],
+        User[ID]["BRZ_equip"],
+        User[ID]["HiPo_choice_1"],
+        User[ID]["HiPo_choice_2"],
+        User[ID]["slots"],
     )
     attributeValues = unit.getAttributes()
     return unit, attributeValues
@@ -116,12 +131,12 @@ def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_
     for nCopies in range(1, NUM_COPIES_MAX):
         units[nCopies - 1] = Unit(
             ID,
-            User[ID]["Common Name"],
+            User[ID]["common_name"],
             nCopies,
-            User[ID]["BRZ Equip"],
-            User[ID]["HiPo Choice # 1"],
-            User[ID]["HiPo Choice # 2"],
-            User[ID]["Slots"],
+            User[ID]["BRZ_equip"],
+            User[ID]["HiPo_choice_1"],
+            User[ID]["HiPo_choice_2"],
+            User[ID]["slots"],
         )
         attributeValues[:, :, nCopies - 1] = units[nCopies - 1].getAttributes()
         normalizeUnit(units[nCopies - 1], rainbowMeans, rainbowStds)
@@ -129,6 +144,8 @@ def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_
     return units, attributeValues, evaluations
 
 if __name__ == '__main__':
+    User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
+    nUnits = len(User)
     a, b = (1 - AVG_PEAK_TURN) / PEAK_TURN_STD, (99 - AVG_PEAK_TURN) / PEAK_TURN_STD
     turnDistribution = truncnorm(a, b, AVG_PEAK_TURN, PEAK_TURN_STD)
 
@@ -183,9 +200,9 @@ if __name__ == '__main__':
         for ID in reverseOrderIDs:
             normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
             evaluations[ID - 1, -1] = overallEvaluator.evaluate(units[-1][ID - 1])
-        if optimiseSlots:
+        if optimiseslots:
             for ID in reverseOrderIDs:
-                best_slots = copy.copy(User[ID]["Slots"])
+                best_slots = copy.copy(User[ID]["slots"])
                 stateIdx = 0
                 nextTurn = 1
                 while nextTurn < MAX_TURN:
@@ -194,11 +211,11 @@ if __name__ == '__main__':
                         best_slots[stateIdx] = slot
                         unit = Unit(
                             ID,
-                            User[ID]["Common Name"],
+                            User[ID]["common_name"],
                             NUM_COPIES_MAX,
-                            User[ID]["BRZ Equip"],
-                            User[ID]["HiPo Choice # 1"],
-                            User[ID]["HiPo Choice # 2"],
+                            User[ID]["BRZ_equip"],
+                            User[ID]["HiPo_choice_1"],
+                            User[ID]["HiPo_choice_2"],
                             best_slots,
                             save=False,
                         )
@@ -210,10 +227,10 @@ if __name__ == '__main__':
                     best_slots[stateIdx] = best_slot
                     stateIdx += 1
                     nextTurn += RETURN_PERIOD_PER_SLOT[best_slot - 1]
-                if best_slots == User[ID]["Slots"]:
-                    print(ID, "default Slots", User[ID]["Common Name"])
+                if best_slots == User[ID]["slots"]:
+                    print(ID, "default slots", User[ID]["common_name"])
                 else:
-                    print(ID, best_slots, User[ID]["Common Name"])
+                    print(ID, best_slots, User[ID]["common_name"])
         if analyseHiPo:
             for ID in reverseOrderIDs:
                 best_HiPo = -1
@@ -221,12 +238,12 @@ if __name__ == '__main__':
                 for i, HiPo_build in enumerate(HIPO_BUILDS):
                     HiPo_unit = Unit(
                         ID,
-                        User[ID]["Common Name"],
+                        User[ID]["common_name"],
                         NUM_COPIES_MAX,
                         HiPo_build[0],
                         HiPo_build[1],
                         HiPo_build[2],
-                        User[ID]["Slots"],
+                        User[ID]["slots"],
                         save=False,
                     )
                     normalizeUnit(HiPo_unit, rainbowMeans, rainbowStds)
@@ -234,7 +251,7 @@ if __name__ == '__main__':
                     if HiPo_evaluation > best_eval:
                         best_HiPo = i
                         best_eval = HiPo_evaluation
-                if HIPO_BUILDS[best_HiPo] == [User[ID]["BRZ Equip"], User[ID]["HiPo Choice # 1"], User[ID]["HiPo Choice # 2"]]:
+                if HIPO_BUILDS[best_HiPo] == [User[ID]["BRZ_equip"], User[ID]["HiPo_choice_1"], User[ID]["HiPo_choice_2"]]:
                     print(ID, "default HiPo", HiPo_unit.name)
                 else:
                     print(ID, HIPO_BUILDS[best_HiPo], HiPo_unit.name)
@@ -266,7 +283,7 @@ if __name__ == '__main__':
         scores = []
         units = []
         for ID in range(1, nUnits + 1):
-            numCopies = User[ID]["# Copies"]
+            numCopies = User[ID]["num_copies"]
             if numCopies > 0:
                 pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/" + HIPO_DUPES[numCopies - 1] + "/unit_" + str(ID) + ".pkl", "rb")
                 units.append(pickle.load(pkl))

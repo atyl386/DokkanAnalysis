@@ -1,12 +1,14 @@
 import pickle
-from dokkanAccount import User
 import pandas as pd
 import datetime as dt
 from dateutil.relativedelta import relativedelta
 import numpy as np
 from dokkanUnitConstants import NUM_COPIES_MAX
+from dokkanEvaluation import parseDokkanAccountXML
+from dokkanUnitConstants import DOKKAN_ACCOUNT_XML_FILE_PATH
 
 HiPo_dupes = ["55%", "69%", "79%", "90%", "100%"]
+User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
 nUnits = len(User)
 
 
@@ -14,7 +16,7 @@ def SummonRating(ID):
     pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(ID) + ".pkl", "rb")
     unit = pickle.load(pkl)
     pkl.close()
-    nCopies = User[ID]["# Copies"]
+    nCopies = User[ID]["num_copies"]
     evals = [0.0] * NUM_COPIES_MAX
     now = dt.datetime.today()
     EZADiscountFactor = 1/3
@@ -64,12 +66,12 @@ def SummonRatings():
     nCopies = [0] * nUnits
     summonRatings = [0.0] * nUnits
     for ID in IDs:
-        commonName[ID - 1] = User[ID]["Common Name"]
-        nCopies[ID - 1] = User[ID]["# Copies"]
+        commonName[ID - 1] = User[ID]["common_name"]
+        nCopies[ID - 1] = User[ID]["num_copies"]
         summonRatings[ID - 1] = SummonRating(ID)
     df = pd.DataFrame(
         data=np.transpose([IDs, commonName, nCopies, summonRatings]),
-        columns=["ID", "Common Name", "# Copies", "Summon Rating"],
+        columns=["ID", "common_name", "num_copies", "Summon Rating"],
     )
     df.set_index("ID", inplace=True)
     with pd.ExcelWriter("SummonRating.xlsx") as writer:

@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # Lower DMG_RED_100_SUPPORT_FACTOR to 15 from 20
-# - Change dokkanAcount to be an .xml file so can write to it with optimised HiPo and Slots
+# - Change dokkanAcount to be an .xml file so can write to it with optimised HiPo and slots
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type

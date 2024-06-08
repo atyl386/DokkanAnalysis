@@ -6,6 +6,7 @@ import os
 # IO
 
 CWD = os.getcwd()
+DOKKAN_ACCOUNT_XML_FILE_PATH = os.path.join(CWD, "dokkanAccount.xml")
 
 # Phases of a Turn
 PHASES = ["Start of Turn", "Active / Finish Attacks", "Collect Ki", "Receive Attacks", "Attack Enemy"]
@@ -118,7 +119,7 @@ NUM_ATTRIBUTES = len(ATTTRIBUTE_NAMES)
 EVAL_TURNS = np.arange(1, MAX_TURN + 1, 2)
 NUM_EVAL_TURNS = len(EVAL_TURNS)
 
-# Slots
+# slots
 SLOTS = [1, 2, 3]
 NUM_SLOTS = len(SLOTS)
 RETURN_PERIOD_PER_SLOT = [2, 2, 3]
