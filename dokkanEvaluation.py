@@ -164,18 +164,9 @@ if __name__ == '__main__':
         "Super Attack Defence": 7,
         "Slot Bonus": 9
     }
-    top100AttributeDict = {
-        "Leader Skill": 0,
-        "SBR": 0,
-        "HP": 2,
-        "Useability": 5,
-        "Healing": 1.5,
-        "Support": 5,
-        "APT": 11,
-        "Normal Defence": 7,
-        "Super Attack Defence": 7,
-        "Slot Bonus": 9
-    }
+    top100AttributeDict = copy.copy(attributeDict)
+    top100AttributeDict["Leader Skill"] = 0
+    top100AttributeDict["SBR"] = 0
     overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
     top100Evaluator = Evaluator(overallTurnWeights, top100AttributeDict.values())
 
