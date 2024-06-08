@@ -164,9 +164,11 @@ if __name__ == '__main__':
         "Super Attack Defence": 7,
         "Slot Bonus": 9
     }
+
     top100AttributeDict = copy.copy(attributeDict)
     top100AttributeDict["Leader Skill"] = 0
     top100AttributeDict["SBR"] = 0
+
     overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
     top100Evaluator = Evaluator(overallTurnWeights, top100AttributeDict.values())
 
@@ -191,6 +193,8 @@ if __name__ == '__main__':
         for ID in reverseOrderIDs:
             normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
             evaluations[ID - 1, -1] = overallEvaluator.evaluate(units[-1][ID - 1])
+        dokkanAccountXML = ET.parse(DOKKAN_ACCOUNT_XML_FILE_PATH)
+        dokkanAccountRoot = dokkanAccountXML.getroot()
         if optimiseslots:
             for ID in reverseOrderIDs:
                 best_slots = copy.copy(User[ID]["slots"])
@@ -218,10 +222,8 @@ if __name__ == '__main__':
                     best_slots[stateIdx] = best_slot
                     stateIdx += 1
                     nextTurn += RETURN_PERIOD_PER_SLOT[best_slot - 1]
-                if best_slots == User[ID]["slots"]:
-                    print(ID, "default slots", User[ID]["common_name"])
-                else:
-                    print(ID, best_slots, User[ID]["common_name"])
+                dokkanAccountRoot.find(f"_{ID}").find("slots").set("value", str(best_slots))
+                dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding='utf-8')
         if analyseHiPo:
             for ID in reverseOrderIDs:
                 best_HiPo = -1
@@ -242,10 +244,10 @@ if __name__ == '__main__':
                     if HiPo_evaluation > best_eval:
                         best_HiPo = i
                         best_eval = HiPo_evaluation
-                if HIPO_BUILDS[best_HiPo] == [User[ID]["BRZ_equip"], User[ID]["HiPo_choice_1"], User[ID]["HiPo_choice_2"]]:
-                    print(ID, "default HiPo", HiPo_unit.name)
-                else:
-                    print(ID, HIPO_BUILDS[best_HiPo], HiPo_unit.name)
+                unit = dokkanAccountRoot.find(f"_{ID}")
+                for i, equip in enumerate(["BRZ_equip", "HiPo_choice_1", "HiPo_choice_2"]):
+                    unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
+                dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding='utf-8')
         with multiprocessing.Pool() as pool:
             output = np.asarray(pool.starmap(processOtherUnit, [(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
         units[:-1] = np.array(list(output[:, 0])).T
