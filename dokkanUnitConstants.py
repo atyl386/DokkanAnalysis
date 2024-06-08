@@ -500,7 +500,7 @@ SUPPORT_SUPER_ATTACK_EFFECTS = ["Raise Allies ATK", "Raise Allies DEF", "Raise A
 ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
 DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
 CRIT_SUPPORT_100_FACTOR = CRIT_MULTIPLIER / AVG_TYPE_ADVANATGE * ATK_SUPPORT_100_FACTOR
-DMG_RED_SUPPORT_100_FACTOR = 20
+DMG_RED_SUPPORT_100_FACTOR = 15
 # Giant/Rage Form
 GIANT_RAGE_SUPPORT = DMG_RED_SUPPORT_100_FACTOR / 2  # Support for nullifying super attacks for a turn
 AVG_SA_MULT = 5
