@@ -5,7 +5,6 @@ import math
 import click as clc
 
 # TODO:
-# Lower DMG_RED_100_SUPPORT_FACTOR to 15 from 20
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
@@ -2811,4 +2810,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(58, "DFLR_TEQ_SS_Gods", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(211, "DF_PHY_Goku_Black", 1, "DEF", "DGE", "ADD", SLOT_2)

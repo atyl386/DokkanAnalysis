@@ -196,6 +196,7 @@ if __name__ == '__main__':
         dokkanAccountXML = ET.parse(DOKKAN_ACCOUNT_XML_FILE_PATH)
         dokkanAccountRoot = dokkanAccountXML.getroot()
         if optimiseslots:
+            print(ID)
             for ID in reverseOrderIDs:
                 best_slots = copy.copy(User[ID]["slots"])
                 stateIdx = 0
@@ -226,6 +227,7 @@ if __name__ == '__main__':
                 dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding='utf-8')
         if analyseHiPo:
             for ID in reverseOrderIDs:
+                print(ID)
                 best_HiPo = -1
                 best_eval = -np.inf
                 for i, HiPo_build in enumerate(HIPO_BUILDS):

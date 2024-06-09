@@ -436,7 +436,7 @@ AVG_P2_STATS = 2 # Guess
 
 SPECIAL_SUPPORT_EFFECTS = ["P3 Disable Action", "Delay Target", "Intercept"]
 
-ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Triple Orb Change", "Complete Orb Change", "Rainbow Orb Change"]
+ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Triple Orb Change", "Complete Orb Change", "Rainbow Orb Change", "Rainbow + Type Orb Change"]
 
 REGULAR_SUPPORT_EFFECTS = [
     "Ki Support",
@@ -529,6 +529,7 @@ SUPPORT_FACTORS = [
     0.375,
     0,
     0.5,
+    0.5,
     DMG_RED_SUPPORT_100_FACTOR / (NUM_SLOTS - 1) * P_DISABLE_SUPER, # /2 as only can affect 1 unit out the two others, times chance of disabling super.
     DMG_RED_SUPPORT_100_FACTOR,
     DMG_RED_SUPPORT_100_FACTOR,
@@ -582,6 +583,7 @@ ORB_COUNTS_DOUBLE_ORB_CHANGING = [0, 7.85, 1.85] # See numTypeOrbsCurveFit.py & 
 ORB_COUNTS_TRIPLE_ORB_CHANGING = [0, 8.55, 1.93] # See numTypeOrbsCurveFit.py & numRainbowOrbsCurveFit.py
 ORB_COUNTS_COMPLETE_ORB_CHANGING = [0, 23, 0]
 ORB_COUNTS_RAINBOW_ORB_CHANGING = [2.05, 2.05, 2.7] # From DokkanAverageKi.xlsx
+ORB_COUNTS_RAINBOW_PLUS_TYPE_ORB_CHANGING = [0.8, 5.55, 3.2] # Guess (Rainbow + Type - No)
 
 KI_PER_SAME_TYPE_ORB = 2.0
 
@@ -773,6 +775,7 @@ orbTypeDoubleOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_DOUBLE_ORB_C
 orbTypeTripleOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_TRIPLE_ORB_CHANGING))
 orbTypeCompleteOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_COMPLETE_ORB_CHANGING))
 orbTypeRainbowOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_RAINBOW_ORB_CHANGING))
+orbTypeRainbowPlusTypeOrbChangingConversion = dict(zip(ORB_TYPES, ORB_COUNTS_RAINBOW_PLUS_TYPE_ORB_CHANGING))
 orbChangeConversion = dict(
     zip(
         ORB_CHANGING_TYPES,
@@ -783,6 +786,7 @@ orbChangeConversion = dict(
             orbTypeTripleOrbChangingConversion,
             orbTypeCompleteOrbChangingConversion,
             orbTypeRainbowOrbChangingConversion,
+            orbTypeRainbowPlusTypeOrbChangingConversion,
         ],
     )
 )
