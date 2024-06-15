@@ -1695,4 +1695,12 @@
         <HiPo_choice_2 value="CRT" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
     </_212>
+    <_213>
+        <common_name value="F2PLR_AGL_Tien_Chiaotzu" />
+        <num_copies value="5" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_213>
 </id>
