@@ -14,11 +14,7 @@ import click as clc
 # - Also might want to include attack all in atk calcs.
 # - If ever do DPT, instead of APT, should use Lowers DEF in calcs. But most enemies are immunue to it anyway, so not a big deal.
 # - Add some functionality that can update existing input .txt files with new questions (assuming not relevant to exisiting unit)
-# - It would be awesome if after I have read in a unit I could reconstruct the passive description to compare it against the game
 # - Instead of asking user how many of something, should ask until they enteran exit key ak a while loop instead of for loop
-# - Should put at may not be relevant tag onto end of the prompts that may not always be relevant.
-# - Ideally would just pull data from database, but not up in time for new units. Would be amazing for old units though.
-# - Leader skill weight should decrease from 5 as new structure adds more variability between leader skills
 # - Once calculate how many supers do on turn 1, use this in the SBR calculation for debuffs on super(). i.e. SBR should be one of the last things to be calculated
 
 ##################################################### Helper Functions ############################################################################
@@ -2810,4 +2806,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(213, "F2PLR_AGL_Tien_Chiaotzu", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(214, "LR_STR_Cell_Max", 5, "DEF", "DGE", "ADD", SLOT_2)
