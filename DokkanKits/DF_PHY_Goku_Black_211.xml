@@ -7,8 +7,8 @@
 		<input prompt="Has the unit EZA'd?" response="Y" />
 		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="6/24" />
 		<input prompt="When did the unit release on the Global version of Dokkan? (MM/YY)" response="6/24" />
-		<input prompt="What is the unit's Max Level HP stat?" response="13105" />
-		<input prompt="What is the unit's Max Level ATK stat?" response="11458" />
+		<input prompt="What is the unit's Max Level HP stat?" response="13995" />
+		<input prompt="What is the unit's Max Level ATK stat?" response="13091" />
 		<input prompt="What is the unit's Max Level DEF stat?" response="5960" />
 		<input prompt="How would you rate the unit's leader skill on a scale of 1-10? 200% limited / 2 x 180% - e.g. LR Hatchiyak Goku 200% small - e.g. LR Metal Cooler 200% medium - e.g. PHY God Goku 200% large - e.g. LR Vegeta and Trunks" response="&lt;150%" />
 		<input prompt="How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account." response="2" />
