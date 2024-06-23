@@ -502,7 +502,8 @@ DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
 CRIT_SUPPORT_100_FACTOR = CRIT_MULTIPLIER / AVG_TYPE_ADVANATGE * ATK_SUPPORT_100_FACTOR
 DMG_RED_SUPPORT_100_FACTOR = 15
 # Giant/Rage Form
-GIANT_RAGE_SUPPORT = DMG_RED_SUPPORT_100_FACTOR / 2  # Support for nullifying super attacks for a turn
+GIANT_RAGE_SUPPORT = DMG_RED_SUPPORT_100_FACTOR / 2 + 0.5 # Support for nullifying super attacks for a turn, circumvent locking
+GIANT_RAGE_HEAL = 0.2 # allows additional orbs to be collected
 AVG_SA_MULT = 5
 SUPER_ATTACK_SUPPORT_FACTORS = [ATK_SUPPORT_100_FACTOR / AVG_SA_MULT, DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS, CRIT_SUPPORT_100_FACTOR]
 OTHER_SUPER_ATTACK_EFFECTS = ["Heal", "Crit", "Disable Action", "Lowers ATK", "Lowers DEF", "Attack All"]

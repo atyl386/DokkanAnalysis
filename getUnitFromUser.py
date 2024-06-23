@@ -1623,6 +1623,7 @@ class GiantRageMode(SingleTurnAbility):
             self.giantRageModeState.setState(giantRageUnit, self.giantRageForm)  # Calculate the APT of the state
             state.APT += self.giantRageModeState.APT * NUM_SLOTS * giantRageUnit.giantRageDuration
             state.support += GIANT_RAGE_SUPPORT
+            state.buff["Heal"] += GIANT_RAGE_HEAL
 
 
 class Revive(SingleTurnAbility):
