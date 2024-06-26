@@ -2807,4 +2807,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(214, "LR_STR_Cell_Max", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(215, "F2P_AGL_RoF_Krillin", 5, "DEF", "DGE", "ADD", SLOT_2)

@@ -8,7 +8,7 @@ import multiprocessing
 HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 
 reCalc = True
-analyseHiPo = False
+analyseHiPo = True
 optimiseslots = False
 accountRanking = True
 

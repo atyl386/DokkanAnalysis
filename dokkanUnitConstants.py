@@ -330,7 +330,7 @@ LINKS = [
     "Hatred of Saiyans",
     "Hero",
     "Hero of Justice",
-    "High Compatility",
+    "High Compatibility",
     "Infighter",
     "Infinite Energy",
     "Infinite Regeneration",
