@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Implement dodging counters
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
@@ -145,7 +146,7 @@ def getCondition(inputHelper):
 
 # Overwrite this class function as has additional
 def updateAttacksReceivedAndEvaded(self, state):
-    pEvade = self.prob * (1 - DODGE_CANCEL_FACTOR)
+    pEvade = self.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
     state.numAttacksReceived = NUM_ATTACKS_DIRECTED[state.slot - 1] * (1 - pEvade)
     state.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * (1 - pEvade)
     state.numAttacksEvaded = NUM_ATTACKS_DIRECTED[state.slot - 1] * pEvade
@@ -1236,7 +1237,9 @@ class State:
             "Disable Guard": 0,
             "Heal": 0,
             "Damage Dealt Heal": 0,
-            "Attacks Guaranteed to Hit": 0
+            "Attacks Guaranteed to Hit": 0,
+            "Disable Evasion Cancel": 0,
+
         }
         self.p1Buff = {}
         self.p2Buff = {}
@@ -1325,6 +1328,7 @@ class State:
             self.stackedStats["DEF"],
         )
         self.normalDamageTakenPreSuper = getDamageTaken(
+            self.buff["Disable Evasion Cancel"],
             0,
             self.multiChanceBuff["EvasionA"].prob,
             self.buff["Guard"],
@@ -1334,6 +1338,7 @@ class State:
             self.avgDefPreSuper,
         )
         self.saDamageTakenPreSuper = getDamageTaken(
+            self.buff["Disable Evasion Cancel"],
             self.multiChanceBuff["Nullify"].prob,
             self.multiChanceBuff["EvasionA"].prob,
             self.buff["Guard"],
@@ -1470,6 +1475,7 @@ class State:
             self.avgDefMult,
         )
         self.normalDamageTakenPostSuper = getDamageTaken(
+            self.buff["Disable Evasion Cancel"],
             0,
             self.multiChanceBuff["EvasionB"].prob,
             self.buff["Guard"],
@@ -1479,6 +1485,7 @@ class State:
             self.avgDefPostSuper,
         )
         self.saDamageTakenPostSuper = getDamageTaken(
+            self.buff["Disable Evasion Cancel"],
             self.multiChanceBuff["Nullify"].prob,
             self.multiChanceBuff["EvasionB"].prob,
             self.buff["Guard"],
@@ -1649,9 +1656,8 @@ class Revive(SingleTurnAbility):
 class Domain(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        self.domainType, buff, prop, self.duration = args
-        self.prop = prop
-        self.effectiveBuff = buff * aprioriProbMod(prop, True)
+        self.domainType, buff, self.prop, self.duration = args
+        self.effectiveBuff = buff * aprioriProbMod(self.prop, True)
         form.inputHelper.parent = form.inputHelper.parentMap[form.inputHelper.parent]
     def applyToState(self, state, unit=None, form=None):
         if form.checkCondition(self.condition, self.activated, True):
@@ -1723,6 +1729,32 @@ class Domain(SingleTurnAbility):
                         ),
                         TurnDependent(form, 1, False, "P3 ATK", 0.2, 1, params),
                         TurnDependent(form, 1, False, "P3 DEF", 0.2, 1, params),
+                    ])
+                case "Shining World of Void":
+                    superClassBuff = 0.15 * aprioriProbMod(self.prop, True) # prop to account for may be buffing enemies too
+                    RoGBuff = 0.15 * aprioriProbMod(2/3 * math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # 2/3 comes from not every ally on RoG. The other part comes from calculating the probability an average enemy is not on the RoG category.
+                    form.abilities["Start of Turn"].extend([
+                        TurnDependent(
+                            form, 1, False, "Ki Support", 4 * KI_SUPPORT_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "Ki", 4, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", superClassBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "DEF Support", superClassBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", RoGBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "Disable Evasion Cancel Support", RoGBuff * DISABLE_EVASION_CANCEL_SUPPORT_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(form, 1, False, "P3 ATK", 0.3, 1, params),
+                        TurnDependent(form, 1, False, "P3 DEF", 0.15, 1, params),
+                        TurnDependent(form, 1, False, "Disable Evasion Cancel", 0.15, 1, params),
                     ])
                     
 
@@ -2185,7 +2217,7 @@ class PerAttackEvaded(PerEvent):
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
             case "DEF":
-                pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
+                pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
                 state.p2Buff["DEF"] += min((state.numAttacksDirected - 1) * pEvade * (1 - pEvade) * self.effectiveBuff / 2, buffToGo)
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo), "Crit", state)
@@ -2199,9 +2231,9 @@ class PerAttackEvaded(PerEvent):
                 evasionBChance = [0] * numAttacksDirected
                 for i in range(numAttacksDirected):
                     if i < numAttacksDirectedBeforeAttacking:
-                        evasionAChance[i] = evasionA.prob * (1 - DODGE_CANCEL_FACTOR)
+                        evasionAChance[i] = evasionA.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
                         evasionA.updateChance("On Super", evasionAChance[i] * self.effectiveBuff, "Evasion", state)
-                    evasionBChance[i] = evasionB.prob * (1 - DODGE_CANCEL_FACTOR)
+                    evasionBChance[i] = evasionB.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
                     evasionB.updateChance("On Super", evasionBChance[i] * self.effectiveBuff, "Evasion", state)
                 if numAttacksDirectedBeforeAttacking >= 1:
                     state.multiChanceBuff["EvasionA"].updateChance("On Super", min(np.mean(evasionAChance), buffToGo), "Evasion", state)
@@ -2415,7 +2447,7 @@ class AfterAttackEvaded(AfterEvent):
         self.nextAttackingTurn = yesNo2Bool[args[2]]
 
     def setEventFactor(self, state):
-        pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
+        pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
         numHitsBeforeDodgeOnce = (1 - pEvade) / pEvade
         attacksToActivate = numHitsBeforeDodgeOnce if self.threshold == 0 else self.required * numHitsBeforeDodgeOnce
         if self.threshold > 1:
@@ -2509,6 +2541,11 @@ class UntilEvent(PassiveAbility):
                     state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", turnBuff, "Evasion", state)
                 case "P2 DEF B":
                     state.p2DefB += turnBuff
+                case "Dmg Red":
+                    state.dmgRedA += turnBuff
+                    state.dmgRedB += turnBuff
+                    state.dmgRedNormalA += turnBuff
+                    state.dmgRedNormalB += turnBuff
 
 
 class UntilAttackRecieved(UntilEvent):
@@ -2517,9 +2554,9 @@ class UntilAttackRecieved(UntilEvent):
 
     def applyToState(self, state, unit=None, form=None):
         if self.effect == "Evasion":
-            pEvade = (state.multiChanceBuff["EvasionA"].prob + self.effectiveBuff) * (1 - DODGE_CANCEL_FACTOR)
+            pEvade = (state.multiChanceBuff["EvasionA"].prob + self.effectiveBuff) * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
         else:
-            pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR)
+            pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
         self.eventFactor = min(pEvade / (1 - pEvade) / round(state.numAttacksDirected), 1)
         self.setTurnBuff(state)
 
@@ -2809,4 +2846,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(217, "LR_INT_Universe_7", 0, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(218, "DFLR_TEQ_UI_Goku", 0, "DEF", "DGE", "ADD", SLOT_1)

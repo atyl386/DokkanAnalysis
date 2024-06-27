@@ -93,7 +93,7 @@ SPECIAL_ATTACK_MULTIPLIER_NAMES = [
 SPECIAL_ATTACK_MULTIPLIERS = [0, 1, 4.4, 5.0, 5.5, 7.5]
 
 # Domain
-DOMAIN_TYPES = ["Increase Damage Received", "Alternate Dimensional Space", "City (Future) (Rift in Time)"]
+DOMAIN_TYPES = ["Increase Damage Received", "Alternate Dimensional Space", "City (Future) (Rift in Time)", "Shining World of Void"]
 
 # Turns
 MAX_TURN = 20
@@ -444,6 +444,8 @@ REGULAR_SUPPORT_EFFECTS = [
     "DEF Support",
     "Crit Support",
     "Dmg Red Support",
+    "Evasion Support",
+    "Disable Evasion Cancel Support",
     "Scouter",
     "Remove Status Effects",
     "Survive K.O. Attack",
@@ -469,6 +471,7 @@ EFFECTS = [
     "Stun",
     "Disable Action",
     "Attacks Guaranteed to Hit",
+    "Disable Evasion Cancel",
     "AEAAT",
     "Dmg Red",
     "Dmg Red A",
@@ -501,6 +504,8 @@ ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
 DEF_SUPPORT_100_FACTOR = 3  # 100% def increase support == 3 support points
 CRIT_SUPPORT_100_FACTOR = CRIT_MULTIPLIER / AVG_TYPE_ADVANATGE * ATK_SUPPORT_100_FACTOR
 DMG_RED_SUPPORT_100_FACTOR = 15
+EVASION_SUPPORT_100_FACTOR = 15 * (1 - DODGE_CANCEL_FACTOR)
+DISABLE_EVASION_CANCEL_SUPPORT_FACTOR = 15 * DODGE_CANCEL_FACTOR
 # Giant/Rage Form
 GIANT_RAGE_SUPPORT = DMG_RED_SUPPORT_100_FACTOR / 2 + 0.5 # Support for nullifying super attacks for a turn, circumvent locking
 GIANT_RAGE_HEAL = 0.2 # allows additional orbs to be collected
@@ -517,6 +522,8 @@ SUPPORT_FACTORS = [
     DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS,
     CRIT_SUPPORT_100_FACTOR,
     DMG_RED_SUPPORT_100_FACTOR,
+    EVASION_SUPPORT_100_FACTOR,
+    DISABLE_EVASION_CANCEL_SUPPORT_FACTOR,
     1,
     0.125,
     0.25,
