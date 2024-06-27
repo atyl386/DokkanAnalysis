@@ -2507,6 +2507,8 @@ class UntilEvent(PassiveAbility):
                 case "Evasion":
                     state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", turnBuff, "Evasion", state)
                     state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", turnBuff, "Evasion", state)
+                case "P2 DEF B":
+                    state.p2DefB += turnBuff
 
 
 class UntilAttackRecieved(UntilEvent):
@@ -2807,4 +2809,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(215, "F2P_AGL_RoF_Krillin", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(216, "BU_STR_Dyspo", 0, "DEF", "DGE", "ADD", SLOT_2)

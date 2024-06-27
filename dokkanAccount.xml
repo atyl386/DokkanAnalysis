@@ -1712,11 +1712,19 @@
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
     </_214>
     <_215>
-        <common_name value="F2p_AGL_RoF_Krillin" />
+        <common_name value="F2P_AGL_RoF_Krillin" />
         <num_copies value="5" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_215>
+    <_216>
+        <common_name value="BU_STR_Dyspo" />
+        <num_copies value="0" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_216>
 </id>
