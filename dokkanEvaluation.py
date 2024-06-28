@@ -9,7 +9,7 @@ HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 
 reCalc = True
 analyseHiPo = False
-optimiseslots = False
+optimiseslots = True
 accountRanking = True
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
