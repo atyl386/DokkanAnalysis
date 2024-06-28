@@ -99,8 +99,8 @@
         <common_name value="CLR_STR_SS_Goku_Hatchiyak" />
         <num_copies value="2" />
         <BRZ_equip value="DEF" />
-        <HiPo_choice_1 value="DGE" />
-        <HiPo_choice_2 value="ADD" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
         <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_13>
     <_14>
@@ -179,8 +179,8 @@
         <common_name value="CLR_AGL_Kai_Goku" />
         <num_copies value="0" />
         <BRZ_equip value="DEF" />
-        <HiPo_choice_1 value="DGE" />
-        <HiPo_choice_2 value="ADD" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
         <slots value="[1, 1, 1, 2, 2, 1, 1, 1, 1, 1]" />
     </_23>
     <_24>
@@ -404,7 +404,7 @@
         <num_copies value="1" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
-        <HiPo_choice_2 value="CRT" />
+        <HiPo_choice_2 value="ADD" />
         <slots value="[1, 2, 3, 3, 2, 2, 2, 2, 2, 2]" />
     </_51>
     <_52>
@@ -444,7 +444,7 @@
         <num_copies value="5" />
         <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="ADD" />
-        <HiPo_choice_2 value="DGE" />
+        <HiPo_choice_2 value="CRT" />
         <slots value="[3, 1, 3, 3, 3, 3, 3, 3]" /> 
     </_56>
     <_57>
@@ -586,7 +586,7 @@
     <_74>
         <common_name value="BU_TEQ_Tien" />
         <num_copies value="0" />
-        <BRZ_equip value="DGE" />
+        <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[3, 2, 3, 3, 3, 3, 3, 1, 1, 1]" />
@@ -844,7 +844,7 @@
         <num_copies value="2" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
-        <HiPo_choice_2 value="CRT" />
+        <HiPo_choice_2 value="ADD" />
         <slots value="[3, 2, 3, 3, 2, 2, 2, 2, 2, 2]" />
     </_106>
     <_107>
@@ -1106,7 +1106,7 @@
     <_139>
         <common_name value="BU_INT_Kid_Pan" />
         <num_copies value="4" />
-        <BRZ_equip value="DGE" />
+        <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 1]" />
@@ -1122,7 +1122,7 @@
     <_141>
         <common_name value="BU_TEQ_Caulifla" />
         <num_copies value="5" />
-        <BRZ_equip value="ATK" />
+        <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="CRT" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
