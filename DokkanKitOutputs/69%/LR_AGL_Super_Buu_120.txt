@@ -42,15 +42,28 @@ State # 3 / Turn # 7
 Leader Skill: 2.0 
 SBR: 2.5999999999999996 
 HP: 18075.0 
-Useability: 0.7012987012987014 
+Useability: 0.7780032467532468 
 Healing: 0.5006345869015385 
-Support: 0.0 
-APT: 30436269.740641512 
-Normal Defence: -1.245386341664453 
-Super Attack Defence: -0.2995794642857143 
-Slot Bonus: 1.0 
+Support: 0.9375 
+APT: 19525016.12673657 
+Normal Defence: -0.5593007135981725 
+Super Attack Defence: -0.12385714285714285 
+Slot Bonus: 0.3333333333333333 
 
-State # 4 / Turn # 9 
+State # 4 / Turn # 10 
+ 
+Leader Skill: 2.0 
+SBR: 2.5999999999999996 
+HP: 18075.0 
+Useability: 0.7268668831168832 
+Healing: 0.23396792023487184 
+Support: 0.3125 
+APT: 12867463.983344078 
+Normal Defence: -0.6438500149195915 
+Super Attack Defence: -0.14450000000000002 
+Slot Bonus: 0.4444444444444444 
+
+State # 5 / Turn # 12 
  
 Leader Skill: 2.0 
 SBR: 2.5999999999999996 
@@ -63,7 +76,7 @@ Normal Defence: -0.6861246655803009
 Super Attack Defence: -0.15482142857142858 
 Slot Bonus: 0.5 
 
-State # 5 / Turn # 11 
+State # 6 / Turn # 14 
  
 Leader Skill: 2.0 
 SBR: 2.5999999999999996 
@@ -76,7 +89,7 @@ Normal Defence: -0.6861246655803009
 Super Attack Defence: -0.15482142857142858 
 Slot Bonus: 0.5 
 
-State # 6 / Turn # 13 
+State # 7 / Turn # 16 
  
 Leader Skill: 2.0 
 SBR: 2.5999999999999996 
@@ -89,7 +102,7 @@ Normal Defence: -0.6861246655803009
 Super Attack Defence: -0.15482142857142858 
 Slot Bonus: 0.5 
 
-State # 7 / Turn # 15 
+State # 8 / Turn # 18 
  
 Leader Skill: 2.0 
 SBR: 2.5999999999999996 
@@ -102,20 +115,7 @@ Normal Defence: -0.6861246655803009
 Super Attack Defence: -0.15482142857142858 
 Slot Bonus: 0.5 
 
-State # 8 / Turn # 17 
- 
-Leader Skill: 2.0 
-SBR: 2.5999999999999996 
-HP: 18075.0 
-Useability: 0.7012987012987014 
-Healing: 0.10063458690153847 
-Support: 0.0 
-APT: 9538687.91164783 
-Normal Defence: -0.6861246655803009 
-Super Attack Defence: -0.15482142857142858 
-Slot Bonus: 0.5 
-
-State # 9 / Turn # 19 
+State # 9 / Turn # 20 
  
 Leader Skill: 2.0 
 SBR: 2.5999999999999996 
