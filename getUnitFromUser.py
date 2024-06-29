@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# Instead of doing damage recieved "on average" from attacks received, should instead simulate each attack separately, e.g. hirudegarn
 # - Implement dodging counters
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
@@ -1259,7 +1260,10 @@ class State:
                 inputEffect = "Evasion" if "Evasion" in effect else effect
                 self.multiChanceBuff[effect].updateChance("HiPo", unit.pHiPo[inputEffect], effect, self)
                 self.multiChanceBuff[effect].updateChance("Links", form.linkEffects[inputEffect], effect, self)
-                self.multiChanceBuff[effect].updateChance("On Super", form.carryOverBuffs[inputEffect].get(), effect, self)
+                if inputEffect == "Evasion":
+                    self.multiChanceBuff[effect].updateChance("Start of Turn", form.carryOverBuffs[inputEffect].get(), effect, self)
+                else:
+                    self.multiChanceBuff[effect].updateChance("On Super", form.carryOverBuffs[inputEffect].get(), effect, self)
         self.aaPSuper = form.carryOverBuffs["aaPSuper"].get()
         self.aaPGuarantee = form.carryOverBuffs["aaPGuarantee"].get()
         self.orbCollection = OrbCollection()
@@ -2116,7 +2120,7 @@ class PerAttackPerformed(PerEvent):
                 state.dmgRedB += cappedTurnBuff
                 state.dmgRedNormalB += cappedTurnBuff
             case "Evasion":
-                state.multiChanceBuff["EvasionB"].updateChance("On Super", cappedTurnBuff, self.effect, state)
+                state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, self.effect, state)
         if not (self.withinTheSameTurn):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2232,12 +2236,12 @@ class PerAttackEvaded(PerEvent):
                 for i in range(numAttacksDirected):
                     if i < numAttacksDirectedBeforeAttacking:
                         evasionAChance[i] = evasionA.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
-                        evasionA.updateChance("On Super", evasionAChance[i] * self.effectiveBuff, "Evasion", state)
+                        evasionA.updateChance("Start of Turn", evasionAChance[i] * self.effectiveBuff, "Evasion", state)
                     evasionBChance[i] = evasionB.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
-                    evasionB.updateChance("On Super", evasionBChance[i] * self.effectiveBuff, "Evasion", state)
+                    evasionB.updateChance("Start of Turn", evasionBChance[i] * self.effectiveBuff, "Evasion", state)
                 if numAttacksDirectedBeforeAttacking >= 1:
-                    state.multiChanceBuff["EvasionA"].updateChance("On Super", min(np.mean(evasionAChance), buffToGo), "Evasion", state)
-                state.multiChanceBuff["EvasionB"].updateChance("On Super", min(np.mean(evasionBChance), buffToGo), "Evasion", state)
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", min(np.mean(evasionAChance), buffToGo), "Evasion", state)
+                state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", min(np.mean(evasionBChance), buffToGo), "Evasion", state)
                 cappedTurnBuff = min(buffToGo, self.effectiveBuff * state.numAttacksEvaded)
         if not (self.withinTheSameTurn):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
@@ -2306,8 +2310,8 @@ class AfterEvent(PassiveAbility):
                     state.dmgRedNormalA += cappedTurnBuff
                     state.dmgRedNormalB += cappedTurnBuff
                 case "Evasion":
-                    state.multiChanceBuff["EvasionA"].updateChance("On Super", cappedTurnBuff, "Evasion", state)
-                    state.multiChanceBuff["EvasionB"].updateChance("On Super", cappedTurnBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
 
 
     def nextTurnUpdate(self, form, state):
@@ -2661,10 +2665,10 @@ class PerformingSuperAttackDefence(PassiveAbility):
                 if state.superAttacksPerformed > 0:
                     state.dmgRedA += self.effectiveBuff
             case "Evasion":
-                state.multiChanceBuff["EvasionA"].updateChance("On Super", self.effectiveBuff, "Evasion", state)
+                state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
                 # If have activated active skill attack this turn
                 if state.superAttacksPerformed > 0:
-                    state.multiChanceBuff["EvasionB"].updateChance("On Super", self.effectiveBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
 
 
 class KiSphereDependent(PerEvent):

@@ -548,7 +548,7 @@ SUPPORT_FACTORS = [
 MULTI_CHANCE_EFFECTS = ["Crit", "EvasionA", "EvasionB", "Nullify"]
 MULTI_CHANCE_EFFECTS_NO_NULLIFY = [effect for effect in MULTI_CHANCE_EFFECTS if effect != "Nullify"]
 CRIT_CHANCES = ["HiPo", "Start of Turn", "Links", "On Super", "Active Skill", "Super Attack Effect"]
-EVASION_CHANCES = ["HiPo", "Start of Turn", "Links", "On Super", "Active Skill"]
+EVASION_CHANCES = ["HiPo", "Start of Turn", "Links", "Active Skill"]
 NULLIFY_CHANCES = ["SA Counter", "Nullification"]
 
 # Conditions
