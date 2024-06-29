@@ -1743,4 +1743,12 @@
         <HiPo_choice_2 value="DGE" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
     </_218>
+    <_219>
+        <common_name value="F2PLR_PHY_Yamcha_Puar" />
+        <num_copies value="5" />
+        <BRZ_equip value="DGE" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_219>
 </id>
