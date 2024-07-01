@@ -192,6 +192,79 @@ def branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo):
         tempAA1 = branchAA(i, nAA, pAA + pHiPo * (1 - pHiPo) ** nProcs, nProcs + 1, pSA, pG, pHiPo)
         return pSA[i] * (1 + tempAA1) + (1 - pSA[i]) * (pG[i] * (1 + tempAA1) + (1 - pG[i]) * tempAA0)
 
+def branchAttacksEvaded(
+    iA,
+    iB,
+    nAA,
+    nAB,
+    evasion,
+    pEvadeB,
+    pDisableEvasionCancel,
+    evasionPerAttackReceived,
+    evasionPerAttackEvaded,
+):
+    """Returns the average remaining attacks evaded by a unit in a turn recursively"""
+    pE = (1 - DODGE_CANCEL_FACTOR * (1 - pDisableEvasionCancel)) * evasion.prob
+    pReceiveAttack = 1 - pE
+    evasionPostEvade = copy.copy(evasion)
+    evasionPostHit = copy.copy(evasion)
+    evasionPostEvade.updateChance("Start of Turn", evasionPerAttackEvaded[0])
+    evasionPostHit.updateChance("Start of Turn", evasionPerAttackReceived[0])
+    # If last attack in sequence
+    if iA >= nAA - 1 and iB == -1:
+        evasionPostEvadeB = copy.copy(evasionPostEvade)
+        evasionPostEvadeB.updateChance("Start of Turn", pEvadeB)
+        evasionPostHitB = copy.copy(evasionPostHit)
+        evasionPostHitB.updateChance("Start of Turn", pEvadeB)
+        # mulitply by extra factor if only part is expected. 0 =< nA - i < 1 )
+        return pE * (nAA - iA + branchAttacksEvaded(
+            iA,
+            0,
+            nAA,
+            nAB,
+            evasionPostEvadeB,
+            pEvadeB,
+            pDisableEvasionCancel,
+            evasionPerAttackReceived,
+            evasionPerAttackEvaded[1:],
+        )) + pReceiveAttack * branchAttacksEvaded(
+            iA,
+            0,
+            nAA,
+            nAB,
+            evasionPostHitB,
+            pEvadeB,
+            pDisableEvasionCancel,
+            evasionPerAttackReceived[1:],
+            evasionPerAttackEvaded,
+        )
+    elif iA < nAA - 1 or iB < nAB - 1:
+        if iA < nAA - 1:
+            iA += 1
+        else:
+            iB += 1
+        return pE * (1 + branchAttacksEvaded(
+            iA,
+            iB,
+            nAA,
+            nAB,
+            evasionPostEvade,
+            pDisableEvasionCancel,
+            evasionPerAttackReceived,
+            evasionPerAttackEvaded[1:],
+        )) + pReceiveAttack * branchAttacksEvaded(
+            iA,
+            iB,
+            nAA,
+            nAB,
+            evasionPostHit,
+            pDisableEvasionCancel,
+            evasionPerAttackReceived[1:],
+            evasionPerAttackEvaded,
+        )
+    else:
+        return pE * (nAB - iB)
+
 
 def getAttackDistribution(constantKi, randomKi, intentional12Ki, rarity):
     """Returns the probability of normals, super-attacks and ultra-super-attacks"""
@@ -452,20 +525,227 @@ def getAPT(
         apt = 0
     return apt
 
+def branchDamageTaken(
+    iA,
+    iB,
+    nAA,
+    nAB,
+    p2Def,
+    p2DefB,
+    evasion,
+    pEvadeB,
+    pGuard,
+    dmgRed,
+    dmgRedNormal,
+    dmgRedB,
+    pNullify,
+    defence,
+    postSuperDefMult,
+    pDisableEvasionCancel,
+    defPerAttackReceived,
+    defPerAttackEvaded,
+    defPerAttackGuarded,
+    dmgRedPerAttackReceived,
+    evasionPerAttackReceived,
+    evasionPerAttackEvaded,
+    guardPerAttackReceived,
+    maxNormalDamage,
+    maxSADamage,
+    tdb,
+):
+    """Returns the remaining damage taken by a unit in a turn recursively"""
+    # Get damage taken by the attack pre super
+    attackDamageTaken = np.array([getAttackDamageTaken(pGuard, maxNormalDamage, tdb, dmgRedNormal, defence), getAttackDamageTaken(pGuard, maxSADamage, tdb, dmgRed, defence)])
+    pE_N = (1 - DODGE_CANCEL_FACTOR * (1 - pDisableEvasionCancel)) * evasion.prob
+    pE = np.array([pE_N, pE_N * (1 - pNullify)])
+    pReceiveAttack = 1 - (pNullify + pE)
+    pG = pReceiveAttack * pGuard
+    pR = 1 - pNullify - pE - pG
+    evasionPostEvade = copy.copy(evasion)
+    evasionPostHit = copy.copy(evasion)
+    evasionPostEvade.updateChance("Start of Turn", evasionPerAttackEvaded[0])
+    evasionPostHit.updateChance("Start of Turn", evasionPerAttackReceived[0])
+    # If last attack in sequence pre super
+    if iA >= nAA - 1 and iB == -1:
+        evasionPostEvadeB = copy.copy(evasionPostEvade)
+        evasionPostEvadeB.updateChance("Start of Turn", pEvadeB)
+        evasionPostHitB = copy.copy(evasionPostHit)
+        evasionPostHitB.updateChance("Start of Turn", pEvadeB)
+        # mulitply by extra factor if only part is expected. 0 =< nAA - iA < 1 )
+        return attackDamageTaken * (nAA - iA) + pE * branchDamageTaken(
+            iA,
+            0,
+            nAA,
+            nAB,
+            p2Def + p2DefB + defPerAttackEvaded[0],
+            p2DefB,
+            evasionPostEvadeB,
+            pEvadeB,
+            pGuard,
+            dmgRed + dmgRedB,
+            dmgRedNormal + dmgRedB,
+            dmgRedB,
+            pNullify,
+            defence * (p2Def + p2DefB + defPerAttackEvaded[0]) / p2Def * postSuperDefMult,
+            postSuperDefMult,
+            pDisableEvasionCancel,
+            defPerAttackReceived,
+            defPerAttackEvaded[1:],
+            defPerAttackGuarded,
+            dmgRedPerAttackReceived,
+            evasionPerAttackReceived,
+            evasionPerAttackEvaded[1:],
+            guardPerAttackReceived,
+            maxNormalDamage,
+            maxSADamage,
+            tdb
+            ) + pG * branchDamageTaken(
+            iA,
+            0,
+            nAA,
+            nAB,
+            p2Def + p2DefB + defPerAttackGuarded[0] + defPerAttackReceived[0],
+            p2DefB,
+            evasionPostHitB,
+            pEvadeB,
+            pGuard,
+            dmgRed + dmgRedB + dmgRedPerAttackReceived[0],
+            dmgRedNormal + dmgRedB + dmgRedPerAttackReceived[0],
+            dmgRedB,
+            pNullify,
+            defence * (p2Def + p2DefB + defPerAttackGuarded[0] + defPerAttackReceived[0]) / p2Def * postSuperDefMult,
+            postSuperDefMult,
+            pDisableEvasionCancel,
+            defPerAttackReceived[1:],
+            defPerAttackEvaded,
+            defPerAttackGuarded[1:],
+            dmgRedPerAttackReceived[1:],
+            evasionPerAttackReceived[1:],
+            evasionPerAttackEvaded,
+            guardPerAttackReceived[1:],
+            maxNormalDamage,
+            maxSADamage,
+            tdb
+            ) + pR * branchDamageTaken(
+            iA,
+            0,
+            nAA,
+            nAB,
+            p2Def + p2DefB + defPerAttackReceived[0],
+            p2DefB,
+            evasionPostHitB,
+            pEvadeB,
+            pGuard,
+            dmgRed + dmgRedB + dmgRedPerAttackReceived[0],
+            dmgRedNormal + dmgRedB + dmgRedPerAttackReceived[0],
+            dmgRedB,
+            pNullify,
+            defence * (p2Def + p2DefB + defPerAttackReceived[0]) / p2Def * postSuperDefMult,
+            postSuperDefMult,
+            pDisableEvasionCancel,
+            defPerAttackReceived[1:],
+            defPerAttackEvaded,
+            defPerAttackGuarded,
+            dmgRedPerAttackReceived[1:],
+            evasionPerAttackReceived[1:],
+            evasionPerAttackEvaded,
+            guardPerAttackReceived[1:],
+            maxNormalDamage,
+            maxSADamage,
+            tdb
+            )
+    elif iA < nAA - 1 or iB < nAB - 1:
+        if iA < nAA - 1:
+            iA += 1
+        else:
+            iB += 1
+        return attackDamageTaken + pE * branchDamageTaken(
+            iA,
+            iB,
+            nAA,
+            nAB,
+            p2Def + defPerAttackEvaded[0],
+            p2DefB,
+            evasionPostEvade,
+            pEvadeB,
+            pGuard,
+            dmgRed,
+            dmgRedNormal,
+            dmgRedB,
+            pNullify,
+            defence * (p2Def + defPerAttackEvaded[0]) / p2Def,
+            postSuperDefMult,
+            pDisableEvasionCancel,
+            defPerAttackReceived,
+            defPerAttackEvaded[1:],
+            defPerAttackGuarded,
+            dmgRedPerAttackReceived,
+            evasionPerAttackReceived,
+            evasionPerAttackEvaded[1:],
+            guardPerAttackReceived,
+            maxNormalDamage,
+            maxSADamage,
+            tdb
+            ) + pG * branchDamageTaken(
+            iA,
+            iB,
+            nAA,
+            nAB,
+            p2Def + defPerAttackGuarded[0] + defPerAttackReceived[0],
+            evasionPostHit,
+            pEvadeB,
+            pGuard,
+            dmgRed + dmgRedPerAttackReceived[0],
+            dmgRedNormal + dmgRedPerAttackReceived[0],
+            pNullify,
+            defence * (p2Def + defPerAttackGuarded[0] + defPerAttackReceived[0]) / p2Def,
+            pDisableEvasionCancel,
+            defPerAttackReceived[1:],
+            defPerAttackEvaded,
+            defPerAttackGuarded[1:],
+            dmgRedPerAttackReceived[1:],
+            evasionPerAttackReceived[1:],
+            evasionPerAttackEvaded,
+            maxNormalDamage,
+            maxSADamage,
+            tdb,
+            ) + pR * branchDamageTaken(
+            iA,
+            iB,
+            nAA,
+            nAB,
+            p2Def + defPerAttackReceived[0],
+            evasionPostHit,
+            pEvadeB,
+            pGuard + guardPerAttackReceived[0],
+            dmgRed + dmgRedPerAttackReceived[0],
+            dmgRedNormal + dmgRedPerAttackReceived[0],
+            pNullify,
+            defence * (p2Def + defPerAttackReceived[0]) / p2Def,
+            pDisableEvasionCancel,
+            defPerAttackReceived[1:],
+            defPerAttackEvaded,
+            defPerAttackGuarded,
+            dmgRedPerAttackReceived[1:],
+            evasionPerAttackReceived[1:],
+            evasionPerAttackEvaded,
+            maxNormalDamage,
+            maxSADamage,
+            tdb,
+            )
+    else:
+        # mulitply by extra factor if only part is expected. 0 =< nAB - iB < 1 )
+        return attackDamageTaken * (nAB - iB)
 
-def getDamageTaken(pDisableEvasionCancel, pNullify, pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
-    assert pNullify <= 1
-    assert pEvade <= 1
-    assert guard <= 1
+
+def getAttackDamageTaken(guard, maxDamage, tdb, dmgRed, avgDef):
     return min(
-        -(1 - (pNullify + (1 - pNullify) * (1 - DODGE_CANCEL_FACTOR * (1 - pDisableEvasionCancel)) * pEvade))
-        * min(
+        -min(
             (guard * GUARD_MOD * (maxDamage * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
             + (1 - guard) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)) / AVG_HEALTH,
             1,
         ),
-        0,
-    )
+        0)
 
 
 def aprioriProbMod(p, knownApriori):

@@ -5,7 +5,10 @@ import math
 import click as clc
 
 # TODO:
-# Instead of doing damage recieved "on average" from attacks received, should instead simulate each attack separately, e.g. hirudegarn
+# - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
+# - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
+# - Easily make branching functions more effecient by only running if multiplier is 0
+# - Instead of doing damage recieved "on average" from attacks received, should instead simulate each attack separately, e.g. hirudegarn
 # - Implement dodging counters
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
@@ -463,9 +466,11 @@ class Unit:
                     applyTransformationAttackAPT = True
                     stateIdx -= 1
             else:
-                form.numAttacksReceived += state.numAttacksReceived
-                form.numAttacksGuarded += state.numAttacksReceived * state.buff["Guard"]
+                #state.numAttacksEvaded = branchAttacksEvaded(0, -1, state.numAttacksDirectedBeforeAttacking, state.numAttacksDirectedAfterAttacking, state.multiChanceBuff["EvasionA"], state.multiChanceBuff["EvasionB"].chances["Start of Turn"] - state.multiChanceBuff["EvasionA"].chances["Start of Turn"], state.buff["Disable Evasion Cancel"], state.evasionPerAttackReceived, state.evasionPerAttackEvaded)
+                #state.numAttacksReceived = state.numAttacksDirected - state.numAttacksEvaded
+                form.numAttacksGuarded += state.buff["Guard"] * state.numAttacksReceived
                 form.numAttacksEvaded += state.numAttacksEvaded
+                form.numAttacksReceived += state.numAttacksReceived
                 self.nextForm = form.checkCondition(
                     form.formChangeCondition,
                     form.transformed,
@@ -1283,11 +1288,19 @@ class State:
         self.numAttacksDirectedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
         self.numAttacksDirectedAfterAttacking = NUM_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
         self.numAttacksDirected = NUM_ATTACKS_DIRECTED[self.slot - 1]
+        # Required for getting damage received for individual attacks
+        self.defPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.defPerAttackEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.defPerAttackGuarded = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.dmgRedPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.evasionPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.evasionPerAttackEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.guardPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
         # Required for getting APTs for individual attacks
-        self.atkPerAttackPerformed = np.zeros(MAX_TURN)
-        self.atkPerSuperPerformed = np.zeros(MAX_TURN)
-        self.critPerAttackPerformed = np.zeros(MAX_TURN)
-        self.critPerSuperPerformed = np.zeros(MAX_TURN)
+        self.atkPerAttackPerformed = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.atkPerSuperPerformed = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.critPerAttackPerformed = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.critPerSuperPerformed = np.zeros(NUM_ATTACKS_PER_TURN)
         self.APT = 0
         self.activeSkillAttackActivated = False
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
@@ -1330,26 +1343,6 @@ class State:
             self.p2Buff["DEF"],
             self.p3Buff["DEF"],
             self.stackedStats["DEF"],
-        )
-        self.normalDamageTakenPreSuper = getDamageTaken(
-            self.buff["Disable Evasion Cancel"],
-            0,
-            self.multiChanceBuff["EvasionA"].prob,
-            self.buff["Guard"],
-            MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
-            unit.TDB,
-            self.dmgRedNormalA,
-            self.avgDefPreSuper,
-        )
-        self.saDamageTakenPreSuper = getDamageTaken(
-            self.buff["Disable Evasion Cancel"],
-            self.multiChanceBuff["Nullify"].prob,
-            self.multiChanceBuff["EvasionA"].prob,
-            self.buff["Guard"],
-            MAX_SA_DAM_PER_TURN[self.turn - 1],
-            unit.TDB,
-            self.dmgRedA,
-            self.avgDefPreSuper,
         )
         for ability in form.abilities["Attack Enemy"]:
             ability.applyToState(self, unit, form)
@@ -1469,45 +1462,38 @@ class State:
             form.superAttacks["18 Ki"].effects["Crit"].buff,
         )
         self.getAvgDefMult(form, unit)
-        self.p2Buff["DEF"] += self.p2DefB
-        self.avgDefPostSuper = getDefStat(
-            unit.DEF,
-            self.p1Buff["DEF"],
-            form.linkEffects["DEF"],
-            self.p2Buff["DEF"],
-            self.p3Buff["DEF"],
-            self.avgDefMult,
-        )
-        self.normalDamageTakenPostSuper = getDamageTaken(
-            self.buff["Disable Evasion Cancel"],
+        # TODO Need to correct inputs
+        self.normalDamageTaken, self.saDamageTaken = branchDamageTaken(
             0,
-            self.multiChanceBuff["EvasionB"].prob,
+            -1,
+            self.numAttacksDirectedBeforeAttacking,
+            self.numAttacksDirectedAfterAttacking,
+            self.p2Buff["DEF"],
+            self.p2DefB,
+            self.multiChanceBuff["EvasionA"],
+            self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
             self.buff["Guard"],
-            MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
-            unit.TDB,
-            self.dmgRedNormalB,
-            self.avgDefPostSuper,
-        )
-        self.saDamageTakenPostSuper = getDamageTaken(
+            self.dmgRedA,
+            self.dmgRedB,
+            np.array([0, self.multiChanceBuff["Nullify"].prob]),
+            self.avgDefPreSuper,
+            self.avgDefMult,
             self.buff["Disable Evasion Cancel"],
-            self.multiChanceBuff["Nullify"].prob,
-            self.multiChanceBuff["EvasionB"].prob,
-            self.buff["Guard"],
+            self.defPerAttackReceived,
+            self.defPerAttackEvaded,
+            self.defPerAttackGuarded,
+            self.dmgRedPerAttackReceived,
+            self.evasionPerAttackReceived,
+            self.evasionPerAttackEvaded,
+            self.guardPerAttackReceived,
+            MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
-            self.dmgRedB,
-            self.avgDefPostSuper,
         )
         self.buff["Heal"] += form.linkEffects["Heal"] + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + ((0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR) / AVG_HEALTH
         self.buff["Heal"] = min(self.buff["Heal"], 1)
-        self.normalDamageTaken = (
-            self.numNormalAttacksDirectedBeforeAttacking * self.normalDamageTakenPreSuper
-            + self.numNormalAttacksDirectedAfterAttacking * self.normalDamageTakenPostSuper
-        )
-        self.saDamageTaken = (
-            self.numSuperAttacksDirectedBeforeAttacking * self.saDamageTakenPreSuper
-            + self.numSuperAttacksDirectedAfterAttacking * self.saDamageTakenPostSuper
-        )
+        self.normalDamageTaken *= (self.numNormalAttacksDirectedBeforeAttacking + self.numNormalAttacksDirectedAfterAttacking) / self.numAttacksDirected
+        self.saDamageTaken *= (self.numSuperAttacksDirectedBeforeAttacking + self.numSuperAttacksDirectedAfterAttacking) / self.numAttacksDirected
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
         self.useability = (
             unit.teams
@@ -2132,22 +2118,21 @@ class PerAttackReceived(PerEvent):
         self.withinTheSameTurn = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
+        cumBuffPerAttack = self.effectiveBuff * (np.arange(len(NUM_ATTACKS_DIRECTED[self.slot - 1]) + 1) + 1)
         turnBuff = self.effectiveBuff * state.numAttacksReceived
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff, key=abs)
-        defBuff = min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo, key=abs)
+        cappedCumBuffPerAttack = np.minimum(cumBuffPerAttack, buffToGo)
+        cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs)
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs)
             case "DEF":
-                state.p2Buff["DEF"] += defBuff
+                state.defPerAttackReceived += cappedBuffPerAttack
             case "Dmg Red":
-                state.dmgRedA += defBuff
-                state.dmgRedB += defBuff
-                state.dmgRedNormalA += defBuff
-                state.dmgRedNormalB += defBuff
+                state.dmgRedPerAttackReceived += cappedBuffPerAttack
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key = abs), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
@@ -2155,29 +2140,29 @@ class PerAttackReceived(PerEvent):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
 
-
+# TODO Should have a separate dmgRedPerAttackReceivedOrEvaded
 class PerAttackReceivedOrEvaded(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
         self.withinTheSameTurn = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
+        cumBuffPerAttack = self.effectiveBuff * (np.arange(len(NUM_ATTACKS_DIRECTED[self.slot - 1]) + 1) + 1)
         numAttacksDirected = round(state.numAttacksDirected)
         turnBuff = self.effectiveBuff * numAttacksDirected
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        defBuff = min((numAttacksDirected - 1) * self.effectiveBuff / 2, buffToGo)
+        cappedCumBuffPerAttack = np.minimum(cumBuffPerAttack, buffToGo)
+        cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Dmg Red":
-                state.dmgRedA += defBuff
-                state.dmgRedB += defBuff
-                state.dmgRedNormalA += defBuff
-                state.dmgRedNormalB += defBuff
+                state.dmgRedPerAttackReceived += cappedBuffPerAttack
+                state.dmgRedPerAttackEvaded += cappedBuffPerAttack
         if not (self.withinTheSameTurn):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
 
-
+# TODO Fix me for new recusive function
 class PerAttackGuarded(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
@@ -2212,37 +2197,24 @@ class PerAttackEvaded(PerEvent):
         self.withinTheSameTurn = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
+        cumBuffPerAttack = self.effectiveBuff * (np.arange(len(NUM_ATTACKS_DIRECTED[self.slot - 1]) + 1) + 1)
         turnBuff = self.effectiveBuff * state.numAttacksEvaded
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
+        cappedCumBuffPerAttack = np.minimum(cumBuffPerAttack, buffToGo)
+        cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
             case "DEF":
-                pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
-                state.p2Buff["DEF"] += min((state.numAttacksDirected - 1) * pEvade * (1 - pEvade) * self.effectiveBuff / 2, buffToGo)
+                state.defPerAttackEvaded += cappedBuffPerAttack
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
             case "Evasion":
-                evasionA = copy.deepcopy(state.multiChanceBuff["EvasionA"])
-                numAttacksDirectedBeforeAttacking = round(state.numAttacksDirectedBeforeAttacking)
-                evasionAChance = [0] * numAttacksDirectedBeforeAttacking
-                evasionB = copy.deepcopy(state.multiChanceBuff["EvasionB"])
-                numAttacksDirected = round(state.numAttacksDirected)
-                evasionBChance = [0] * numAttacksDirected
-                for i in range(numAttacksDirected):
-                    if i < numAttacksDirectedBeforeAttacking:
-                        evasionAChance[i] = evasionA.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
-                        evasionA.updateChance("Start of Turn", evasionAChance[i] * self.effectiveBuff, "Evasion", state)
-                    evasionBChance[i] = evasionB.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
-                    evasionB.updateChance("Start of Turn", evasionBChance[i] * self.effectiveBuff, "Evasion", state)
-                if numAttacksDirectedBeforeAttacking >= 1:
-                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", min(np.mean(evasionAChance), buffToGo), "Evasion", state)
-                state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", min(np.mean(evasionBChance), buffToGo), "Evasion", state)
-                cappedTurnBuff = min(buffToGo, self.effectiveBuff * state.numAttacksEvaded)
+                state.evasionPerAttackEvaded += cappedBuffPerAttack
         if not (self.withinTheSameTurn):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2357,7 +2329,7 @@ class AfterAttackPerformed(AfterEvent):
             self.nextTurnUpdate(form, state)
         self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
-
+# TODO Fix me for new recusive function
 class AfterAttackReceived(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
@@ -2399,7 +2371,7 @@ class AfterAttackReceived(AfterEvent):
             self.nextTurnUpdate(form, state)
         self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
             
-
+# TODO Fix me for new recusive function
 class AfterGuardActivated(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
@@ -2444,7 +2416,7 @@ class AfterGuardActivated(AfterEvent):
             self.nextTurnUpdate(form, state)
         self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
-
+# TODO Fix me for new recusive function
 class AfterAttackEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
@@ -2490,7 +2462,7 @@ class AfterAttackEvaded(AfterEvent):
             self.nextTurnUpdate(form, state)
         self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
-
+# TODO Fix me for new recusive function
 class AfterAttackReceivedOrEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
@@ -2551,7 +2523,7 @@ class UntilEvent(PassiveAbility):
                     state.dmgRedNormalA += turnBuff
                     state.dmgRedNormalB += turnBuff
 
-
+# TODO Fix me for new recusive function
 class UntilAttackRecieved(UntilEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
@@ -2623,7 +2595,7 @@ class EveryTimeXAttacksPerformedInBattle(EveryTimeXEventsInBattle):
             self.increment = state.attacksPerformed
         self.applyBuff(unit, state, form)
 
-
+# TODO Fix me for new recusive function
 class EveryTimeXAttacksReceivedInBattle(EveryTimeXEventsInBattle):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args)
@@ -2631,6 +2603,7 @@ class EveryTimeXAttacksReceivedInBattle(EveryTimeXEventsInBattle):
     def applyToState(self, state, unit=None, form=None):
         self.increment = state.numAttacksReceived
         self.applyBuff(unit, state, form)
+
 
 class PerformingSuperAttackOffence(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
