@@ -1474,6 +1474,7 @@ class State:
             self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
             self.buff["Guard"],
             self.dmgRedA,
+            self.dmgRedNormalA,
             self.dmgRedB,
             np.array([0, self.multiChanceBuff["Nullify"].prob]),
             self.avgDefPreSuper,

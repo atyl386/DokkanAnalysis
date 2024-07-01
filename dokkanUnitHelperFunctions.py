@@ -557,20 +557,20 @@ def branchDamageTaken(
     # Get damage taken by the attack pre super
     attackDamageTaken = np.array([getAttackDamageTaken(pGuard, maxNormalDamage, tdb, dmgRedNormal, defence), getAttackDamageTaken(pGuard, maxSADamage, tdb, dmgRed, defence)])
     pE_N = (1 - DODGE_CANCEL_FACTOR * (1 - pDisableEvasionCancel)) * evasion.prob
-    pE = np.array([pE_N, pE_N * (1 - pNullify)])
+    pE = pE_N * (1 - pNullify)
     pReceiveAttack = 1 - (pNullify + pE)
     pG = pReceiveAttack * pGuard
     pR = 1 - pNullify - pE - pG
     evasionPostEvade = copy.copy(evasion)
     evasionPostHit = copy.copy(evasion)
-    evasionPostEvade.updateChance("Start of Turn", evasionPerAttackEvaded[0])
-    evasionPostHit.updateChance("Start of Turn", evasionPerAttackReceived[0])
+    evasionPostEvade.updateChance("Start of Turn", evasionPerAttackEvaded[0], "")
+    evasionPostHit.updateChance("Start of Turn", evasionPerAttackReceived[0], "")
     # If last attack in sequence pre super
     if iA >= nAA - 1 and iB == -1:
         evasionPostEvadeB = copy.copy(evasionPostEvade)
-        evasionPostEvadeB.updateChance("Start of Turn", pEvadeB)
+        evasionPostEvadeB.updateChance("Start of Turn", pEvadeB, "")
         evasionPostHitB = copy.copy(evasionPostHit)
-        evasionPostHitB.updateChance("Start of Turn", pEvadeB)
+        evasionPostHitB.updateChance("Start of Turn", pEvadeB, "")
         # mulitply by extra factor if only part is expected. 0 =< nAA - iA < 1 )
         return attackDamageTaken * (nAA - iA) + pE * branchDamageTaken(
             iA,
@@ -692,13 +692,16 @@ def branchDamageTaken(
             nAA,
             nAB,
             p2Def + defPerAttackGuarded[0] + defPerAttackReceived[0],
+            p2DefB,
             evasionPostHit,
             pEvadeB,
             pGuard,
             dmgRed + dmgRedPerAttackReceived[0],
             dmgRedNormal + dmgRedPerAttackReceived[0],
+            dmgRedB,
             pNullify,
             defence * (p2Def + defPerAttackGuarded[0] + defPerAttackReceived[0]) / p2Def,
+            postSuperDefMult,
             pDisableEvasionCancel,
             defPerAttackReceived[1:],
             defPerAttackEvaded,
@@ -706,6 +709,7 @@ def branchDamageTaken(
             dmgRedPerAttackReceived[1:],
             evasionPerAttackReceived[1:],
             evasionPerAttackEvaded,
+            guardPerAttackReceived,
             maxNormalDamage,
             maxSADamage,
             tdb,
@@ -715,13 +719,16 @@ def branchDamageTaken(
             nAA,
             nAB,
             p2Def + defPerAttackReceived[0],
+            p2DefB,
             evasionPostHit,
             pEvadeB,
             pGuard + guardPerAttackReceived[0],
             dmgRed + dmgRedPerAttackReceived[0],
             dmgRedNormal + dmgRedPerAttackReceived[0],
+            dmgRedB,
             pNullify,
             defence * (p2Def + defPerAttackReceived[0]) / p2Def,
+            postSuperDefMult,
             pDisableEvasionCancel,
             defPerAttackReceived[1:],
             defPerAttackEvaded,
@@ -729,6 +736,7 @@ def branchDamageTaken(
             dmgRedPerAttackReceived[1:],
             evasionPerAttackReceived[1:],
             evasionPerAttackEvaded,
+            guardPerAttackReceived,
             maxNormalDamage,
             maxSADamage,
             tdb,
