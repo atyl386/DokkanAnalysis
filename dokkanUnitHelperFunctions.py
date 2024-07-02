@@ -555,12 +555,12 @@ def branchDamageTaken(
 ):
     """Returns the remaining damage taken by a unit in a turn recursively"""
     # Get damage taken by the attack pre super
-    attackDamageTaken = np.array([getAttackDamageTaken(pGuard, maxNormalDamage, tdb, dmgRedNormal, defence), getAttackDamageTaken(pGuard, maxSADamage, tdb, dmgRed, defence)])
     pE_N = (1 - DODGE_CANCEL_FACTOR * (1 - pDisableEvasionCancel)) * evasion.prob
     pE = pE_N * (1 - pNullify)
     pReceiveAttack = 1 - (pNullify + pE)
     pG = pReceiveAttack * pGuard
     pR = 1 - pNullify - pE - pG
+    attackDamageTaken = np.array([getAttackDamageTaken(pNullify[0], pE[0], pGuard, maxNormalDamage, tdb, dmgRedNormal, defence), getAttackDamageTaken(pNullify[1], pE[1], pGuard, maxSADamage, tdb, dmgRed, defence)])
     evasionPostEvade = copy.copy(evasion)
     evasionPostHit = copy.copy(evasion)
     evasionPostEvade.updateChance("Start of Turn", evasionPerAttackEvaded[0], "")
@@ -746,14 +746,16 @@ def branchDamageTaken(
         return attackDamageTaken * (nAB - iB)
 
 
-def getAttackDamageTaken(guard, maxDamage, tdb, dmgRed, avgDef):
+def getAttackDamageTaken(pNullify, pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
     return min(
-        -min(
+        -(1 - pNullify - pEvade)
+        * min(
             (guard * GUARD_MOD * (maxDamage * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
             + (1 - guard) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)) / AVG_HEALTH,
             1,
         ),
-        0)
+        0,
+    )
 
 
 def aprioriProbMod(p, knownApriori):

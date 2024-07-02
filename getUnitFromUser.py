@@ -1493,8 +1493,9 @@ class State:
         )
         self.buff["Heal"] += form.linkEffects["Heal"] + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + ((0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR) / AVG_HEALTH
         self.buff["Heal"] = min(self.buff["Heal"], 1)
-        self.normalDamageTaken *= (self.numNormalAttacksDirectedBeforeAttacking + self.numNormalAttacksDirectedAfterAttacking) / self.numAttacksDirected
-        self.saDamageTaken *= (self.numSuperAttacksDirectedBeforeAttacking + self.numSuperAttacksDirectedAfterAttacking) / self.numAttacksDirected
+        # Good way to check this would be a unit with no dodge and no defence, should return with -numAttacksDirected
+        self.normalDamageTaken = max(self.normalDamageTaken * (self.numNormalAttacksDirectedBeforeAttacking + self.numNormalAttacksDirectedAfterAttacking) / self.numAttacksDirected, -1)
+        self.saDamageTaken = max(self.saDamageTaken * (self.numSuperAttacksDirectedBeforeAttacking + self.numSuperAttacksDirectedAfterAttacking) / self.numAttacksDirected, -1)
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
         self.useability = (
             unit.teams
@@ -2824,4 +2825,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(219, "F2PLR_PHY_Yamcha_Puar", 5, "DEF", "DGE", "CRT", SLOT_1)
+    unit = Unit(219, "F2PLR_PHY_Yamcha_Puar", 5, "DGE", "DGE", "CRT", SLOT_2)
