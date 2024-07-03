@@ -1297,10 +1297,10 @@ class State:
         self.evasionPerAttackEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
         self.guardPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
         # Required for getting APTs for individual attacks
-        self.atkPerAttackPerformed = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.atkPerSuperPerformed = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.critPerAttackPerformed = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.critPerSuperPerformed = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.atkPerAttackPerformed = np.zeros(MAX_TURN)
+        self.atkPerSuperPerformed = np.zeros(MAX_TURN)
+        self.critPerAttackPerformed = np.zeros(MAX_TURN)
+        self.critPerSuperPerformed = np.zeros(MAX_TURN)
         self.APT = 0
         self.activeSkillAttackActivated = False
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
@@ -2120,7 +2120,7 @@ class PerAttackReceived(PerEvent):
         self.withinTheSameTurn = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
-        cumBuffPerAttack = self.effectiveBuff * (np.arange(len(NUM_ATTACKS_DIRECTED[self.slot - 1]) + 1) + 1)
+        cumBuffPerAttack = self.effectiveBuff * (np.arange(NUM_ATTACKS_PER_TURN) + 1)
         turnBuff = self.effectiveBuff * state.numAttacksReceived
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff, key=abs)
@@ -2149,7 +2149,7 @@ class PerAttackReceivedOrEvaded(PerEvent):
         self.withinTheSameTurn = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
-        cumBuffPerAttack = self.effectiveBuff * (np.arange(len(NUM_ATTACKS_DIRECTED[self.slot - 1]) + 1) + 1)
+        cumBuffPerAttack = self.effectiveBuff * (np.arange(NUM_ATTACKS_PER_TURN) + 1)
         numAttacksDirected = round(state.numAttacksDirected)
         turnBuff = self.effectiveBuff * numAttacksDirected
         buffToGo = self.max - self.applied
@@ -2159,7 +2159,6 @@ class PerAttackReceivedOrEvaded(PerEvent):
         match self.effect:
             case "Dmg Red":
                 state.dmgRedPerAttackReceived += cappedBuffPerAttack
-                state.dmgRedPerAttackEvaded += cappedBuffPerAttack
         if not (self.withinTheSameTurn):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2170,23 +2169,22 @@ class PerAttackGuarded(PerEvent):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
 
     def applyToState(self, state, unit=None, form=None):
+        cumBuffPerAttack = self.effectiveBuff * (np.arange(NUM_ATTACKS_PER_TURN) + 1)
         turnBuff = self.effectiveBuff * state.numAttacksReceived * state.buff["Guard"]
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
         form.carryOverBuffs[self.effect].add(cappedTurnBuff)
-        defBuff = min((state.numAttacksReceived - 1) * self.effectiveBuff / 2, buffToGo)
+        cappedCumBuffPerAttack = np.minimum(cumBuffPerAttack, buffToGo)
+        cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "DEF":
-                state.p2Buff["DEF"] += defBuff
+                state.defPerAttackReceived += cappedBuffPerAttack
             case "Dmg Red":
-                state.dmgRedA += defBuff
-                state.dmgRedB += defBuff
-                state.dmgRedNormalA += defBuff
-                state.dmgRedNormalB += defBuff
+                state.dmgRedPerAttackReceived += cappedBuffPerAttack
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
                 state.atkModifier = state.getAvgAtkMod(form, unit)
@@ -2199,7 +2197,7 @@ class PerAttackEvaded(PerEvent):
         self.withinTheSameTurn = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
-        cumBuffPerAttack = self.effectiveBuff * (np.arange(len(NUM_ATTACKS_DIRECTED[self.slot - 1]) + 1) + 1)
+        cumBuffPerAttack = self.effectiveBuff * (np.arange(NUM_ATTACKS_PER_TURN) + 1)
         turnBuff = self.effectiveBuff * state.numAttacksEvaded
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
