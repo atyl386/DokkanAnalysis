@@ -5,8 +5,8 @@ import math
 import click as clc
 
 # TODO:
-# - Why is slot 1 damage taken with dodge units so much worse than before? e.g. carnival gogeta 
-# - Something definitely wrong with Carnival Gogeta Blue normal def on turn 11 + - it is because he is in slot 1 after his active
+# - Only when defence matters, are there diffs -> Bug with defence calc
+# - Dodge or die character appear unchanged! e.g. str WHis
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0

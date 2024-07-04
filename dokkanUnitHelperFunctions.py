@@ -571,6 +571,9 @@ def branchDamageTaken(
         evasionPostEvadeB.updateChance("Start of Turn", pEvadeB, "")
         evasionPostHitB = copy.copy(evasionPostHit)
         evasionPostHitB.updateChance("Start of Turn", pEvadeB, "")
+        postSuperDefence = defence * (1 + p2Def + p2DefB) / (1 + p2Def) * (1 + postSuperDefMult)
+        # Update with post super abilities
+        attackDamageTaken = np.array([getAttackDamageTaken(pNullify[0], pE[0], pGuard, maxNormalDamage, tdb, dmgRedNormal + dmgRedB, postSuperDefence), getAttackDamageTaken(pNullify[1], pE[1], pGuard, maxSADamage, tdb, dmgRed + dmgRedB, postSuperDefence)])
         # mulitply by extra factor if only part is expected. 0 =< nAA - iA < 1 )
         return attackDamageTaken * (nAA - iA) + pE * branchDamageTaken(
             iA,
@@ -586,7 +589,7 @@ def branchDamageTaken(
             dmgRedNormal + dmgRedB,
             dmgRedB,
             pNullify,
-            defence * (1 + p2Def + p2DefB + defPerAttackEvaded[0]) / (1 + p2Def) * postSuperDefMult,
+            defence * (1 + p2Def + p2DefB + defPerAttackEvaded[0]) / (1 + p2Def) * (1 + postSuperDefMult),
             postSuperDefMult,
             pDisableEvasionCancel,
             defPerAttackReceived,
@@ -613,7 +616,7 @@ def branchDamageTaken(
             dmgRedNormal + dmgRedB + dmgRedPerAttackReceived[0],
             dmgRedB,
             pNullify,
-            defence * (1 + p2Def + p2DefB + defPerAttackGuarded[0] + defPerAttackReceived[0]) / (1 + p2Def) * postSuperDefMult,
+            defence * (1 + p2Def + p2DefB + defPerAttackGuarded[0] + defPerAttackReceived[0]) / (1 + p2Def) * (1 + postSuperDefMult),
             postSuperDefMult,
             pDisableEvasionCancel,
             defPerAttackReceived[1:],
@@ -640,7 +643,7 @@ def branchDamageTaken(
             dmgRedNormal + dmgRedB + dmgRedPerAttackReceived[0],
             dmgRedB,
             pNullify,
-            defence * (1 + p2Def + p2DefB + defPerAttackReceived[0]) / (1 + p2Def) * postSuperDefMult,
+            defence * (1 + p2Def + p2DefB + defPerAttackReceived[0]) / (1 + p2Def) * (1 + postSuperDefMult),
             postSuperDefMult,
             pDisableEvasionCancel,
             defPerAttackReceived[1:],
