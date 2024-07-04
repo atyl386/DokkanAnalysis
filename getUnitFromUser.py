@@ -5,6 +5,8 @@ import math
 import click as clc
 
 # TODO:
+# - Why is slot 1 damage taken with dodge units so much worse than before? e.g. carnival gogeta 
+# - Something definitely wrong with Carnival Gogeta Blue normal def on turn 11 + - it is because he is in slot 1 after his active
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
@@ -2823,4 +2825,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(219, "F2PLR_PHY_Yamcha_Puar", 5, "DGE", "DGE", "CRT", SLOT_2)
+    unit = Unit(219, "F2PLR_PHY_Yamcha_Puar", 5, "DGE", "DGE", "CRT", SLOT_1)
