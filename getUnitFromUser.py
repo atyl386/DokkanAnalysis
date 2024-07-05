@@ -1480,7 +1480,7 @@ class State:
             self.dmgRedB,
             np.array([0, self.multiChanceBuff["Nullify"].prob]),
             self.avgDefPreSuper,
-            self.avgDefMult,
+            self.avgDefMult - self.stackedStats["DEF"],
             self.buff["Disable Evasion Cancel"],
             self.defPerAttackReceived,
             self.defPerAttackEvaded,
@@ -2825,4 +2825,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(219, "F2PLR_PHY_Yamcha_Puar", 5, "DGE", "DGE", "CRT", SLOT_1)
+    unit = Unit(219, "F2PLR_PHY_Yamcha_Puar", 5, "DGE", "DGE", "CRT", SLOT_2)
