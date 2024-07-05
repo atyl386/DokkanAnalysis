@@ -1464,7 +1464,6 @@ class State:
             form.superAttacks["18 Ki"].effects["Crit"].buff,
         )
         self.getAvgDefMult(form, unit)
-        # TODO Need to correct inputs
         self.normalDamageTaken, self.saDamageTaken = branchDamageTaken(
             0,
             -1,
@@ -1477,7 +1476,7 @@ class State:
             self.buff["Guard"],
             self.dmgRedA,
             self.dmgRedNormalA,
-            self.dmgRedB,
+            self.dmgRedB - self.dmgRedA,
             np.array([0, self.multiChanceBuff["Nullify"].prob]),
             self.avgDefPreSuper,
             self.avgDefMult - self.stackedStats["DEF"],
@@ -1495,7 +1494,6 @@ class State:
         )
         self.buff["Heal"] += form.linkEffects["Heal"] + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + ((0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR) / AVG_HEALTH
         self.buff["Heal"] = min(self.buff["Heal"], 1)
-        # Good way to check this would be a unit with no dodge and no defence, should return with -numAttacksDirected
         self.normalDamageTaken = max(self.normalDamageTaken * (self.numNormalAttacksDirectedBeforeAttacking + self.numNormalAttacksDirectedAfterAttacking) / self.numAttacksDirected, -1)
         self.saDamageTaken = max(self.saDamageTaken * (self.numSuperAttacksDirectedBeforeAttacking + self.numSuperAttacksDirectedAfterAttacking) / self.numAttacksDirected, -1)
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
@@ -2825,4 +2823,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(219, "F2PLR_PHY_Yamcha_Puar", 5, "DGE", "DGE", "CRT", SLOT_2)
+    unit = Unit(4, "DFLR_TEQ_Fusion_Zamasu", 5, "DEF", "ADD", "CRT", [1, 1, 2, 1, 1, 1, 2, 2, 2, 2])
