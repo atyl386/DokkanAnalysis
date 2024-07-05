@@ -5,8 +5,7 @@ import math
 import click as clc
 
 # TODO:
-# - Only when defence matters, are there diffs -> Bug with defence calc
-# - Dodge or die character appear unchanged! e.g. str WHis
+# - TEQ Ultimate Gohan normal def turn 1 is half what it was? Why?
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
@@ -2823,4 +2822,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(4, "DFLR_TEQ_Fusion_Zamasu", 5, "DEF", "ADD", "CRT", [1, 1, 2, 1, 1, 1, 2, 2, 2, 2])
+    unit = Unit(164, "DF_TEQ_Ultimate_Gohan", 5, "DEF", "ADD", "DGE", [1, 2, 2, 1, 1, 1, 1, 1, 1, 1])
