@@ -5,7 +5,7 @@ import math
 import click as clc
 
 # TODO:
-# - TEQ Ultimate Gohan normal def turn 1 is half what it was? Why?
+# - Not correctly modelling guard after frts attack reicevd
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
@@ -2162,7 +2162,6 @@ class PerAttackReceivedOrEvaded(PerEvent):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
 
-# TODO Fix me for new recusive function
 class PerAttackGuarded(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
@@ -2337,9 +2336,7 @@ class AfterAttackReceived(AfterEvent):
         attacksToActivate = 1 if self.threshold == 0 else self.required
         # If buff is a defensive one
         if self.effect in ["DEF", "Dmg Red", "Evasion", "Guard"]:
-            self.eventFactor = max(
-                state.numAttacksReceived - attacksToActivate
-            , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
+            self.eventFactor = 1
         else:
             if self.threshold == 0:
                 self.eventFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
@@ -2348,6 +2345,35 @@ class AfterAttackReceived(AfterEvent):
                     self.eventFactor = 1
                 else:
                     self.eventFactor = 0
+    
+    def setTurnBuff(self, unit, form, state):
+        # geometric cdf
+        turnBuff = self.effectiveBuff * self.eventFactor
+        cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
+        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), self.required, cappedTurnBuff)
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += cappedTurnBuff
+        elif self.effect in REGULAR_SUPPORT_EFFECTS:
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
+        else:
+            match self.effect:
+                case "ATK":
+                    state.p2Buff["ATK"] += cappedTurnBuff
+                case "DEF":
+                    state.defPerAttackReceived += cappedBuffPerAttack
+                case "AdditionalSuper":
+                    state.aaPSuper.append(cappedTurnBuff)
+                    state.aaPGuarantee.append(0)
+                case "AAChance":
+                    state.aaPGuarantee.append(cappedTurnBuff)
+                    state.aaPSuper.append(cappedTurnBuff * self.superChance)
+                case "Crit":
+                    state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
+                    state.atkModifier = state.getAvgAtkMod(form, unit)
+                case "Dmg Red":
+                    state.dmgRedPerAttackReceived += cappedBuffPerAttack
+                case "Evasion":
+                    state.evasionPerAttackReceived += cappedBuffPerAttack
 
 
     def applyToState(self, state, unit=None, form=None):
@@ -2822,4 +2848,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(164, "DF_TEQ_Ultimate_Gohan", 5, "DEF", "ADD", "DGE", [1, 2, 2, 1, 1, 1, 1, 1, 1, 1])
+    unit = Unit(101, "DF_AGL_SS3_DragonFist_Goku", 5, "DGE", "DGE", "ADD", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2])
