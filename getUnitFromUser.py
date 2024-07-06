@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - TEQ SS Vegeta, Berserk Kale (+3 turns not behaving as expected :()), Hirudegarn have quite big discrepancies
+# - TEQ SS Vegeta, Hirudegarn have quite big discrepancies
 # - Simplify getEventFactor code
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
@@ -1370,9 +1370,9 @@ class State:
                     )
                 )
                 self.support += supportFactor * numSupers
-            pDisableSuper = min(numSupers, 1) * P_DISABLE_SUPER * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
+            pDisableSuper = min(min(numSupers, 1) * P_DISABLE_SUPER * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]), self.numSuperAttacksDirectedAfterAttacking)
             self.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-            pDisableNormal = min(numSupers, 1) * min(1, self.numNormalAttacksDirectedAfterAttacking) * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
+            pDisableNormal = min(min(numSupers, 1) * min(1, self.numNormalAttacksDirectedAfterAttacking) * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]), self.numNormalAttacksDirectedAfterAttacking)
             self.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
             self.numAttacksDirected -= pDisableNormal
             self.numAttacksDirectedAfterAttacking -= pDisableNormal
@@ -2837,4 +2837,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(17, "DF_AGL_Berserk_kale", 5, "DEF", "DGE", "ADD", [3, 2, 2, 2, 2, 2, 2, 2, 2, 1])
+    unit = Unit(100, "DF_TEQ_SS_Vegeta", 5, "ATK", "CRT", "ADD", SLOT_1)
