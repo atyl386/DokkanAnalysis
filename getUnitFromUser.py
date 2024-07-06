@@ -2434,8 +2434,8 @@ class AfterGuardActivated(AfterAttackDirected):
         else:
             self.setEventFactor(state)
             self.setTurnBuff(unit, form, state)
-        if self.effect not in REGULAR_SUPPORT_EFFECTS:
-            self.nextTurnUpdate(form, state)
+            if self.effect not in REGULAR_SUPPORT_EFFECTS:
+                self.nextTurnUpdate(form, state)
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
@@ -2469,8 +2469,8 @@ class AfterAttackEvaded(AfterAttackDirected):
         else:
             self.setEventFactor(state)
             self.setTurnBuff(unit, form, state)
-        if self.effect not in REGULAR_SUPPORT_EFFECTS:
-            self.nextTurnUpdate(form, state)
+            if self.effect not in REGULAR_SUPPORT_EFFECTS:
+                self.nextTurnUpdate(form, state)
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
@@ -2502,8 +2502,8 @@ class AfterAttackReceivedOrEvaded(AfterAttackDirected):
         else:
             self.setEventFactor(state)
             self.setTurnBuff(unit, form, state)
-        if self.effect not in REGULAR_SUPPORT_EFFECTS:
-            self.nextTurnUpdate(form, state)
+            if self.effect not in REGULAR_SUPPORT_EFFECTS:
+                self.nextTurnUpdate(form, state)
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
