@@ -1374,9 +1374,9 @@ class State:
                     )
                 )
                 self.support += supportFactor * numSupers
-            pDisableSuper = numSupers * P_DISABLE_SUPER * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
+            pDisableSuper = min(numSupers, 1) * P_DISABLE_SUPER * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
             self.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-            pDisableNormal = numSupers * min(1, self.numNormalAttacksDirectedAfterAttacking) * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
+            pDisableNormal = min(numSupers, 1) * min(1, self.numNormalAttacksDirectedAfterAttacking) * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
             self.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
             self.numAttacksDirected -= pDisableNormal
             self.numAttacksDirectedAfterAttacking -= pDisableNormal
