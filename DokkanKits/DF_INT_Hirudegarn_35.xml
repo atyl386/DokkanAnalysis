@@ -182,7 +182,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="What is the chance for this to become a super?" response="0.7" />
-					<input prompt="How many evasions are required?" response="0" />
+					<input prompt="How many evasions are required?" response="1" />
 					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_1>
 			</after_evade_attack>
@@ -424,7 +424,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="What is the chance for this to become a super?" response="0.5" />
-					<input prompt="How many evasions are required?" response="0" />
+					<input prompt="How many evasions are required?" response="1" />
 					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_1>
 				<ability_2>

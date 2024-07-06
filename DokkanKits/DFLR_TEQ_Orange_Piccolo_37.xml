@@ -447,7 +447,7 @@
 					<input prompt="What type of buff does the unit get?" response="Ki" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="2.0" />
-					<input prompt="How many attacks received are required?" response="0" />
+					<input prompt="How many attacks received are required?" response="1" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many turns does the buff last?" response="1" />
@@ -455,7 +455,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="2.0" />
 					<input prompt="How many turns does the effect last for?" response="1" />
-					<input prompt="How many attacks received are required?" response="0" />
+					<input prompt="How many attacks received are required?" response="1" />
 				</ability_2>
 			</after_receive_attack>
 			<after_guard_attack>

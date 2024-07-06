@@ -2249,7 +2249,7 @@ class PerAttackEvaded(PerEvent):
 
 
 class AfterEvent(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, threshold = 0):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, threshold = 1):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.effectDuration = effectDuration
         self.turnsLeft = effectDuration
@@ -2316,7 +2316,7 @@ class AfterEvent(PassiveAbility):
 
     def nextTurnUpdate(self, form, state):
         # If abiltiy going to be active next turn
-        if not(np.any(self.applied)) and self.required - self.increment <= 0 and self.effectDuration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+        if not(np.any(self.applied)) and self.eventFactor > 0 and self.effectDuration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 form.carryOverBuffs["aaPSuper"].add(state.aaPSuper[-1])
                 form.carryOverBuffs["aaPGuarantee"].add(state.aaPGuarantee[-1])
@@ -2363,14 +2363,13 @@ class AfterAttackReceived(AfterEvent):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
 
     def setEventFactor(self, state):
-        attacksToActivate = 1 if self.threshold == 0 else self.required
         # If buff is a defensive one
         if self.effect in ["DEF", "Dmg Red", "Evasion", "Guard"]:
             self.eventFactor = max(
-                state.numAttacksReceived - attacksToActivate
+                state.numAttacksReceived - self.required
             , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
         else:
-            if self.threshold == 0:
+            if self.threshold == 1:
                 self.eventFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
             else:
                 if self.required == 0:
@@ -2381,20 +2380,15 @@ class AfterAttackReceived(AfterEvent):
 
     def applyToState(self, state, unit=None, form=None):
         self.increment = state.numAttacksReceived
-        if self.threshold == 0:
-            self.updateBuffToGo()
-            # Check if ability will be active next turn
-            if np.any(self.applied):
-                self.resetAppliedBuffs(form, state)
-            else:
-                self.setEventFactor(state)
-                self.setTurnBuff(unit, form, state)
-        else:
-            self.buffToGo = self.effectiveBuff
+        self.updateBuffToGo()
+        # Check if ability will be active next turn
+        if self.threshold > 1:
             self.required = max(self.threshold - form.numAttacksReceived, 0)
-            if not(np.any(self.applied)):
-                self.setEventFactor(state)
-                self.setTurnBuff(unit, form, state)
+        if np.any(self.applied):
+            self.resetAppliedBuffs(form, state)
+        else:
+            self.setEventFactor(state)
+            self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
         self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
@@ -2416,7 +2410,7 @@ class AfterGuardActivated(AfterEvent):
                     state.numAttacksReceived - attacksToActivate
                 , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
             else:
-                if self.threshold == 0:
+                if self.threshold == 1:
                     self.eventFactor = min(state.numAttacksReceivedBeforeAttacking * state.buff["Guard"], 1)
                 else:
                     if self.required == 0:
@@ -2427,19 +2421,14 @@ class AfterGuardActivated(AfterEvent):
 
     def applyToState(self, state, unit=None, form=None):
         self.increment = state.numAttacksReceived * state.buff["Guard"]
-        if self.threshold == 0:
-            self.updateBuffToGo()
-            if np.any(self.applied):
-                self.resetAppliedBuffs(form, state)
-            else:
-                self.setEventFactor(state)
-                self.setTurnBuff(unit, form, state)
-        else:
-            self.buffToGo = self.effectiveBuff
+        self.updateBuffToGo()
+        if self.threshold > 1:
             self.required = max(self.threshold - form.numAttacksReceived * state.buff["Guard"], 0)
-            if not(np.any(self.applied)):
-                self.setEventFactor(state)
-                self.setTurnBuff(unit, form, state)
+        if np.any(self.applied):
+            self.resetAppliedBuffs(form, state)
+        else:
+            self.setEventFactor(state)
+            self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
         self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
@@ -2453,7 +2442,7 @@ class AfterAttackEvaded(AfterEvent):
     def setEventFactor(self, state):
         pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
         numHitsBeforeDodgeOnce = (1 - pEvade) / pEvade
-        attacksToActivate = numHitsBeforeDodgeOnce if self.threshold == 0 else self.required * numHitsBeforeDodgeOnce
+        attacksToActivate = self.required * numHitsBeforeDodgeOnce
         if self.threshold > 1:
             self.eventFactor = 1 - poisson.cdf(self.required - 1, state.numAttacksEvaded)
         # If buff is a defensive one
@@ -2462,7 +2451,7 @@ class AfterAttackEvaded(AfterEvent):
                 state.numAttacksReceived - attacksToActivate
             , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
         else:
-            if self.threshold == 0:
+            if self.threshold == 1:
                 self.eventFactor = min(state.numAttacksEvadedBeforeAttacking, 1)
             else:
                 if self.required == 0:
@@ -2473,19 +2462,14 @@ class AfterAttackEvaded(AfterEvent):
 
     def applyToState(self, state, unit=None, form=None):
         self.increment = state.numAttacksEvaded
-        if self.threshold == 0:
-            self.updateBuffToGo()
-            if np.any(self.applied):
-                self.resetAppliedBuffs(form, state)
-            else:
-                self.setEventFactor(state)
-                self.setTurnBuff(unit, form, state)
-        else:
-            self.buffToGo = self.effectiveBuff
+        self.updateBuffToGo()
+        if self.threshold > 1:
             self.required = max(self.threshold - form.numAttacksEvaded, 0)
-            if not(np.any(self.applied)):
-                self.setEventFactor(state)
-                self.setTurnBuff(unit, form, state)
+        if np.any(self.applied):
+            self.resetAppliedBuffs(form, state)
+        else:
+            self.setEventFactor(state)
+            self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
         self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
@@ -2496,14 +2480,12 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
     
     def setEventFactor(self, state):
-        attacksToActivate = 1 if self.threshold == 0 else self.required
-        numAttacksDirectedBeforeAttacking = round(state.numAttacksDirectedBeforeAttacking)
         # If buff is a defensive one
         if self.effect in ["DEF", "Dmg Red", "Evasion"]:
-            self.eventFactor = max(self.numAttacksDirected - attacksToActivate, 0) / self.numAttacksDirected  # Factor to account for not having the buff on the fist hit
+            self.eventFactor = max(state.numAttacksDirected - self.required, 0) / state.numAttacksDirected  # Factor to account for not having the buff on the fist hit
         else:
-            if self.threshold == 0:
-                self.eventFactor = min(numAttacksDirectedBeforeAttacking, 1)
+            if self.threshold == 1:
+                self.eventFactor = min(state.numAttacksDirectedBeforeAttacking, 1)
             else:
                 if self.required == 0:
                     self.eventFactor = 1
@@ -2511,18 +2493,15 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
                     self.eventFactor = 0
 
     def applyToState(self, state, unit=None, form=None):
-        self.numAttacksDirected = round(state.numAttacksDirected)
-        self.increment = self.numAttacksDirected
-        if self.threshold == 0:
-            self.updateBuffToGo()
-            if np.any(self.applied):
-                self.resetAppliedBuffs(form, state)
-            else:
-                self.setEventFactor(state)
-                self.setTurnBuff(unit, form, state)
-        else:
-            self.buffToGo = self.effectiveBuff
+        self.increment = state.numAttacksDirected
+        self.updateBuffToGo()
+        if self.threshold > 1:
             raise Exception("Need to implement form.numAttacksDirected")
+        if np.any(self.applied):
+            self.resetAppliedBuffs(form, state)
+        else:
+            self.setEventFactor(state)
+            self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
         self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
@@ -2850,4 +2829,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(219, "F2PLR_PHY_Yamcha_Puar", 5, "DEF", "DGE", "CRT", SLOT_1)
+    unit = Unit(65, "BU_INT_Golden_Frieza", 5, "DEF", "DGE", "ADD", [1, 1, 1, 2, 2, 2, 1, 2, 1, 2])
