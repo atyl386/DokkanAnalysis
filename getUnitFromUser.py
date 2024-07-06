@@ -2314,7 +2314,7 @@ class AfterEvent(PassiveAbility):
 
     def nextTurnUpdate(self, form, state):
         # If abiltiy going to be active next turn
-        if not(np.any(self.applied)) and self.eventFactor > 0 and self.effectDuration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+        if not(np.any(self.applied)) and self.required - self.increment <= 0 and self.effectDuration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 form.carryOverBuffs["aaPSuper"].add(state.aaPSuper[-1])
                 form.carryOverBuffs["aaPGuarantee"].add(state.aaPGuarantee[-1])
