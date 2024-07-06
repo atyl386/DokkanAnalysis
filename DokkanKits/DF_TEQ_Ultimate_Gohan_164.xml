@@ -186,14 +186,14 @@
 				<input prompt="How many different buffs does the form get after guarding an attack?" response="2" />
 				<ability_1>
 					<input prompt="How many turns does the buff last?" response="1" />
-					<input prompt="How many attacks guarded are required?" response="0" />
+					<input prompt="How many attacks guarded are required?" response="1" />
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.58" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many turns does the buff last?" response="3" />
-					<input prompt="How many attacks guarded are required?" response="0" />
+					<input prompt="How many attacks guarded are required?" response="1" />
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.58" />
@@ -404,14 +404,14 @@
 				<input prompt="How many different buffs does the form get after guarding an attack?" response="2" />
 				<ability_1>
 					<input prompt="How many turns does the buff last?" response="99" />
-					<input prompt="How many attacks guarded are required?" response="0" />
+					<input prompt="How many attacks guarded are required?" response="1" />
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.58" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many turns does the buff last?" response="1" />
-					<input prompt="How many attacks guarded are required?" response="0" />
+					<input prompt="How many attacks guarded are required?" response="1" />
 					<input prompt="What type of buff does the unit get?" response="AEAAT" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />

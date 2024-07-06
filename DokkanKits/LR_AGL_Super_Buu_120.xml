@@ -290,7 +290,7 @@
 				<input prompt="How many different buffs does the form get after receiving an attack?" response="1" />
 				<ability_1>
 					<input prompt="How many turns does the buff last?" response="1" />
-					<input prompt="How many attacks received are required?" response="0" />
+					<input prompt="How many attacks received are required?" response="1" />
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
@@ -300,7 +300,7 @@
 				<input prompt="How many different buffs does the form get after guarding an attack?" response="1" />
 				<ability_1>
 					<input prompt="How many turns does the buff last?" response="1" />
-					<input prompt="How many attacks guarded are required?" response="0" />
+					<input prompt="How many attacks guarded are required?" response="1" />
 					<input prompt="What type of buff does the unit get?" response="AAChance" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
