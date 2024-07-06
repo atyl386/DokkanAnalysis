@@ -557,10 +557,9 @@ def branchDamageTaken(
     """Returns the remaining damage taken by a unit in a turn recursively"""
     # Get damage taken by the attack pre super
     pE_N = (1 - DODGE_CANCEL_FACTOR * (1 - pDisableEvasionCancel)) * evasion.prob
-    pE = pE_N * (1 - pNullify)
-    pReceiveAttack = 1 - (pNullify + pE)
-    pG = pReceiveAttack * pGuard
-    pR = 1 - pNullify - pE - pG
+    pE = pE_N * (1 - pNullify) + pNullify
+    pG = (1 - pE) * pGuard
+    pR = 1 - pE - pG
     attackDamageTaken = np.array([getAttackDamageTaken(pE[0], pGuard, maxNormalDamage, tdb, dmgRedNormal, defence), getAttackDamageTaken(pE[1], pGuard, maxSADamage, tdb, dmgRed, defence)])
     evasionPostEvade = copy.deepcopy(evasion)
     evasionPostHit = copy.deepcopy(evasion)
