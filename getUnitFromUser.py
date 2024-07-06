@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Do I need to fix the "" for evasion buffs in branchDamageTaken() ?
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
 # - Hirudegarn have quite big discrepancies, CLR SS Goku
 # - Simplify getEventFactor code
@@ -2860,4 +2861,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(100, "DF_TEQ_SS_Vegeta", 5, "ATK", "CRT", "ADD", SLOT_1)
+    unit = Unit(1, "CLR_TEQ_SS_Goku", 5, "DGE", "DGE", "CRT", [1, 2, 2, 2, 2, 2, 2, 2, 1, 1])
