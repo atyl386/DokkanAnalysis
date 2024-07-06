@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+#CLR Phy Gogeta - Turj 9 normal damage post super is different between v2.0 and feature/addBounds
 # - PHY CLR Goegeta, LR Janemba, CLR SS Trio (after dmgRed wears off), TEQ SS Vegeta, SS3 Gotenks turn 3
 # - Simplify getEventFactor code
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
