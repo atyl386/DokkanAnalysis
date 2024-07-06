@@ -2226,7 +2226,6 @@ class AfterEvent(PassiveAbility):
         self.threshold = threshold
         self.required = threshold
         self.increment = 0
-        self.turnsSinceActivated = 0
         if effect in ADDITIONAL_ATTACK_EFFECTS:
             self.applied = [0, 0]
         else:
@@ -2240,7 +2239,7 @@ class AfterEvent(PassiveAbility):
             self.buffToGo = self.effectiveBuff - self.applied
 
     def resetAppliedBuffs(self, form, state):
-        if self.turnsLeft < self.turnsSinceActivated * RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+        if self.turnsLeft < RETURN_PERIOD_PER_SLOT[state.slot - 1]:
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 form.carryOverBuffs["aaPSuper"].sub(self.applied[0])
                 form.carryOverBuffs["aaPGuarantee"].sub(self.applied[1])
@@ -2249,7 +2248,6 @@ class AfterEvent(PassiveAbility):
                 form.carryOverBuffs[self.effect].sub(self.applied)
                 self.applied = 0
             self.turnsLeft = self.effectDuration
-            self.turnsSinceActivated = 0
     
     def setTurnBuff(self, unit, form, state):
         # geometric cdf
@@ -2295,7 +2293,6 @@ class AfterEvent(PassiveAbility):
                 nextTurnBuff = min(self.buffToGo, self.effectiveBuff)
                 form.carryOverBuffs[self.effect].add(nextTurnBuff)
                 self.applied += nextTurnBuff
-            self.turnsSinceActivated += 1
 
 
 class AfterAttackPerformed(AfterEvent):
@@ -2325,7 +2322,8 @@ class AfterAttackPerformed(AfterEvent):
                 setAttacksPerformed(unit, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
-        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
+        if np.any(self.applied):
+            self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 # TODO Fix me for new recusive function
 class AfterAttackReceived(AfterEvent):
@@ -2349,7 +2347,7 @@ class AfterAttackReceived(AfterEvent):
         # geometric cdf
         turnBuff = self.effectiveBuff * self.eventFactor
         cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
-        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), self.required, cappedTurnBuff)
+        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), self.required - 1, cappedTurnBuff)
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
         elif self.effect in REGULAR_SUPPORT_EFFECTS:
@@ -2388,7 +2386,8 @@ class AfterAttackReceived(AfterEvent):
             self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
-        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
+        if np.any(self.applied):
+            self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
             
 # TODO Fix me for new recusive function
 class AfterGuardActivated(AfterEvent):
@@ -2428,7 +2427,8 @@ class AfterGuardActivated(AfterEvent):
             self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
-        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
+        if np.any(self.applied):
+            self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 # TODO Fix me for new recusive function
 class AfterAttackEvaded(AfterEvent):
@@ -2469,7 +2469,8 @@ class AfterAttackEvaded(AfterEvent):
             self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
-        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
+        if np.any(self.applied):
+            self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 # TODO Fix me for new recusive function
 class AfterAttackReceivedOrEvaded(AfterEvent):
@@ -2501,7 +2502,8 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
             self.setTurnBuff(unit, form, state)
         if self.effect not in REGULAR_SUPPORT_EFFECTS:
             self.nextTurnUpdate(form, state)
-        self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
+        if np.any(self.applied):
+            self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 
 class UntilEvent(PassiveAbility):
