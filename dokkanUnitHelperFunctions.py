@@ -561,7 +561,7 @@ def branchDamageTaken(
     pReceiveAttack = 1 - (pNullify + pE)
     pG = pReceiveAttack * pGuard
     pR = 1 - pNullify - pE - pG
-    attackDamageTaken = np.array([getAttackDamageTaken(pNullify[0], pE[0], pGuard, maxNormalDamage, tdb, dmgRedNormal, defence), getAttackDamageTaken(pNullify[1], pE[1], pGuard, maxSADamage, tdb, dmgRed, defence)])
+    attackDamageTaken = np.array([getAttackDamageTaken(pE[0], pGuard, maxNormalDamage, tdb, dmgRedNormal, defence), getAttackDamageTaken(pE[1], pGuard, maxSADamage, tdb, dmgRed, defence)])
     evasionPostEvade = copy.deepcopy(evasion)
     evasionPostHit = copy.deepcopy(evasion)
     evasionPostEvade.updateChance("Start of Turn", evasionPerAttackEvaded[0], "")
@@ -753,9 +753,9 @@ def branchDamageTaken(
         return attackDamageTaken * (nAB - iB)
 
 
-def getAttackDamageTaken(pNullify, pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
+def getAttackDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
     return min(
-        -(1 - pNullify - pEvade)
+        -(1 - pEvade)
         * min(
             (guard * GUARD_MOD * (maxDamage * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
             + (1 - guard) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)) / AVG_HEALTH,
