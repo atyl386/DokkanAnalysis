@@ -562,15 +562,15 @@ def branchDamageTaken(
     pG = pReceiveAttack * pGuard
     pR = 1 - pNullify - pE - pG
     attackDamageTaken = np.array([getAttackDamageTaken(pNullify[0], pE[0], pGuard, maxNormalDamage, tdb, dmgRedNormal, defence), getAttackDamageTaken(pNullify[1], pE[1], pGuard, maxSADamage, tdb, dmgRed, defence)])
-    evasionPostEvade = copy.copy(evasion)
-    evasionPostHit = copy.copy(evasion)
+    evasionPostEvade = copy.deepcopy(evasion)
+    evasionPostHit = copy.deepcopy(evasion)
     evasionPostEvade.updateChance("Start of Turn", evasionPerAttackEvaded[0], "")
     evasionPostHit.updateChance("Start of Turn", evasionPerAttackReceived[0], "")
     # If last attack in sequence pre super
     if iA >= nAA - 1 and iB == -1:
-        evasionPostEvadeB = copy.copy(evasionPostEvade)
+        evasionPostEvadeB = copy.deepcopy(evasionPostEvade)
         evasionPostEvadeB.updateChance("Start of Turn", pEvadeB, "")
-        evasionPostHitB = copy.copy(evasionPostHit)
+        evasionPostHitB = copy.deepcopy(evasionPostHit)
         evasionPostHitB.updateChance("Start of Turn", pEvadeB, "")
         # mulitply by extra factor if only part is expected. 0 =< nAA - iA < 1 )
         return attackDamageTaken * (nAA - iA) + pE * branchDamageTaken(
