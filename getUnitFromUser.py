@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - TEQ SS Vegeta, Berserk Kale, Hirudegarn have quite big discrepancies
+# - TEQ SS Vegeta, Berserk Kale (+3 turns not behaving as expected :()), Hirudegarn have quite big discrepancies
 # - Simplify getEventFactor code
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
@@ -2397,8 +2397,8 @@ class AfterAttackReceived(AfterAttackDirected):
         else:
             self.setEventFactor(state)
             self.setTurnBuff(unit, form, state)
-        if self.effect not in REGULAR_SUPPORT_EFFECTS:
-            self.nextTurnUpdate(form, state)
+            if self.effect not in REGULAR_SUPPORT_EFFECTS:
+                self.nextTurnUpdate(form, state)
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
@@ -2837,4 +2837,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(110, "DF_PHY_God_Toppo", 5, "DEF", "DGE", "ADD", [1, 1, 1, 1, 1, 1, 2, 2, 2, 1])
+    unit = Unit(17, "DF_AGL_Berserk_kale", 5, "DEF", "DGE", "ADD", [3, 2, 2, 2, 2, 2, 2, 2, 2, 1])
