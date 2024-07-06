@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - PHY CLR Goegeta, LR Janemba, CLR SS Trio (after dmgRed wears off), TEQ SS Vegeta, SS3 Gotenks turn 3
+# - TEQ SS Vegeta, Hirudegarn have quite big discrepancies
 # - Simplify getEventFactor code
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
@@ -2093,7 +2093,7 @@ class PerAttackPerformed(PerEvent):
             turnBuff = self.effectiveBuff * state.attacksPerformed
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        cappedCumBuffPerAttack = np.minimum(cumBuffPerAttack, buffToGo)
+        cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         if not (self.requiresSuperAttack):
             match self.effect:
@@ -2128,7 +2128,7 @@ class PerAttackReceived(PerEvent):
         turnBuff = self.effectiveBuff * state.numAttacksReceived
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff, key=abs)
-        cappedCumBuffPerAttack = np.minimum(cumBuffPerAttack, buffToGo)
+        cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Ki":
@@ -2158,7 +2158,7 @@ class PerAttackReceivedOrEvaded(PerEvent):
         turnBuff = self.effectiveBuff * numAttacksDirected
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        cappedCumBuffPerAttack = np.minimum(cumBuffPerAttack, buffToGo)
+        cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Dmg Red":
@@ -2177,7 +2177,7 @@ class PerAttackGuarded(PerEvent):
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
         form.carryOverBuffs[self.effect].add(cappedTurnBuff)
-        cappedCumBuffPerAttack = np.minimum(cumBuffPerAttack, buffToGo)
+        cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Ki":
@@ -2204,7 +2204,7 @@ class PerAttackEvaded(PerEvent):
         turnBuff = self.effectiveBuff * state.numAttacksEvaded
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
-        cappedCumBuffPerAttack = np.minimum(cumBuffPerAttack, buffToGo)
+        cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Ki":
@@ -2837,4 +2837,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(67, "CLR_PHY_Gogeta_Blue", 5, "ATK", "ADD", "CRT", [3, 3, 1, 1, 1, 1, 1, 1, 1, 1])
+    unit = Unit(110, "DF_PHY_God_Toppo", 5, "DEF", "DGE", "ADD", [1, 1, 1, 1, 1, 1, 2, 2, 2, 1])
