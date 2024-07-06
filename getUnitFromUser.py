@@ -5,7 +5,8 @@ import math
 import click as clc
 
 # TODO:
-# - Not correctly modelling guard after frts attack reicevd
+# - PHY CLR Goegeta, LR Janemba, CLR SS Trio (after dmgRed wears off), TEQ SS Vegeta, SS3 Gotenks turn 3
+# - Simplify getEventFactor code
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
@@ -469,7 +470,7 @@ class Unit:
             else:
                 #state.numAttacksEvaded = branchAttacksEvaded(0, -1, state.numAttacksDirectedBeforeAttacking, state.numAttacksDirectedAfterAttacking, state.multiChanceBuff["EvasionA"], state.multiChanceBuff["EvasionB"].chances["Start of Turn"] - state.multiChanceBuff["EvasionA"].chances["Start of Turn"], state.buff["Disable Evasion Cancel"], state.evasionPerAttackReceived, state.evasionPerAttackEvaded)
                 #state.numAttacksReceived = state.numAttacksDirected - state.numAttacksEvaded
-                form.numAttacksGuarded += state.buff["Guard"] * state.numAttacksReceived
+                form.numAttacksGuarded += state.guard * state.numAttacksReceived
                 form.numAttacksEvaded += state.numAttacksEvaded
                 form.numAttacksReceived += state.numAttacksReceived
                 self.nextForm = form.checkCondition(
@@ -1240,7 +1241,6 @@ class State:
         self.buff = {
             "Ki": LEADER_SKILL_KI + form.carryOverBuffs["Ki"].get(),
             "AEAAT": 0,
-            "Guard": form.carryOverBuffs["Guard"].get(),
             "Disable Guard": 0,
             "Heal": 0,
             "Damage Dealt Heal": 0,
@@ -1280,6 +1280,7 @@ class State:
         self.dmgRedNormalB = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedA = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedB = form.carryOverBuffs["Dmg Red"].get()
+        self.guard = form.carryOverBuffs["Guard"].get()
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
         self.numNormalAttacksDirectedBeforeAttacking = NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
@@ -1336,7 +1337,7 @@ class State:
         self.pAttack = 1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]
         self.pNextAttack = self.pAttack - PROBABILITY_KILL_ENEMY_PER_ATTACK
         setAttacksPerformed(unit, self)
-        self.buff["Guard"] = min(self.buff["Guard"], 1)
+        self.guard = min(self.guard, 1)
         self.avgDefPreSuper = getDefStat(
             unit.DEF,
             self.p1Buff["DEF"],
@@ -1472,7 +1473,7 @@ class State:
             self.p2DefB,
             self.multiChanceBuff["EvasionA"],
             self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
-            self.buff["Guard"],
+            self.guard,
             self.dmgRedA,
             self.dmgRedNormalA,
             self.dmgRedB - self.dmgRedA,
@@ -1919,6 +1920,8 @@ class Buff(PassiveAbility):
                     case "Dmg Red against Normals":
                         state.dmgRedNormalA += effectiveBuff
                         state.dmgRedNormalB += effectiveBuff
+                    case "Guard":
+                        state.guard += effectiveBuff
                     case "Dmg Red":
                         state.dmgRedA += effectiveBuff
                         state.dmgRedB += effectiveBuff
@@ -2168,7 +2171,7 @@ class PerAttackGuarded(PerEvent):
 
     def applyToState(self, state, unit=None, form=None):
         cumBuffPerAttack = self.effectiveBuff * (np.arange(NUM_ATTACKS_PER_TURN) + 1)
-        turnBuff = self.effectiveBuff * state.numAttacksReceived * state.buff["Guard"]
+        turnBuff = self.effectiveBuff * state.numAttacksReceived * state.guard
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff)
         form.carryOverBuffs[self.effect].add(cappedTurnBuff)
@@ -2272,6 +2275,8 @@ class AfterEvent(PassiveAbility):
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.atkModifier = state.getAvgAtkMod(form, unit)
+                case "Guard":
+                    state.guard += cappedTurnBuff
                 case "Dmg Red":
                     state.dmgRedA += cappedTurnBuff
                     state.dmgRedB += cappedTurnBuff
@@ -2325,29 +2330,16 @@ class AfterAttackPerformed(AfterEvent):
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
-# TODO Fix me for new recusive function
-class AfterAttackReceived(AfterEvent):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
 
-    def setEventFactor(self, state):
-        # If buff is a defensive one
-        if self.effect in ["DEF", "Dmg Red", "Evasion", "Guard"]:
-            self.eventFactor = 1
-        else:
-            if self.threshold == 1:
-                self.eventFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
-            else:
-                if self.required == 0:
-                    self.eventFactor = 1
-                else:
-                    self.eventFactor = 0
+class AfterAttackDirected(AfterEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, threshold=1):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, threshold)
     
     def setTurnBuff(self, unit, form, state):
         # geometric cdf
         turnBuff = self.effectiveBuff * self.eventFactor
         cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
-        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), self.required - 1, cappedTurnBuff)
+        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), min(round(self.required - 1), NUM_ATTACKS_PER_TURN - 1), cappedTurnBuff)
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
         elif self.effect in REGULAR_SUPPORT_EFFECTS:
@@ -2367,11 +2359,30 @@ class AfterAttackReceived(AfterEvent):
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.atkModifier = state.getAvgAtkMod(form, unit)
+                case "Guard":
+                    state.guardPerAttackReceived += cappedBuffPerAttack
                 case "Dmg Red":
                     state.dmgRedPerAttackReceived += cappedBuffPerAttack
                 case "Evasion":
                     state.evasionPerAttackReceived += cappedBuffPerAttack
 
+
+class AfterAttackReceived(AfterAttackDirected):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
+
+    def setEventFactor(self, state):
+        # If buff is a defensive one
+        if self.effect in ["DEF", "Dmg Red", "Evasion", "Guard"]:
+            self.eventFactor = 1
+        else:
+            if self.threshold == 1:
+                self.eventFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
+            else:
+                if self.required == 0:
+                    self.eventFactor = 1
+                else:
+                    self.eventFactor = 0
 
     def applyToState(self, state, unit=None, form=None):
         self.increment = state.numAttacksReceived
@@ -2388,26 +2399,22 @@ class AfterAttackReceived(AfterEvent):
             self.nextTurnUpdate(form, state)
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
-            
-# TODO Fix me for new recusive function
-class AfterGuardActivated(AfterEvent):
+
+          
+class AfterGuardActivated(AfterAttackDirected):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
 
     def setEventFactor(self, state):
-        # Need the + 1 to account for the hit you take when you first guard the attack, i.e. is the expected number of unguarded attacks + 1 before ability activates
-        if state.buff["Guard"] == 0:
+        if state.guard == 0:
             self.eventFactor = 0
         else:
-            attacksToActivate = 1 / state.buff["Guard"] if self.threshold == 0 else self.required / state.buff["Guard"]
             # If buff is a defensive one
             if self.effect in ["DEF", "Dmg Red", "Guard"]:
-                self.eventFactor = max(
-                    state.numAttacksReceived - attacksToActivate
-                , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
+                self.eventFactor = 1
             else:
                 if self.threshold == 1:
-                    self.eventFactor = min(state.numAttacksReceivedBeforeAttacking * state.buff["Guard"], 1)
+                    self.eventFactor = min(state.numAttacksReceivedBeforeAttacking * state.guard, 1)
                 else:
                     if self.required == 0:
                         self.eventFactor = 1
@@ -2416,10 +2423,10 @@ class AfterGuardActivated(AfterEvent):
 
 
     def applyToState(self, state, unit=None, form=None):
-        self.increment = state.numAttacksReceived * state.buff["Guard"]
+        self.increment = state.numAttacksReceived * state.guard
         self.updateBuffToGo()
         if self.threshold > 1:
-            self.required = max(self.threshold - form.numAttacksReceived * state.buff["Guard"], 0)
+            self.required = max(self.threshold - form.numAttacksReceived * state.guard, 0)
         if np.any(self.applied):
             self.resetAppliedBuffs(form, state)
         else:
@@ -2430,23 +2437,16 @@ class AfterGuardActivated(AfterEvent):
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
-# TODO Fix me for new recusive function
-class AfterAttackEvaded(AfterEvent):
+
+class AfterAttackEvaded(AfterAttackDirected):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
         self.nextAttackingTurn = yesNo2Bool[args[2]]
 
     def setEventFactor(self, state):
-        pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
-        numHitsBeforeDodgeOnce = (1 - pEvade) / pEvade
-        attacksToActivate = self.required * numHitsBeforeDodgeOnce
-        if self.threshold > 1:
-            self.eventFactor = 1 - poisson.cdf(self.required - 1, state.numAttacksEvaded)
         # If buff is a defensive one
-        elif self.effect in ["DEF", "Dmg Red", "Evasion"]:
-            self.eventFactor = max(
-                state.numAttacksReceived - attacksToActivate
-            , 0) / state.numAttacksReceived  # Factor to account for not having the buff on the fist hit
+        if self.effect in ["DEF", "Dmg Red", "Evasion"]:
+            self.eventFactor = 1
         else:
             if self.threshold == 1:
                 self.eventFactor = min(state.numAttacksEvadedBeforeAttacking, 1)
@@ -2472,15 +2472,15 @@ class AfterAttackEvaded(AfterEvent):
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
-# TODO Fix me for new recusive function
-class AfterAttackReceivedOrEvaded(AfterEvent):
+
+class AfterAttackReceivedOrEvaded(AfterAttackDirected):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
     
     def setEventFactor(self, state):
         # If buff is a defensive one
         if self.effect in ["DEF", "Dmg Red", "Evasion"]:
-            self.eventFactor = max(state.numAttacksDirected - self.required, 0) / state.numAttacksDirected  # Factor to account for not having the buff on the fist hit
+            self.eventFactor = 1
         else:
             if self.threshold == 1:
                 self.eventFactor = min(state.numAttacksDirectedBeforeAttacking, 1)
@@ -2523,6 +2523,8 @@ class UntilEvent(PassiveAbility):
                     state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", turnBuff, "Evasion", state)
                 case "P2 DEF B":
                     state.p2DefB += turnBuff
+                case "Guard":
+                    state.guard += turnBuff
                 case "Dmg Red":
                     state.dmgRedA += turnBuff
                     state.dmgRedB += turnBuff
@@ -2563,6 +2565,8 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                     state.aaPGuarantee.append(0)
                 case "DEF":
                     state.p2Buff["DEF"] += cappedTurnBuff
+                case "Guard":
+                    state.guard += cappedTurnBuff
                 case "Dmg Red":
                     state.dmgRedA += cappedTurnBuff
                     state.dmgRedB += cappedTurnBuff
@@ -2679,6 +2683,8 @@ class KiSphereDependent(PerEvent):
                 case "Dmg Red against Normals":
                     state.dmgRedNormalA += buffFromOrbs
                     state.dmgRedNormalB += buffFromOrbs
+                case "Guard":
+                    state.guard += buffFromOrbs
                 case "Dmg Red":
                     state.dmgRedA += buffFromOrbs
                     state.dmgRedB += buffFromOrbs
@@ -2829,4 +2835,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(184, "BU_INT_Dark_Masked_King", 5, "DEF", "DGE", "CRT", [1, 2, 2, 2, 2, 2, 2, 2, 2, 2])
+    unit = Unit(218, "DFLR_TEQ_UI_Goku", 5, "ATK", "ADD", "DGE", SLOT_1)
