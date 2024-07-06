@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - TEQ SS Vegeta, Hirudegarn have quite big discrepancies
+# - Hirudegarn have quite big discrepancies, CLR SS Goku
 # - Simplify getEventFactor code
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
@@ -1465,21 +1465,20 @@ class State:
             form.superAttacks["18 Ki"].effects["Crit"].buff,
         )
         self.getAvgDefMult(form, unit)
-        self.normalDamageTaken, self.saDamageTaken = branchDamageTaken(
+        self.normalDamageTaken = branchDamageTaken(
             0,
             -1,
-            self.numAttacksDirectedBeforeAttacking,
-            self.numAttacksDirectedAfterAttacking,
+            self.numNormalAttacksDirectedBeforeAttacking,
+            self.numNormalAttacksDirectedAfterAttacking,
             self.p2Buff["DEF"],
             self.p2DefB,
             self.multiChanceBuff["EvasionA"],
             self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
             self.guard,
-            self.dmgRedA,
             self.dmgRedNormalA,
             self.dmgRedB - self.dmgRedA,
-            np.array([0, self.multiChanceBuff["Nullify"].prob]),
-            self.avgDefPreSuper,
+            0,
+            copy.deepcopy(self.avgDefPreSuper),
             self.stackedStats["DEF"],
             self.avgDefMult,
             self.buff["Disable Evasion Cancel"],
@@ -1491,13 +1490,37 @@ class State:
             self.evasionPerAttackEvaded,
             self.guardPerAttackReceived,
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
+            unit.TDB,
+        )
+        self.saDamageTaken = branchDamageTaken(
+            0,
+            -1,
+            self.numSuperAttacksDirectedBeforeAttacking,
+            self.numSuperAttacksDirectedAfterAttacking,
+            self.p2Buff["DEF"],
+            self.p2DefB,
+            self.multiChanceBuff["EvasionA"],
+            self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
+            self.guard,
+            self.dmgRedA,
+            self.dmgRedB - self.dmgRedA,
+            self.multiChanceBuff["Nullify"].prob,
+            self.avgDefPreSuper,
+            self.stackedStats["DEF"],
+            self.avgDefMult,
+            self.buff["Disable Evasion Cancel"],
+            self.defPerAttackReceived,
+            self.defPerAttackEvaded,
+            self.defPerAttackGuarded,
+            self.dmgRedPerAttackReceived,
+            self.evasionPerAttackReceived,
+            self.evasionPerAttackEvaded,
+            self.guardPerAttackReceived,
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
         )
         self.buff["Heal"] += form.linkEffects["Heal"] + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + ((0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR) / AVG_HEALTH
         self.buff["Heal"] = min(self.buff["Heal"], 1)
-        self.normalDamageTaken *= (self.numNormalAttacksDirectedBeforeAttacking + self.numNormalAttacksDirectedAfterAttacking) / self.numAttacksDirected
-        self.saDamageTaken *= (self.numSuperAttacksDirectedBeforeAttacking + self.numSuperAttacksDirectedAfterAttacking) / self.numAttacksDirected
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
         self.useability = (
             unit.teams
