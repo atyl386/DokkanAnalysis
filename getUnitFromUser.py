@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - TEQ SS Vegeta, Hirudegarn have quite big discrepancies
+# - TEQ SS Vegeta, Berserk Kale, Hirudegarn have quite big discrepancies
 # - Simplify getEventFactor code
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
@@ -1496,8 +1496,8 @@ class State:
         )
         self.buff["Heal"] += form.linkEffects["Heal"] + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + ((0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR) / AVG_HEALTH
         self.buff["Heal"] = min(self.buff["Heal"], 1)
-        self.normalDamageTaken = max(self.normalDamageTaken * (self.numNormalAttacksDirectedBeforeAttacking + self.numNormalAttacksDirectedAfterAttacking) / self.numAttacksDirected, -1)
-        self.saDamageTaken = max(self.saDamageTaken * (self.numSuperAttacksDirectedBeforeAttacking + self.numSuperAttacksDirectedAfterAttacking) / self.numAttacksDirected, -1)
+        self.normalDamageTaken *= (self.numNormalAttacksDirectedBeforeAttacking + self.numNormalAttacksDirectedAfterAttacking) / self.numAttacksDirected
+        self.saDamageTaken *= (self.numSuperAttacksDirectedBeforeAttacking + self.numSuperAttacksDirectedAfterAttacking) / self.numAttacksDirected
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
         self.useability = (
             unit.teams
