@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - TEQ SS Vegeta has some pretty big discrepancies - is becuase of disable? - why is self.numNormalAttacksDirectedAfterAttacking going negative?
+# - TEQ SS Vegeta has some pretty big discrepancies - is becuase of disable? - INT Hit is also weird
 # - PHY CLR Goegeta, LR Janemba, CLR SS Trio (after dmgRed wears off), TEQ SS Vegeta, SS3 Gotenks turn 3
 # - Simplify getEventFactor code
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
@@ -2838,4 +2838,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(100, "DF_TEQ_SS_Vegeta", 5, "ATK", "CRT", "ADD", SLOT_1)
+    unit = Unit(210, "BU_INT_Hit", 5, "DEF", "DGE", "ADD", SLOT_2)
