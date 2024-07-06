@@ -392,7 +392,7 @@
 				</ultra_super_attack>
 			</super_attack>
 			<default>
-				<input prompt="How many unconditional buffs does the form have?" response="7" />
+				<input prompt="How many unconditional buffs does the form have?" response="8" />
 				<ability_1>
 					<input prompt="What type of buff does the unit get?" response="Ki" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
@@ -428,6 +428,11 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.26" />
 				</ability_7>
+				<ability_8>
+					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+				</ability_8>
 			</default>
 			<turn_dpendent>
 				<input prompt="How many turn dependent buffs does the form have?" response="0" />
@@ -503,14 +508,7 @@
 				<input prompt="How many per ki buffs does the form have?" response="0" />
 			</per_ki>
 			<after_receive_attack>
-				<input prompt="How many different buffs does the form get after receiving an attack?" response="1" />
-				<ability_1>
-					<input prompt="How many turns does the buff last?" response="1" />
-					<input prompt="What type of buff does the unit get?" response="DEF" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.5" />
-					<input prompt="How many attacks received are required?" response="1" />
-				</ability_1>
+				<input prompt="How many different buffs does the form get after receiving an attack?" response="0" />
 			</after_receive_attack>
 			<after_guard_attack>
 				<input prompt="How many different buffs does the form get after guarding an attack?" response="0" />
