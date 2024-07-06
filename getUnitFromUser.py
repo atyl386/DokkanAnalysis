@@ -5,7 +5,8 @@ import math
 import click as clc
 
 # TODO:
-#CLR Phy Gogeta - Turj 9 normal damage post super is different between v2.0 and feature/addBounds
+# - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
+# - TEQ SS Vegeta has some pretty big discrepancies - is becuase of disable? - why is self.numNormalAttacksDirectedAfterAttacking going negative?
 # - PHY CLR Goegeta, LR Janemba, CLR SS Trio (after dmgRed wears off), TEQ SS Vegeta, SS3 Gotenks turn 3
 # - Simplify getEventFactor code
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
@@ -1370,9 +1371,9 @@ class State:
                     )
                 )
                 self.support += supportFactor * numSupers
-            pDisableSuper = numSupers * P_DISABLE_SUPER * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
+            pDisableSuper = min(numSupers, 1) * P_DISABLE_SUPER * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
             self.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-            pDisableNormal = numSupers * min(1, self.numNormalAttacksDirectedAfterAttacking) * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
+            pDisableNormal = min(numSupers, 1) * min(1, self.numNormalAttacksDirectedAfterAttacking) * form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
             self.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
             self.numAttacksDirected -= pDisableNormal
             self.numAttacksDirectedAfterAttacking -= pDisableNormal
@@ -2837,4 +2838,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(67, "CLR_PHY_Gogeta_Blue", 5, "ATK", "ADD", "CRT", [3, 3, 1, 1, 1, 1, 1, 1, 1, 1])
+    unit = Unit(100, "DF_TEQ_SS_Vegeta", 5, "ATK", "CRT", "ADD", SLOT_1)
