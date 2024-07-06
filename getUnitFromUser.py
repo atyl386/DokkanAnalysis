@@ -5,9 +5,8 @@ import math
 import click as clc
 
 # TODO:
-# - Do I need to fix the "" for evasion buffs in branchDamageTaken() ?
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - Hirudegarn have quite big discrepancies, CLR SS Goku
+# - Hirudegarn and MUI have quite big discrepancies
 # - Simplify getEventFactor code
 # - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
