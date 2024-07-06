@@ -6,9 +6,8 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - Hirudegarn and MUI have quite big discrepancies
+# - Hirudegarn and MUI have quite big discrepancies - hirudegarn because ned additional argument to say it is within the turn
 # - Simplify getEventFactor code
-# - Buff.applyToState() EvasionB bug fix: EvasionA -> EvasionB
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
 # - Instead of doing damage recieved "on average" from attacks received, should instead simulate each attack separately, e.g. hirudegarn
@@ -1478,7 +1477,7 @@ class State:
             self.dmgRedNormalA,
             self.dmgRedB - self.dmgRedA,
             0,
-            copy.deepcopy(self.avgDefPreSuper),
+            self.avgDefPreSuper,
             self.stackedStats["DEF"],
             self.avgDefMult,
             self.buff["Disable Evasion Cancel"],
@@ -2356,15 +2355,15 @@ class AfterAttackPerformed(AfterEvent):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 
-class AfterAttackDirected(AfterEvent):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, threshold=1):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, effectDuration, threshold)
+class AfterAttackReceived(AfterEvent):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
     
     def setTurnBuff(self, unit, form, state):
         # geometric cdf
         turnBuff = self.effectiveBuff * self.eventFactor
         cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
-        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), min(round(self.required - 1), NUM_ATTACKS_PER_TURN - 1), cappedTurnBuff)
+        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1), cappedTurnBuff)
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
         elif self.effect in REGULAR_SUPPORT_EFFECTS:
@@ -2390,11 +2389,6 @@ class AfterAttackDirected(AfterEvent):
                     state.dmgRedPerAttackReceived += cappedBuffPerAttack
                 case "Evasion":
                     state.evasionPerAttackReceived += cappedBuffPerAttack
-
-
-class AfterAttackReceived(AfterAttackDirected):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
 
     def setEventFactor(self, state):
         # If buff is a defensive one
@@ -2426,9 +2420,35 @@ class AfterAttackReceived(AfterAttackDirected):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
           
-class AfterGuardActivated(AfterAttackDirected):
+class AfterGuardActivated(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
+    
+    def setTurnBuff(self, unit, form, state):
+        # geometric cdf
+        turnBuff = self.effectiveBuff * self.eventFactor
+        cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
+        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1), cappedTurnBuff)
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += cappedTurnBuff
+        elif self.effect in REGULAR_SUPPORT_EFFECTS:
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
+        else:
+            match self.effect:
+                case "ATK":
+                    state.p2Buff["ATK"] += cappedTurnBuff
+                case "DEF":
+                    state.defPerAttackGuarded += cappedBuffPerAttack
+                case "AdditionalSuper":
+                    state.aaPSuper.append(cappedTurnBuff)
+                    state.aaPGuarantee.append(0)
+                case "AAChance":
+                    state.aaPGuarantee.append(cappedTurnBuff)
+                    state.aaPSuper.append(cappedTurnBuff * self.superChance)
+                case "Crit":
+                    state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
+                    state.atkModifier = state.getAvgAtkMod(form, unit)
+
 
     def setEventFactor(self, state):
         if state.guard == 0:
@@ -2463,10 +2483,37 @@ class AfterGuardActivated(AfterAttackDirected):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 
-class AfterAttackEvaded(AfterAttackDirected):
+class AfterAttackEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
         self.nextAttackingTurn = yesNo2Bool[args[2]]
+    
+    def setTurnBuff(self, unit, form, state):
+        # geometric cdf
+        turnBuff = self.effectiveBuff * self.eventFactor
+        cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
+        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1), cappedTurnBuff)
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += cappedTurnBuff
+        elif self.effect in REGULAR_SUPPORT_EFFECTS:
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
+        else:
+            match self.effect:
+                case "ATK":
+                    state.p2Buff["ATK"] += cappedTurnBuff
+                case "DEF":
+                    state.defPerAttackEvaded += cappedBuffPerAttack
+                case "AdditionalSuper":
+                    state.aaPSuper.append(cappedTurnBuff)
+                    state.aaPGuarantee.append(0)
+                case "AAChance":
+                    state.aaPGuarantee.append(cappedTurnBuff)
+                    state.aaPSuper.append(cappedTurnBuff * self.superChance)
+                case "Crit":
+                    state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
+                    state.atkModifier = state.getAvgAtkMod(form, unit)
+                case "Evasion":
+                    state.evasionPerAttackEvaded += cappedBuffPerAttack
 
     def setEventFactor(self, state):
         # If buff is a defensive one
@@ -2497,10 +2544,41 @@ class AfterAttackEvaded(AfterAttackDirected):
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
-
-class AfterAttackReceivedOrEvaded(AfterAttackDirected):
+# Fix  - should have a state.defPerAttackReceivedOrEvaded
+class AfterAttackReceivedOrEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+    
+    def setTurnBuff(self, unit, form, state):
+        # geometric cdf
+        turnBuff = self.effectiveBuff * self.eventFactor
+        cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
+        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1), cappedTurnBuff)
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += cappedTurnBuff
+        elif self.effect in REGULAR_SUPPORT_EFFECTS:
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
+        else:
+            match self.effect:
+                case "ATK":
+                    state.p2Buff["ATK"] += cappedTurnBuff
+                case "DEF":
+                    state.defPerAttackReceived += cappedBuffPerAttack
+                case "AdditionalSuper":
+                    state.aaPSuper.append(cappedTurnBuff)
+                    state.aaPGuarantee.append(0)
+                case "AAChance":
+                    state.aaPGuarantee.append(cappedTurnBuff)
+                    state.aaPSuper.append(cappedTurnBuff * self.superChance)
+                case "Crit":
+                    state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
+                    state.atkModifier = state.getAvgAtkMod(form, unit)
+                case "Guard":
+                    state.guardPerAttackReceived += cappedBuffPerAttack
+                case "Dmg Red":
+                    state.dmgRedPerAttackReceived += cappedBuffPerAttack
+                case "Evasion":
+                    state.evasionPerAttackReceived += cappedBuffPerAttack
     
     def setEventFactor(self, state):
         # If buff is a defensive one
@@ -2860,4 +2938,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(1, "CLR_TEQ_SS_Goku", 5, "DGE", "DGE", "CRT", [1, 2, 2, 2, 2, 2, 2, 2, 1, 1])
+    unit = Unit(35, "DF_INT_Hirudegarn", 5, "ATK", "ADD", "CRT", [3, 1, 1, 1, 1, 1, 1, 1, 1, 1])
