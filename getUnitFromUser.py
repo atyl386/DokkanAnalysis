@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - Hirudegarn and MUI have quite big discrepancies - hirudegarn because ned additional argument to say it is within the turn
+# - Evo Blue and MUI have quite big discrepancies
 # - Simplify getEventFactor code
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
@@ -1153,11 +1153,10 @@ class CarryOverBuff:
         else:
             self.value += value
     def sub(self, value):
-        if self.value != []:
-            if self.effect in ADDITIONAL_ATTACK_PARAMETERS:
-                self.value.remove(value)
-            else:
-                self.value -= value
+        if self.effect in ADDITIONAL_ATTACK_PARAMETERS:
+            self.value.remove(value)
+        else:
+            self.value -= value
 
 
 class Link:
@@ -2253,6 +2252,7 @@ class AfterEvent(PassiveAbility):
         self.threshold = threshold
         self.required = threshold
         self.increment = 0
+        self.isNextTurnBuff = False
         if effect in ADDITIONAL_ATTACK_EFFECTS:
             self.applied = [0, 0]
         else:
@@ -2313,7 +2313,7 @@ class AfterEvent(PassiveAbility):
 
     def nextTurnUpdate(self, form, state):
         # If abiltiy going to be active next turn
-        if not(np.any(self.applied)) and self.increment - self.required >= 0 and self.effectDuration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+        if not(np.any(self.applied)) and (self.increment - self.required >= 0 or self.isNextTurnBuff) and self.effectDuration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 form.carryOverBuffs["aaPSuper"].add(state.aaPSuper[-1])
                 form.carryOverBuffs["aaPGuarantee"].add(state.aaPGuarantee[-1])
@@ -2531,14 +2531,25 @@ class AfterAttackEvaded(AfterEvent):
 
     def applyToState(self, state, unit=None, form=None):
         self.increment = state.numAttacksEvaded
+        if self.nextAttackingTurn:
+            if np.any(self.applied):
+                self.isNextTurnBuff = False
+                self.resetAppliedBuffs(form, state)
+            else:
+                self.isNextTurnBuff = True
+                self.effectiveBuff = 1 - poisson.cdf(self.threshold - 1, self.increment)
         self.updateBuffToGo()
         if self.threshold > 1:
-            self.required = max(self.threshold - form.numAttacksEvaded, 0)
+            if not(self.isNextTurnBuff):
+                self.required = 99
+            else:
+                self.required = max(self.threshold - form.numAttacksEvaded, 0)
         if np.any(self.applied):
             self.resetAppliedBuffs(form, state)
         else:
             self.setEventFactor(state)
-            self.setTurnBuff(unit, form, state)
+            if not(self.nextAttackingTurn):
+                self.setTurnBuff(unit, form, state)
             if self.effect not in REGULAR_SUPPORT_EFFECTS:
                 self.nextTurnUpdate(form, state)
         if np.any(self.applied):
