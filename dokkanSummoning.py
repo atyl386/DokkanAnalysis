@@ -90,6 +90,7 @@ class Banner:
         threePlus1=False,
         gFeatured=False,
         gFeaturedEvery3=False,
+        anniversaryFormat=False,
     ):
         self.units = np.mean([SummonRating(unit) for unit in units])
         if coin == "red" or coin == "cyan":
@@ -114,7 +115,11 @@ class Banner:
             self.threePlus1 = 4 / 3
         else:
             self.threePlus1 = 1
-        self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount
+        if anniversaryFormat:
+            self.anniBonus = (6 + (1 + 9 * SSR_rate * featuredSSR_rate) / (10 * 0.1 * 0.5)) / ((30 + 40 + 50 + 0 + 40 + 45 + 50)/50)
+        else:
+            self.anniBonus = 1 
+        self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus
 
     def shouldSummmon(self):
         if self.summonScore > 20:  # Will need to be tuned
@@ -132,15 +137,13 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-FirstFormFrieza = Banner([97, 96, 98, 28, 186, 31, 30], "red", discount=6*50/(35+40+45))
-print(FirstFormFrieza.summonScore)
-DBS_Broly = Banner([54, 55, 56, 57, 58, 59, 2, 4, 65, 66], "red", threePlus1=True, tickets=True)
+DBS_Broly = Banner([54, 55, 56, 57, 58, 59, 2, 4, 65, 66], "red", anniversaryFormat=True)
 print(DBS_Broly.summonScore)
-Blue_Gogeta = Banner([54, 54, 49, 50, 54, 51, 22, 52, 53, 67], "cyan", threePlus1=True, tickets=True)
+Blue_Gogeta = Banner([54, 54, 49, 50, 54, 51, 22, 52, 53, 67], "cyan", anniversaryFormat=True)
 print(Blue_Gogeta.summonScore)
-Beast_Gohan = Banner([81, 82, 63, 3, 62, 61, 90, 91, 103, 104], "red", threePlus1=True, tickets=True)
+Beast_Gohan = Banner([81, 82, 63, 3, 62, 61, 90, 91, 103, 104], "red", anniversaryFormat=True)
 print(Beast_Gohan.summonScore)
-Gammas = Banner([83, 64, 23, 1, 25, 105, 106, 104, 104, 104], "cyan", threePlus1=True, tickets=True)
+Gammas = Banner([83, 64, 23, 1, 25, 105, 106, 104, 104, 104], "cyan", anniversaryFormat=True)
 print(Gammas.summonScore)
 # WWDL_1 = Banner([14,68,67,20,13,11,13,96,81,57,86,25,58,60,59,137,13,158,13,13,13,13,98,13,13,13,88,93,13,13,67,13,13,13,97,13,13,13,13,13,13,13,13,13,13,13,13,13,13],'red')
 # print(WWDL_1.summonScore)
