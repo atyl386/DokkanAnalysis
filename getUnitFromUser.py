@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - Evo Blue and MUI have quite big discrepancies
+# - Evo Blue, LR SS4 Goku and MUI and Baby Janemba (after evading attack ability), have quite big discrepancies
 # - Simplify getEventFactor code
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
@@ -2540,7 +2540,7 @@ class AfterAttackEvaded(AfterEvent):
                 self.effectiveBuff = (1 - state.multiChanceBuff["EvasionA"].chances["Start of Turn"]) * (1 - poisson.cdf(self.threshold - 1, self.increment))
         self.updateBuffToGo()
         if self.threshold > 1:
-            if not(self.isNextTurnBuff):
+            if not(self.isNextTurnBuff) and self.nextAttackingTurn:
                 self.required = 99
             else:
                 self.required = max(self.threshold - form.numAttacksEvaded, 0)
@@ -2949,4 +2949,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(35, "DF_INT_Hirudegarn", 5, "ATK", "ADD", "CRT", [3, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+    unit = Unit(186, "BU_AGL_SS2_Future_Trunks", 5, "DEF", "DGE", "ADD", SLOT_1)
