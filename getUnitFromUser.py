@@ -2537,7 +2537,7 @@ class AfterAttackEvaded(AfterEvent):
                 self.resetAppliedBuffs(form, state)
             else:
                 self.isNextTurnBuff = True
-                self.effectiveBuff = 1 - poisson.cdf(self.threshold - 1, self.increment)
+                self.effectiveBuff = (1 - state.multiChanceBuff["EvasionA"].chances["Start of Turn"]) * (1 - poisson.cdf(self.threshold - 1, self.increment))
         self.updateBuffToGo()
         if self.threshold > 1:
             if not(self.isNextTurnBuff):
