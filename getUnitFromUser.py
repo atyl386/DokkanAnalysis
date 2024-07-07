@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - Evo Blue, LR SS4 Goku and MUI and Baby Janemba (after evading attack ability), have quite big discrepancies
+# - Evo Blue, LR SS4 Goku have quite big discrepancies because I haven't correctly modelled the received or evaded ability. Same for TEQ UI since I haven't modelled until attacks
 # - Simplify getEventFactor code
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
@@ -2949,4 +2949,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(186, "BU_AGL_SS2_Future_Trunks", 5, "DEF", "DGE", "ADD", SLOT_1)
+    unit = Unit(90, "DFLR_AGL_MUI_Goku", 5, "ATK", "ADD", "CRT", SLOT_1)
