@@ -841,7 +841,7 @@
     </_105>
     <_106>
         <common_name value="LR_INT_SSR_Goku_Black" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -913,7 +913,7 @@
     </_114>
     <_115>
         <common_name value="LR_STR_Beerus_Whis" />
-        <num_copies value="4" />
+        <num_copies value="5" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -961,7 +961,7 @@
     </_120>
     <_121>
         <common_name value="LR_AGL_Golden_Frieza" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
