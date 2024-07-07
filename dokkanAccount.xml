@@ -1767,4 +1767,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_221>
+    <_222>
+        <common_name value="LR_PHY_Android17_Frieza" />
+        <num_copies value="1" />
+        <BRZ_equip value="ATK" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_222>
 </id>
