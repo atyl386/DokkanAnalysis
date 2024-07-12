@@ -128,7 +128,7 @@ class Banner:
             return False
 
 
-#SummonRatings()
+SummonRatings()
 """ Halloween = Banner([115, 116, 83, 68, 64, 5, 78, 63, 62, 20], 'red')
 HalloweenStep2 = Banner([64, 78, 63, 62, 20], 'red')
 HalloweenStep3A = Banner([127, 128, 118, 108, 107, 124, 74, 73, 50, 52], 'red')
