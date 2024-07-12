@@ -506,6 +506,7 @@ CRIT_SUPPORT_100_FACTOR = CRIT_MULTIPLIER / AVG_TYPE_ADVANATGE * ATK_SUPPORT_100
 DMG_RED_SUPPORT_100_FACTOR = 15
 EVASION_SUPPORT_100_FACTOR = 15 * (1 - DODGE_CANCEL_FACTOR)
 DISABLE_EVASION_CANCEL_SUPPORT_FACTOR = 15 * DODGE_CANCEL_FACTOR
+DOMAIN_SUPPORT_FACTOR = 1 # Support buff from negating eneny territory skill
 # Giant/Rage Form
 GIANT_RAGE_SUPPORT = DMG_RED_SUPPORT_100_FACTOR / 2 + 0.5 # Support for nullifying super attacks for a turn, circumvent locking
 GIANT_RAGE_HEAL = 0.2 # allows additional orbs to be collected

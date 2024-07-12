@@ -1681,6 +1681,7 @@ class Domain(SingleTurnAbility):
             start = state.turn
             end = start + self.duration - 1
             params = [start, end]
+            state.support += DOMAIN_SUPPORT_FACTOR
             match self.domainType:
                 case "Increase Damage Received":
                     form.abilities["Start of Turn"].extend([
