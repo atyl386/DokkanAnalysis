@@ -5,7 +5,6 @@ import math
 import click as clc
 
 # TODO:
-# - Get the category names for each unit and then instead of just caring about number, care about how niche the categiries are. I have temporarily increased Broly effective teams from 8 to 10
 # - Why can normal damage be non-zero, but sa damage be 0? E.g. LR Android 17 & Frieza
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
 # - Evo Blue, LR SS4 Goku have quite big discrepancies because I haven't correctly modelled the received or evaded ability. Same for TEQ UI since I haven't modelled until attacks
