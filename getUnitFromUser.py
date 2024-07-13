@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - TEQ UI isn't quite right since I haven't modelled until attacks
+# - Still need to fix some abilities
 # - Simplify getEventFactor code
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
@@ -2635,38 +2635,32 @@ class UntilEvent(PassiveAbility):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.eventFactor = 1
     
-    def setTurnBuff(self, state):
-        # geometric cdf
-        turnBuff = self.effectiveBuff * self.eventFactor
-        if self.effect in state.buff.keys():
-            state.buff[self.effect] += turnBuff
-        else:
-            match self.effect:
-                case "Evasion":
-                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", turnBuff, "Evasion", state)
-                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", turnBuff, "Evasion", state)
-                case "P2 DEF B":
-                    state.p2DefB += turnBuff
-                case "Guard":
-                    state.guard += turnBuff
-                case "Dmg Red":
-                    state.dmgRedA += turnBuff
-                    state.dmgRedB += turnBuff
-                    state.dmgRedNormalA += turnBuff
-                    state.dmgRedNormalB += turnBuff
 
-# TODO Fix me for new recusive function
 class UntilAttackRecieved(UntilEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
 
     def applyToState(self, state, unit=None, form=None):
-        if self.effect == "Evasion":
-            pEvade = (state.multiChanceBuff["EvasionA"].prob + self.effectiveBuff) * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
+        if self.effect in state.buff.keys():
+            state.buff[self.effect] += self.effectiveBuff
         else:
-            pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
-        self.eventFactor = min(pEvade / (1 - pEvade) / round(state.numAttacksDirected), 1)
-        self.setTurnBuff(state)
+            match self.effect:
+                case "Evasion":
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
+                    state.evasionPerAttackReceived[0] -= self.effectiveBuff
+                case "P2 DEF B":
+                    state.p2DefB += self.effectiveBuff
+                    state.defPerAttackReceived[0] -= self.effectiveBuff
+                case "Guard":
+                    state.guard += self.effectiveBuff
+                    state.guardPerAttackReceived[0] -= self.effectiveBuff
+                case "Dmg Red":
+                    state.dmgRedA += self.effectiveBuff
+                    state.dmgRedB += self.effectiveBuff
+                    state.dmgRedNormalA += self.effectiveBuff
+                    state.dmgRedNormalB += self.effectiveBuff
+                    state.dmgRedPerAttackReceived[0] -= self.effectiveBuff
 
 
 class EveryTimeXEventsInBattle(PassiveAbility):
