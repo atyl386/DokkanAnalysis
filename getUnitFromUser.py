@@ -6,7 +6,6 @@ import click as clc
 
 # TODO:
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - Still need to fix some abilities
 # - Simplify getEventFactor code
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
@@ -2723,7 +2722,7 @@ class EveryTimeXAttacksPerformedInBattle(EveryTimeXEventsInBattle):
             self.increment = state.attacksPerformed
         self.applyBuff(unit, state, form)
 
-# TODO Fix me for new recusive function
+
 class EveryTimeXAttacksReceivedInBattle(EveryTimeXEventsInBattle):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args)
