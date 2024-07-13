@@ -5,13 +5,11 @@ import math
 import click as clc
 
 # TODO:
-# - Why can normal damage be non-zero, but sa damage be 0? E.g. LR Android 17 & Frieza
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
-# - Evo Blue, LR SS4 Goku have quite big discrepancies because I haven't correctly modelled the received or evaded ability. Same for TEQ UI since I haven't modelled until attacks
+# - TEQ UI isn't quite right since I haven't modelled until attacks
 # - Simplify getEventFactor code
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Easily make branching functions more effecient by only running if multiplier is 0
-# - Instead of doing damage recieved "on average" from attacks received, should instead simulate each attack separately, e.g. hirudegarn
 # - Implement dodging counters
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
@@ -1294,10 +1292,14 @@ class State:
         self.defPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
         self.defPerAttackEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
         self.defPerAttackGuarded = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.defPerAttackReceivedOrEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
         self.dmgRedPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.dmgRedPerAttackReceivedOrEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
         self.evasionPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
         self.evasionPerAttackEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.evasionPerAttackReceivedOrEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
         self.guardPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.guardPerAttackReceivedOrEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
         # Required for getting APTs for individual attacks
         self.atkPerAttackPerformed = np.zeros(MAX_TURN)
         self.atkPerSuperPerformed = np.zeros(MAX_TURN)
@@ -1484,10 +1486,14 @@ class State:
             self.defPerAttackReceived,
             self.defPerAttackEvaded,
             self.defPerAttackGuarded,
+            self.defPerAttackReceivedOrEvaded,
             self.dmgRedPerAttackReceived,
+            self.dmgRedPerAttackReceivedOrEvaded,
             self.evasionPerAttackReceived,
             self.evasionPerAttackEvaded,
+            self.evasionPerAttackReceivedOrEvaded,
             self.guardPerAttackReceived,
+            self.guardPerAttackReceivedOrEvaded,
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
         )
@@ -1511,10 +1517,14 @@ class State:
             self.defPerAttackReceived,
             self.defPerAttackEvaded,
             self.defPerAttackGuarded,
+            self.defPerAttackReceivedOrEvaded,
             self.dmgRedPerAttackReceived,
+            self.dmgRedPerAttackReceivedOrEvaded,
             self.evasionPerAttackReceived,
             self.evasionPerAttackEvaded,
+            self.evasionPerAttackReceivedOrEvaded,
             self.guardPerAttackReceived,
+            self.guardPerAttackReceivedOrEvaded,
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             unit.TDB,
         )
@@ -2169,7 +2179,6 @@ class PerAttackReceived(PerEvent):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
 
-# TODO Should have a separate dmgRedPerAttackReceivedOrEvaded
 class PerAttackReceivedOrEvaded(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
@@ -2185,7 +2194,7 @@ class PerAttackReceivedOrEvaded(PerEvent):
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Dmg Red":
-                state.dmgRedPerAttackReceived += cappedBuffPerAttack
+                state.dmgRedPerAttackReceivedOrEvaded += cappedBuffPerAttack
         if not (self.withinTheSameTurn):
             form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2557,7 +2566,6 @@ class AfterAttackEvaded(AfterEvent):
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
-# Fix  - should have a state.defPerAttackReceivedOrEvaded
 class AfterAttackReceivedOrEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
@@ -2576,7 +2584,7 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
                 case "ATK":
                     state.p2Buff["ATK"] += cappedTurnBuff
                 case "DEF":
-                    state.defPerAttackReceived += cappedBuffPerAttack
+                    state.defPerAttackReceivedOrEvaded += cappedBuffPerAttack
                 case "AdditionalSuper":
                     state.aaPSuper.append(cappedTurnBuff)
                     state.aaPGuarantee.append(0)
@@ -2587,11 +2595,11 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.atkModifier = state.getAvgAtkMod(form, unit)
                 case "Guard":
-                    state.guardPerAttackReceived += cappedBuffPerAttack
+                    state.guardPerAttackReceivedOrEvaded += cappedBuffPerAttack
                 case "Dmg Red":
-                    state.dmgRedPerAttackReceived += cappedBuffPerAttack
+                    state.dmgRedPerAttackReceivedOrEvaded += cappedBuffPerAttack
                 case "Evasion":
-                    state.evasionPerAttackReceived += cappedBuffPerAttack
+                    state.evasionPerAttackReceivedOrEvaded += cappedBuffPerAttack
     
     def setEventFactor(self, state):
         # If buff is a defensive one
@@ -2951,4 +2959,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(222, "LR_PHY_Android17_Frieza", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(222, "LR_PHY_Android17_Frieza", 5, "ATK", "ADD", "DGE", SLOT_2)
