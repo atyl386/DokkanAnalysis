@@ -1799,4 +1799,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_225>
+    <_226>
+        <common_name value="F2P_PHY_ChiChi" />
+        <num_copies value="5" />
+        <BRZ_equip value="DGE" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_226>
 </id>
