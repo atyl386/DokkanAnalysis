@@ -2952,4 +2952,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(222, "LR_PHY_Android17_Frieza", 5, "ATK", "ADD", "DGE", SLOT_2)
+    unit = Unit(223, "BU_STR_Bardock_Gine", 5, "DEF", "DGE", "ADD", SLOT_2)
