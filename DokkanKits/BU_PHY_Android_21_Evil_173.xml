@@ -129,15 +129,17 @@
 					<input prompt="What turn does the buff start from?" response="1" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="4" />
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.7" />
+					<input prompt="What is the probability this ability activates?" response="0.7" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
 				</ability_3>
 				<ability_4>
 					<input prompt="What turn does the buff start from?" response="5" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="What is the probability this ability activates?" response="0.5" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
 				</ability_4>
 			</turn_dpendent>
 			<slot_dependent>

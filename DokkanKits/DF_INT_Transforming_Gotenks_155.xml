@@ -99,8 +99,9 @@
 				</ability_3>
 				<ability_4>
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="What is the probability this ability activates?" response="0.5" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
 				</ability_4>
 				<ability_5>
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
@@ -312,8 +313,9 @@
 				</ability_4>
 				<ability_5>
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.7" />
+					<input prompt="What is the probability this ability activates?" response="0.7" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
 				</ability_5>
 				<ability_6>
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
