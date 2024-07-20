@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Should we be using the averages/std for each turn rather than averaged over all turns?
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
 # - Simplify getEventFactor code
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
@@ -2952,4 +2953,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(227, "F2P_INT_Gohan_Youth", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(228, "F2P_INT_Caulifla", 5, "DEF", "DGE", "ADD", SLOT_1)
