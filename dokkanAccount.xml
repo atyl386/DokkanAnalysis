@@ -1823,4 +1823,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[1, 1, 1, 2, 1, 1, 1, 1, 1, 1]" />
     </_228>
+    <_229>
+        <common_name value="F2P_TEQ_Kale" />
+        <num_copies value="2" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_229>
 </id>
