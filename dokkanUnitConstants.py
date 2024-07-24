@@ -470,6 +470,7 @@ EFFECTS = [
     "Seal",
     "Stun",
     "Disable Action",
+    "Disable Action B",
     "Attacks Guaranteed to Hit",
     "Disable Evasion Cancel",
     "AEAAT",

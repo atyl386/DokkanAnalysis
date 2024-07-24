@@ -1975,6 +1975,13 @@ class Buff(PassiveAbility):
                         state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
                     case "EvasionB":
                         state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
+                    case "Disable Action B":
+                        pDisableSuper = P_DISABLE_SUPER * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                        state.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
+                        pDisableNormal = min(1, state.numNormalAttacksDirectedAfterAttacking) * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                        state.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
+                        state.numAttacksDirected -= pDisableNormal
+                        state.numAttacksDirectedAfterAttacking -= pDisableNormal
                     case "AdditionalSuper":
                         state.aaPSuper.append(activationProbability)
                         state.aaPGuarantee.append(0)
@@ -2953,4 +2960,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(229, "F2P_TEQ_Kale", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(230, "CLR_AGL_Jiren", 5, "DEF", "DGE", "ADD", SLOT_1)
