@@ -679,15 +679,7 @@
 				<input prompt="How many per ki buffs does the form have?" response="0" />
 			</per_ki>
 			<after_receive_attack>
-				<input prompt="How many different buffs does the form get after receiving an attack?" response="1" />
-				<ability_1>
-					<input prompt="How many turns does the buff last?" response="99" />
-					<input prompt="How many attacks received are required?" response="1" />
-					<input prompt="What type of buff does the unit get?" response="ATK" />
-					<input prompt="What is the probability this ability activates?" response="0.125" />
-					<input prompt="Is the status of this ability known beforehand?" response="N" />
-					<input prompt="What is the value of the buff?" response="0.5" />
-				</ability_1>
+				<input prompt="How many different buffs does the form get after receiving an attack?" response="0" />
 			</after_receive_attack>
 			<after_guard_attack>
 				<input prompt="How many different buffs does the form get after guarding an attack?" response="0" />
@@ -714,7 +706,15 @@
 				<input prompt="How many different buffs does the form get on attacks evaded?" response="0" />
 			</per_attack_evaded>
 			<after_x_attacks_received_in_battle>
-				<input prompt="How many different buffs does the form get after receiving X attacks in battle?" response="0" />
+				<input prompt="How many different buffs does the form get after receiving X attacks in battle?" response="1" />
+				<ability_1>
+					<input prompt="How many attacks received are required?" response="8" />
+					<input prompt="What is the maximum buff?" response="99.0" />
+					<input prompt="Within the same turn?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+				</ability_1>
 			</after_x_attacks_received_in_battle>
 			<after_perform_attack>
 				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
