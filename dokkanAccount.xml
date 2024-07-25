@@ -1839,4 +1839,12 @@
         <HiPo_choice_2 value="DGE" />
         <slots value="[2, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_230>
+    <_231>
+        <common_name value="LR_TEQ_Full_Power_Jiren" />
+        <num_copies value="2" />
+        <BRZ_equip value="ATK" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_231>
 </id>
