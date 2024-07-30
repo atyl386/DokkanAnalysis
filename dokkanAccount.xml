@@ -1701,7 +1701,7 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
-        <slots value="[2, 2, 3, 3, 3, 2, 2, 2, 2, 2]" />
+        <slots value="[2, 2, 3, 3, 3, 3, 2, 2, 2, 2]" />
     </_213>
     <_214>
         <common_name value="LR_STR_Cell_Max" />
@@ -1855,4 +1855,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
     </_232>
+    <_233>
+        <common_name value="DF_STR_Master_Roshi" />
+        <num_copies value="0" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_233>
 </id>
