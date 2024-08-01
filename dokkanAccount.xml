@@ -1605,7 +1605,7 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
-        <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
+        <slots value="[3, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_201>
     <_202>
         <common_name value="BU_TEQ_SS_Future_Gohan" />
@@ -1861,6 +1861,14 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="DGE" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+        <slots value="[2, 2, 2, 3, 2, 2, 2, 2, 2, 2]" />
     </_233>
+    <_234>
+        <common_name value="F2PLR_PHY_Pajamas_Beerus" />
+        <num_copies value="5" />
+        <BRZ_equip value="DGE" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[2, 2, 3, 3, 3, 3, 3, 1, 1, 1]" />
+    </_234>
 </id>

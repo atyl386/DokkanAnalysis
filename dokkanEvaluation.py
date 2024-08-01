@@ -11,6 +11,7 @@ reCalc = True
 analyseHiPo = False
 optimiseslots = False
 accountRanking = True
+useMultiprocessing = True
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
     dokkanAccountXML = ET.parse(dokkanAccountXmlFilePath)
@@ -185,8 +186,14 @@ if __name__ == '__main__':
         units = [[None] * nUnits for i in range(NUM_COPIES_MAX)]
         evaluations = np.zeros((nUnits, NUM_COPIES_MAX))
         reverseOrderIDs = np.flip(list(User.keys()))
-        with multiprocessing.Pool() as pool:
-            output = np.asarray(pool.starmap(processRainbowUnit, [(ID, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
+        if useMultiprocessing:
+            with multiprocessing.Pool() as pool:
+                output = np.asarray(pool.starmap(processRainbowUnit, [(ID, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
+        else:
+            output = []
+            for ID in reverseOrderIDs:
+                output.insert(len(output), processRainbowUnit(ID, User, NUM_COPIES_MAX))
+            output = np.asarray(output, dtype=object)
         units[-1] = np.array(list(output[:,0]))
         attributeValues[:, :, :, -1] = list(output[:,1])
         [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
@@ -250,8 +257,14 @@ if __name__ == '__main__':
                 for i, equip in enumerate(["BRZ_equip", "HiPo_choice_1", "HiPo_choice_2"]):
                     unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
                 dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding='utf-8')
-        with multiprocessing.Pool() as pool:
-            output = np.asarray(pool.starmap(processOtherUnit, [(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
+        if useMultiprocessing:
+            with multiprocessing.Pool() as pool:
+                output = np.asarray(pool.starmap(processOtherUnit, [(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
+        else:
+            output = []
+            for ID in reverseOrderIDs:
+                output.insert(len(output), processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX))
+            output = np.asarray(output, dtype=object)
         units[:-1] = np.array(list(output[:, 0])).T
         attributeValues[:, :, :, :-1] = list(output[:, 1])
         evaluations[:, :-1] = list(output[:, 2])

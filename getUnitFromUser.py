@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
 # - Simplify getEventFactor code
@@ -628,9 +629,9 @@ class Form:
                 self,
                 "How many different buffs does the form get per turn?",
                 PerTurn,
-                ["What is the maximum buff?"],
-                [None],
-                [1.0],
+                ["What is the maximum buff?", "Applied at start of turn?"],
+                [None, clc.Choice(YES_NO)],
+                [1.0, "N"],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "domain")
@@ -1273,7 +1274,7 @@ class State:
         self.orbCollection = OrbCollection()
         self.firstAttackBuff = 0
         self.p2DefB = 0
-        self.support = 0  # Support score
+        self.support = form.carryOverBuffs["ATK Support"].get()  # Support score
         self.dmgRedNormalA = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedNormalB = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedA = form.carryOverBuffs["Dmg Red"].get()
@@ -2092,30 +2093,38 @@ class PerKi(PerEvent):
 class PerTurn(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
+        self.appliedAtStartOfTurn = yesNo2Bool[args[1]]
 
     def applyToState(self, state, unit=None, form=None):
-        turnBuff = self.effectiveBuff
+        if not(self.appliedAtStartOfTurn) and state.turn == 1:
+            isActive = 0
+        else:
+            isActive = 1
+        turnBuff = self.effectiveBuff * isActive
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff, key=abs)
         form.carryOverBuffs[self.effect].add(cappedTurnBuff)
-        match self.effect:
-            case "Ki":
-                state.buff["Ki"] += cappedTurnBuff
-            case "ATK":
-                state.p1Buff["ATK"] += cappedTurnBuff
-            case "DEF":
-                state.p1Buff["DEF"] += cappedTurnBuff
-            case "Crit":
-                state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
-                state.atkModifier = state.getAvgAtkMod(form, unit)
-            case "Dmg Red":
-                state.dmgRedA += cappedTurnBuff
-                state.dmgRedB += cappedTurnBuff
-                state.dmgRedNormalA += cappedTurnBuff
-                state.dmgRedNormalB += cappedTurnBuff
-            case "Evasion":
-                state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
-                state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
+        if self.effect in REGULAR_SUPPORT_EFFECTS:
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1] * isActive
+        else:
+            match self.effect:
+                case "Ki":
+                    state.buff["Ki"] += cappedTurnBuff
+                case "ATK":
+                    state.p1Buff["ATK"] += cappedTurnBuff
+                case "DEF":
+                    state.p1Buff["DEF"] += cappedTurnBuff
+                case "Crit":
+                    state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
+                    state.atkModifier = state.getAvgAtkMod(form, unit)
+                case "Dmg Red":
+                    state.dmgRedA += cappedTurnBuff
+                    state.dmgRedB += cappedTurnBuff
+                    state.dmgRedNormalA += cappedTurnBuff
+                    state.dmgRedNormalB += cappedTurnBuff
+                case "Evasion":
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
         self.applied += cappedTurnBuff
 
 
@@ -2960,4 +2969,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(233, "DF_STR_Master_Roshi", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(234, "F2PLR_PHY_Pajamas_Beerus", 5, "DEF", "DGE", "ADD", SLOT_2)

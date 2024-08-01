@@ -172,6 +172,7 @@
 					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="-0.3" />
+					<input prompt="Applied at start of turn?" response="N" />
 				</ability_1>
 			</per_turn>
 			<domain>
