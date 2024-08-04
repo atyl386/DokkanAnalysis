@@ -2969,4 +2969,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(234, "F2PLR_PHY_Pajamas_Beerus", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(21, "DF_STR_Costume_Videl", 5, "DGE", "DGE", "ADD", SLOT_2)
