@@ -137,8 +137,8 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-Beast_Gohan = Banner([81, 82, 63, 3, 62, 61, 90, 91, 103, 104], "red", threePlus1=True, tickets=True)
-print(Beast_Gohan.summonScore)
+UI_Goku = Banner([218, 216, 84, 82, 82, 102, 85, 82, 135, 82], "red")
+print(UI_Goku.summonScore)
 Gammas = Banner([83, 64, 23, 1, 25, 105, 106, 104, 104, 104], "cyan", threePlus1=True, tickets=True)
 print(Gammas.summonScore)
 # WWDL_1 = Banner([14,68,67,20,13,11,13,96,81,57,86,25,58,60,59,137,13,158,13,13,13,13,98,13,13,13,88,93,13,13,67,13,13,13,97,13,13,13,13,13,13,13,13,13,13,13,13,13,13],'red')
