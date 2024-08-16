@@ -1873,10 +1873,18 @@
     </_234>
     <_235>
         <common_name value="F2P_TEQ_Cyborg_Tao" />
-        <num_copies value="5" />
+        <num_copies value="3" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_235>
+    <_236>
+        <common_name value="F2P_TEQ_Cell_Perfect" />
+        <num_copies value="3" />
+        <BRZ_equip value="DGE" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_236>
 </id>
