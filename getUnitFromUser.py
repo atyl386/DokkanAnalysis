@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
@@ -2969,4 +2970,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(21, "DF_STR_Costume_Videl", 5, "DGE", "DGE", "ADD", SLOT_2)
+    unit = Unit(235, "F2P_TEQ_Cyborg_Tao", 5, "DGE", "DGE", "ADD", SLOT_2)
