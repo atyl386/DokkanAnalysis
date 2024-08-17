@@ -1877,12 +1877,12 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+        <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_235>
     <_236>
         <common_name value="F2P_TEQ_Cell_Perfect" />
         <num_copies value="3" />
-        <BRZ_equip value="DGE" />
+        <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
@@ -1893,14 +1893,22 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+        <slots value="[2, 3, 3, 3, 3, 3, 3, 2, 2, 2]" />
     </_237>
     <_238>
         <common_name value="BU_AGL_Margarita" />
         <num_copies value="4" />
-        <BRZ_equip value="DGE" />
+        <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+        <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
     </_238>
+    <_239>
+        <common_name value="BU_TEQ_Kyawei" />
+        <num_copies value="5" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[1, 1, 1, 2, 1, 1, 1, 1, 1, 1]" />
+    </_239>
 </id>
