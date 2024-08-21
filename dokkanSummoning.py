@@ -128,7 +128,7 @@ class Banner:
             return False
 
 
-#SummonRatings()
+SummonRatings()
 """ Halloween = Banner([115, 116, 83, 68, 64, 5, 78, 63, 62, 20], 'red')
 HalloweenStep2 = Banner([64, 78, 63, 62, 20], 'red')
 HalloweenStep3A = Banner([127, 128, 118, 108, 107, 124, 74, 73, 50, 52], 'red')
@@ -137,8 +137,8 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-Toppo = Banner([110, 109, 15, 17, 5, 134, 150], "red", gFeaturedEvery3=True, discount=50*3/(30 + 45 + 50))
-print(Toppo.summonScore)
+CellMax = Banner([214, 52, 49, 65, 49, 49, 151, 49, 49, 49], "yellow", gFeaturedEvery3=True, discount=50*3/(35 + 40 + 45))
+print(CellMax.summonScore)
 # WWDL_1 = Banner([14,68,67,20,13,11,13,96,81,57,86,25,58,60,59,137,13,158,13,13,13,13,98,13,13,13,88,93,13,13,67,13,13,13,97,13,13,13,13,13,13,13,13,13,13,13,13,13,13],'red')
 # print(WWDL_1.summonScore)
 # WWDL_2 = Banner([29,13,64,15,78,28,80,13,84,85,98,13,13,13,13,96,53,13,13,13,13,13,13,60,13,13,53,13,79,96,89,13,77,13,13,13,13,13,13,13,13,13,73,13,13,13,13,13,13,13],'red')

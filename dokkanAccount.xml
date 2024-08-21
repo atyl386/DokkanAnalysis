@@ -1909,7 +1909,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[1, 1, 2, 2, 2, 1, 1, 1, 1, 1]" />
+        <slots value="[1, 1, 1, 2, 1, 1, 1, 1, 1, 1]" />
     </_239>
     <_240>
         <common_name value="BU_INT_Cocotte" />
@@ -1935,4 +1935,12 @@
         <HiPo_choice_2 value="DGE" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_242>
+    <_243>
+        <common_name value="F2P_STR_Devilman" />
+        <num_copies value="5" />
+        <BRZ_equip value="DGE" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_243>
 </id>
