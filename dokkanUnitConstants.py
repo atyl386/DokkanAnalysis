@@ -480,6 +480,7 @@ EFFECTS = [
     "Dmg Red against Normals",
     "Dmg Red against Normals A",
     "Dmg Red against Normals B",
+    "Dmg Red against Supers",
     "Guard",
     "Disable Guard",
     "Crit",
@@ -573,7 +574,7 @@ CONDITIONS = [
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]
 
 # Standby Finish Effect Conditions
-START_OF_TURN_FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "SA Counter", "Turn"]
+START_OF_TURN_FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "SA Counter", "Turn", "Broly SS Trio"]
 END_OF_TURN_FINISH_EFFECT_CONDITIONS = ["Attack performed by allies"]
 FINISH_EFFECT_CONDITIONS = START_OF_TURN_FINISH_EFFECT_CONDITIONS + END_OF_TURN_FINISH_EFFECT_CONDITIONS
 

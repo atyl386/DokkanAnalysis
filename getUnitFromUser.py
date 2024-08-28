@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Should fix GOku, Gohan and Trunks ability, so get dmg red against normals too for the rest of the turn
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
@@ -1133,6 +1134,8 @@ class Form:
                 charge = len([ability for ability in self.abilities["Start of Turn"] if ability.effect == "Scouter"])
             case "Turn":
                 charge = 1
+            case "Broly SS Trio":
+                charge = NUM_SLOTS * (3 * np.mean(NUM_ATTACKS_DIRECTED) + 2 * ORB_COUNTS_NO_ORB_CHANGING[1] + ORB_COUNTS_COMPLETE_ORB_CHANGING[0] + ORB_COUNTS_COMPLETE_ORB_CHANGING[2])
         return charge
 
 
@@ -1278,8 +1281,8 @@ class State:
         self.support = form.carryOverBuffs["ATK Support"].get()  # Support score
         self.dmgRedNormalA = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedNormalB = form.carryOverBuffs["Dmg Red"].get()
-        self.dmgRedA = form.carryOverBuffs["Dmg Red"].get()
-        self.dmgRedB = form.carryOverBuffs["Dmg Red"].get()
+        self.dmgRedSuperA = form.carryOverBuffs["Dmg Red"].get()
+        self.dmgRedSuperB = form.carryOverBuffs["Dmg Red"].get()
         self.guard = form.carryOverBuffs["Guard"].get()
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
@@ -1479,7 +1482,7 @@ class State:
             self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
             self.guard,
             self.dmgRedNormalA,
-            self.dmgRedB - self.dmgRedA,
+            self.dmgRedNormalB - self.dmgRedNormalA,
             0,
             self.avgDefPreSuper,
             self.stackedStats["DEF"],
@@ -1509,8 +1512,8 @@ class State:
             self.multiChanceBuff["EvasionA"],
             self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
             self.guard,
-            self.dmgRedA,
-            self.dmgRedB - self.dmgRedA,
+            self.dmgRedSuperA,
+            self.dmgRedSuperB - self.dmgRedSuperA,
             self.multiChanceBuff["Nullify"].prob,
             self.avgDefPreSuper,
             self.stackedStats["DEF"],
@@ -1957,18 +1960,21 @@ class Buff(PassiveAbility):
                     case "Dmg Red against Normals":
                         state.dmgRedNormalA += effectiveBuff
                         state.dmgRedNormalB += effectiveBuff
+                    case "Dmg Red against Supers":
+                        state.dmgRedSuperA += effectiveBuff
+                        state.dmgRedSuperB += effectiveBuff
                     case "Guard":
                         state.guard += effectiveBuff
                     case "Dmg Red":
-                        state.dmgRedA += effectiveBuff
-                        state.dmgRedB += effectiveBuff
                         state.dmgRedNormalA += effectiveBuff
                         state.dmgRedNormalB += effectiveBuff
+                        state.dmgRedSuperA += effectiveBuff
+                        state.dmgRedSuperB += effectiveBuff
                     case "Dmg Red A":
-                        state.dmgRedA += effectiveBuff
+                        state.dmgRedSuperA += effectiveBuff
                         state.dmgRedNormalA += effectiveBuff
                     case "Dmg Red B":
-                        state.dmgRedB += effectiveBuff
+                        state.dmgRedSuperB += effectiveBuff
                         state.dmgRedNormalB += effectiveBuff
                     case "Evasion":
                         state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
@@ -2024,8 +2030,8 @@ class Buff(PassiveAbility):
                         state.support += disableActionActiveSupportFactorConversion[state.slot] * supportBuff
                     case "Delay Target":
                         state.support += supportFactorConversion[self.effect] * supportBuff
-                        state.dmgRedA = 1
-                        state.dmgRedB = 1
+                        state.dmgRedSuperA = 1
+                        state.dmgRedSuperB = 1
                         state.dmgRedNormalA = 1
                         state.dmgRedNormalB = 1
                         state.numAttacksReceived = 0
@@ -2119,8 +2125,8 @@ class PerTurn(PerEvent):
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.atkModifier = state.getAvgAtkMod(form, unit)
                 case "Dmg Red":
-                    state.dmgRedA += cappedTurnBuff
-                    state.dmgRedB += cappedTurnBuff
+                    state.dmgRedSuperA += cappedTurnBuff
+                    state.dmgRedSuperB += cappedTurnBuff
                     state.dmgRedNormalA += cappedTurnBuff
                     state.dmgRedNormalB += cappedTurnBuff
                 case "Evasion":
@@ -2159,7 +2165,7 @@ class PerAttackPerformed(PerEvent):
             case "Crit":
                 state.critPerSuperPerformed = cappedBuffPerAttack
             case "Dmg Red":
-                state.dmgRedB += cappedTurnBuff
+                state.dmgRedSuperB += cappedTurnBuff
                 state.dmgRedNormalB += cappedTurnBuff
             case "Evasion":
                 state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, self.effect, state)
@@ -2330,8 +2336,8 @@ class AfterEvent(PassiveAbility):
                 case "Guard":
                     state.guard += cappedTurnBuff
                 case "Dmg Red":
-                    state.dmgRedA += cappedTurnBuff
-                    state.dmgRedB += cappedTurnBuff
+                    state.dmgRedSuperA += cappedTurnBuff
+                    state.dmgRedSuperB += cappedTurnBuff
                     state.dmgRedNormalA += cappedTurnBuff
                     state.dmgRedNormalB += cappedTurnBuff
                 case "Evasion":
@@ -2673,8 +2679,8 @@ class UntilAttackRecieved(UntilEvent):
                     state.guard += self.effectiveBuff
                     state.guardPerAttackReceived[0] -= self.effectiveBuff
                 case "Dmg Red":
-                    state.dmgRedA += self.effectiveBuff
-                    state.dmgRedB += self.effectiveBuff
+                    state.dmgRedSuperA += self.effectiveBuff
+                    state.dmgRedSuperB += self.effectiveBuff
                     state.dmgRedNormalA += self.effectiveBuff
                     state.dmgRedNormalB += self.effectiveBuff
                     state.dmgRedPerAttackReceived[0] -= self.effectiveBuff
@@ -2703,8 +2709,8 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                 case "Guard":
                     state.guard += cappedTurnBuff
                 case "Dmg Red":
-                    state.dmgRedA += cappedTurnBuff
-                    state.dmgRedB += cappedTurnBuff
+                    state.dmgRedSuperA += cappedTurnBuff
+                    state.dmgRedSuperB += cappedTurnBuff
                     state.dmgRedNormalA += cappedTurnBuff
                     state.dmgRedNormalB += cappedTurnBuff
                 case "Heal":
@@ -2777,11 +2783,12 @@ class PerformingSuperAttackDefence(PassiveAbility):
                 else:
                     state.p2DefB += self.effectiveBuff
             case "Dmg Red":
-                state.dmgRedB += self.effectiveBuff
+                state.dmgRedSuperB += self.effectiveBuff
                 state.dmgRedNormalB += self.effectiveBuff
                 # If have activated active skill attack this turn
                 if state.superAttacksPerformed > 0:
-                    state.dmgRedA += self.effectiveBuff
+                    state.dmgRedSuperA += self.effectiveBuff
+                    state.dmgRedNormalA += self.effectiveBuff
             case "Evasion":
                 state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
                 # If have activated active skill attack this turn
@@ -2818,15 +2825,18 @@ class KiSphereDependent(PerEvent):
                 case "Dmg Red against Normals":
                     state.dmgRedNormalA += buffFromOrbs
                     state.dmgRedNormalB += buffFromOrbs
+                case "Dmg Red against Supers":
+                    state.dmgRedSuperA += buffFromOrbs
+                    state.dmgRedSuperB += buffFromOrbs
                 case "Guard":
                     state.guard += buffFromOrbs
                 case "Dmg Red":
-                    state.dmgRedA += buffFromOrbs
-                    state.dmgRedB += buffFromOrbs
+                    state.dmgRedSuperA += buffFromOrbs
+                    state.dmgRedSuperB += buffFromOrbs
                     state.dmgRedNormalA += buffFromOrbs
                     state.dmgRedNormalB += buffFromOrbs
                 case "Dmg Red A":
-                    state.dmgRedA += buffFromOrbs
+                    state.dmgRedSuperA += buffFromOrbs
                     state.dmgRedNormalA += buffFromOrbs
                 case "AdditionalSuper":
                     state.aaPSuper.append(effectFactor)
@@ -2970,4 +2980,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(245, "CLR_TEQ_Broly", 5, "ATK", "ADD", "DGE", SLOT_2)
+    unit = Unit(246, "DFLR_PHY_Goku_Gohan_Trunks", 5, "ATK", "ADD", "DGE", SLOT_2)

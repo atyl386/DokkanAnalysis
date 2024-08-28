@@ -1959,4 +1959,12 @@
         <HiPo_choice_2 value="CRT" />
         <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_245>
+    <_246>
+        <common_name value="DFLR_PHY_Goku_Gohan_Trunks" />
+        <num_copies value="0" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_246>
 </id>
