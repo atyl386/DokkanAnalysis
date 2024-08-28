@@ -1951,4 +1951,12 @@
         <HiPo_choice_2 value="CRT" />
         <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 1]" />
     </_244>
+    <_245>
+        <common_name value="CLR_TEQ_Broly" />
+        <num_copies value="0" />
+        <BRZ_equip value="ATK" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_245>
 </id>

@@ -1794,7 +1794,7 @@ class ActiveSkillBuff(SingleTurnAbility):
         self.activations = 0
 
     def applyToState(self, state, unit=None, form=None):
-        if form.checkCondition(self.condition, self.activations == self.maxActivations, True) and unit.fightPeak:
+        if form.checkCondition(self.condition, self.activations == self.maxActivations, True) and (unit.fightPeak or self.duration > 1):
             self.activations += 1
             start = state.turn
             end = start + self.duration - 1
