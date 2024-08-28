@@ -145,7 +145,7 @@
     </_18>
     <_19>
         <common_name value="DF_PHY_Kid_Goku" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -161,7 +161,7 @@
     </_20>
     <_21>
         <common_name value="DF_STR_Costume_Videl" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="DGE" />
@@ -265,7 +265,7 @@
     </_33>
     <_34>
         <common_name value="DF_PHY_Raditz" />
-        <num_copies value="3" />
+        <num_copies value="4" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
@@ -321,7 +321,7 @@
     </_40>
     <_41>
         <common_name value="DF_TEQ_Fat_Janemba" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
@@ -681,7 +681,7 @@
     </_85>
     <_86>
         <common_name value="DF_INT_Future_Gohan" />
-        <num_copies value="3" />
+        <num_copies value="4" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1217,7 +1217,7 @@
     </_152>
     <_153>
         <common_name value="BU_INT_Pride_Troopers" />
-        <num_copies value="4" />
+        <num_copies value="5" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1265,7 +1265,7 @@
     </_158>
     <_159>
         <common_name value="BU_PHY_Gotenks" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="DGE" />
@@ -1297,7 +1297,7 @@
     </_162>
     <_163>
         <common_name value="DF_TEQ_Exchange_Buu" />
-        <num_copies value="3" />
+        <num_copies value="5" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1353,7 +1353,7 @@
     </_169>
     <_170>
         <common_name value="DF_PHY_Kid_Buu" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1473,7 +1473,7 @@
     </_184>
     <_185>
         <common_name value="BU_INT_Zamasu" />
-        <num_copies value="4" />
+        <num_copies value="5" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
