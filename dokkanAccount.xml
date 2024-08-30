@@ -737,7 +737,7 @@
     </_92>
     <_93>
         <common_name value="DF_STR_Transforming_Kelfa" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="CRT" />
         <HiPo_choice_2 value="ADD" />
@@ -761,7 +761,7 @@
     </_95>
     <_96>
         <common_name value="BU_INT_Dodoria" />
-        <num_copies value="3" />
+        <num_copies value="4" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1073,7 +1073,7 @@
     </_134>
     <_135>
         <common_name value="DF_STR_SSB_Kaioken_Goku" />
-        <num_copies value="4" />
+        <num_copies value="5" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1265,7 +1265,7 @@
     </_158>
     <_159>
         <common_name value="BU_PHY_Gotenks" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="DGE" />
