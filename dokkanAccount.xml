@@ -33,7 +33,7 @@
     </_4>
     <_5>
         <common_name value="DF_TEQ_Super_Trunks" />
-        <num_copies value="0" />
+        <num_copies value="1" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -65,7 +65,7 @@
     </_8>
     <_9>
         <common_name value="DF_STR_Super_Vegeta" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -73,7 +73,7 @@
     </_9>
     <_10>
         <common_name value="DF_AGL_Sword_Trunks" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
@@ -297,7 +297,7 @@
     </_37>
     <_38>
         <common_name value="DF_INT_RoF_Blues" />
-        <num_copies value="0" />
+        <num_copies value="1" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -353,7 +353,7 @@
     </_44>
     <_45>
         <common_name value="DF_TEQ_GT_Pan" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -361,7 +361,7 @@
     </_45>
     <_46>
         <common_name value="DF_AGL_Transforming_Cell" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -513,7 +513,7 @@
     </_64>
     <_65>
         <common_name value="BU_INT_Golden_Frieza" />
-        <num_copies value="3" />
+        <num_copies value="4" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1529,7 +1529,7 @@
     </_191>
     <_192>
         <common_name value="BU_INT_Bota_Magetta" />
-        <num_copies value="3" />
+        <num_copies value="5" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
