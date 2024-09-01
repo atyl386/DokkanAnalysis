@@ -137,7 +137,7 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-Goku_Gohan_Trunks = Banner([246, 247, 160, 42, 63, 2, 62, 44, 231, 101], 'red', threePlus1=True)
+Goku_Gohan_Trunks = Banner([246, 247, 160, 42, 63, 2, 62, 44, 248, 101], 'red', threePlus1=True)
 print(Goku_Gohan_Trunks.summonScore)
 Broly = Banner([245, 79, 64, 23, 51, 49, 242, 49, 49, 49], 'cyan', threePlus1=True)
 print(Broly.summonScore)
