@@ -1978,9 +1978,17 @@
     <_248>
         <common_name value="DF_INT_LSS_Broly" />
         <num_copies value="3" />
-        <BRZ_equip value="ATK" />
+        <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="CRT" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 1, 1, 1]" />
     </_248>
+    <_249>
+        <common_name value="LR_TEQ_SS_Broly" />
+        <num_copies value="3" />
+        <BRZ_equip value="ATK" />
+        <HiPo_choice_1 value="CRT" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_249>
 </id>
