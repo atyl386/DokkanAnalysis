@@ -1,6 +1,6 @@
 DFLR_AGL_MUI_Goku 
-DFLR_STR_Beast_Gohan 
 DFLR_INT_Evolution_Blue_Vegeta 
+DFLR_STR_Beast_Gohan 
 CLR_PHY_Gogeta_Blue 
 LR_PHY_Broly_Cheelai_Lemo 
 DFLR_PHY_Buutenks 
@@ -9,7 +9,6 @@ DFLR_PHY_Blue_Goku_Vegeta
 DFLR_STR_SS_Vegito 
 DFLR_TEQ_Vegito_Blue 
 LR_STR_Bulma_Youth 
-DF_INT_LSS_Broly 
 LR_PHY_Android17_Frieza 
 DFLR_STR_Gogeta_Blue 
 DFLR_STR_GT_Goku_Vegeta 
@@ -19,6 +18,7 @@ LR_TEQ_Full_Power_Jiren
 DF_INT_Fat_Buu 
 DF_TEQ_Ultimate_Gohan 
 DFLR_AGL_DBS_SS_Broly 
+DF_INT_LSS_Broly 
 LR_STR_UI_Goku 
 LR_STR_Team_Turles 
 DFLR_AGL_Vegito_Blue 
@@ -40,8 +40,8 @@ BU_PHY_Gotenks
 BU_INT_Vados 
 DF_AGL_Paikuhan 
 DF_TEQ_Future_Androids 
-DF_TEQ_SS3_Gotenks 
 DF_INT_Hirudegarn 
+DF_TEQ_SS3_Gotenks 
 DF_AGL_SS3_Goku_Angel 
 DFLR_TEQ_Orange_Piccolo 
 LR_INT_SSR_Goku_Black 
@@ -57,8 +57,8 @@ F2P_INT_Caulifla
 BU_AGL_Cell_Jr 
 BU_PHY_Giant_Ribrianne 
 BU_AGL_Super_Vegeta 
-BU_TEQ_Kyawei 
 F2PLR_PHY_Yamcha_Puar 
+BU_TEQ_Kyawei 
 BU_INT_Hercule 
 BU_INT_Hit 
 BU_INT_Cheelai 
@@ -76,8 +76,8 @@ BU_TEQ_Evil_Buu
 BU_INT_Pride_Troopers 
 BU_STR_Kale 
 DF_AGL_Fusion_Zamasu 
-LR_TEQ_Great_Ape_Vegeta 
 DF_STR_Costume_Videl 
+LR_TEQ_Great_Ape_Vegeta 
 BU_STR_Bardock_Gine 
 F2P_AGL_SS_Gohan_Boujack 
 DF_AGL_SS3_DragonFist_Goku 
@@ -100,8 +100,8 @@ LR_AGL_Golden_Frieza
 DF_TEQ_23_WT_Goku 
 F2PLR_PHY_Babidi_Buu 
 F2P_AGL_RoF_Krillin 
-BU_AGL_Krillin_Android18 
 DF_PHY_Piccolo 
+BU_AGL_Krillin_Android18 
 BU_INT_Kid_Pan 
 LR_AGL_SS2_Caulifla_Kale 
 CLR_INT_SS_Trio 
@@ -119,12 +119,12 @@ DFLR_TEQ_Go_Bros
 BU_INT_Golden_Frieza 
 DF_PHY_God_Goku 
 DF_STR_Piccolo_Gohan_Exchange 
-F2PLR_INT_Babidi 
 BU_TEQ_SS_Future_Gohan 
+F2PLR_INT_Babidi 
 DF_AGL_Berserk_Kale 
+DF_AGL_1st_Form_Frieza 
 LR_STR_Goku_Hit 
 BU_PHY_Gowasu_Zamasu 
-DF_AGL_1st_Form_Frieza 
 F2P_PHY_Gohan_Goku_Exchange 
 DF_STR_Super_Buu 
 F2PLR_TEQ_Dragon_Ball_Trio 
@@ -155,11 +155,11 @@ BU_PHY_23_WT_Tien
 DF_AGL_Kid_Gohan 
 DF_STR_SS3_Vegeta 
 LR_TEQ_SS3_DragonFist_Goku 
-BU_STR_23_WT_Krillin 
 DF_AGL_Captain_Ginyu 
+BU_STR_23_WT_Krillin 
 BU_AGL_Baby_Janemba 
-F2P_TEQ_Kale 
 F2PLR_TEQ_SS_Trunks_Broly 
+F2P_TEQ_Kale 
 DF_STR_Transforming_Cooler 
 CLR_PHY_Metal_Cooler 
 CLR_STR_SS_Goku_Hatchiyak 
