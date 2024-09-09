@@ -336,6 +336,9 @@
 			<after_x_attacks_received_in_battle>
 				<input prompt="How many different buffs does the form get after receiving X attacks in battle?" response="0" />
 			</after_x_attacks_received_in_battle>
+			<after_x_attacks_evaded_in_battle>
+				<input prompt="How many different buffs does the form get after evading X attacks in battle?" response="0" />
+			</after_x_attacks_evaded_in_battle>
 			<after_perform_attack>
 				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
 			</after_perform_attack>

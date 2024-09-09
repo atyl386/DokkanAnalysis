@@ -137,6 +137,11 @@ def getCondition(inputHelper):
                     "How many received attacks are required?", default=5
                 )
                 condition[i] = AttacksReceivedCondition(numAttacksReceivedCondition)
+            case "Num Attacks Evaded":
+                numAttacksEvadedCondition = inputHelper.getAndSaveUserInput(
+                    "How many evaded attacks are required?", default=5
+                )
+                condition[i] = AttacksEvadedCondition(numAttacksEvadedCondition)
             case "Finish Skill Activation":
                 requiredCharge = inputHelper.getAndSaveUserInput("What is the required charge condition?", default=30)
                 condition[i] = FinishSkillActivatedCondition(requiredCharge)
@@ -872,6 +877,17 @@ class Form:
                 "How many different buffs does the form get after receiving X attacks in battle?",
                 EveryTimeXAttacksReceivedInBattle,
                 ["How many attacks received are required?", "What is the maximum buff?", "Within the same turn?"],
+                [None, None, clc.Choice(YES_NO)],
+                [5, 1.0, "Y"],
+            )
+        )
+        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_x_attacks_evaded_in_battle")
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after evading X attacks in battle?",
+                EveryTimeXAttacksEvadedInBattle,
+                ["How many attacks evaded are required?", "What is the maximum buff?", "Within the same turn?"],
                 [None, None, clc.Choice(YES_NO)],
                 [5, 1.0, "Y"],
             )
@@ -2713,6 +2729,9 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                     state.dmgRedSuperB += cappedTurnBuff
                     state.dmgRedNormalA += cappedTurnBuff
                     state.dmgRedNormalB += cappedTurnBuff
+                case "Evasion":
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
                 case "Heal":
                     state.buff["Heal"] += cappedTurnBuff
                 case "Crit":
@@ -2753,6 +2772,15 @@ class EveryTimeXAttacksReceivedInBattle(EveryTimeXEventsInBattle):
 
     def applyToState(self, state, unit=None, form=None):
         self.increment = state.numAttacksReceived
+        self.applyBuff(unit, state, form)
+
+
+class EveryTimeXAttacksEvadedInBattle(EveryTimeXEventsInBattle):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args)
+
+    def applyToState(self, state, unit=None, form=None):
+        self.increment = state.numAttacksEvaded
         self.applyBuff(unit, state, form)
 
 
@@ -2950,6 +2978,12 @@ class AttacksReceivedCondition(Condition):
         self.conditionValue = numAttacks
 
 
+class AttacksEvadedCondition(Condition):
+    def __init__(self, numAttacks):
+        self.formAttr = "numAttacksEvaded"
+        self.conditionValue = numAttacks
+
+
 class FinishSkillActivatedCondition(Condition):
     def __init__(self, requiredCharge):
         self.formAttr = "charge"
@@ -2980,4 +3014,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(250, "F2P_STR_Videl", 5, "DGE", "DGE", "ADD", SLOT_2)
+    unit = Unit(251, "F2P_INT_SS_Kid_Trunks", 5, "DGE", "DGE", "ADD", SLOT_2)

@@ -1901,7 +1901,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[1, 1, 1, 1, 2, 1, 1, 1, 1, 1]" />
+        <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
     </_238>
     <_239>
         <common_name value="BU_TEQ_Kyawei" />
@@ -1999,4 +1999,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
     </_250>
+    <_251>
+        <common_name value="F2P_INT_SS_Kid_Trunks" />
+        <num_copies value="5" />
+        <BRZ_equip value="DGE" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+    </_251>
 </id>
