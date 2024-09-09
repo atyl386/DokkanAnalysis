@@ -1277,7 +1277,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="CRT" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 2, 1, 2, 2, 1, 1, 1, 1]" />
+        <slots value="[2, 2, 2, 1, 2, 2, 2, 1, 1, 1]" />
     </_160>
     <_161>
         <common_name value="DF_AGL_SS3_Goku_Angel" />
@@ -1405,7 +1405,7 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
-        <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+        <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_176>
     <_177>
         <common_name value="F2PLR_INT_Babidi" />
@@ -1461,7 +1461,7 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
-        <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 1]" />
+        <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 1]" />
     </_183>
     <_184>
         <common_name value="BU_INT_Dark_Masked_King" />
@@ -1549,7 +1549,7 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 1]" />
+        <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 1]" />
     </_194>
     <_195>
         <common_name value="BU_TEQ_Tapion" />
@@ -1565,7 +1565,7 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
-        <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 1]" />
+        <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 1]" />
     </_196>
     <_197>
         <common_name value="F2P_TEQ_SS3_Goku_Angel" />
@@ -1605,7 +1605,7 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
-        <slots value="[3, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
+        <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_201>
     <_202>
         <common_name value="BU_TEQ_SS_Future_Gohan" />
@@ -1645,7 +1645,7 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
-        <slots value="[1, 2, 2, 2, 2, 2, 1, 2, 2, 1]" />
+        <slots value="[1, 1, 2, 2, 2, 2, 1, 2, 2, 1]" />
     </_206>
     <_207>
         <common_name value="F2P_AGL_SS_Goku_Fishing" />
@@ -1781,7 +1781,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="DGE" />
-        <slots value="[2, 2, 2, 3, 2, 2, 2, 2, 2, 2]" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_223>
     <_224>
         <common_name value="BU_INT_Paragus_Broly" />
@@ -1901,7 +1901,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+        <slots value="[1, 1, 1, 1, 2, 1, 1, 1, 1, 1]" />
     </_238>
     <_239>
         <common_name value="BU_TEQ_Kyawei" />
@@ -1909,7 +1909,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[1, 1, 1, 2, 1, 1, 1, 1, 1, 1]" />
+        <slots value="[1, 1, 2, 2, 2, 1, 1, 1, 1, 1]" />
     </_239>
     <_240>
         <common_name value="BU_INT_Cocotte" />
@@ -1925,7 +1925,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[1, 1, 2, 2, 2, 1, 1, 1, 1, 1]" />
+        <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 1]" />
     </_241>
     <_242>
         <common_name value="LR_STR_Team_Turles" />
@@ -1981,7 +1981,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="CRT" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 1, 1, 1]" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_248>
     <_249>
         <common_name value="LR_TEQ_SS_Broly" />
@@ -1989,6 +1989,14 @@
         <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="CRT" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+        <slots value="[3, 3, 3, 2, 2, 2, 2, 2, 2, 2]" />
     </_249>
+    <_250>
+        <common_name value="F2P_STR_Videl" />
+        <num_copies value="5" />
+        <BRZ_equip value="DGE" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+    </_250>
 </id>
