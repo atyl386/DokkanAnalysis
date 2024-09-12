@@ -575,7 +575,7 @@ CONDITIONS = [
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]
 
 # Standby Finish Effect Conditions
-START_OF_TURN_FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "SA Counter", "Turn", "Broly SS Trio"]
+START_OF_TURN_FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "SA Counter", "Turn", "Broly SS Trio", "Dragon Balls"]
 END_OF_TURN_FINISH_EFFECT_CONDITIONS = ["Attack performed by allies"]
 FINISH_EFFECT_CONDITIONS = START_OF_TURN_FINISH_EFFECT_CONDITIONS + END_OF_TURN_FINISH_EFFECT_CONDITIONS
 

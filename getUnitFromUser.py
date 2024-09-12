@@ -1152,6 +1152,12 @@ class Form:
                 charge = 1
             case "Broly SS Trio":
                 charge = NUM_SLOTS * (3 * np.mean(NUM_ATTACKS_DIRECTED) + 2 * ORB_COUNTS_NO_ORB_CHANGING[1] + ORB_COUNTS_COMPLETE_ORB_CHANGING[0] + ORB_COUNTS_COMPLETE_ORB_CHANGING[2])
+            case "Dragon Balls":
+                charge = NUM_SLOTS * (1 + 4 * (7 / 23) / 2) * (
+                    orbChangeConversion["No Orb Change"]["Same"]
+                    + orbChangeConversion["Rainbow Orb Change"]["Rainbow"]
+                    + orbChangeConversion["Rainbow Orb Change"]["Other"]
+                )
         return charge
 
 
@@ -2908,6 +2914,8 @@ class KiSphereDependent(PerEvent):
                     state.p2Buff["ATK"] += buffFromOrbs
                 case "P2 DEF B":
                     state.p2DefB += buffFromOrbs
+                case "P2 DEF":
+                    state.p2Buff["DEF"] += buffFromOrbs
         if not (yesNo2Bool[self.withinTheSameTurn]):
             form.carryOverBuffs[self.effect].add(buffFromOrbs)
             self.applied += buffFromOrbs
@@ -3046,4 +3054,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(253, "DFLR_INT_LSS_Broly", 5, "ATK", "ADD", "CRT", SLOT_1)
+    unit = Unit(254, "CLR_STR_Family_Kamehameha", 5, "ATK", "ADD", "CRT", SLOT_1)
