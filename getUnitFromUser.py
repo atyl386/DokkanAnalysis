@@ -5,7 +5,7 @@ import math
 import click as clc
 
 # TODO:
-# - Should fix GOku, Gohan and Trunks ability, so get dmg red against normals too for the rest of the turn
+# - Should fix Goku, Gohan and Trunks ability, so get dmg red against normals too for the rest of the turn
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
@@ -1804,6 +1804,38 @@ class Domain(SingleTurnAbility):
                         TurnDependent(form, 1, False, "P3 DEF", 0.15, 1, params),
                         TurnDependent(form, 1, False, "Disable Evasion Cancel", 0.15, 1, params),
                     ])
+                case "Molten Lava of Natade Village":
+                    UncontrollablePowerBuff = 0.15 * aprioriProbMod(2/3 * math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # 2/3 comes from not every ally on Uncontrollable Power. The other part comes from calculating the probability an average enemy is not on the RoG category.
+                    MovieHeroesDebuff = 0.1 * aprioriProbMod(1 - math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # The other part comes from calculating the probability an average enemy is on the Movie Heroes category.
+                    form.abilities["Start of Turn"].extend([
+                        TurnDependent(
+                            form, 1, False, "Type Orb Change", 1, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "Guard", 1, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "AEAAT", 1, 99, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", UncontrollablePowerBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "DEF Support", UncontrollablePowerBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", MovieHeroesDebuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "DEF Support", MovieHeroesDebuff * DEF_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(form, 1, False, "P3 ATK", 0.15 + MovieHeroesDebuff, 1, params),
+                        TurnDependent(form, 1, False, "P3 DEF", 0.15, 1, params),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", self.effectiveBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params)
+                    ])
                     
 
 class ActiveSkillBuff(SingleTurnAbility):
@@ -3014,4 +3046,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(252, "BU_TEQ_Videl", 5, "DGE", "DGE", "ADD", SLOT_2)
+    unit = Unit(253, "DFLR_INT_LSS_Broly", 5, "ATK", "ADD", "CRT", SLOT_1)

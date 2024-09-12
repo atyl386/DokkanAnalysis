@@ -93,7 +93,7 @@ SPECIAL_ATTACK_MULTIPLIER_NAMES = [
 SPECIAL_ATTACK_MULTIPLIERS = [0, 1, 4.4, 5.0, 5.5, 7.5]
 
 # Domain
-DOMAIN_TYPES = ["Increase Damage Received", "Alternate Dimensional Space", "City (Future) (Rift in Time)", "Shining World of Void"]
+DOMAIN_TYPES = ["Increase Damage Received", "Alternate Dimensional Space", "City (Future) (Rift in Time)", "Shining World of Void", "Molten Lava of Natade Village"]
 
 # Turns
 MAX_TURN = 20

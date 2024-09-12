@@ -2015,4 +2015,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[3, 3, 3, 3, 3, 3, 3, 3]" />
     </_252>
+    <_253>
+        <common_name value="DFLR_INT_LSS_Broly" />
+        <num_copies value="0" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[2, 1, 1, 2, 2, 2, 2, 2, 2, 2]" />
+    </_253>
 </id>
