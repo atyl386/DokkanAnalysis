@@ -4,9 +4,9 @@ DFLR_STR_Beast_Gohan
 CLR_PHY_Gogeta_Blue 
 LR_PHY_Broly_Cheelai_Lemo 
 DFLR_PHY_Buutenks 
+LR_TEQ_SS_Broly 
 CLR_TEQ_Broly 
 DFLR_PHY_Blue_Goku_Vegeta 
-LR_TEQ_SS_Broly 
 LR_STR_Bulma_Youth 
 DFLR_STR_SS_Vegito 
 DFLR_TEQ_Vegito_Blue 
@@ -53,6 +53,7 @@ DF_AGL_Gogeta_Blue
 DF_TEQ_SoH_Trunks 
 LR_INT_SSR_Goku_Black 
 BU_AGL_Margarita 
+BU_TEQ_Evil_Buu 
 BU_AGL_Cell_Jr 
 F2P_INT_Caulifla 
 DF_AGL_SS_Bardock 
@@ -77,7 +78,6 @@ LR_INT_God_Goku
 DF_AGL_Fusion_Zamasu 
 BU_STR_Kale 
 F2P_AGL_SS_Gohan_Boujack 
-BU_TEQ_Evil_Buu 
 F2P_STR_Videl 
 F2PLR_PHY_Pajamas_Beerus 
 BU_STR_Bardock_Gine 
@@ -85,6 +85,7 @@ DF_PHY_Android_17
 DF_AGL_SS3_DragonFist_Goku 
 BU_AGL_SS_Gotenks 
 LR_STR_Beerus_Whis 
+DF_AGL_Berserk_Kale 
 LR_TEQ_Great_Ape_Vegeta 
 DF_STR_Costume_Videl 
 DFLR_INT_Perfect_Cell 
@@ -110,6 +111,7 @@ F2P_TEQ_Cell_Perfect
 F2PLR_PHY_Babidi_Buu 
 LR_AGL_SS2_Caulifla_Kale 
 BU_TEQ_Bulla 
+BU_AGL_King_Vegeta 
 F2P_INT_Gohan_Youth 
 F2P_INT_Bulma_Youth 
 CLR_INT_SS_Trio 
@@ -127,7 +129,6 @@ BU_TEQ_SS_Future_Gohan
 DFLR_TEQ_Go_Bros 
 LR_STR_Goku_Hit 
 BU_PHY_Robelu 
-DF_AGL_Berserk_Kale 
 F2P_PHY_Gohan_Goku_Exchange 
 DF_STR_Super_Buu 
 F2PLR_TEQ_Dragon_Ball_Trio 
@@ -184,7 +185,6 @@ LR_INT_Full_Power_Boujack
 BU_INT_Kid_Gohan_Namek 
 BU_STR_Fat_Buu 
 BU_PHY_Kid_Chichi 
-BU_AGL_King_Vegeta 
 BU_INT_Bota_Magetta 
 BU_INT_Dark_Masked_King 
 BU_STR_SS_Cabba 
@@ -211,6 +211,6 @@ DFLR_INT_Vegeta_Trunks
 BU_STR_Nappa 
 BU_PHY_Zamasu 
 BU_TEQ_Frost_Final_Form 
-DF_INT_Majin_Vegeta 
 BU_STR_Universe_2 
+DF_INT_Majin_Vegeta 
 DF_TEQ_Super_Trunks 
