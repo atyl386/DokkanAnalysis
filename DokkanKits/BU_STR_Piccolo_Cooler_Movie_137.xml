@@ -206,6 +206,7 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many turns does the buff last?" response="3" />
@@ -213,6 +214,7 @@
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_2>
 				<ability_3>
 					<input prompt="How many turns does the buff last?" response="3" />
@@ -220,6 +222,7 @@
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.3" />
+					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_3>
 			</after_receive_attack>
 			<after_guard_attack>

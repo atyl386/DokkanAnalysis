@@ -396,6 +396,7 @@
 					<input prompt="What is the value of the buff?" response="0.6" />
 					<input prompt="How many turns does the buff last?" response="3" />
 					<input prompt="How many attacks received are required?" response="1" />
+					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What type of buff does the unit get?" response="DEF" />
@@ -403,6 +404,7 @@
 					<input prompt="What is the value of the buff?" response="0.6" />
 					<input prompt="How many turns does the buff last?" response="3" />
 					<input prompt="How many attacks received are required?" response="1" />
+					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_2>
 			</after_receive_attack>
 			<after_guard_attack>

@@ -780,9 +780,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after receiving an attack?",
                 AfterAttackReceived,
-                ["How many turns does the buff last?", "How many attacks received are required?"],
-                [None, None],
-                [1, 0],
+                ["How many turns does the buff last?", "How many attacks received are required?", "Does the buff start from the next attacking turn?"],
+                [None, None, clc.Choice(YES_NO)],
+                [1, 0, "N"],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_guard_attack")
@@ -1267,7 +1267,7 @@ class State:
             "Ki": LEADER_SKILL_KI + form.carryOverBuffs["Ki"].get(),
             "AEAAT": 0,
             "Disable Guard": 0,
-            "Heal": 0,
+            "Heal": form.carryOverBuffs["Heal"].get(),
             "Damage Dealt Heal": 0,
             "Attacks Guaranteed to Hit": 0,
             "Disable Evasion Cancel": 0,
@@ -2341,6 +2341,7 @@ class AfterEvent(PassiveAbility):
         self.required = threshold
         self.increment = 0
         self.isNextTurnBuff = False
+        self.maxEffectiveBuff = self.effectiveBuff
         if effect in ADDITIONAL_ATTACK_EFFECTS:
             self.applied = [0, 0]
         else:
@@ -2446,6 +2447,7 @@ class AfterAttackPerformed(AfterEvent):
 class AfterAttackReceived(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
+        self.nextAttackingTurn = yesNo2Bool[args[2]]
     
     def setTurnBuff(self, unit, form, state):
         # geometric cdf
@@ -2493,15 +2495,26 @@ class AfterAttackReceived(AfterEvent):
 
     def applyToState(self, state, unit=None, form=None):
         self.increment = state.numAttacksReceived
+        if self.nextAttackingTurn:
+            if np.any(self.applied):
+                self.isNextTurnBuff = False
+                self.resetAppliedBuffs(form, state)
+            else:
+                self.isNextTurnBuff = True
+                self.effectiveBuff = self.maxEffectiveBuff * (1 - poisson.cdf(self.threshold - 1, self.increment))
         self.updateBuffToGo()
         # Check if ability will be active next turn
         if self.threshold > 1:
-            self.required = max(self.threshold - form.numAttacksReceived, 0)
+            if not(self.isNextTurnBuff) and self.nextAttackingTurn:
+                self.required = 99
+            else:
+                self.required = max(self.threshold - form.numAttacksReceived, 0)
         if np.any(self.applied):
             self.resetAppliedBuffs(form, state)
         else:
             self.setEventFactor(state)
-            self.setTurnBuff(unit, form, state)
+            if not(self.nextAttackingTurn):
+                self.setTurnBuff(unit, form, state)
             if self.effect not in REGULAR_SUPPORT_EFFECTS:
                 self.nextTurnUpdate(form, state)
         if np.any(self.applied):
@@ -2625,6 +2638,7 @@ class AfterAttackEvaded(AfterEvent):
                 self.resetAppliedBuffs(form, state)
             else:
                 self.isNextTurnBuff = True
+                # This only works if effect is guaranteed dodge. Is working out how much extra evasion chance is to be gained on average by dodding threshold attacks in a turn
                 self.effectiveBuff = (1 - state.multiChanceBuff["EvasionA"].chances["Start of Turn"]) * (1 - poisson.cdf(self.threshold - 1, self.increment))
         self.updateBuffToGo()
         if self.threshold > 1:
@@ -3054,4 +3068,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(254, "CLR_STR_Family_Kamehameha", 5, "ATK", "ADD", "CRT", SLOT_1)
+    unit = Unit(255, "F2P_TEQ_Bio_Broly", 5, "DEF", "DGE", "CRT", SLOT_2)
