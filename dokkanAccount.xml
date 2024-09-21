@@ -2034,9 +2034,17 @@
     <_255>
         <common_name value="F2P_TEQ_Bio_Broly" />
         <num_copies value="5" />
-        <BRZ_equip value="DGE" />
+        <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
-        <slots value="[3, 2, 2, 3, 2, 3, 3, 3, 2, 2]" />
+        <slots value="[1, 3, 2, 3, 2, 3, 3, 3, 2, 2]" />
     </_255>
+    <_256>
+        <common_name value="F2PLR_PHY_Bio_Broly" />
+        <num_copies value="5" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 3, 2, 2, 2, 2, 2, 2]" />
+    </_256>
 </id>

@@ -11,7 +11,7 @@ reCalc = True
 analyseHiPo = False
 optimiseslots = False
 accountRanking = True
-useMultiprocessing = True
+useMultiprocessing = False
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
     dokkanAccountXML = ET.parse(dokkanAccountXmlFilePath)

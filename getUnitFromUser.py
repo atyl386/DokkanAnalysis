@@ -636,9 +636,9 @@ class Form:
                 self,
                 "How many different buffs does the form get per turn?",
                 PerTurn,
-                ["What is the maximum buff?", "Applied at start of turn?"],
-                [None, clc.Choice(YES_NO)],
-                [1.0, "N"],
+                ["What is the maximum buff?", "Applied at start of turn?", "What turn does the buff start from?"],
+                [None, clc.Choice(YES_NO), None],
+                [1.0, "N", 1],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "domain")
@@ -2155,9 +2155,10 @@ class PerTurn(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
         self.appliedAtStartOfTurn = yesNo2Bool[args[1]]
+        self.initialTurn = args[2]
 
     def applyToState(self, state, unit=None, form=None):
-        if not(self.appliedAtStartOfTurn) and state.turn == 1:
+        if (not(self.appliedAtStartOfTurn) and state.turn - (form.initialTurn - 1) == self.initialTurn) or state.turn - (form.initialTurn - 1) < self.initialTurn:
             isActive = 0
         else:
             isActive = 1
@@ -3068,4 +3069,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(255, "F2P_TEQ_Bio_Broly", 5, "DEF", "DGE", "CRT", SLOT_2)
+    unit = Unit(256, "F2PLR_PHY_Bio_Broly", 5, "DEF", "DGE", "CRT", SLOT_2)

@@ -340,6 +340,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="Applied at start of turn?" response="Y" />
+					<input prompt="What turn does the buff start from?" response="1" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What is the maximum buff?" response="1.0" />
@@ -347,6 +348,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.25" />
 					<input prompt="Applied at start of turn?" response="Y" />
+					<input prompt="What turn does the buff start from?" response="1" />
 				</ability_2>
 				<ability_3>
 					<input prompt="What is the maximum buff?" response="1.0" />
@@ -354,6 +356,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.25" />
 					<input prompt="Applied at start of turn?" response="Y" />
+					<input prompt="What turn does the buff start from?" response="1" />
 				</ability_3>
 			</per_turn>
 			<domain>
