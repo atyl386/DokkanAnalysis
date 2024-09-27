@@ -5,7 +5,7 @@ import math
 import click as clc
 
 # TODO:
-# - Should fix Goku, Gohan and Trunks ability, so get dmg red against normals too for the rest of the turn
+# - Implement boss crit - see Truth's video
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
@@ -3069,4 +3069,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(257, "DF_PHY_SS_Goten_Trunks", 5, "DEF", "DGE", "CRT", SLOT_2)
+    unit = Unit(258, "DF_STR_LSS_Broly", 5, "DEF", "DGE", "ADD", SLOT_2)

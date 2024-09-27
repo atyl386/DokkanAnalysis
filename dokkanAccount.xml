@@ -417,7 +417,7 @@
     </_52>
     <_53>
         <common_name value="CLR_PHY_SS_Future_Trunks" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
@@ -1267,14 +1267,14 @@
         <common_name value="BU_PHY_Gotenks" />
         <num_copies value="4" />
         <BRZ_equip value="ATK" />
-        <HiPo_choice_1 value="ADD" />
-        <HiPo_choice_2 value="DGE" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
         <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_159>
     <_160>
         <common_name value="DF_INT_Fat_Buu" />
         <num_copies value="1" />
-        <BRZ_equip value="ATK" />
+        <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="CRT" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 1, 2, 2, 2, 1, 1, 1]" />
@@ -1980,7 +1980,7 @@
         <num_copies value="3" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="ADD" />
-        <HiPo_choice_2 value="CRT" />
+        <HiPo_choice_2 value="DGE" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_248>
     <_249>
@@ -2050,9 +2050,17 @@
     <_257>
         <common_name value="DF_PHY_SS_Goten_Trunks" />
         <num_copies value="1" />
-        <BRZ_equip value="ATK" />
+        <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
     </_257>
+    <_258>
+        <common_name value="DF_STR_LSS_Broly" />
+        <num_copies value="2" />
+        <BRZ_equip value="ATK" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+    </_258>
 </id>
