@@ -1509,7 +1509,7 @@ class State:
             self.dmgRedNormalA,
             self.dmgRedNormalB - self.dmgRedNormalA,
             0,
-            self.avgDefPreSuper,
+            self.avgDefPreSuper * (1 - ENEMY_CRIT_DEF_DEBUFF * ENEMY_NORMAL_CRIT_CHANCE),
             self.stackedStats["DEF"],
             self.avgDefMult,
             self.buff["Disable Evasion Cancel"],
@@ -1525,6 +1525,7 @@ class State:
             self.guardPerAttackReceived,
             self.guardPerAttackReceivedOrEvaded,
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
+            ENEMY_NORMAL_CRIT_CHANCE,
             unit.TDB,
         )
         self.saDamageTaken = branchDamageTaken(
@@ -1541,7 +1542,7 @@ class State:
             self.dmgRedSuperA,
             self.dmgRedSuperB - self.dmgRedSuperA,
             self.multiChanceBuff["Nullify"].prob,
-            self.avgDefPreSuper,
+            self.avgDefPreSuper * (1 - ENEMY_CRIT_DEF_DEBUFF * ENEMY_SUPER_CRIT_CHANCE),
             self.stackedStats["DEF"],
             self.avgDefMult,
             self.buff["Disable Evasion Cancel"],
@@ -1557,6 +1558,7 @@ class State:
             self.guardPerAttackReceived,
             self.guardPerAttackReceivedOrEvaded,
             MAX_SA_DAM_PER_TURN[self.turn - 1],
+            ENEMY_SUPER_CRIT_CHANCE,
             unit.TDB,
         )
         self.buff["Heal"] += form.linkEffects["Heal"] + form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + ((0.03 + 0.0015 * HIPO_RECOVERY_BOOST[unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR) / AVG_HEALTH

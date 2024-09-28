@@ -192,6 +192,7 @@ def branchAA(i, nAA, pAA, nProcs, pSA, pG, pHiPo):
         tempAA1 = branchAA(i, nAA, pAA + pHiPo * (1 - pHiPo) ** nProcs, nProcs + 1, pSA, pG, pHiPo)
         return pSA[i] * (1 + tempAA1) + (1 - pSA[i]) * (pG[i] * (1 + tempAA1) + (1 - pG[i]) * tempAA0)
 
+
 def branchAttacksEvaded(
     iA,
     iB,
@@ -217,17 +218,21 @@ def branchAttacksEvaded(
         evasionPostHitB = copy.copy(evasionPostHit)
         evasionPostHitB.updateChance("Start of Turn", pEvadeB)
         # mulitply by extra factor if only part is expected. 0 =< nA - i < 1 )
-        return pE * (nAA - iA + branchAttacksEvaded(
-            iA,
-            0,
-            nAA,
-            nAB,
-            evasionPostEvadeB,
-            pEvadeB,
-            pDisableEvasionCancel,
-            evasionPerAttackReceived,
-            evasionPerAttackEvaded[1:],
-        )) + pReceiveAttack * branchAttacksEvaded(
+        return pE * (
+            nAA
+            - iA
+            + branchAttacksEvaded(
+                iA,
+                0,
+                nAA,
+                nAB,
+                evasionPostEvadeB,
+                pEvadeB,
+                pDisableEvasionCancel,
+                evasionPerAttackReceived,
+                evasionPerAttackEvaded[1:],
+            )
+        ) + pReceiveAttack * branchAttacksEvaded(
             iA,
             0,
             nAA,
@@ -243,16 +248,19 @@ def branchAttacksEvaded(
             iA += 1
         else:
             iB += 1
-        return pE * (1 + branchAttacksEvaded(
-            iA,
-            iB,
-            nAA,
-            nAB,
-            evasionPostEvade,
-            pDisableEvasionCancel,
-            evasionPerAttackReceived,
-            evasionPerAttackEvaded[1:],
-        )) + pReceiveAttack * branchAttacksEvaded(
+        return pE * (
+            1
+            + branchAttacksEvaded(
+                iA,
+                iB,
+                nAA,
+                nAB,
+                evasionPostEvade,
+                pDisableEvasionCancel,
+                evasionPerAttackReceived,
+                evasionPerAttackEvaded[1:],
+            )
+        ) + pReceiveAttack * branchAttacksEvaded(
             iA,
             iB,
             nAA,
@@ -555,6 +563,7 @@ def branchDamageTaken(
     guardPerAttackReceived,
     guardPerAttackReceivedOrEvaded,
     maxDamage,
+    enemyCritChance,
     tdb,
 ):
     """Returns the remaining damage taken by a unit in a turn recursively"""
@@ -564,13 +573,21 @@ def branchDamageTaken(
     pE = pE_N * (1 - pNullify) + pNullify
     pG = (1 - pE) * pGuard
     pR = 1 - pE - pG
-    attackDamageTaken = getAttackDamageTaken(pE, pGuard, maxDamage, tdb, dmgRed, defence)
+    attackDamageTaken = getAttackDamageTaken(pE, pGuard, maxDamage, tdb, dmgRed, defence, enemyCritChance)
     # If last attack in sequence pre super
     if iA >= nAA - 1 and iB == -1:
         evasionPostEvadeB = copy.deepcopy(evasion)
         evasionPostHitB = copy.deepcopy(evasion)
-        evasionPostEvadeB.updateChance("Start of Turn", (evasionPerAttackEvaded[0] + evasionPerAttackReceivedOrEvaded[0]) * (nAA - iA) + pEvadeB, "")
-        evasionPostHitB.updateChance("Start of Turn", (evasionPerAttackReceived[0] + evasionPerAttackReceivedOrEvaded[0]) * (nAA - iA) + pEvadeB, "")
+        evasionPostEvadeB.updateChance(
+            "Start of Turn",
+            (evasionPerAttackEvaded[0] + evasionPerAttackReceivedOrEvaded[0]) * (nAA - iA) + pEvadeB,
+            "",
+        )
+        evasionPostHitB.updateChance(
+            "Start of Turn",
+            (evasionPerAttackReceived[0] + evasionPerAttackReceivedOrEvaded[0]) * (nAA - iA) + pEvadeB,
+            "",
+        )
         # mulitply by extra factor if only part is expected. 0 =< nAA - iA < 1 )
         defPerAttackEvadedB = copy.copy(defPerAttackEvaded)
         defPerAttackGuardedB = copy.copy(defPerAttackGuarded)
@@ -594,216 +611,268 @@ def branchDamageTaken(
         evasionPerAttackReceivedOrEvadedB[0] *= 1 - (nAA - iA)
         guardPerAttackReceivedB[0] *= 1 - (nAA - iA)
         guardPerAttackReceivedB[0] *= 1 - (nAA - iA)
-        return attackDamageTaken * (nAA - iA) + pE * branchDamageTaken(
-            iA,
-            0,
-            nAA,
-            nAB,
-            p2Def + p2DefB + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
-            p2DefB,
-            evasionPostEvadeB,
-            pEvadeB,
-            0,
-            pGuard + guardPerAttackReceivedOrEvaded[0] * (nAA - iA),
-            dmgRed + dmgRedB + dmgRedPerAttackReceivedOrEvaded[0] * (nAA - iA),
-            dmgRedB,
-            pNullify,
-            defence * (1 + p2Def + p2DefB + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA)) / (1 + p2Def) * (1 + postSuperDefMultB) / (1 + postSuperDefMult),
-            postSuperDefMultB,
-            postSuperDefMultB,
-            pDisableEvasionCancel,
-            defPerAttackReceived,
-            defPerAttackEvadedB,
-            defPerAttackGuarded,
-            defPerAttackReceivedOrEvadedB,
-            dmgRedPerAttackReceived,
-            dmgRedPerAttackReceivedOrEvadedB,
-            evasionPerAttackReceived,
-            evasionPerAttackEvadedB,
-            evasionPerAttackReceivedOrEvadedB,
-            guardPerAttackReceived,
-            guardPerAttackReceivedOrEvadedB,
-            maxDamage,
-            tdb
-            ) + pG * branchDamageTaken(
-            iA,
-            0,
-            nAA,
-            nAB,
-            p2Def + p2DefB + (defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
-            p2DefB,
-            evasionPostHitB,
-            pEvadeB,
-            0,
-            pGuard + (guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0]) * (nAA - iA),
-            dmgRed + dmgRedB + (dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0]) * (nAA - iA),
-            dmgRedB,
-            pNullify,
-            defence * (1 + p2Def + p2DefB + (defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA)) / (1 + p2Def) * (1 + postSuperDefMultB) / (1 + postSuperDefMult),
-            postSuperDefMultB,
-            postSuperDefMultB,
-            pDisableEvasionCancel,
-            defPerAttackReceivedB,
-            defPerAttackEvaded,
-            defPerAttackGuardedB,
-            defPerAttackReceivedOrEvadedB,
-            dmgRedPerAttackReceivedB,
-            dmgRedPerAttackReceivedOrEvadedB,
-            evasionPerAttackReceivedB,
-            evasionPerAttackEvaded,
-            evasionPerAttackReceivedOrEvadedB,
-            guardPerAttackReceivedB,
-            guardPerAttackReceivedOrEvadedB,
-            maxDamage,
-            tdb
-            ) + pR * branchDamageTaken(
-            iA,
-            0,
-            nAA,
-            nAB,
-            p2Def + p2DefB + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
-            p2DefB,
-            evasionPostHitB,
-            pEvadeB,
-            0,
-            pGuard + (guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0]) * (nAA - iA),
-            dmgRed + dmgRedB + (dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0]) * (nAA - iA),
-            dmgRedB,
-            pNullify,
-            defence * (1 + p2Def + p2DefB + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA)) / (1 + p2Def) * (1 + postSuperDefMultB) / (1 + postSuperDefMult),
-            postSuperDefMultB,
-            postSuperDefMultB,
-            pDisableEvasionCancel,
-            defPerAttackReceivedB,
-            defPerAttackEvaded,
-            defPerAttackGuarded,
-            defPerAttackReceivedOrEvadedB,
-            dmgRedPerAttackReceivedB,
-            dmgRedPerAttackReceivedOrEvadedB,
-            evasionPerAttackReceivedB,
-            evasionPerAttackEvaded,
-            evasionPerAttackReceivedOrEvadedB,
-            guardPerAttackReceivedB,
-            guardPerAttackReceivedOrEvadedB,
-            maxDamage,
-            tdb
+        return (
+            attackDamageTaken * (nAA - iA)
+            + pE
+            * branchDamageTaken(
+                iA,
+                0,
+                nAA,
+                nAB,
+                p2Def + p2DefB + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                p2DefB,
+                evasionPostEvadeB,
+                pEvadeB,
+                0,
+                pGuard + guardPerAttackReceivedOrEvaded[0] * (nAA - iA),
+                dmgRed + dmgRedB + dmgRedPerAttackReceivedOrEvaded[0] * (nAA - iA),
+                dmgRedB,
+                pNullify,
+                defence
+                * (1 + p2Def + p2DefB + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA))
+                / (1 + p2Def)
+                * (1 + postSuperDefMultB)
+                / (1 + postSuperDefMult),
+                postSuperDefMultB,
+                postSuperDefMultB,
+                pDisableEvasionCancel,
+                defPerAttackReceived,
+                defPerAttackEvadedB,
+                defPerAttackGuarded,
+                defPerAttackReceivedOrEvadedB,
+                dmgRedPerAttackReceived,
+                dmgRedPerAttackReceivedOrEvadedB,
+                evasionPerAttackReceived,
+                evasionPerAttackEvadedB,
+                evasionPerAttackReceivedOrEvadedB,
+                guardPerAttackReceived,
+                guardPerAttackReceivedOrEvadedB,
+                maxDamage,
+                enemyCritChance,
+                tdb,
             )
+            + pG
+            * branchDamageTaken(
+                iA,
+                0,
+                nAA,
+                nAB,
+                p2Def
+                + p2DefB
+                + (defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                p2DefB,
+                evasionPostHitB,
+                pEvadeB,
+                0,
+                pGuard + (guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                dmgRed + dmgRedB + (dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                dmgRedB,
+                pNullify,
+                defence
+                * (
+                    1
+                    + p2Def
+                    + p2DefB
+                    + (defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA)
+                )
+                / (1 + p2Def)
+                * (1 + postSuperDefMultB)
+                / (1 + postSuperDefMult),
+                postSuperDefMultB,
+                postSuperDefMultB,
+                pDisableEvasionCancel,
+                defPerAttackReceivedB,
+                defPerAttackEvaded,
+                defPerAttackGuardedB,
+                defPerAttackReceivedOrEvadedB,
+                dmgRedPerAttackReceivedB,
+                dmgRedPerAttackReceivedOrEvadedB,
+                evasionPerAttackReceivedB,
+                evasionPerAttackEvaded,
+                evasionPerAttackReceivedOrEvadedB,
+                guardPerAttackReceivedB,
+                guardPerAttackReceivedOrEvadedB,
+                maxDamage,
+                enemyCritChance,
+                tdb,
+            )
+            + pR
+            * branchDamageTaken(
+                iA,
+                0,
+                nAA,
+                nAB,
+                p2Def + p2DefB + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                p2DefB,
+                evasionPostHitB,
+                pEvadeB,
+                0,
+                pGuard + (guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                dmgRed + dmgRedB + (dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                dmgRedB,
+                pNullify,
+                defence
+                * (1 + p2Def + p2DefB + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA))
+                / (1 + p2Def)
+                * (1 + postSuperDefMultB)
+                / (1 + postSuperDefMult),
+                postSuperDefMultB,
+                postSuperDefMultB,
+                pDisableEvasionCancel,
+                defPerAttackReceivedB,
+                defPerAttackEvaded,
+                defPerAttackGuarded,
+                defPerAttackReceivedOrEvadedB,
+                dmgRedPerAttackReceivedB,
+                dmgRedPerAttackReceivedOrEvadedB,
+                evasionPerAttackReceivedB,
+                evasionPerAttackEvaded,
+                evasionPerAttackReceivedOrEvadedB,
+                guardPerAttackReceivedB,
+                guardPerAttackReceivedOrEvadedB,
+                maxDamage,
+                enemyCritChance,
+                tdb,
+            )
+        )
     elif iA < nAA - 1 or iB < nAB - 1:
         evasionPostEvade = copy.deepcopy(evasion)
         evasionPostHit = copy.deepcopy(evasion)
-        evasionPostEvade.updateChance("Start of Turn", evasionPerAttackEvaded[0] + evasionPerAttackReceivedOrEvaded[0], "")
-        evasionPostHit.updateChance("Start of Turn", evasionPerAttackReceived[0] + evasionPerAttackReceivedOrEvaded[0], "")
+        evasionPostEvade.updateChance(
+            "Start of Turn", evasionPerAttackEvaded[0] + evasionPerAttackReceivedOrEvaded[0], ""
+        )
+        evasionPostHit.updateChance(
+            "Start of Turn", evasionPerAttackReceived[0] + evasionPerAttackReceivedOrEvaded[0], ""
+        )
         if iA < nAA - 1:
             iA += 1
         else:
             iB += 1
-        return attackDamageTaken + pE * branchDamageTaken(
-            iA,
-            iB,
-            nAA,
-            nAB,
-            p2Def + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0],
-            p2DefB,
-            evasionPostEvade,
-            pEvadeB,
-            0,
-            pGuard + guardPerAttackReceivedOrEvaded[0],
-            dmgRed + dmgRedPerAttackReceivedOrEvaded[0],
-            dmgRedB,
-            pNullify,
-            defence * (1 + p2Def + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
-            postSuperDefMult,
-            postSuperDefMultB,
-            pDisableEvasionCancel,
-            defPerAttackReceived,
-            defPerAttackEvaded[1:],
-            defPerAttackGuarded,
-            defPerAttackReceivedOrEvaded[1:],
-            dmgRedPerAttackReceived,
-            dmgRedPerAttackReceivedOrEvaded[1:],
-            evasionPerAttackReceived,
-            evasionPerAttackEvaded[1:],
-            evasionPerAttackReceivedOrEvaded[1:],
-            guardPerAttackReceived,
-            guardPerAttackReceivedOrEvaded[1:],
-            maxDamage,
-            tdb
-            ) + pG * branchDamageTaken(
-            iA,
-            iB,
-            nAA,
-            nAB,
-            p2Def + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
-            p2DefB,
-            evasionPostHit,
-            pEvadeB,
-            0,
-            pGuard + guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0],
-            dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
-            dmgRedB,
-            pNullify,
-            defence * (1 + p2Def + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
-            postSuperDefMult,
-            postSuperDefMultB,
-            pDisableEvasionCancel,
-            defPerAttackReceived[1:],
-            defPerAttackEvaded,
-            defPerAttackGuarded[1:],
-            defPerAttackReceivedOrEvaded[1:],
-            dmgRedPerAttackReceived[1:],
-            dmgRedPerAttackReceivedOrEvaded[1:],
-            evasionPerAttackReceived[1:],
-            evasionPerAttackEvaded,
-            evasionPerAttackReceivedOrEvaded[1:],
-            guardPerAttackReceived[1:],
-            guardPerAttackReceivedOrEvaded[1:],
-            maxDamage,
-            tdb,
-            ) + pR * branchDamageTaken(
-            iA,
-            iB,
-            nAA,
-            nAB,
-            p2Def + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
-            p2DefB,
-            evasionPostHit,
-            pEvadeB,
-            0,
-            pGuard + guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0],
-            dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
-            dmgRedB,
-            pNullify,
-            defence * (1 + p2Def + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
-            postSuperDefMult,
-            postSuperDefMultB,
-            pDisableEvasionCancel,
-            defPerAttackReceived[1:],
-            defPerAttackEvaded,
-            defPerAttackGuarded,
-            defPerAttackReceivedOrEvaded[1:],
-            dmgRedPerAttackReceived[1:],
-            dmgRedPerAttackReceivedOrEvaded[1:],
-            evasionPerAttackReceived[1:],
-            evasionPerAttackEvaded,
-            evasionPerAttackReceivedOrEvaded[1:],
-            guardPerAttackReceived[1:],
-            guardPerAttackReceivedOrEvaded[1:],
-            maxDamage,
-            tdb,
+        return (
+            attackDamageTaken
+            + pE
+            * branchDamageTaken(
+                iA,
+                iB,
+                nAA,
+                nAB,
+                p2Def + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0],
+                p2DefB,
+                evasionPostEvade,
+                pEvadeB,
+                0,
+                pGuard + guardPerAttackReceivedOrEvaded[0],
+                dmgRed + dmgRedPerAttackReceivedOrEvaded[0],
+                dmgRedB,
+                pNullify,
+                defence * (1 + p2Def + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
+                postSuperDefMult,
+                postSuperDefMultB,
+                pDisableEvasionCancel,
+                defPerAttackReceived,
+                defPerAttackEvaded[1:],
+                defPerAttackGuarded,
+                defPerAttackReceivedOrEvaded[1:],
+                dmgRedPerAttackReceived,
+                dmgRedPerAttackReceivedOrEvaded[1:],
+                evasionPerAttackReceived,
+                evasionPerAttackEvaded[1:],
+                evasionPerAttackReceivedOrEvaded[1:],
+                guardPerAttackReceived,
+                guardPerAttackReceivedOrEvaded[1:],
+                maxDamage,
+                enemyCritChance,
+                tdb,
             )
+            + pG
+            * branchDamageTaken(
+                iA,
+                iB,
+                nAA,
+                nAB,
+                p2Def + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
+                p2DefB,
+                evasionPostHit,
+                pEvadeB,
+                0,
+                pGuard + guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0],
+                dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
+                dmgRedB,
+                pNullify,
+                defence
+                * (1 + p2Def + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0])
+                / (1 + p2Def),
+                postSuperDefMult,
+                postSuperDefMultB,
+                pDisableEvasionCancel,
+                defPerAttackReceived[1:],
+                defPerAttackEvaded,
+                defPerAttackGuarded[1:],
+                defPerAttackReceivedOrEvaded[1:],
+                dmgRedPerAttackReceived[1:],
+                dmgRedPerAttackReceivedOrEvaded[1:],
+                evasionPerAttackReceived[1:],
+                evasionPerAttackEvaded,
+                evasionPerAttackReceivedOrEvaded[1:],
+                guardPerAttackReceived[1:],
+                guardPerAttackReceivedOrEvaded[1:],
+                maxDamage,
+                enemyCritChance,
+                tdb,
+            )
+            + pR
+            * branchDamageTaken(
+                iA,
+                iB,
+                nAA,
+                nAB,
+                p2Def + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
+                p2DefB,
+                evasionPostHit,
+                pEvadeB,
+                0,
+                pGuard + guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0],
+                dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
+                dmgRedB,
+                pNullify,
+                defence * (1 + p2Def + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
+                postSuperDefMult,
+                postSuperDefMultB,
+                pDisableEvasionCancel,
+                defPerAttackReceived[1:],
+                defPerAttackEvaded,
+                defPerAttackGuarded,
+                defPerAttackReceivedOrEvaded[1:],
+                dmgRedPerAttackReceived[1:],
+                dmgRedPerAttackReceivedOrEvaded[1:],
+                evasionPerAttackReceived[1:],
+                evasionPerAttackEvaded,
+                evasionPerAttackReceivedOrEvaded[1:],
+                guardPerAttackReceived[1:],
+                guardPerAttackReceivedOrEvaded[1:],
+                maxDamage,
+                enemyCritChance,
+                tdb,
+            )
+        )
     else:
         # mulitply by extra factor if only part is expected. 0 =< nAB - iB < 1 )
         return attackDamageTaken * (nAB - iB)
 
 
-def getAttackDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef):
+def getAttackDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef, enemyCritChance):
     return min(
         -(1 - pEvade)
         * min(
-            (guard * GUARD_MOD * (maxDamage * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
-            + (1 - guard) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)) / AVG_HEALTH,
-            1,
-        ),
+            (
+                guard * GUARD_MOD * (maxDamage * (AEAAT_MULTIPLIER * enemyCritChance + (1 - enemyCritChance)) * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
+                + (1 - guard)
+                * (
+                    enemyCritChance * (maxDamage * (AEAAT_MULTIPLIER - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
+                    + (1 - enemyCritChance) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
+                )
+            ) / AVG_HEALTH,
+            1),
         0,
     )
 

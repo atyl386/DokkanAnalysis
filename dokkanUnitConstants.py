@@ -23,6 +23,10 @@ HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 # Misc
 YES_NO = ["Y", "N"]
 
+# Enemy Crit
+
+ENEMY_CRIT_DEF_DEBUFF = 0.3 # Not constant, should update to whatever it is for the strongest boss with crit
+
 # SBR
 ATT_DEBUFF_PASSIVE_CONVERSION_GRADIENT = 10  # 10% attack down for 2 turns = SBR score of +1
 DEBUFF_DURATIONS = [0, 1, 2, 3, 4]  # [turns]
@@ -247,6 +251,8 @@ PROBABILITY_KILL_ENEMY_PER_ATTACK = (
 
 # Enemy
 ENEMY_DODGE_CHANCE = 0.05
+ENEMY_SUPER_CRIT_CHANCE = 0.05
+ENEMY_NORMAL_CRIT_CHANCE = 0
 LOOK_AHEAD_FACTOR = 1.2  # Want to know which units will be good in the future when enemies hit even harder
 AVG_DAM_VARIANCE = 1.015
 MAX_T1_NORMAL_DAM = 1001000 # SSGSSE Vegeta Supreme Battle Spectacle
