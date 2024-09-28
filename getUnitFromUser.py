@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Implement after recieve super attack ability - e.g. TEQ Super Gogeta
 # - Implement boss crit - see Truth's video
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
@@ -3069,4 +3070,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(258, "DF_STR_LSS_Broly", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(259, "DFLR_TEQ_Super_Gogeta", 5, "DEF", "DGE", "ADD", SLOT_2)

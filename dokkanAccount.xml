@@ -2063,4 +2063,12 @@
         <HiPo_choice_2 value="DGE" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
     </_258>
+    <_259>
+        <common_name value="DFLR_TEQ_Super_Gogeta" />
+        <num_copies value="1" />
+        <BRZ_equip value="ATK" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[2, 2, 1, 1, 1, 2, 2, 2, 2, 2]" />
+    </_259>
 </id>
