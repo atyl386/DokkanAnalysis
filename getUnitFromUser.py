@@ -5,7 +5,7 @@ import math
 import click as clc
 
 # TODO:
-# - Implement after recieve super attack ability - e.g. TEQ Super Gogeta
+# - Implement evasion against super ability - e.g. TEQ Super Gogeta
 # - Implement boss crit - see Truth's video
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
@@ -1301,6 +1301,7 @@ class State:
         self.orbCollection = OrbCollection()
         self.firstAttackBuff = 0
         self.p2DefB = 0
+        self.evadeSuper = 0
         self.support = form.carryOverBuffs["ATK Support"].get()  # Support score
         self.dmgRedNormalA = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedNormalB = form.carryOverBuffs["Dmg Red"].get()
@@ -1503,6 +1504,7 @@ class State:
             self.p2DefB,
             self.multiChanceBuff["EvasionA"],
             self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
+            0,
             self.guard,
             self.dmgRedNormalA,
             self.dmgRedNormalB - self.dmgRedNormalA,
@@ -1534,6 +1536,7 @@ class State:
             self.p2DefB,
             self.multiChanceBuff["EvasionA"],
             self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
+            self.evadeSuper,
             self.guard,
             self.dmgRedSuperA,
             self.dmgRedSuperB - self.dmgRedSuperA,
@@ -2038,6 +2041,8 @@ class Buff(PassiveAbility):
                         state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
                     case "EvasionB":
                         state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
+                    case "Evasion against Supers":
+                        state.evadeSuper += effectiveBuff
                     case "Disable Action B":
                         pDisableSuper = P_DISABLE_SUPER * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
                         state.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
@@ -3071,3 +3076,4 @@ class CompositeCondition:
 
 if __name__ == "__main__":
     unit = Unit(259, "DFLR_TEQ_Super_Gogeta", 5, "DEF", "DGE", "ADD", SLOT_2)
+    #unit = Unit(260, "LR_PHY_Super_Janemba", 5, "DEF", "DGE", "ADD", SLOT_2)

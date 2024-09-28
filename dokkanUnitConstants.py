@@ -489,6 +489,7 @@ EFFECTS = [
     "Evasion",
     "EvasionA",
     "EvasionB",
+    "Evasion against Supers",
     "Ki (Type Ki Sphere)",
     "Ki (Ki Sphere)",
     "Ki (Ki Sphere)",

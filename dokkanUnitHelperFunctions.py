@@ -534,6 +534,7 @@ def branchDamageTaken(
     p2DefB,
     evasion,
     pEvadeB,
+    pEvadeExtra,
     pGuard,
     dmgRed,
     dmgRedB,
@@ -558,6 +559,7 @@ def branchDamageTaken(
 ):
     """Returns the remaining damage taken by a unit in a turn recursively"""
     # Get damage taken by the attack pre super
+    evasion.updateChance("Start of Turn", pEvadeExtra, "")
     pE_N = (1 - DODGE_CANCEL_FACTOR * (1 - pDisableEvasionCancel)) * evasion.prob
     pE = pE_N * (1 - pNullify) + pNullify
     pG = (1 - pE) * pGuard
@@ -601,6 +603,7 @@ def branchDamageTaken(
             p2DefB,
             evasionPostEvadeB,
             pEvadeB,
+            0,
             pGuard + guardPerAttackReceivedOrEvaded[0] * (nAA - iA),
             dmgRed + dmgRedB + dmgRedPerAttackReceivedOrEvaded[0] * (nAA - iA),
             dmgRedB,
@@ -631,6 +634,7 @@ def branchDamageTaken(
             p2DefB,
             evasionPostHitB,
             pEvadeB,
+            0,
             pGuard + (guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0]) * (nAA - iA),
             dmgRed + dmgRedB + (dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0]) * (nAA - iA),
             dmgRedB,
@@ -661,6 +665,7 @@ def branchDamageTaken(
             p2DefB,
             evasionPostHitB,
             pEvadeB,
+            0,
             pGuard + (guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0]) * (nAA - iA),
             dmgRed + dmgRedB + (dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0]) * (nAA - iA),
             dmgRedB,
@@ -701,6 +706,7 @@ def branchDamageTaken(
             p2DefB,
             evasionPostEvade,
             pEvadeB,
+            0,
             pGuard + guardPerAttackReceivedOrEvaded[0],
             dmgRed + dmgRedPerAttackReceivedOrEvaded[0],
             dmgRedB,
@@ -731,6 +737,7 @@ def branchDamageTaken(
             p2DefB,
             evasionPostHit,
             pEvadeB,
+            0,
             pGuard + guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0],
             dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
             dmgRedB,
@@ -761,6 +768,7 @@ def branchDamageTaken(
             p2DefB,
             evasionPostHit,
             pEvadeB,
+            0,
             pGuard + guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0],
             dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
             dmgRedB,
