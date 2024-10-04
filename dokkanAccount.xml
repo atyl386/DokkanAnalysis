@@ -2095,4 +2095,12 @@
         <HiPo_choice_2 value="DGE" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_262>
+    <_263>
+        <common_name value="BU_STR_SS_Namek_Goku" />
+        <num_copies value="5" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_263>
 </id>
