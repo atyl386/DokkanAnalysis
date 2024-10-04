@@ -2087,4 +2087,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_261>
+    <_262>
+        <common_name value="DF_PHY_Full_Power_Frieza" />
+        <num_copies value="5" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_262>
 </id>
