@@ -12,7 +12,6 @@ DFLR_INT_Evolution_Blue_Vegeta
 DFLR_INT_LSS_Broly 
 DFLR_AGL_DBS_SS_Broly 
 CLR_INT_Gammas 
-BU_AGL_Nail 
 LR_PHY_Broly_Cheelai_Lemo 
 LR_TEQ_SS_Broly 
 DF_AGL_Dirty_Fireworks_Vegeta 
@@ -24,6 +23,7 @@ DF_PHY_SS_Goten_Trunks
 LR_PHY_Android17_Frieza 
 DF_AGL_SS3_Goku_Angel 
 DF_INT_Fat_Buu 
+BU_AGL_Nail 
 DF_TEQ_SS_Vegeta 
 LR_TEQ_Full_Power_Jiren 
 DF_STR_SS3_DragonFist_Goku 
@@ -103,10 +103,10 @@ LR_INT_SSR_Goku_Black
 DFLR_PHY_Beast_Gohan 
 DF_AGL_SS_Bardock 
 DF_AGL_Berserk_Kale 
-CLR_TEQ_SS_Goku 
 BU_TEQ_Mai 
-CLR_AGL_Kai_Goku 
+CLR_TEQ_SS_Goku 
 LR_AGL_Nappa_Vegeta_Exchange 
+CLR_AGL_Kai_Goku 
 F2P_TEQ_Mr_Buu 
 DF_STR_Super_Vegeta 
 BU_INT_Cui 
@@ -122,8 +122,8 @@ F2P_INT_Caulifla
 BU_PHY_Giant_Ribrianne 
 LR_TEQ_Great_Ape_Vegeta 
 BU_INT_Dodoria 
-BU_AGL_King_Vegeta 
 BU_INT_Hit 
+BU_AGL_King_Vegeta 
 BU_AGL_SFPS4LB_Vegito_Xeno 
 BU_INT_Hercule 
 BU_AGL_SS_Gotenks 
@@ -208,10 +208,10 @@ DF_AGL_Android_13
 BU_PHY_Buutenks 
 BU_TEQ_Vegeta_Nappa 
 F2P_TEQ_Candy_Vegito 
-BU_TEQ_SS_Vegeta_BoG 
 DF_PHY_SS2_Goku 
-F2P_STR_High_School_Gohan 
+BU_TEQ_SS_Vegeta_BoG 
 F2P_AGL_SS_Goku_Fishing 
+F2P_STR_High_School_Gohan 
 F2PLR_TEQ_Dragon_Ball_Trio 
 DF_PHY_DBS_SS_Broly 
 LR_AGL_Future_Gohan_Trunks 
@@ -233,8 +233,8 @@ LR_TEQ_SS3_DragonFist_Goku
 F2P_TEQ_Cyborg_Tao 
 DF_STR_SS3_Vegeta 
 DF_TEQ_GT_Pan 
-BU_STR_Future_Mai 
 F2P_INT_Tien 
+BU_STR_Future_Mai 
 F2P_INT_GT_Vegeta 
 DF_PHY_Beerus 
 BU_STR_23_WT_Krillin 
@@ -244,8 +244,8 @@ F2P_STR_SS2_Great_Saiyaman
 F2P_STR_Devilman 
 BU_STR_SS_Namek_Goku 
 BU_STR_Recoome_Guldo 
-BU_INT_Amond_Rasin 
 BU_PHY_Kid_Chichi 
+BU_INT_Amond_Rasin 
 BU_STR_Piccolo_Cooler_Movie 
 BU_INT_Zamasu 
 F2P_PHY_Buyon 
