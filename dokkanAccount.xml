@@ -2071,4 +2071,12 @@
         <HiPo_choice_2 value="CRT" />
         <slots value="[2, 2, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
     </_259>
+    <_260>
+        <common_name value="DF_AGL_Dirty_Fireworks_Vegeta" />
+        <num_copies value="0" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_260>
 </id>
