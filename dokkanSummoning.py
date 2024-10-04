@@ -137,14 +137,8 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-Goku_Gohan_Trunks = Banner([246, 247, 160, 42, 63, 2, 62, 44, 248, 101], 'red', threePlus1=True)
-print(Goku_Gohan_Trunks.summonScore)
-Broly = Banner([245, 79, 64, 23, 51, 49, 242, 49, 49, 49], 'cyan', threePlus1=True)
-print(Broly.summonScore)
-FamilyKamehameha = Banner([254, 165, 53, 22, 1, 78, 249, 250, 250, 250], 'cyan', threePlus1=True)
-print(FamilyKamehameha.summonScore)
-LSSBroly = Banner([253, 252, 161, 35, 4, 3, 59, 37, 161, 156], 'red', threePlus1=True)
-print(LSSBroly.summonScore)
+DirtyFireworksVegeta = Banner([260, 261, 100, 162, 30, 38, 9, 3, 3, 3], 'red', gFeaturedEvery3=True)
+print(DirtyFireworksVegeta.summonScore)
 WWDL_1 = Banner([36, 19, 31, 30, 17, 150, 39, 34, 8, 33, 40, 140, 11, 170, 21, 257, 41, 21, 93, 163, 135, 127, 126, 86, 104, 142, 142, 60, 60, 60, 128, 128, 128, 127, 10, 188, 188, 183, 183, 116, 25, 116, 116, 25, 25, 101, 101, 211, 25, 101, 116, 25, 25, 25, 101, 170],'red', discount=50*(2 + 10 * 2)/100)
 print(WWDL_1.summonScore)
 WWDL_2 = Banner([25, 18, 5, 7, 32, 134, 45, 38, 46, 25, 10, 20, 9, 25, 170, 48, 48, 25, 164, 155, 98, 170, 146, 131, 25, 145, 129, 25, 54, 8, 25, 132, 116, 25, 146, 116, 8, 126, 8, 25, 116, 25, 25, 48, 170, 41, 25, 48, 48, 25, 156, 25, 25, 25, 101, 101],'red', discount=50*(2 + 10 * 2)/100)
