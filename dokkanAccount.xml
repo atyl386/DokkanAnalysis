@@ -2135,4 +2135,12 @@
         <HiPo_choice_2 value="DGE" />
         <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_267>
+    <_268>
+        <common_name value="F2P_STR_Hacchan" />
+        <num_copies value="3" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_268>
 </id>
