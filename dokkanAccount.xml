@@ -1466,7 +1466,7 @@
     <_184>
         <common_name value="BU_INT_Dark_Masked_King" />
         <num_copies value="2" />
-        <BRZ_equip value="DEF" />
+        <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
         <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
@@ -1859,8 +1859,8 @@
         <common_name value="DF_STR_Master_Roshi" />
         <num_copies value="0" />
         <BRZ_equip value="DEF" />
-        <HiPo_choice_1 value="ADD" />
-        <HiPo_choice_2 value="DGE" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 3, 2, 2, 2, 2, 2, 2]" />
     </_233>
     <_234>
@@ -2101,20 +2101,20 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 3, 3, 3, 3, 3, 2, 2, 2]" /> 
+        <slots value="[3, 2, 3, 1, 3, 3, 3, 2, 2, 2]" /> 
     </_263>
     <_264>
         <common_name value="BU_AGL_Nail" />
         <num_copies value="5" />
-        <BRZ_equip value="ATK" />
+        <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="ADD" />
-        <HiPo_choice_2 value="DGE" />
+        <HiPo_choice_2 value="CRT" />
         <slots value="[2, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
     </_264>
     <_265>
         <common_name value="F2PLR_TEQ_SS_Goku" />
         <num_copies value="5" />
-        <BRZ_equip value="DEF" />
+        <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
@@ -2125,15 +2125,15 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="DGE" />
-        <slots value="[1, 1, 1, 1, 2, 2, 2, 2, 2, 2]" /> 
+        <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
     </_266>
     <_267>
         <common_name value="F2PLR_TEQ_Demon_King_Piccolo" />
         <num_copies value="5" />
-        <BRZ_equip value="DEF" />
+        <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="DGE" />
-        <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_267>
     <_268>
         <common_name value="F2P_STR_Hacchan" />
@@ -2146,25 +2146,25 @@
     <_269>
         <common_name value="F2P_PHY_Mighty_Mask" />
         <num_copies value="5" />
-        <BRZ_equip value="DEF" />
-        <HiPo_choice_1 value="ADD" />
-        <HiPo_choice_2 value="DGE" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+        <BRZ_equip value="DGE" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 1, 2, 2, 2, 2, 2, 2]" /> 
     </_269>
     <_270>
         <common_name value="F2P_AGL_Hit" />
         <num_copies value="5" />
-        <BRZ_equip value="DEF" />
+        <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
-        <HiPo_choice_2 value="ADD" />
+        <HiPo_choice_2 value="CRT" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_270>
     <_271>
         <common_name value="F2PLR_TEQ_Grandpa_Gohan" />
         <num_copies value="0" />
-        <BRZ_equip value="DEF" />
-        <HiPo_choice_1 value="DGE" />
-        <HiPo_choice_2 value="CRT" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+        <BRZ_equip value="ATK" />
+        <HiPo_choice_1 value="CRT" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[3, 3, 2, 3, 3, 3, 3, 2, 2, 2]" /> 
     </_271>
 </id>
