@@ -9,8 +9,8 @@ LR_STR_Cell_Max
 LR_PHY_Super_Janemba 
 DFLR_AGL_MUI_Goku 
 DFLR_INT_Evolution_Blue_Vegeta 
-DFLR_INT_LSS_Broly 
 DFLR_AGL_DBS_SS_Broly 
+DFLR_INT_LSS_Broly 
 CLR_INT_Gammas 
 LR_TEQ_Gohan_Piccolo_Exchange 
 LR_PHY_Broly_Cheelai_Lemo 
@@ -26,8 +26,8 @@ DF_AGL_SS3_Goku_Angel
 DF_INT_Fat_Buu 
 DF_TEQ_SS_Vegeta 
 LR_TEQ_Full_Power_Jiren 
-DF_STR_SS3_DragonFist_Goku 
 DFLR_STR_SS_Vegito 
+DF_STR_SS3_DragonFist_Goku 
 LR_STR_Team_Turles 
 BU_AGL_Nail 
 LR_STR_Bulma_Youth 
@@ -48,8 +48,8 @@ DF_STR_Transforming_Kelfa
 DF_INT_Piccolo_Jr 
 CLR_PHY_SS_Future_Trunks 
 LR_STR_UI_Goku 
-DF_TEQ_Ultimate_Gohan 
 BU_TEQ_Caulifla 
+DF_TEQ_Ultimate_Gohan 
 CLR_INT_SS_Trio 
 DFLR_PHY_Buu_Goku_Vegeta 
 F2PLR_TEQ_SS_Goku 
@@ -61,8 +61,8 @@ DF_STR_Master_Roshi
 LR_INT_Ginyu_Force 
 DF_TEQ_Exchange_Buu 
 BU_AGL_Bulma_Bunny 
-DF_PHY_Kid_Buu 
 DF_PHY_SSR_Goku_Black 
+DF_PHY_Kid_Buu 
 DFLR_AGL_SS2_Gohan_Youth 
 LR_AGL_Super_Baby_2 
 DF_STR_Costume_Videl 
@@ -86,8 +86,8 @@ F2P_INT_SS_Kid_Trunks
 BU_TEQ_Evil_Buu 
 DF_AGL_Android_21_Good 
 BU_INT_Android_16 
-LR_TEQ_Universe_2 
 DF_TEQ_Super_Trunks 
+LR_TEQ_Universe_2 
 DF_STR_Piccolo_Gohan_Exchange 
 LR_AGL_SS2_Caulifla_Kale 
 BU_AGL_Margarita 
@@ -129,8 +129,8 @@ BU_AGL_King_Vegeta
 BU_INT_Hit 
 DFLR_INT_Vegeta_Trunks 
 BU_AGL_SFPS4LB_Vegito_Xeno 
-BU_AGL_SS_Gotenks 
 BU_INT_Hercule 
+BU_AGL_SS_Gotenks 
 CLR_STR_SS_Goku_Hatchiyak 
 DF_AGL_Transforming_Cell 
 BU_INT_Future_Mai 
@@ -167,8 +167,8 @@ BU_PHY_Gowasu_Zamasu
 F2PLR_PHY_Pajamas_Beerus 
 F2P_STR_Videl 
 BU_STR_Hit 
-DF_TEQ_Fusing_Kefla 
 BU_AGL_Pan_GT 
+DF_TEQ_Fusing_Kefla 
 BU_INT_Whis 
 BU_STR_Bardock_Gine 
 F2P_AGL_RoF_Krillin 
@@ -221,8 +221,8 @@ DF_PHY_DBS_SS_Broly
 LR_AGL_Future_Gohan_Trunks 
 F2P_PHY_ChiChi 
 DF_TEQ_Golden_Frieza 
-DF_INT_RoF_Blues 
 BU_PHY_Whirus 
+DF_INT_RoF_Blues 
 DF_STR_Transforming_Cooler 
 BU_AGL_Daiz_Cacao 
 F2P_PHY_UI_Goku 
@@ -230,6 +230,7 @@ BU_STR_Fat_Buu
 DF_TEQ_Fat_Janemba 
 BU_AGL_Baby_Janemba 
 DF_INT_Majin_Vegeta 
+F2P_PHY_Mighty_Mask 
 BU_STR_Pan_GT 
 BU_PHY_Android_21_Evil 
 BU_STR_SS_Future_Trunks 

@@ -2143,4 +2143,12 @@
         <HiPo_choice_2 value="CRT" />
         <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_268>
+    <_269>
+        <common_name value="F2P_PHY_Mighty_Mask" />
+        <num_copies value="5" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_269>
 </id>
