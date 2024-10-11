@@ -2119,4 +2119,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_265>
+    <_266>
+        <common_name value="LR_TEQ_Gohan_Piccolo_Exchange" />
+        <num_copies value="0" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
+        <slots value="[1, 1, 1, 1, 2, 2, 2, 2, 2, 2]" /> 
+    </_266>
 </id>
