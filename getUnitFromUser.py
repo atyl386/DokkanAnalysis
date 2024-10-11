@@ -3076,4 +3076,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(270, "F2P_AGL_Hit", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(271, "F2PLR_TEQ_Grandpa_Gohan", 5, "DEF", "DGE", "ADD", SLOT_2)
