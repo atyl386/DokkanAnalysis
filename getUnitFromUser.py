@@ -6,7 +6,6 @@ import click as clc
 
 # TODO:
 # - Implement evasion against super ability - e.g. TEQ Super Gogeta
-# - Implement boss crit - see Truth's video
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
@@ -3077,4 +3076,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(263, "BU_STR_SS_Namek_Goku", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(265, "F2PLR_TEQ_SS_Goku", 5, "DEF", "DGE", "ADD", SLOT_2)
