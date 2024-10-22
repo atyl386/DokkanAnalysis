@@ -145,7 +145,7 @@
     </_18>
     <_19>
         <common_name value="DF_PHY_Kid_Goku" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -249,7 +249,7 @@
     </_31>
     <_32>
         <common_name value="DF_INT_Yamcha" />
-        <num_copies value="0" />
+        <num_copies value="1" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1665,7 +1665,7 @@
     </_208>
     <_209>
         <common_name value="BU_STR_Fat_Buu" />
-        <num_copies value="3" />
+        <num_copies value="4" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
