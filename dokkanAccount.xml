@@ -2215,4 +2215,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[3, 3, 3, 3, 3, 3, 3, 3]" /> 
     </_277>
+    <_278>
+        <common_name value="LR_AGL_Krillin_Gohan_Namek" />
+        <num_copies value="5" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_278>
 </id>
