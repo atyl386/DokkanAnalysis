@@ -3076,4 +3076,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(278, "LR_AGL_Krillin_Gohan_Namek", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(279, "LR_INT_Vegeta_Goku_Exchange", 5, "DEF", "DGE", "ADD", SLOT_2)
