@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Add Demonic Power to units
 # - Implement evasion against super ability - e.g. TEQ Super Gogeta
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
@@ -3076,4 +3077,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(280, "F2P_TEQ_Oolong_Launch", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(281, "BU_INT_Angila_Medamatcha", 5, "DEF", "DGE", "ADD", SLOT_2)
