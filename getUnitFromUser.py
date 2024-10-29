@@ -1817,7 +1817,7 @@ class Domain(SingleTurnAbility):
                         TurnDependent(form, 1, False, "Disable Evasion Cancel", 0.15, 1, params),
                     ])
                 case "Molten Lava of Natade Village":
-                    UncontrollablePowerBuff = 0.15 * aprioriProbMod(2/3 * math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # 2/3 comes from not every ally on Uncontrollable Power. The other part comes from calculating the probability an average enemy is not on the RoG category.
+                    UncontrollablePowerBuff = 0.15 * aprioriProbMod(2/3 * math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # 2/3 comes from not every ally on Uncontrollable Power. The other part comes from calculating the probability an average enemy is not on the Uncontrollable Power category.
                     MovieHeroesDebuff = 0.1 * aprioriProbMod(1 - math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # The other part comes from calculating the probability an average enemy is on the Movie Heroes category.
                     form.abilities["Start of Turn"].extend([
                         TurnDependent(
@@ -1838,10 +1838,36 @@ class Domain(SingleTurnAbility):
                         TurnDependent(
                             form, 1, False, "ATK Support", MovieHeroesDebuff * ATK_SUPPORT_100_FACTOR, self.duration, params
                         ),
-                        TurnDependent(
-                            form, 1, False, "DEF Support", MovieHeroesDebuff * DEF_SUPPORT_100_FACTOR, self.duration, params
-                        ),
                         TurnDependent(form, 1, False, "P3 ATK", 0.15 + MovieHeroesDebuff, 1, params),
+                        TurnDependent(form, 1, False, "P3 DEF", 0.15, 1, params),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", self.effectiveBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params)
+                    ])
+                case "Earth Shrouded in Clouds":
+                    DemonicPowerBuff = 0.15 * aprioriProbMod(1.0 * math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # 1.0 comes from every ally being on Uncontrollable Power. The other part comes from calculating the probability an average enemy is not on the Demonic Power category.
+                    EarthBredFightersDebuff = 0.15 * aprioriProbMod(1 - math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # The other part comes from calculating the probability an average enemy is on the Earth-Bred Fighters category.
+                    form.abilities["Start of Turn"].extend([
+                        TurnDependent(
+                            form, 1, False, "Heal", 0.1, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "Ki", 2, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "Ki Support", 2, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", DemonicPowerBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "DEF Support", DemonicPowerBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "ATK Support", EarthBredFightersDebuff * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(form, 1, False, "P3 ATK", 0.15 + EarthBredFightersDebuff, 1, params),
                         TurnDependent(form, 1, False, "P3 DEF", 0.15, 1, params),
                         TurnDependent(
                             form, 1, False, "ATK Support", self.effectiveBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
@@ -3077,4 +3103,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(281, "BU_INT_Angila_Medamatcha", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(282, "DF_STR_Lord_Slug", 5, "DEF", "DGE", "ADD", SLOT_2)
