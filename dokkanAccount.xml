@@ -2255,4 +2255,12 @@
         <HiPo_choice_2 value="DGE" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_282>
+    <_283>
+        <common_name value="DF_STR_Boujack" />
+        <num_copies value="4" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="CRT" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_283>
 </id>
