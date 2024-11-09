@@ -2236,14 +2236,14 @@
         <num_copies value="5" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
-        <HiPo_choice_2 value="CRT" />
+        <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_280>
     <_281>
         <common_name value="BU_INT_Angila_Medamatcha" />
         <num_copies value="0" />
         <BRZ_equip value="DEF" />
-        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="CRT" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_281>
@@ -2252,8 +2252,8 @@
         <num_copies value="0" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="CRT" />
-        <HiPo_choice_2 value="DGE" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
     </_282>
     <_283>
         <common_name value="DF_STR_Boujack" />
@@ -2261,12 +2261,12 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="CRT" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+        <slots value="[3, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_283>
     <_284>
         <common_name value="BU_AGL_Mechikabura" />
         <num_copies value="2" />
-        <BRZ_equip value="DEF" />
+        <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="CRT" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
@@ -2282,7 +2282,7 @@
     <_286>
         <common_name value="BU_INT_Xeno_Pan" />
         <num_copies value="1" />
-        <BRZ_equip value="DEF" />
+        <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
