@@ -195,7 +195,7 @@
 				<input prompt="How many conditions have to be met?" response="1" />
 				<condition_1>
 					<input prompt="What type of condition is # 1?" response="Max HP" />
-					<input prompt="What is the maximum HP condition?" response="0.3" />
+					<input prompt="What is the maximum HP condition?" response="0.6" />
 				</condition_1>
 				<input prompt="Can this form attack?" response="Y" />
 				<input prompt="What is the unit's normal counter multiplier?" response="NA" />
