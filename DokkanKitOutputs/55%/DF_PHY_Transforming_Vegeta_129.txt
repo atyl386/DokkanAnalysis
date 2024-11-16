@@ -3,7 +3,7 @@ State # 0 / Turn # 1
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 16002.0 
-Useability: 1.2802597402597404 
+Useability: 1.2245962732919256 
 Healing: 0.030664005507692306 
 Support: 0.0875 
 APT: 6423627.587853967 
@@ -16,7 +16,7 @@ State # 1 / Turn # 3
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 16002.0 
-Useability: 1.2802597402597404 
+Useability: 1.2245962732919256 
 Healing: 0.05293582703821432 
 Support: 0.0875 
 APT: 6999810.499028002 
@@ -29,7 +29,7 @@ State # 2 / Turn # 5
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 16002.0 
-Useability: 1.2857142857142858 
+Useability: 1.2298136645962732 
 Healing: 0.0961906652838113 
 Support: 0.125 
 APT: 10764150.685208458 
@@ -42,7 +42,7 @@ State # 3 / Turn # 7
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 16002.0 
-Useability: 1.2129870129870128 
+Useability: 1.1602484472049688 
 Healing: 0.132671986358896 
 Support: 0.125 
 APT: 13994459.059945067 
@@ -55,7 +55,7 @@ State # 4 / Turn # 9
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 16002.0 
-Useability: 1.2571428571428573 
+Useability: 1.2024844720496894 
 Healing: 0.8245146194337033 
 Support: 0.0 
 APT: 66828112.395099804 
@@ -68,7 +68,7 @@ State # 5 / Turn # 12
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 16002.0 
-Useability: 1.2692640692640693 
+Useability: 1.2140786749482402 
 Healing: 0.4003078224786821 
 Support: 0.08333333333333333 
 APT: 34271137.58596638 
@@ -81,7 +81,7 @@ State # 6 / Turn # 14
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 16002.0 
-Useability: 1.2753246753246754 
+Useability: 1.2198757763975154 
 Healing: 0.18820442400117138 
 Support: 0.125 
 APT: 17992650.181399677 
@@ -94,7 +94,7 @@ State # 7 / Turn # 16
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 16002.0 
-Useability: 1.2753246753246754 
+Useability: 1.2198757763975154 
 Healing: 0.18820442400117138 
 Support: 0.125 
 APT: 17992650.181399677 
@@ -107,7 +107,7 @@ State # 8 / Turn # 18
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 16002.0 
-Useability: 1.2753246753246754 
+Useability: 1.2198757763975154 
 Healing: 0.18820442400117138 
 Support: 0.125 
 APT: 17992650.181399677 
@@ -120,7 +120,7 @@ State # 9 / Turn # 20
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 16002.0 
-Useability: 1.2753246753246754 
+Useability: 1.2198757763975154 
 Healing: 0.18820442400117138 
 Support: 0.125 
 APT: 17992650.181399677 

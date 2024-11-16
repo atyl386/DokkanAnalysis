@@ -5,7 +5,6 @@ import math
 import click as clc
 
 # TODO:
-# - Add Demonic Power to units
 # - Implement evasion against super ability - e.g. TEQ Super Gogeta
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
