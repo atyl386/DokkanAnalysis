@@ -97,7 +97,7 @@
     </_12>
     <_13>
         <common_name value="CLR_STR_SS_Goku_Hatchiyak" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -105,7 +105,7 @@
     </_13>
     <_14>
         <common_name value="LR_AGL_Future_Gohan_Trunks" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
@@ -657,7 +657,7 @@
     </_82>
     <_83>
         <common_name value="CLR_INT_Gammas" />
-        <num_copies value="0" />
+        <num_copies value="1" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="DGE" />
@@ -785,7 +785,7 @@
     </_98>
     <_99>
         <common_name value="BU_AGL_King_Vegeta" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1769,7 +1769,7 @@
     </_221>
     <_222>
         <common_name value="LR_PHY_Android17_Frieza" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="DGE" />

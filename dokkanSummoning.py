@@ -137,8 +137,10 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-Heroes = Banner([297, 296, 295, 294, 293], 'blue', gFeatured=True, featuredSSR_rate=0.7)
-print(Heroes.summonScore)
+BlackFridayFestival = Banner([81, 66, 102, 57, 110, 15, 164, 86, 60, 54], 'red', threePlus1=True)
+print(BlackFridayFestival.summonScore)
+BlackFridayCarnival = Banner([67, 83, 12, 13, 214, 222, 217, 252, 89, 87], 'cyan', threePlus1=True)
+print(BlackFridayCarnival.summonScore)
 WWDL_1 = Banner([36, 19, 31, 30, 17, 150, 39, 34, 8, 33, 40, 140, 11, 170, 21, 257, 41, 21, 93, 163, 135, 127, 126, 86, 104, 142, 142, 60, 60, 60, 128, 128, 128, 127, 10, 188, 188, 183, 183, 116, 25, 116, 116, 25, 25, 101, 101, 211, 25, 101, 116, 25, 25, 25, 101, 170],'red', discount=50*(2 + 10 * 2)/100)
 print(WWDL_1.summonScore)
 WWDL_2 = Banner([25, 18, 5, 7, 32, 134, 45, 38, 46, 25, 10, 20, 9, 25, 170, 48, 48, 25, 164, 155, 98, 170, 146, 131, 25, 145, 129, 25, 54, 8, 25, 132, 116, 25, 146, 116, 8, 126, 8, 25, 116, 25, 25, 48, 170, 41, 25, 48, 48, 25, 156, 25, 25, 25, 101, 101],'red', discount=50*(2 + 10 * 2)/100)
