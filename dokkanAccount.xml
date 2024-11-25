@@ -2197,7 +2197,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 3, 2, 3, 3, 3, 3, 2, 2]" /> 
+        <slots value="[2, 3, 3, 2, 3, 3, 3, 3, 2, 2]" /> 
     </_275>
     <_276>
         <common_name value="F2P_TEQ_Tien" />
@@ -2237,7 +2237,7 @@
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+        <slots value="[2, 2, 2, 2, 2, 1, 1, 1, 1, 1]" /> 
     </_280>
     <_281>
         <common_name value="BU_INT_Angila_Medamatcha" />
@@ -2253,7 +2253,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="CRT" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
+        <slots value="[2, 1, 1, 2, 2, 1, 2, 2, 1, 1]" /> 
     </_282>
     <_283>
         <common_name value="DF_STR_Boujack" />
@@ -2349,7 +2349,7 @@
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+        <slots value="[1, 1, 1, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_294>
     <_295>
         <common_name value="BU_INT_Aeos" />
@@ -2386,7 +2386,7 @@
     <_299>
         <common_name value="F2P_PHY_Frieza_Cooler" />
         <num_copies value="5" />
-        <BRZ_equip value="DEF" />
+        <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
@@ -2394,10 +2394,10 @@
     <_300>
         <common_name value="F2P_PHY_Hit" />
         <num_copies value="5" />
-        <BRZ_equip value="DEF" />
+        <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+        <slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 1]" /> 
     </_300>
     <_301>
         <common_name value="F2P_TEQ_Saonel_Pirina" />
@@ -2410,10 +2410,10 @@
     <_302>
         <common_name value="F2P_STR_Champa" />
         <num_copies value="5" />
-        <BRZ_equip value="DEF" />
+        <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
-        <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[3, 3, 3, 3, 3, 3, 3, 2, 2, 2]" /> 
     </_302>
     <_303>
         <common_name value="BU_INT_Piccolo_ToP" />
@@ -2435,14 +2435,14 @@
         <common_name value="BU_TEQ_ToP_Android_18" />
         <num_copies value="5" />
         <BRZ_equip value="DEF" />
-        <HiPo_choice_1 value="DGE" />
-        <HiPo_choice_2 value="ADD" />
-        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
+        <slots value="[2, 2, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
     </_305>
     <_306>
         <common_name value="BU_AGL_Skinny_Buu" />
         <num_copies value="5" />
-        <BRZ_equip value="DGE" />
+        <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
