@@ -1872,6 +1872,19 @@ class Domain(SingleTurnAbility):
                         ),
                         TurnDependent(form, 1, False, "P3 ATK", self.effectiveBuff, 1, params)
                     ])
+                case "Inside Majin Buu":
+                    PowerAbsorptionOrTransformationBoostBuff = 0.15 * aprioriProbMod(1.0 * math.factorial(NUM_CATEGORIES - 2) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 2)), True) # 1.0 comes from every ally being on either Power Absoption or Transformation Boost. The other part comes from calculating the probability an average enemy is not on either category.
+                    MajinBuuSagaBuff = 0.15 * aprioriProbMod(0.75 * math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # 0.75 comes from 75% of allies being on either Power Absoption or Transformation Boost. The other part comes from calculating the probability an average enemy is not on either category.
+                    form.abilities["Start of Turn"].extend([
+                        TurnDependent(
+                            form, 1, False, "ATK Support", (PowerAbsorptionOrTransformationBoostBuff + MajinBuuSagaBuff) * ATK_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(
+                            form, 1, False, "DEF Support", (PowerAbsorptionOrTransformationBoostBuff + MajinBuuSagaBuff) * DEF_SUPPORT_100_FACTOR, self.duration, params
+                        ),
+                        TurnDependent(form, 1, False, "P3 ATK", 0.3, 1, params),
+                        TurnDependent(form, 1, False, "P3 DEF", 0.3, 1, params),
+                    ])
                     
 
 class ActiveSkillBuff(SingleTurnAbility):
@@ -3101,4 +3114,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(306, "BU_AGL_Skinny_Buu", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(307, "DF_TEQ_Buuhan", 5, "DEF", "DGE", "ADD", SLOT_2)

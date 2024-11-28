@@ -2447,4 +2447,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
     </_306>
+    <_307>
+        <common_name value="DF_TEQ_Buuhan" />
+        <num_copies value="0" />
+        <BRZ_equip value="ATK" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="DGE" />
+        <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
+    </_307>
 </id>
