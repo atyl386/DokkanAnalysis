@@ -2471,4 +2471,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_309>
+    <_310>
+        <common_name value="DF_INT_Ultimate_Gohan" />
+        <num_copies value="5" />
+        <BRZ_equip value="ATK" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_310>
 </id>
