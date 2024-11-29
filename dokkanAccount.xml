@@ -57,7 +57,7 @@
     </_7>
     <_8>
         <common_name value="DF_INT_Majin_Vegeta" />
-        <num_copies value="1" />
+        <num_copies value="3" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -121,7 +121,7 @@
     </_15>
     <_16>
         <common_name value="BU_STR_Universe_2" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -241,7 +241,7 @@
     </_30>
     <_31>
         <common_name value="DF_TEQ_Bardock" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -769,7 +769,7 @@
     </_96>
     <_97>
         <common_name value="DF_AGL_1st_Form_Frieza" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="DGE" />
@@ -1257,7 +1257,7 @@
     </_157>
     <_158>
         <common_name value="BU_TEQ_Evil_Buu" />
-        <num_copies value="2" />
+        <num_copies value="3" />
         <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1921,7 +1921,7 @@
     </_240>
     <_241>
         <common_name value="BU_TEQ_Mai" />
-        <num_copies value="0" />
+        <num_copies value="1" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -2449,7 +2449,7 @@
     </_306>
     <_307>
         <common_name value="DF_TEQ_Buuhan" />
-        <num_copies value="0" />
+        <num_copies value="1" />
         <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="ADD" />
         <HiPo_choice_2 value="CRT" />
@@ -2457,7 +2457,7 @@
     </_307>
     <_308>
         <common_name value="BU_STR_Grand_Supreme_Kai" />
-        <num_copies value="0" />
+        <num_copies value="1" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
