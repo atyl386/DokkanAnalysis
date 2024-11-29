@@ -2455,4 +2455,12 @@
         <HiPo_choice_2 value="DGE" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
     </_307>
+    <_308>
+        <common_name value="BU_STR_Grand_Supreme_Kai" />
+        <num_copies value="0" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_308>
 </id>
