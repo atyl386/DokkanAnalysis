@@ -697,10 +697,11 @@ class Form:
                 [
                     "What is the attack multiplier?",
                     "What is the additional attack buff when performing the attack?",
+                    "What is the additional P2 ATK buff when performing the attack?",
                     "Does this active skill trigger a transformation?",
                 ],
-                [clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False), None, clc.Choice(YES_NO)],
-                ["Ultimate", 0.0, "N"],
+                [clc.Choice(SPECIAL_ATTACK_MULTIPLIER_NAMES, case_sensitive=False), None, None, clc.Choice(YES_NO)],
+                ["Ultimate", 0.0, 0.0, "N"],
             )
         )
         self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "standby_finish_attack")
@@ -1299,6 +1300,7 @@ class State:
         self.orbCollection = OrbCollection()
         self.firstAttackBuff = 0
         self.p2DefB = 0
+        self.p2DefSuper = 0
         self.evadeSuper = 0
         self.support = form.carryOverBuffs["ATK Support"].get()  # Support score
         self.dmgRedNormalA = form.carryOverBuffs["Dmg Red"].get()
@@ -1500,6 +1502,7 @@ class State:
             self.numNormalAttacksDirectedAfterAttacking,
             self.p2Buff["DEF"],
             self.p2DefB,
+            0,
             self.multiChanceBuff["EvasionA"],
             self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
             0,
@@ -1533,6 +1536,7 @@ class State:
             self.numSuperAttacksDirectedAfterAttacking,
             self.p2Buff["DEF"],
             self.p2DefB,
+            self.p2DefSuper,
             self.multiChanceBuff["EvasionA"],
             self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
             self.evadeSuper,
@@ -1908,7 +1912,7 @@ class ActiveSkillBuff(SingleTurnAbility):
 class ActiveSkillAttack(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
-        attackMultiplier, attackBuff, self.triggersTransformation = args
+        attackMultiplier, attackBuff, self.p2AttackBuff, self.triggersTransformation = args
         self.activeMult = specialAttackConversion[attackMultiplier] + attackBuff
 
     def applyToState(self, state, unit=None, form=None):
@@ -1925,7 +1929,7 @@ class ActiveSkillAttack(SingleTurnAbility):
                     state.p1Buff["ATK"],
                     state.stackedStats["ATK"],
                     self.form.linkEffects["SoT ATK"],
-                    state.p2Buff["ATK"],
+                    state.p2Buff["ATK"] + self.p2AttackBuff,
                     state.p3Buff["ATK"],
                     self.activeMult,
                     unit.nCopies,
@@ -2112,6 +2116,8 @@ class Buff(PassiveAbility):
                         state.p2Buff["DEF"] += effectiveBuff
                     case "P2 DEF B":
                         state.p2DefB += effectiveBuff
+                    case "P2 DEF against Supers":
+                        state.p2DefSuper += effectiveBuff
                     case "P3 ATK":
                         state.p3Buff["ATK"] += effectiveBuff
                     case "P3 DEF":
@@ -3114,4 +3120,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(312, "DF_TEQ_Majin_Vegeta", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(313, "CLR_TEQ_SS3_Gotenks", 5, "DEF", "DGE", "ADD", SLOT_2)

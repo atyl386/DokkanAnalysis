@@ -540,6 +540,7 @@ def branchDamageTaken(
     nAB,
     p2Def,
     p2DefB,
+    p2DefSuper,
     evasion,
     pEvadeB,
     pEvadeExtra,
@@ -619,8 +620,9 @@ def branchDamageTaken(
                 0,
                 nAA,
                 nAB,
-                p2Def + p2DefB + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                p2Def + p2DefB + p2DefSuper + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
                 p2DefB,
+                p2DefSuper,
                 evasionPostEvadeB,
                 pEvadeB,
                 0,
@@ -629,7 +631,7 @@ def branchDamageTaken(
                 dmgRedB,
                 pNullify,
                 defence
-                * (1 + p2Def + p2DefB + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA))
+                * (1 + p2Def + p2DefB + p2DefSuper + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA))
                 / (1 + p2Def)
                 * (1 + postSuperDefMultB)
                 / (1 + postSuperDefMult),
@@ -659,8 +661,10 @@ def branchDamageTaken(
                 nAB,
                 p2Def
                 + p2DefB
+                + p2DefSuper
                 + (defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
                 p2DefB,
+                p2DefSuper,
                 evasionPostHitB,
                 pEvadeB,
                 0,
@@ -673,6 +677,7 @@ def branchDamageTaken(
                     1
                     + p2Def
                     + p2DefB
+                    + p2DefSuper
                     + (defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA)
                 )
                 / (1 + p2Def)
@@ -702,8 +707,9 @@ def branchDamageTaken(
                 0,
                 nAA,
                 nAB,
-                p2Def + p2DefB + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                p2Def + p2DefB + p2DefSuper + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
                 p2DefB,
+                p2DefSuper,
                 evasionPostHitB,
                 pEvadeB,
                 0,
@@ -712,7 +718,7 @@ def branchDamageTaken(
                 dmgRedB,
                 pNullify,
                 defence
-                * (1 + p2Def + p2DefB + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA))
+                * (1 + p2Def + p2DefB + p2DefSuper + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA))
                 / (1 + p2Def)
                 * (1 + postSuperDefMultB)
                 / (1 + postSuperDefMult),
@@ -756,8 +762,9 @@ def branchDamageTaken(
                 iB,
                 nAA,
                 nAB,
-                p2Def + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0],
+                p2Def + p2DefSuper + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0],
                 p2DefB,
+                p2DefSuper,
                 evasionPostEvade,
                 pEvadeB,
                 0,
@@ -765,7 +772,7 @@ def branchDamageTaken(
                 dmgRed + dmgRedPerAttackReceivedOrEvaded[0],
                 dmgRedB,
                 pNullify,
-                defence * (1 + p2Def + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
+                defence * (1 + p2Def + p2DefSuper + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
                 postSuperDefMult,
                 postSuperDefMultB,
                 pDisableEvasionCancel,
@@ -790,8 +797,9 @@ def branchDamageTaken(
                 iB,
                 nAA,
                 nAB,
-                p2Def + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
+                p2Def + p2DefSuper + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
                 p2DefB,
+                p2DefSuper,
                 evasionPostHit,
                 pEvadeB,
                 0,
@@ -800,7 +808,7 @@ def branchDamageTaken(
                 dmgRedB,
                 pNullify,
                 defence
-                * (1 + p2Def + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0])
+                * (1 + p2Def + p2DefSuper + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0])
                 / (1 + p2Def),
                 postSuperDefMult,
                 postSuperDefMultB,
@@ -826,8 +834,9 @@ def branchDamageTaken(
                 iB,
                 nAA,
                 nAB,
-                p2Def + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
+                p2Def + p2DefSuper + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
                 p2DefB,
+                p2DefSuper,
                 evasionPostHit,
                 pEvadeB,
                 0,
@@ -835,7 +844,7 @@ def branchDamageTaken(
                 dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
                 dmgRedB,
                 pNullify,
-                defence * (1 + p2Def + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
+                defence * (1 + p2Def + p2DefSuper + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
                 postSuperDefMult,
                 postSuperDefMultB,
                 pDisableEvasionCancel,
