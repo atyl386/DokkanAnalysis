@@ -207,6 +207,7 @@
 							</condition_1>
 						</condition_b>
 					</composte_condition>
+					<input prompt="What is the additional P2 ATK buff when performing the attack?" response="0.0" />
 				</ability_1>
 			</active_skill_attack>
 			<standby_finish_attack>

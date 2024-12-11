@@ -214,6 +214,7 @@
 						<input prompt="What type of condition is # 1?" response="Turn" />
 						<input prompt="What is the ability turn condition?" response="3" />
 					</condition_1>
+					<input prompt="What is the additional P2 ATK buff when performing the attack?" response="0.0" />
 				</ability_1>
 			</active_skill_attack>
 			<standby_finish_attack>
