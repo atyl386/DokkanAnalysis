@@ -2788,6 +2788,9 @@ class UntilAttackRecieved(UntilEvent):
             state.buff[self.effect] += self.effectiveBuff
         else:
             match self.effect:
+                case "DEF":
+                    state.p2Buff["DEF"] += self.effectiveBuff
+                    state.defPerAttackReceived[0] -= self.effectiveBuff
                 case "Evasion":
                     state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
                     state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
@@ -3120,4 +3123,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(315, "F2P_INT_Andrdoid_18", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(316, "F2P_AGL_Kid_Pan", 5, "DEF", "DGE", "ADD", SLOT_2)
