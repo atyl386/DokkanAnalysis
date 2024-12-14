@@ -2503,4 +2503,12 @@
         <HiPo_choice_2 value="DGE" />
         <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
     </_313>
+    <_314>
+        <common_name value="F2P_AGL_Grandpa_Gohan" />
+        <num_copies value="2" />
+        <BRZ_equip value="ATK" />
+        <HiPo_choice_1 value="DGE" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" /> 
+    </_314>
 </id>
