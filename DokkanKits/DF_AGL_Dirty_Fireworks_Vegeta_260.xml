@@ -71,7 +71,7 @@
 								<regular_super_attack_variation_1_effect_2>
 									<input prompt="What type of effect does the unit get on super?" response="DEF" />
 									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
-									<input prompt="What is the value of the buff?" response="0.3" />
+									<input prompt="What is the value of the buff?" response="0.2" />
 									<input prompt="How many turns does it last for?" response="99" />
 								</regular_super_attack_variation_1_effect_2>
 							</regular_super_attack_variation_1_effects>
@@ -119,7 +119,7 @@
 				<ability_1>
 					<input prompt="What turn does the buff start from?" response="7" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
-					<input prompt="What type of buff does the unit get?" response="DEF" />
+					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
 				</ability_1>
