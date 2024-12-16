@@ -2535,4 +2535,12 @@
         <HiPo_choice_2 value="ADD" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_317>
+    <_318>
+        <common_name value="LR_PHY_SS2_Angel_Vegeta" />
+        <num_copies value="3" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="CRT" />
+        <HiPo_choice_2 value="ADD" />
+        <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_318>
 </id>

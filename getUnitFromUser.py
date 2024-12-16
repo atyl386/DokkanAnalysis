@@ -2197,9 +2197,12 @@ class PerKi(PerEvent):
 
     def applyToState(self, state, unit=None, form=None):
         ki = min(round(state.buff["Ki"] + state.randomKi), rarity2MaxKi[unit.rarity])
-        self.effectiveBuff = min(self.effectiveBuff * ki, self.max)
-        if self.effect in STACK_EFFECTS:
-            state.p2Buff[self.effect] += self.effectiveBuff
+        effectiveBuff = min(self.effectiveBuff * ki, self.max)
+        supportBuff = effectiveBuff * np.minimum(self.effectDuration, RETURN_PERIOD_PER_SLOT)
+        if self.effect in REGULAR_SUPPORT_EFFECTS:
+            state.support += supportFactorConversion[self.effect] * supportBuff[state.slot - 1]
+        elif self.effect in STACK_EFFECTS:
+            state.p2Buff[self.effect] += effectiveBuff
 
 
 class PerTurn(PerEvent):
@@ -3123,4 +3126,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(317, "F2P_STR_Hell_Fighter_17", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(318, "LR_PHY_SS2_Angel_Vegeta", 5, "DEF", "DGE", "ADD", SLOT_2)
