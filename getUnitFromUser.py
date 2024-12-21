@@ -1624,21 +1624,93 @@ class State:
         saMultiplier = saMultActive + SA_BOOST_INC * HIPO_SA_BOOST[self.form.unit.nCopies - 1]
         return self.getAtkStat(self.p1Buff["ATK"], p2Atk, kiMultiplier, saMultiplier * (1 + self.stackedStats["ATK"]))
 
+    def branchAPT(self, i, m12, mN, pAA, nProcs, crit, atkModifier, p2AtkBuff, atkPerAttackPerformed, critPerAttackPerformed, atkPerSuperPerformed, critPerSuperPerformed):
+        """Returns the total remaining APT of a unit in a turn recursively"""
+        p2AtkFactor = (1 + self.p2Buff["ATK"] + p2AtkBuff) / (1 + self.p2Buff["ATK"])
+        normal = mN * self.n_0 * p2AtkFactor * atkModifier
+        additional12Ki = m12 * self.a12_0 * p2AtkFactor * atkModifier
+        if i == self.nAA - 1:  # If no more additional attacks
+            return 0.5 * pAA * (additional12Ki + normal)  # Add average hidden-potential attack damage
+        else:
+            i += 1  # Increment attack counter
+            # Calculate extra attack if get additional super and subsequent addditional attacks
+            # Add damage if don't get any additional attacks
+            crit0 = copy.deepcopy(crit)
+            crit.updateChance("On Super", critPerAttackPerformed[0], "Crit")
+            crit1 = copy.deepcopy(crit)
+            crit.updateChance("On Super", critPerSuperPerformed[0] - critPerAttackPerformed[0], "Crit")
+            crit.updateChance("Super Attack Effect", self.form.superAttacks["AS"].effects["Crit"].buff, "Crit")
+            crit2 = copy.deepcopy(crit)
+            if crit0.prob == 1:
+                atkModifier1 = self.form.unit.critMultiplier
+                atkModifier2 = self.form.unit.critMultiplier
+            else:
+                atkModifier1 = (atkModifier - self.form.unit.critMultiplier * crit0.prob) / (1 - crit0.prob) * (
+                    1 - crit1.prob
+                ) + crit1.prob * self.form.unit.critMultiplier
+                atkModifier2 = (atkModifier - self.form.unit.critMultiplier * crit0.prob) / (1 - crit0.prob) * (
+                    1 - crit2.prob
+                ) + crit2.prob * self.form.unit.critMultiplier
+
+            tempAPT0 = self.branchAPT(
+                i,
+                m12,
+                mN,
+                pAA,
+                nProcs,
+                crit0,
+                atkModifier,
+                p2AtkBuff,
+                atkPerAttackPerformed,
+                critPerAttackPerformed,
+                atkPerSuperPerformed,
+                critPerSuperPerformed,
+            )
+            tempAPT1 = self.branchAPT(
+                i,
+                m12,
+                mN,
+                pAA + self.form.unit.pHiPo["AA"] * (1 - self.form.unit.pHiPo["AA"]) ** nProcs,
+                nProcs + 1,
+                crit1,
+                atkModifier1,
+                p2AtkBuff + atkPerAttackPerformed[0],
+                atkPerAttackPerformed[1:],
+                critPerAttackPerformed[1:],
+                atkPerSuperPerformed,
+                critPerSuperPerformed,
+            )
+            tempAPT2 = self.branchAPT(
+                i,
+                m12 + self.form.superAttacks["AS"].effects["ATK"].buff,
+                mN + self.form.superAttacks["AS"].effects["ATK"].buff,
+                pAA + self.form.unit.pHiPo["AA"] * (1 - self.form.unit.pHiPo["AA"]) ** nProcs,
+                nProcs + 1,
+                crit2,
+                atkModifier2,
+                p2AtkBuff + atkPerSuperPerformed[0],
+                atkPerAttackPerformed,
+                critPerAttackPerformed,
+                atkPerSuperPerformed[1:],
+                critPerSuperPerformed[1:],
+            )
+            return self.aaPSuper[i] * (tempAPT2 + additional12Ki) + (1 - self.aaPSuper[i]) * (
+                self.aaPGuarantee[i] * (tempAPT1 + normal) + (1 - self.aaPGuarantee[i]) * (tempAPT0)
+            )
+
     def setAPT(self):
         """Returns the APT of a unit in a turn"""
         if self.form.canAttack:
             # Number of additional attacks from passive in each turn
-            nAA = len(self.aaPSuper)
+            self.nAA = len(self.aaPSuper)
             i = -1  # iteration counter
             nProcs = 1  # Initialise number of HiPo procs
             saMultiplier = self.SAMultiplier(self.form.superAttacks["12 Ki"].multiplier, self.form.superAttacks["AS"].effects["ATK"].duration, self.form.superAttacks["AS"].effects["ATK"].buff)
             m12 = saMultiplier + self.form.superAttacks["AS"].effects["ATK"].buff + self.stackedStats["ATK"]  # 12 ki multiplier after SA effect
-            a12_0 = self.addSA / m12  # Get 12 ki SA attack stat without multiplier
+            self.a12_0 = self.addSA / m12  # Get 12 ki SA attack stat without multiplier
             baseAtk = 1 + self.p1Buff["ATK"] + self.stackedStats["ATK"]
-            n_0 = self.normal / baseAtk
+            self.n_0 = self.normal / baseAtk
             pAA = self.form.unit.pHiPo["AA"]  # Probability of doing an additional attack next
-            pAASA = self.aaPSuper  # Probability of doing a super on inbuilt additional
-            pG = self.aaPGuarantee  # Probability of inbuilt additional
             counterAtk = (
                 NUM_ATTACKS_DIRECTED[self.slot - 1] * self.form.normalCounterMult
                 + NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.form.saCounterMult
@@ -1669,85 +1741,55 @@ class State:
             if self.pN > 0:
                 self.APT += self.pN * (
                     self.normal * atkModifierN * (1 + self.firstAttackBuff)
-                    + branchAPT(
+                    + self.branchAPT(
                         i,
-                        nAA,
                         m12,
                         baseAtk,
-                        self.p2Buff["ATK"],
                         pAA,
                         nProcs,
-                        pAASA,
-                        pG,
-                        n_0,
-                        a12_0,
-                        self.form.superAttacks["AS"].effects["ATK"].buff,
-                        pAA,
                         critN,
-                        self.form.unit.critMultiplier,
                         atkModifierN,
                         self.atkPerAttackPerformed[0],
                         self.atkPerAttackPerformed[1:],
                         self.critPerAttackPerformed[1:],
                         self.atkPerSuperPerformed,
                         self.critPerSuperPerformed,
-                        self.form.superAttacks["AS"].effects["Crit"].buff,
                     )
                 )
             if self.pSA > 0:
                 self.APT += self.pSA * (
                     self.SA * atkModifierSA * (1 + self.firstAttackBuff)
-                    + branchAPT(
+                    + self.branchAPT(
                         i,
-                        nAA,
                         m12 + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
                         baseAtk + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
-                        self.p2Buff["ATK"],
                         pAA,
                         nProcs,
-                        pAASA,
-                        pG,
-                        n_0,
-                        a12_0,
-                        self.form.superAttacks["AS"].effects["ATK"].buff,
-                        pAA,
                         critSA,
-                        self.form.unit.critMultiplier,
                         atkModifierSA,
                         self.atkPerSuperPerformed[0],
                         self.atkPerAttackPerformed,
                         self.critPerAttackPerformed,
                         self.atkPerSuperPerformed[1:],
                         self.critPerSuperPerformed[1:],
-                        self.form.superAttacks["AS"].effects["Crit"].buff,
                     )
                 )
             if self.form.unit.rarity == "LR":  # If  is a LR
                 self.APT += self.pUSA * (
                     self.USA * atkModifierUSA * (1 + self.firstAttackBuff)
-                    + branchAPT(
+                    + self.branchAPT(
                         i,
-                        nAA,
                         m12 + self.form.superAttacks["18 Ki"].effects["ATK"].buff,
                         baseAtk + self.form.superAttacks["18 Ki"].effects["ATK"].buff,
-                        self.p2Buff["ATK"],
                         pAA,
                         nProcs,
-                        pAASA,
-                        pG,
-                        n_0,
-                        a12_0,
-                        self.form.superAttacks["AS"].effects["ATK"].buff,
-                        pAA,
                         critUSA,
-                        self.form.unit.critMultiplier,
                         atkModifierUSA,
                         self.atkPerSuperPerformed[0],
                         self.atkPerAttackPerformed,
                         self.critPerAttackPerformed,
                         self.atkPerSuperPerformed[1:],
                         self.critPerSuperPerformed[1:],
-                        self.form.superAttacks["AS"].effects["Crit"].buff,
                     )
                 )
             self.APT += counterAtk * self.atkModifier
