@@ -65,12 +65,12 @@ def branchAPT(
         i += 1  # Increment attack counter
         # Calculate extra attack if get additional super and subsequent addditional attacks
         # Add damage if don't get any additional attacks
-        crit0 = copy.copy(crit)
+        crit0 = copy.deepcopy(crit)
         crit.updateChance("On Super", critPerAttackPerformed[0], "Crit")
-        crit1 = copy.copy(crit)
+        crit1 = copy.deepcopy(crit)
         crit.updateChance("On Super", critPerSuperPerformed[0] - critPerAttackPerformed[0], "Crit")
         crit.updateChance("Super Attack Effect", sa12Crit, "Crit")
-        crit2 = copy.copy(crit)
+        crit2 = copy.deepcopy(crit)
         if crit0.prob == 1:
             atkModifier1 = critMultiplier
             atkModifier2 = critMultiplier
