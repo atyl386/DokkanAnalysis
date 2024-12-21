@@ -1643,15 +1643,15 @@ class State:
                 NUM_ATTACKS_DIRECTED[self.slot - 1] * self.form.normalCounterMult
                 + NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.form.saCounterMult
             ) * self.normal
-            crit = copy.copy(self.multiChanceBuff["Crit"])
+            crit = copy.deepcopy(self.multiChanceBuff["Crit"])
             pCrit0 = crit.prob
             crit.updateChance("On Super", self.critPerAttackPerformed[0], "Crit")
-            critN = copy.copy(crit)
+            critN = copy.deepcopy(crit)
             crit.updateChance("On Super", self.critPerSuperPerformed[0] - self.critPerAttackPerformed[0], "Crit")
             crit.updateChance("Super Attack Effect", self.form.superAttacks["12 Ki"].effects["Crit"].buff, "Crit")
-            critSA = copy.copy(crit)
+            critSA = copy.deepcopy(crit)
             crit.updateChance("Super Attack Effect", self.form.superAttacks["18 Ki"].effects["Crit"].buff - self.form.superAttacks["12 Ki"].effects["Crit"].buff, "Crit")
-            critUSA = copy.copy(crit)
+            critUSA = copy.deepcopy(crit)
             if pCrit0 == 1:
                 atkModifierN = self.form.unit.critMultiplier
                 atkModifierSA = self.form.unit.critMultiplier
