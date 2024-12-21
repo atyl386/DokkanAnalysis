@@ -29,30 +29,30 @@ import click as clc
 
 
 def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], types=[], defaults=[]):
-    numAbilities = form.inputHelper.getAndSaveUserInput(abilityPrompt, default=0)
+    numAbilities = form.unit.inputHelper.getAndSaveUserInput(abilityPrompt, default=0)
     abilities = []
-    abilityTypeElement = form.inputHelper.parent
+    abilityTypeElement = form.unit.inputHelper.parent
     for i in range(numAbilities):
-        form.inputHelper.parent = form.inputHelper.getChildElement(abilityTypeElement, f"ability_{i + 1}")
+        form.unit.inputHelper.parent = form.unit.inputHelper.getChildElement(abilityTypeElement, f"ability_{i + 1}")
         parameters = []
         for j, parameterPrompt in enumerate(parameterPrompts):
             if len(types) == 0:  # If don't care about prompt choices
-                parameters.append(form.inputHelper.getAndSaveUserInput(parameterPrompt))
+                parameters.append(form.unit.inputHelper.getAndSaveUserInput(parameterPrompt))
             else:
                 parameters.append(
-                    form.inputHelper.getAndSaveUserInput(parameterPrompt, type=types[j], default=defaults[j])
+                    form.unit.inputHelper.getAndSaveUserInput(parameterPrompt, type=types[j], default=defaults[j])
                 )
         if issubclass(abilityClass, PassiveAbility):
-            effect = form.inputHelper.getAndSaveUserInput(
+            effect = form.unit.inputHelper.getAndSaveUserInput(
                 "What type of buff does the unit get?", type=clc.Choice(EFFECTS, case_sensitive=False), default="ATK"
             )
-            activationProbability = form.inputHelper.getAndSaveUserInput(
+            activationProbability = form.unit.inputHelper.getAndSaveUserInput(
                 "What is the probability this ability activates?", default=1.0
             )
             # If the status of this ability is known beforehand, scale it to account for this fact.
             if activationProbability != 1:
                 knownApriori = yesNo2Bool[
-                    form.inputHelper.getAndSaveUserInput(
+                    form.unit.inputHelper.getAndSaveUserInput(
                         "Is the status of this ability known beforehand?",
                         type=clc.Choice(YES_NO, case_sensitive=False),
                         default="N",
@@ -60,7 +60,7 @@ def abilityQuestionaire(form, abilityPrompt, abilityClass, parameterPrompts=[], 
                 ]
             else:
                 knownApriori = False
-            buff = form.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=1.0)
+            buff = form.unit.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=1.0)
             ability = abilityClass(form, activationProbability, knownApriori, effect, buff, args=parameters)
         elif issubclass(abilityClass, SingleTurnAbility):
             ability = abilityClass(form, parameters)
@@ -441,7 +441,7 @@ class Unit:
                 if turn != 1:
                     form.transformed = True
                 self.inputHelper.parent = self.inputHelper.getChildElement(self.formsElement, f"form_{formIdx}")
-                form = Form(self.inputHelper, turn, self.rarity, self.EZA, formIdx, self.numForms, self.giantRageActivationForm)
+                form = Form(self, turn, formIdx)
                 self.forms.append(form)
             elif self.nextForm == -1:
                 form = self.forms[-2]
@@ -524,14 +524,11 @@ class Unit:
 
 
 class Form:
-    def __init__(self, inputHelper, initialTurn, rarity, eza, formIdx, numForms, giantRageActivationForm=-1, giantRageMode=False):
-        self.formElement = inputHelper.parent
-        self.inputHelper = inputHelper
+    def __init__(self, unit, initialTurn, formIdx, giantRageMode=False):
+        self.unit = unit
+        self.formElement = unit.inputHelper.parent
         self.initialTurn = initialTurn
-        self.rarity = rarity
-        self.EZA = eza
         self.formIdx = formIdx
-        self.giantRageActivationForm = giantRageActivationForm
         self.giantRageMode = giantRageMode
         self.linkNames = [""] * MAX_NUM_LINKS
         self.linkCommonality = 0
@@ -550,20 +547,20 @@ class Form:
         self.newForm = True
         self.intentional12Ki = False
         self.revived = False
-        self.canAttack = yesNo2Bool[self.inputHelper.getAndSaveUserInput("Can this form attack?", default="Y")]
-        if self.rarity == "LR":
+        self.canAttack = yesNo2Bool[unit.inputHelper.getAndSaveUserInput("Can this form attack?", default="Y")]
+        if self.unit.rarity == "LR":
             self.intentional12Ki = yesNo2Bool[
-                self.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
+                self.unit.inputHelper.getAndSaveUserInput("Should a 12 Ki be targetted for this form?", default="N")
             ]
         self.normalCounterMult = counterAttackConversion[
-            self.inputHelper.getAndSaveUserInput(
+            self.unit.inputHelper.getAndSaveUserInput(
                 "What is the unit's normal counter multiplier?",
                 type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
                 default="NA",
             )
         ]
         self.saCounterMult = counterAttackConversion[
-            self.inputHelper.getAndSaveUserInput(
+            self.unit.inputHelper.getAndSaveUserInput(
                 "What is the unit's super attack counter multiplier?",
                 type=clc.Choice(counterAttackConversion.keys(), case_sensitive=False),
                 default="NA",
@@ -571,9 +568,9 @@ class Form:
         ]
         self.getLinks()
         #assert len(np.unique(self.linkNames)) == MAX_NUM_LINKS , "Duplicate links"
-        self.getSuperAttacks(self.rarity, self.EZA)
+        self.getSuperAttacks()
         ################################################ Turn Start #####################################################
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "default")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "default")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -581,7 +578,7 @@ class Form:
                 Buff,
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "turn_dpendent")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "turn_dpendent")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -595,7 +592,7 @@ class Form:
                 [self.initialTurn, MAX_TURN],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "slot_dependent")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "slot_dependent")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -607,7 +604,7 @@ class Form:
                 [None],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "health_dependent")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "health_dependent")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -618,7 +615,7 @@ class Form:
                 [0.5, "Y"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "health_scale")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "health_scale")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -629,7 +626,7 @@ class Form:
                 ["Y"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_turn")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_turn")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -640,7 +637,7 @@ class Form:
                 [1.0, "N", 1],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "domain")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "domain")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -656,7 +653,7 @@ class Form:
                 ["Increase Damage Received", 0.3, 0.5, 5],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "active_skill_buffs")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "active_skill_buffs")
         self.abilities["Start of Turn"].extend(
             abilityQuestionaire(
                 self,
@@ -673,7 +670,7 @@ class Form:
             )
         )
         ############################################ Active / Finish Attacks ###############################################
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "offensive_on_super")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "offensive_on_super")
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -684,11 +681,11 @@ class Form:
                 ["N"],
             )
         )
-        if self.giantRageActivationForm == self.formIdx:
-            self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "giant_rage_mode")
-            giantRageModeATK = self.inputHelper.getAndSaveUserInput("What is the giant/rage mode attack stat?", default=60000)
+        if self.unit.giantRageActivationForm == self.formIdx:
+            self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "giant_rage_mode")
+            giantRageModeATK = self.unit.inputHelper.getAndSaveUserInput("What is the giant/rage mode attack stat?", default=60000)
             self.abilities["Active / Finish Attacks"].append(GiantRageMode(self, [giantRageModeATK]))
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "active_skill_attack")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "active_skill_attack")
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -704,7 +701,7 @@ class Form:
                 ["Ultimate", 0.0, 0.0, "N"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "standby_finish_attack")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "standby_finish_attack")
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -725,7 +722,7 @@ class Form:
                 ["Ki sphere obtained by allies", "Super-Ultimate", 1.0, 0.1],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "defensive_on_super")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "defensive_on_super")
         self.abilities["Active / Finish Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -734,7 +731,7 @@ class Form:
             )
         )
         ############################################## Collect Ki ##################################################
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "ki_sphere_dependent")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "ki_sphere_dependent")
         self.abilities["Collect Ki"].extend(
             abilityQuestionaire(
                 self,
@@ -751,7 +748,7 @@ class Form:
                 ["Any", 0, "N", "Y", 99.0],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "ki_dependent")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "ki_dependent")
         self.abilities["Collect Ki"].extend(
             abilityQuestionaire(
                 self,
@@ -762,7 +759,7 @@ class Form:
                 [24],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_ki")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_ki")
         self.abilities["Collect Ki"].extend(
             abilityQuestionaire(
                 self,
@@ -774,7 +771,7 @@ class Form:
             )
         )
         ############################################## Receive Attacks ##################################################
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_receive_attack")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_receive_attack")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -785,7 +782,7 @@ class Form:
                 [1, 0, "N"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_guard_attack")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_guard_attack")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -796,7 +793,7 @@ class Form:
                 [1, 0],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_evade_attack")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_evade_attack")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -807,7 +804,7 @@ class Form:
                 [1, 0, "N"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_recieve_or_evade_attack")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_recieve_or_evade_attack")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -818,7 +815,7 @@ class Form:
                 [1],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "until_recieve_attack")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "until_recieve_attack")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -826,7 +823,7 @@ class Form:
                 UntilAttackRecieved,
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_received")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_received")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -837,7 +834,7 @@ class Form:
                 [1.0, "N"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_received_or_evaded")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_received_or_evaded")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -848,7 +845,7 @@ class Form:
                 [1.0, "N"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_guarded")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_guarded")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -859,7 +856,7 @@ class Form:
                 [1.0],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_evaded")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_evaded")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -870,7 +867,7 @@ class Form:
                 [1.0, "N"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_x_attacks_received_in_battle")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_x_attacks_received_in_battle")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -881,7 +878,7 @@ class Form:
                 [5, 1.0, "Y"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_x_attacks_evaded_in_battle")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_x_attacks_evaded_in_battle")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -893,7 +890,7 @@ class Form:
             )
         )
         ############################################## Attack Enemy ##################################################
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_perform_attack")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_perform_attack")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -904,7 +901,7 @@ class Form:
                 [1, 5, "Y"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "after_x_attacks_in_battle")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_x_attacks_in_battle")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -915,7 +912,7 @@ class Form:
                 [5, 1.0, "Y", "Y"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "per_attack_super_performed")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_super_performed")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -926,7 +923,7 @@ class Form:
                 [1.0, "N", "N"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "nullification")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "nullification")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -937,7 +934,7 @@ class Form:
                 ["N", 0.0],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "revive")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "revive")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -951,7 +948,7 @@ class Form:
                 [0.7, "N"],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "revival_counter")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "revival_counter")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -968,7 +965,7 @@ class Form:
                 ["Super-Ultimate", 1.0],
             )
         )
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, "sa_counter")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "sa_counter")
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -986,23 +983,23 @@ class Form:
             )
         )
         ################################################ Turn End #####################################################
-        self.inputHelper.parent = self.inputHelper.getChildElement(self.formElement, f"form_{self.formIdx}_change_condition")
-        self.formChangeCondition = getCondition(self.inputHelper)
-        if self.formIdx < numForms:
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, f"form_{self.formIdx}_change_condition")
+        self.formChangeCondition = getCondition(unit.inputHelper)
+        if self.formIdx < self.unit.numForms:
             self.newForm = True
         else:
             self.newForm = False
 
     def getLinks(self):
-        linksElement = self.inputHelper.getChildElement(self.inputHelper.parent, "links")
+        linksElement = self.unit.inputHelper.getChildElement(self.unit.inputHelper.parent, "links")
         for linkIndex in range(MAX_NUM_LINKS):
-            self.inputHelper.parent = self.inputHelper.getChildElement(linksElement, f"link_{linkIndex + 1}")
-            self.linkNames[linkIndex] = self.inputHelper.getAndSaveUserInput(
+            self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(linksElement, f"link_{linkIndex + 1}")
+            self.linkNames[linkIndex] = self.unit.inputHelper.getAndSaveUserInput(
                 f"What is the form's link # {linkIndex+1}",
                 type=clc.Choice(LINKS, case_sensitive=False),
                 default="Fierce Battle",
             )
-            linkCommonality = self.inputHelper.getAndSaveUserInput(
+            linkCommonality = self.unit.inputHelper.getAndSaveUserInput(
                 "If has an ideal linking partner, what is the chance this link is active?",
                 default=-1,
             )
@@ -1010,80 +1007,80 @@ class Form:
             for linkEffectName in LINK_EFFECT_NAMES:
                 self.linkEffects[linkEffectName] += link.effects[linkEffectName]
         self.linkEffects["Commonality"] /= MAX_NUM_LINKS
-        self.inputHelper.parent = self.formElement
+        self.unit.inputHelper.parent = self.formElement
 
-    def getSuperAttacks(self, rarity, eza):
-        superAttacksElement = self.inputHelper.getChildElement(self.inputHelper.parent, "super_attack")
+    def getSuperAttacks(self):
+        superAttacksElement = self.unit.inputHelper.getChildElement(self.unit.inputHelper.parent, "super_attack")
         for superAttackType in SUPER_ATTACK_CATEGORIES:
-            self.inputHelper.parent = self.inputHelper.getChildElement(
+            self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
                 superAttacksElement, f"{superAttackNameConversion[superAttackType]}"
             )
-            if superAttackType == "12 Ki" or (rarity == "LR" and not (self.intentional12Ki)):
+            if superAttackType == "12 Ki" or (self.unit.rarity == "LR" and not (self.intentional12Ki)):
                 multiplier = superAttackConversion[
-                    self.inputHelper.getAndSaveUserInput(
+                    self.unit.inputHelper.getAndSaveUserInput(
                         f"What is the form's {superAttackType} super attack multiplier?",
                         type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
                         default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
                     )
-                ][superAttackLevelConversion[rarity][eza]]
+                ][superAttackLevelConversion[self.unit.rarity][self.unit.EZA]]
                 avgSuperAttack = SuperAttack(superAttackType, multiplier)
                 defaultSuperAttack = copy.deepcopy(avgSuperAttack)
-                numSuperAttacks = self.inputHelper.getAndSaveUserInput(
+                numSuperAttacks = self.unit.inputHelper.getAndSaveUserInput(
                     f"How many different {superAttackType} super attacks does this form have?",
                     default=1,
                 )
                 superFracTotal = 0
-                superAttackVariationsElement = self.inputHelper.getChildElement(
-                    self.inputHelper.parent, f"{superAttackNameConversion[superAttackType]}_variations"
+                superAttackVariationsElement = self.unit.inputHelper.getChildElement(
+                    self.unit.inputHelper.parent, f"{superAttackNameConversion[superAttackType]}_variations"
                 )
                 for i in range(numSuperAttacks):
-                    self.inputHelper.parent = self.inputHelper.getChildElement(
+                    self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
                         superAttackVariationsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}"
                     )
                     if numSuperAttacks > 1:
-                        superFrac = self.inputHelper.getAndSaveUserInput(
+                        superFrac = self.unit.inputHelper.getAndSaveUserInput(
                             f"What is the probability of this {superAttackType} super attack variant from occuring?",
                             default=1.0,
                         )
                     else:
                         superFrac = 1
-                    numEffects = self.inputHelper.getAndSaveUserInput(
+                    numEffects = self.unit.inputHelper.getAndSaveUserInput(
                         f"How many effects does this form's {superAttackType} super attack have?",
                         default=1,
                     )
-                    superAttackEffectsElement = self.inputHelper.getChildElement(
-                        self.inputHelper.parent,
+                    superAttackEffectsElement = self.unit.inputHelper.getChildElement(
+                        self.unit.inputHelper.parent,
                         f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}_effects",
                     )
                     for j in range(numEffects):
-                        self.inputHelper.parent = self.inputHelper.getChildElement(
+                        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
                             superAttackEffectsElement,
                             f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}_effect_{j + 1}",
                         )
-                        effectType = self.inputHelper.getAndSaveUserInput(
+                        effectType = self.unit.inputHelper.getAndSaveUserInput(
                             "What type of effect does the unit get on super?",
                             type=clc.Choice(SUPER_ATTACK_EFFECTS, case_sensitive=False),
                             default="ATK",
                         )
-                        activationProbability = self.inputHelper.getAndSaveUserInput(
+                        activationProbability = self.unit.inputHelper.getAndSaveUserInput(
                             "What is the probability this effect activates when supering?",
                             default=1.0,
                         )
-                        buff = self.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=0.0)
-                        duration = self.inputHelper.getAndSaveUserInput(
+                        buff = self.unit.inputHelper.getAndSaveUserInput("What is the value of the buff?", default=0.0)
+                        duration = self.unit.inputHelper.getAndSaveUserInput(
                             "How many turns does it last for?", default=99
                         )
                         avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
                         if i == 0:
                             defaultSuperAttack.addEffect(effectType, activationProbability, buff, duration, 1)
                     superFracTotal += superFrac
-                    self.inputHelper.parent = superAttackVariationsElement
+                    self.unit.inputHelper.parent = superAttackVariationsElement
                 assert superFracTotal == 1, "Invald super attack variant probabilities entered"
-                self.inputHelper.parent = superAttacksElement
+                self.unit.inputHelper.parent = superAttacksElement
             self.superAttacks[superAttackType] = avgSuperAttack
             if superAttackType == "12 Ki":
                 self.superAttacks["AS"] = defaultSuperAttack
-        self.inputHelper.parent = self.formElement
+        self.unit.inputHelper.parent = self.formElement
 
     def checkCondition(self, condition, activated, newForm):
         if activated or condition == -1:
@@ -1670,7 +1667,7 @@ class Ability:
 class SingleTurnAbility(Ability):
     def __init__(self, form):
         super().__init__(form)
-        self.condition = getCondition(form.inputHelper)
+        self.condition = getCondition(form.unit.inputHelper)
         self.activated = False
 
 
@@ -1678,8 +1675,8 @@ class GiantRageMode(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.ATK = args[0]
-        form.inputHelper.parent = form.inputHelper.parentMap[form.inputHelper.parent]        
-        self.giantRageForm = Form(form.inputHelper, 1, form.rarity, form.EZA, form.formIdx + 1, 0, giantRageMode=True)
+        form.unit.inputHelper.parent = form.unit.inputHelper.parentMap[form.unit.inputHelper.parent]        
+        self.giantRageForm = Form(form.unit, 1, form.formIdx + 1, giantRageMode=True)
 
     def applyToState(self, state, unit=None, form=None):
         if form.checkCondition(self.condition, self.activated, True) and unit.fightPeak:
@@ -1698,7 +1695,7 @@ class Revive(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.hpRegen, self.isThisCharacterOnly = args
-        form.inputHelper.parent = form.inputHelper.parentMap[form.inputHelper.parent]
+        form.unit.inputHelper.parent = form.unit.inputHelper.parentMap[form.unit.inputHelper.parent]
         self.abilities = abilityQuestionaire(form, "How many additional constant buffs does this revive have?", Buff)
 
     def applyToState(self, state, unit=None, form=None):
@@ -1719,7 +1716,7 @@ class Domain(SingleTurnAbility):
         super().__init__(form)
         self.domainType, buff, self.prop, self.duration = args
         self.effectiveBuff = buff * aprioriProbMod(self.prop, True)
-        form.inputHelper.parent = form.inputHelper.parentMap[form.inputHelper.parent]
+        form.unit.inputHelper.parent = form.unit.inputHelper.parentMap[form.unit.inputHelper.parent]
     def applyToState(self, state, unit=None, form=None):
         if form.checkCondition(self.condition, self.activated, True):
             self.activated = True
@@ -2002,11 +1999,11 @@ class PassiveAbility(Ability):
         self.effectDuration = effectDuration if effectDuration != None else 1
         self.effectiveBuff = buff * self.activationProbability
         if effect == "AAChance":
-            self.superChance = form.inputHelper.getAndSaveUserInput(
+            self.superChance = form.unit.inputHelper.getAndSaveUserInput(
                 "What is the chance for this to become a super?", default=0.0
             )
         if effect in SUPPORT_EFFECTS and effectDuration == None:
-            self.effectDuration = form.inputHelper.getAndSaveUserInput(
+            self.effectDuration = form.unit.inputHelper.getAndSaveUserInput(
                 "How many turns does the effect last for?", default=1
             )
         self.supportBuff = self.effectiveBuff * np.minimum(self.effectDuration, RETURN_PERIOD_PER_SLOT)
