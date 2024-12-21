@@ -2297,7 +2297,7 @@ class PerAttackReceivedOrEvaded(PerEvent):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
         self.withinTheSameTurn = yesNo2Bool[args[1]]
 
-    def applyToState(self, state, unit=None, form=None):
+    def applyToState(self, state):
         cumBuffPerAttack = self.effectiveBuff * (np.arange(NUM_ATTACKS_PER_TURN) + 1)
         numAttacksDirected = round(state.numAttacksDirected)
         turnBuff = self.effectiveBuff * numAttacksDirected
@@ -2309,7 +2309,7 @@ class PerAttackReceivedOrEvaded(PerEvent):
             case "Dmg Red":
                 state.dmgRedPerAttackReceivedOrEvaded += cappedBuffPerAttack
         if not (self.withinTheSameTurn):
-            form.carryOverBuffs[self.effect].add(cappedTurnBuff)
+            state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
 
 class PerAttackGuarded(PerEvent):
@@ -2767,7 +2767,7 @@ class UntilAttackRecieved(UntilEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
 
-    def applyToState(self, state, unit=None, form=None):
+    def applyToState(self, state):
         if self.effect in state.buff.keys():
             state.buff[self.effect] += self.effectiveBuff
         else:
