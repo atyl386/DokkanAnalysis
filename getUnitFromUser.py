@@ -5,14 +5,12 @@ import math
 import click as clc
 
 # TODO:
-# for call to getSA to return SA, should is incorporate ki?
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
 # - Simplify getEventFactor code
 # - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
-# - Easily make branching functions more effecient by only running if multiplier is 0
 # - Implement dodging counters
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
@@ -1668,60 +1666,62 @@ class State:
                 atkModifierUSA = (self.atkModifier - self.form.unit.critMultiplier * pCrit0) / (1 - pCrit0) * (
                     1 - critUSA.prob
                 ) + critUSA.prob * self.form.unit.critMultiplier
-
-            self.APT += self.pN * (
-                self.normal * atkModifierN * (1 + self.firstAttackBuff)
-                + branchAPT(
-                    i,
-                    nAA,
-                    m12,
-                    baseAtk,
-                    self.p2Buff["ATK"],
-                    pAA,
-                    nProcs,
-                    pAASA,
-                    pG,
-                    n_0,
-                    a12_0,
-                    self.form.superAttacks["AS"].effects["ATK"].buff,
-                    pAA,
-                    critN,
-                    self.form.unit.critMultiplier,
-                    atkModifierN,
-                    self.atkPerAttackPerformed[0],
-                    self.atkPerAttackPerformed[1:],
-                    self.critPerAttackPerformed[1:],
-                    self.atkPerSuperPerformed,
-                    self.critPerSuperPerformed,
-                    self.form.superAttacks["AS"].effects["Crit"].buff,
+            if self.pN > 0:
+                self.APT += self.pN * (
+                    self.normal * atkModifierN * (1 + self.firstAttackBuff)
+                    + branchAPT(
+                        i,
+                        nAA,
+                        m12,
+                        baseAtk,
+                        self.p2Buff["ATK"],
+                        pAA,
+                        nProcs,
+                        pAASA,
+                        pG,
+                        n_0,
+                        a12_0,
+                        self.form.superAttacks["AS"].effects["ATK"].buff,
+                        pAA,
+                        critN,
+                        self.form.unit.critMultiplier,
+                        atkModifierN,
+                        self.atkPerAttackPerformed[0],
+                        self.atkPerAttackPerformed[1:],
+                        self.critPerAttackPerformed[1:],
+                        self.atkPerSuperPerformed,
+                        self.critPerSuperPerformed,
+                        self.form.superAttacks["AS"].effects["Crit"].buff,
+                    )
                 )
-            ) + self.pSA * (
-                self.SA * atkModifierSA * (1 + self.firstAttackBuff)
-                + branchAPT(
-                    i,
-                    nAA,
-                    m12 + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
-                    baseAtk + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
-                    self.p2Buff["ATK"],
-                    pAA,
-                    nProcs,
-                    pAASA,
-                    pG,
-                    n_0,
-                    a12_0,
-                    self.form.superAttacks["AS"].effects["ATK"].buff,
-                    pAA,
-                    critSA,
-                    self.form.unit.critMultiplier,
-                    atkModifierSA,
-                    self.atkPerSuperPerformed[0],
-                    self.atkPerAttackPerformed,
-                    self.critPerAttackPerformed,
-                    self.atkPerSuperPerformed[1:],
-                    self.critPerSuperPerformed[1:],
-                    self.form.superAttacks["AS"].effects["Crit"].buff,
+            if self.pSA > 0:
+                self.APT += self.pSA * (
+                    self.SA * atkModifierSA * (1 + self.firstAttackBuff)
+                    + branchAPT(
+                        i,
+                        nAA,
+                        m12 + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
+                        baseAtk + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
+                        self.p2Buff["ATK"],
+                        pAA,
+                        nProcs,
+                        pAASA,
+                        pG,
+                        n_0,
+                        a12_0,
+                        self.form.superAttacks["AS"].effects["ATK"].buff,
+                        pAA,
+                        critSA,
+                        self.form.unit.critMultiplier,
+                        atkModifierSA,
+                        self.atkPerSuperPerformed[0],
+                        self.atkPerAttackPerformed,
+                        self.critPerAttackPerformed,
+                        self.atkPerSuperPerformed[1:],
+                        self.critPerSuperPerformed[1:],
+                        self.form.superAttacks["AS"].effects["Crit"].buff,
+                    )
                 )
-            )
             if self.form.unit.rarity == "LR":  # If  is a LR
                 self.APT += self.pUSA * (
                     self.USA * atkModifierUSA * (1 + self.firstAttackBuff)
