@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Understand how branchDamageTaken works because I am confused why some have p2DefB included and some don't
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
@@ -1390,25 +1391,20 @@ class State:
         self.setUSA()
         self.setAPT()
         self.setAvgDefMult()
-        self.normalDamageTaken = branchDamageTaken(
+        self.normalDamageTaken = self.branchDamageTaken(
             0,
             -1,
             self.numNormalAttacksDirectedBeforeAttacking,
             self.numNormalAttacksDirectedAfterAttacking,
             self.p2Buff["DEF"],
-            self.p2DefB,
             0,
             self.multiChanceBuff["EvasionA"],
-            self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
             0,
             self.guard,
             self.dmgRedNormalA,
-            self.dmgRedNormalB - self.dmgRedNormalA,
             0,
             self.avgDefPreSuper * (1 - ENEMY_CRIT_DEF_DEBUFF * ENEMY_NORMAL_CRIT_CHANCE),
             self.stackedStats["DEF"],
-            self.avgDefMult,
-            self.buff["Disable Evasion Cancel"],
             self.defPerAttackReceived,
             self.defPerAttackEvaded,
             self.defPerAttackGuarded,
@@ -1422,27 +1418,21 @@ class State:
             self.guardPerAttackReceivedOrEvaded,
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             ENEMY_NORMAL_CRIT_CHANCE,
-            self.form.unit.TDB,
         )
-        self.saDamageTaken = branchDamageTaken(
+        self.saDamageTaken = self.branchDamageTaken(
             0,
             -1,
             self.numSuperAttacksDirectedBeforeAttacking,
             self.numSuperAttacksDirectedAfterAttacking,
             self.p2Buff["DEF"],
-            self.p2DefB,
             self.p2DefSuper,
             self.multiChanceBuff["EvasionA"],
-            self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"],
             self.evadeSuper,
             self.guard,
             self.dmgRedSuperA,
-            self.dmgRedSuperB - self.dmgRedSuperA,
             self.multiChanceBuff["Nullify"].prob,
             self.avgDefPreSuper * (1 - ENEMY_CRIT_DEF_DEBUFF * ENEMY_SUPER_CRIT_CHANCE),
             self.stackedStats["DEF"],
-            self.avgDefMult,
-            self.buff["Disable Evasion Cancel"],
             self.defPerAttackReceived,
             self.defPerAttackEvaded,
             self.defPerAttackGuarded,
@@ -1456,7 +1446,6 @@ class State:
             self.guardPerAttackReceivedOrEvaded,
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             ENEMY_SUPER_CRIT_CHANCE,
-            self.form.unit.TDB,
         )
         self.buff["Heal"] += self.form.linkEffects["Heal"] + self.form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + self.form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + self.form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + ((0.03 + 0.0015 * HIPO_RECOVERY_BOOST[self.form.unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR) / AVG_HEALTH
         self.buff["Heal"] = min(self.buff["Heal"], 1)
@@ -1795,6 +1784,276 @@ class State:
             self.APT += counterAtk * self.atkModifier
         else:
             self.APT += 0
+    
+    def branchDamageTaken(self, iA, iB, nAA, nAB, p2Def, p2DefSuper, evasion, pEvadeExtra, pGuard, dmgRed, pNullify, defence, postSuperDefMult, defPerAttackReceived, defPerAttackEvaded, defPerAttackGuarded, defPerAttackReceivedOrEvaded, dmgRedPerAttackReceived, dmgRedPerAttackReceivedOrEvaded, evasionPerAttackReceived, evasionPerAttackEvaded, evasionPerAttackReceivedOrEvaded, guardPerAttackReceived, guardPerAttackReceivedOrEvaded, maxDamage, enemyCritChance):
+        """Returns the remaining damage taken by a unit in a turn recursively"""
+        # Get damage taken by the attack pre super
+        pEvadeB = self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"]
+        dmgRedB = self.dmgRedNormalB - self.dmgRedNormalA
+        evasion.updateChance("Start of Turn", pEvadeExtra, "")
+        if pEvadeExtra > 0:
+            print("f")
+        pE_N = (1 - DODGE_CANCEL_FACTOR * (1 - self.buff["Disable Evasion Cancel"])) * evasion.prob
+        pE = pE_N * (1 - pNullify) + pNullify
+        pG = (1 - pE) * pGuard
+        pR = 1 - pE - pG
+        attackDamageTaken = getAttackDamageTaken(pE, pGuard, maxDamage, self.form.unit.TDB, dmgRed, defence, enemyCritChance)
+        # If last attack in sequence pre super
+        if iA >= nAA - 1 and iB == -1:
+            evasionPostEvadeB = copy.deepcopy(evasion)
+            evasionPostHitB = copy.deepcopy(evasion)
+            evasionPostEvadeB.updateChance(
+                "Start of Turn",
+                (evasionPerAttackEvaded[0] + evasionPerAttackReceivedOrEvaded[0]) * (nAA - iA) + pEvadeB,
+                "",
+            )
+            evasionPostHitB.updateChance(
+                "Start of Turn",
+                (evasionPerAttackReceived[0] + evasionPerAttackReceivedOrEvaded[0]) * (nAA - iA) + pEvadeB,
+                "",
+            )
+            # mulitply by extra factor if only part is expected. 0 =< nAA - iA < 1 )
+            defPerAttackEvadedB = copy.copy(defPerAttackEvaded)
+            defPerAttackGuardedB = copy.copy(defPerAttackGuarded)
+            defPerAttackReceivedB = copy.copy(defPerAttackReceived)
+            defPerAttackReceivedOrEvadedB = copy.copy(defPerAttackReceivedOrEvaded)
+            dmgRedPerAttackReceivedB = copy.copy(dmgRedPerAttackReceived)
+            dmgRedPerAttackReceivedOrEvadedB = copy.copy(dmgRedPerAttackReceivedOrEvaded)
+            evasionPerAttackEvadedB = copy.copy(evasionPerAttackEvaded)
+            evasionPerAttackReceivedB = copy.copy(evasionPerAttackReceived)
+            evasionPerAttackReceivedOrEvadedB = copy.copy(evasionPerAttackReceived)
+            guardPerAttackReceivedB = copy.copy(guardPerAttackReceived)
+            guardPerAttackReceivedOrEvadedB = copy.copy(guardPerAttackReceivedOrEvaded)
+            defPerAttackEvadedB[0] *= 1 - (nAA - iA)
+            defPerAttackGuardedB[0] *= 1 - (nAA - iA)
+            defPerAttackReceivedB[0] *= 1 - (nAA - iA)
+            defPerAttackReceivedOrEvadedB[0] *= 1 - (nAA - iA)
+            dmgRedPerAttackReceivedB[0] *= 1 - (nAA - iA)
+            dmgRedPerAttackReceivedB[0] *= 1 - (nAA - iA)
+            evasionPerAttackEvadedB[0] *= 1 - (nAA - iA)
+            evasionPerAttackReceivedB[0] *= 1 - (nAA - iA)
+            evasionPerAttackReceivedOrEvadedB[0] *= 1 - (nAA - iA)
+            guardPerAttackReceivedB[0] *= 1 - (nAA - iA)
+            guardPerAttackReceivedB[0] *= 1 - (nAA - iA)
+            return (
+                attackDamageTaken * (nAA - iA)
+                + pE
+                * self.branchDamageTaken(
+                    iA,
+                    0,
+                    nAA,
+                    nAB,
+                    p2Def + self.p2DefB + p2DefSuper + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    p2DefSuper,
+                    evasionPostEvadeB,
+                    0,
+                    pGuard + guardPerAttackReceivedOrEvaded[0] * (nAA - iA),
+                    dmgRed + dmgRedB + dmgRedPerAttackReceivedOrEvaded[0] * (nAA - iA),
+                    pNullify,
+                    defence
+                    * (1 + p2Def + self.p2DefB + p2DefSuper + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA))
+                    / (1 + p2Def)
+                    * (1 + self.avgDefMult)
+                    / (1 + postSuperDefMult),
+                    self.avgDefMult,
+                    defPerAttackReceived,
+                    defPerAttackEvadedB,
+                    defPerAttackGuarded,
+                    defPerAttackReceivedOrEvadedB,
+                    dmgRedPerAttackReceived,
+                    dmgRedPerAttackReceivedOrEvadedB,
+                    evasionPerAttackReceived,
+                    evasionPerAttackEvadedB,
+                    evasionPerAttackReceivedOrEvadedB,
+                    guardPerAttackReceived,
+                    guardPerAttackReceivedOrEvadedB,
+                    maxDamage,
+                    enemyCritChance,
+                )
+                + pG
+                * self.branchDamageTaken(
+                    iA,
+                    0,
+                    nAA,
+                    nAB,
+                    p2Def
+                    + self.p2DefB
+                    + p2DefSuper
+                    + (defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    p2DefSuper,
+                    evasionPostHitB,
+                    0,
+                    pGuard + (guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    dmgRed + dmgRedB + (dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    pNullify,
+                    defence
+                    * (
+                        1
+                        + p2Def
+                        + self.p2DefB
+                        + p2DefSuper
+                        + (defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA)
+                    )
+                    / (1 + p2Def)
+                    * (1 + self.avgDefMult)
+                    / (1 + postSuperDefMult),
+                    self.avgDefMult,
+                    defPerAttackReceivedB,
+                    defPerAttackEvaded,
+                    defPerAttackGuardedB,
+                    defPerAttackReceivedOrEvadedB,
+                    dmgRedPerAttackReceivedB,
+                    dmgRedPerAttackReceivedOrEvadedB,
+                    evasionPerAttackReceivedB,
+                    evasionPerAttackEvaded,
+                    evasionPerAttackReceivedOrEvadedB,
+                    guardPerAttackReceivedB,
+                    guardPerAttackReceivedOrEvadedB,
+                    maxDamage,
+                    enemyCritChance,
+                )
+                + pR
+                * self.branchDamageTaken(
+                    iA,
+                    0,
+                    nAA,
+                    nAB,
+                    p2Def + self.p2DefB + p2DefSuper + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    p2DefSuper,
+                    evasionPostHitB,
+                    0,
+                    pGuard + (guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    dmgRed + dmgRedB + (dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    pNullify,
+                    defence
+                    * (1 + p2Def + self.p2DefB + p2DefSuper + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA))
+                    / (1 + p2Def)
+                    * (1 + self.avgDefMult)
+                    / (1 + postSuperDefMult),
+                    self.avgDefMult,
+                    defPerAttackReceivedB,
+                    defPerAttackEvaded,
+                    defPerAttackGuarded,
+                    defPerAttackReceivedOrEvadedB,
+                    dmgRedPerAttackReceivedB,
+                    dmgRedPerAttackReceivedOrEvadedB,
+                    evasionPerAttackReceivedB,
+                    evasionPerAttackEvaded,
+                    evasionPerAttackReceivedOrEvadedB,
+                    guardPerAttackReceivedB,
+                    guardPerAttackReceivedOrEvadedB,
+                    maxDamage,
+                    enemyCritChance,
+                )
+            )
+        elif iA < nAA - 1 or iB < nAB - 1:
+            evasionPostEvade = copy.deepcopy(evasion)
+            evasionPostHit = copy.deepcopy(evasion)
+            evasionPostEvade.updateChance(
+                "Start of Turn", evasionPerAttackEvaded[0] + evasionPerAttackReceivedOrEvaded[0], ""
+            )
+            evasionPostHit.updateChance(
+                "Start of Turn", evasionPerAttackReceived[0] + evasionPerAttackReceivedOrEvaded[0], ""
+            )
+            if iA < nAA - 1:
+                iA += 1
+            else:
+                iB += 1
+            return (
+                attackDamageTaken
+                + pE
+                * self.branchDamageTaken(
+                    iA,
+                    iB,
+                    nAA,
+                    nAB,
+                    p2Def + p2DefSuper + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0],
+                    p2DefSuper,
+                    evasionPostEvade,
+                    0,
+                    pGuard + guardPerAttackReceivedOrEvaded[0],
+                    dmgRed + dmgRedPerAttackReceivedOrEvaded[0],
+                    pNullify,
+                    defence * (1 + p2Def + p2DefSuper + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
+                    postSuperDefMult,
+                    defPerAttackReceived,
+                    defPerAttackEvaded[1:],
+                    defPerAttackGuarded,
+                    defPerAttackReceivedOrEvaded[1:],
+                    dmgRedPerAttackReceived,
+                    dmgRedPerAttackReceivedOrEvaded[1:],
+                    evasionPerAttackReceived,
+                    evasionPerAttackEvaded[1:],
+                    evasionPerAttackReceivedOrEvaded[1:],
+                    guardPerAttackReceived,
+                    guardPerAttackReceivedOrEvaded[1:],
+                    maxDamage,
+                    enemyCritChance,
+                )
+                + pG
+                * self.branchDamageTaken(
+                    iA,
+                    iB,
+                    nAA,
+                    nAB,
+                    p2Def + p2DefSuper + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
+                    p2DefSuper,
+                    evasionPostHit,
+                    0,
+                    pGuard + guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0],
+                    dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
+                    pNullify,
+                    defence
+                    * (1 + p2Def + p2DefSuper + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0])
+                    / (1 + p2Def),
+                    postSuperDefMult,
+                    defPerAttackReceived[1:],
+                    defPerAttackEvaded,
+                    defPerAttackGuarded[1:],
+                    defPerAttackReceivedOrEvaded[1:],
+                    dmgRedPerAttackReceived[1:],
+                    dmgRedPerAttackReceivedOrEvaded[1:],
+                    evasionPerAttackReceived[1:],
+                    evasionPerAttackEvaded,
+                    evasionPerAttackReceivedOrEvaded[1:],
+                    guardPerAttackReceived[1:],
+                    guardPerAttackReceivedOrEvaded[1:],
+                    maxDamage,
+                    enemyCritChance,
+                )
+                + pR
+                * self.branchDamageTaken(
+                    iA,
+                    iB,
+                    nAA,
+                    nAB,
+                    p2Def + p2DefSuper + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
+                    p2DefSuper,
+                    evasionPostHit,
+                    0,
+                    pGuard + guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0],
+                    dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
+                    pNullify,
+                    defence * (1 + p2Def + p2DefSuper + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
+                    postSuperDefMult,
+                    defPerAttackReceived[1:],
+                    defPerAttackEvaded,
+                    defPerAttackGuarded,
+                    defPerAttackReceivedOrEvaded[1:],
+                    dmgRedPerAttackReceived[1:],
+                    dmgRedPerAttackReceivedOrEvaded[1:],
+                    evasionPerAttackReceived[1:],
+                    evasionPerAttackEvaded,
+                    evasionPerAttackReceivedOrEvaded[1:],
+                    guardPerAttackReceived[1:],
+                    guardPerAttackReceivedOrEvaded[1:],
+                    maxDamage,
+                    enemyCritChance,
+                )
+            )
+        else:
+            # mulitply by extra factor if only part is expected. 0 =< nAB - iB < 1 )
+            return attackDamageTaken * (nAB - iB)
 
 class Stack:
     def __init__(self, stat, buff, duration):
