@@ -5,13 +5,11 @@ import math
 import click as clc
 
 # TODO:
-# - Understand how branchDamageTaken works because I am confused why some have p2DefB included and some don't
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
 # - Simplify getEventFactor code
-# - change branch functions to have optional arguments so don't have to pass on unused arguments, will aslo force a reorder.
 # - Implement dodging counters
 # - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
