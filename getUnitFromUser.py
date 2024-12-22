@@ -463,7 +463,7 @@ class Unit:
                     applyTransformationAttackAPT = True
                     stateIdx -= 1
             else:
-                #state.numAttacksEvaded = branchAttacksEvaded(0, -1, state.numAttacksDirectedBeforeAttacking, state.numAttacksDirectedAfterAttacking, state.multiChanceBuff["EvasionA"], state.multiChanceBuff["EvasionB"].chances["Start of Turn"] - state.multiChanceBuff["EvasionA"].chances["Start of Turn"], state.buff["Disable Evasion Cancel"], state.evasionPerAttackReceived, state.evasionPerAttackEvaded)
+                #state.numAttacksEvaded = branchAttacksEvaded(0, -1, state.numAttacksDirectedBeforeAttacking, state.numAttacksDirectedAfterAttacking, state.multiChanceBuff["EvasionA"], state.multiChanceBuff["EvasionB"].chances["Start of Turn"] - state.multiChanceBuff["EvasionA"].chances["Start of Turn"], state.buff["Disable Evasion Cancel"], state.defBuffStatuses[("Evasion", "Receive")], state.defBuffStatuses[("Evasion", "Evade")])
                 #state.numAttacksReceived = state.numAttacksDirected - state.numAttacksEvaded
                 form.numAttacksGuarded += state.guard * state.numAttacksReceived
                 form.numAttacksEvaded += state.numAttacksEvaded
@@ -1305,17 +1305,7 @@ class State:
         self.numAttacksDirectedAfterAttacking = NUM_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
         self.numAttacksDirected = NUM_ATTACKS_DIRECTED[self.slot - 1]
         # Required for getting damage received for individual attacks
-        self.defPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.defPerAttackEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.defPerAttackGuarded = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.defPerAttackReceivedOrEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.dmgRedPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.dmgRedPerAttackReceivedOrEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.evasionPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.evasionPerAttackEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.evasionPerAttackReceivedOrEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.guardPerAttackReceived = np.zeros(NUM_ATTACKS_PER_TURN)
-        self.guardPerAttackReceivedOrEvaded = np.zeros(NUM_ATTACKS_PER_TURN)
+        self.defBuffStatuses = copy.deepcopy(defBuffStatusesBlank)
         # Required for getting APTs for individual attacks
         self.atkPerAttackPerformed = np.zeros(MAX_TURN)
         self.atkPerSuperPerformed = np.zeros(MAX_TURN)
@@ -1406,17 +1396,7 @@ class State:
             0,
             self.avgDefPreSuper * (1 - ENEMY_CRIT_DEF_DEBUFF * ENEMY_NORMAL_CRIT_CHANCE),
             self.stackedStats["DEF"],
-            self.defPerAttackReceived,
-            self.defPerAttackEvaded,
-            self.defPerAttackGuarded,
-            self.defPerAttackReceivedOrEvaded,
-            self.dmgRedPerAttackReceived,
-            self.dmgRedPerAttackReceivedOrEvaded,
-            self.evasionPerAttackReceived,
-            self.evasionPerAttackEvaded,
-            self.evasionPerAttackReceivedOrEvaded,
-            self.guardPerAttackReceived,
-            self.guardPerAttackReceivedOrEvaded,
+            self.defBuffStatuses,
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             ENEMY_NORMAL_CRIT_CHANCE,
         )
@@ -1435,17 +1415,7 @@ class State:
             self.multiChanceBuff["Nullify"].prob,
             self.avgDefPreSuper * (1 - ENEMY_CRIT_DEF_DEBUFF * ENEMY_SUPER_CRIT_CHANCE),
             self.stackedStats["DEF"],
-            self.defPerAttackReceived,
-            self.defPerAttackEvaded,
-            self.defPerAttackGuarded,
-            self.defPerAttackReceivedOrEvaded,
-            self.dmgRedPerAttackReceived,
-            self.dmgRedPerAttackReceivedOrEvaded,
-            self.evasionPerAttackReceived,
-            self.evasionPerAttackEvaded,
-            self.evasionPerAttackReceivedOrEvaded,
-            self.guardPerAttackReceived,
-            self.guardPerAttackReceivedOrEvaded,
+            self.defBuffStatuses,
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             ENEMY_SUPER_CRIT_CHANCE,
         )
@@ -1787,7 +1757,7 @@ class State:
         else:
             self.APT += 0
     
-    def branchDamageTaken(self, pBranch, iA, iB, nAA, nAB, p2Def, p2DefSuper, evasion, pEvadeExtra, pGuard, dmgRed, pNullify, defence, postSuperDefMult, defPerAttackReceived, defPerAttackEvaded, defPerAttackGuarded, defPerAttackReceivedOrEvaded, dmgRedPerAttackReceived, dmgRedPerAttackReceivedOrEvaded, evasionPerAttackReceived, evasionPerAttackEvaded, evasionPerAttackReceivedOrEvaded, guardPerAttackReceived, guardPerAttackReceivedOrEvaded, maxDamage, enemyCritChance):
+    def branchDamageTaken(self, pBranch, iA, iB, nAA, nAB, p2Def, p2DefSuper, evasion, pEvadeExtra, pGuard, dmgRed, pNullify, defence, postSuperDefMult, defBuffStatuses, maxDamage, enemyCritChance):
         if pBranch == 0:
             return 0
         """Returns the remaining damage taken by a unit in a turn recursively"""
@@ -1806,37 +1776,16 @@ class State:
             evasionPostHitB = copy.deepcopy(evasion)
             evasionPostEvadeB.updateChance(
                 "Start of Turn",
-                (evasionPerAttackEvaded[0] + evasionPerAttackReceivedOrEvaded[0]) * (nAA - iA) + pEvadeB,
+                (defBuffStatuses[("Evasion", "Evade")][0] + defBuffStatuses[("Evasion", "ReceiveOrEvade")][0]) * (nAA - iA) + pEvadeB,
                 "",
             )
             evasionPostHitB.updateChance(
                 "Start of Turn",
-                (evasionPerAttackReceived[0] + evasionPerAttackReceivedOrEvaded[0]) * (nAA - iA) + pEvadeB,
+                (defBuffStatuses[("Evasion", "Receive")][0] + defBuffStatuses[("Evasion", "ReceiveOrEvade")][0]) * (nAA - iA) + pEvadeB,
                 "",
             )
             # mulitply by extra factor if only part is expected. 0 =< nAA - iA < 1 )
-            defPerAttackEvadedB = copy.copy(defPerAttackEvaded)
-            defPerAttackGuardedB = copy.copy(defPerAttackGuarded)
-            defPerAttackReceivedB = copy.copy(defPerAttackReceived)
-            defPerAttackReceivedOrEvadedB = copy.copy(defPerAttackReceivedOrEvaded)
-            dmgRedPerAttackReceivedB = copy.copy(dmgRedPerAttackReceived)
-            dmgRedPerAttackReceivedOrEvadedB = copy.copy(dmgRedPerAttackReceivedOrEvaded)
-            evasionPerAttackEvadedB = copy.copy(evasionPerAttackEvaded)
-            evasionPerAttackReceivedB = copy.copy(evasionPerAttackReceived)
-            evasionPerAttackReceivedOrEvadedB = copy.copy(evasionPerAttackReceived)
-            guardPerAttackReceivedB = copy.copy(guardPerAttackReceived)
-            guardPerAttackReceivedOrEvadedB = copy.copy(guardPerAttackReceivedOrEvaded)
-            defPerAttackEvadedB[0] *= 1 - (nAA - iA)
-            defPerAttackGuardedB[0] *= 1 - (nAA - iA)
-            defPerAttackReceivedB[0] *= 1 - (nAA - iA)
-            defPerAttackReceivedOrEvadedB[0] *= 1 - (nAA - iA)
-            dmgRedPerAttackReceivedB[0] *= 1 - (nAA - iA)
-            dmgRedPerAttackReceivedB[0] *= 1 - (nAA - iA)
-            evasionPerAttackEvadedB[0] *= 1 - (nAA - iA)
-            evasionPerAttackReceivedB[0] *= 1 - (nAA - iA)
-            evasionPerAttackReceivedOrEvadedB[0] *= 1 - (nAA - iA)
-            guardPerAttackReceivedB[0] *= 1 - (nAA - iA)
-            guardPerAttackReceivedB[0] *= 1 - (nAA - iA)
+            defBuffNextStatuses, defBuffStatuses0 = processDefBuffStatuses(defBuffStatuses, 1 - (nAA - iA))
             return pBranch * (
                 attackDamageTaken * (nAA - iA) + self.branchDamageTaken(
                     pE,
@@ -1844,30 +1793,20 @@ class State:
                     0,
                     nAA,
                     nAB,
-                    p2Def + self.p2DefB + p2DefSuper + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    p2Def + self.p2DefB + p2DefSuper + (defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA),
                     p2DefSuper,
                     evasionPostEvadeB,
                     0,
-                    pGuard + guardPerAttackReceivedOrEvaded[0] * (nAA - iA),
-                    dmgRed + dmgRedB + dmgRedPerAttackReceivedOrEvaded[0] * (nAA - iA),
+                    pGuard + defBuffStatuses0[("Guard", "ReceiveOrEvade")] * (nAA - iA),
+                    dmgRed + dmgRedB + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")] * (nAA - iA),
                     pNullify,
                     defence
-                    * (1 + p2Def + self.p2DefB + p2DefSuper + (defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA))
+                    * (1 + p2Def + self.p2DefB + p2DefSuper + (defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA))
                     / (1 + p2Def)
                     * (1 + self.avgDefMult)
                     / (1 + postSuperDefMult),
                     self.avgDefMult,
-                    defPerAttackReceived,
-                    defPerAttackEvadedB,
-                    defPerAttackGuarded,
-                    defPerAttackReceivedOrEvadedB,
-                    dmgRedPerAttackReceived,
-                    dmgRedPerAttackReceivedOrEvadedB,
-                    evasionPerAttackReceived,
-                    evasionPerAttackEvadedB,
-                    evasionPerAttackReceivedOrEvadedB,
-                    guardPerAttackReceived,
-                    guardPerAttackReceivedOrEvadedB,
+                    defBuffNextStatuses["Evade"],
                     maxDamage,
                     enemyCritChance,
                 )
@@ -1880,12 +1819,12 @@ class State:
                     p2Def
                     + self.p2DefB
                     + p2DefSuper
-                    + (defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    + (defBuffStatuses0[("DEF", "Guard")] + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA),
                     p2DefSuper,
                     evasionPostHitB,
                     0,
-                    pGuard + (guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0]) * (nAA - iA),
-                    dmgRed + dmgRedB + (dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    pGuard + (defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")]) * (nAA - iA),
+                    dmgRed + dmgRedB + (defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")]) * (nAA - iA),
                     pNullify,
                     defence
                     * (
@@ -1893,23 +1832,13 @@ class State:
                         + p2Def
                         + self.p2DefB
                         + p2DefSuper
-                        + (defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA)
+                        + (defBuffStatuses0[("DEF", "Guard")] + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA)
                     )
                     / (1 + p2Def)
                     * (1 + self.avgDefMult)
                     / (1 + postSuperDefMult),
                     self.avgDefMult,
-                    defPerAttackReceivedB,
-                    defPerAttackEvaded,
-                    defPerAttackGuardedB,
-                    defPerAttackReceivedOrEvadedB,
-                    dmgRedPerAttackReceivedB,
-                    dmgRedPerAttackReceivedOrEvadedB,
-                    evasionPerAttackReceivedB,
-                    evasionPerAttackEvaded,
-                    evasionPerAttackReceivedOrEvadedB,
-                    guardPerAttackReceivedB,
-                    guardPerAttackReceivedOrEvadedB,
+                    defBuffNextStatuses["Guard"],
                     maxDamage,
                     enemyCritChance,
                 )
@@ -1919,42 +1848,33 @@ class State:
                     0,
                     nAA,
                     nAB,
-                    p2Def + self.p2DefB + p2DefSuper + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    p2Def + self.p2DefB + p2DefSuper + (defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA),
                     p2DefSuper,
                     evasionPostHitB,
                     0,
-                    pGuard + (guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0]) * (nAA - iA),
-                    dmgRed + dmgRedB + (dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0]) * (nAA - iA),
+                    pGuard + (defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")]) * (nAA - iA),
+                    dmgRed + dmgRedB + (defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")]) * (nAA - iA),
                     pNullify,
                     defence
-                    * (1 + p2Def + self.p2DefB + p2DefSuper + (defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) * (nAA - iA))
+                    * (1 + p2Def + self.p2DefB + p2DefSuper + (defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA))
                     / (1 + p2Def)
                     * (1 + self.avgDefMult)
                     / (1 + postSuperDefMult),
                     self.avgDefMult,
-                    defPerAttackReceivedB,
-                    defPerAttackEvaded,
-                    defPerAttackGuarded,
-                    defPerAttackReceivedOrEvadedB,
-                    dmgRedPerAttackReceivedB,
-                    dmgRedPerAttackReceivedOrEvadedB,
-                    evasionPerAttackReceivedB,
-                    evasionPerAttackEvaded,
-                    evasionPerAttackReceivedOrEvadedB,
-                    guardPerAttackReceivedB,
-                    guardPerAttackReceivedOrEvadedB,
+                    defBuffNextStatuses["Receive"],
                     maxDamage,
                     enemyCritChance,
                 )
             )
         elif iA < nAA - 1 or iB < nAB - 1:
+            defBuffNextStatuses, defBuffStatuses0 = processDefBuffStatuses(defBuffStatuses)
             evasionPostEvade = copy.deepcopy(evasion)
             evasionPostHit = copy.deepcopy(evasion)
             evasionPostEvade.updateChance(
-                "Start of Turn", evasionPerAttackEvaded[0] + evasionPerAttackReceivedOrEvaded[0], ""
+                "Start of Turn", defBuffStatuses0[("Evasion", "Evade")] + defBuffStatuses0[("Evasion", "ReceiveOrEvade")], ""
             )
             evasionPostHit.updateChance(
-                "Start of Turn", evasionPerAttackReceived[0] + evasionPerAttackReceivedOrEvaded[0], ""
+                "Start of Turn", defBuffStatuses0[("Evasion", "Receive")] + defBuffStatuses0[("Evasion", "ReceiveOrEvade")], ""
             )
             if iA < nAA - 1:
                 iA += 1
@@ -1968,26 +1888,16 @@ class State:
                     iB,
                     nAA,
                     nAB,
-                    p2Def + p2DefSuper + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0],
+                    p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
                     p2DefSuper,
                     evasionPostEvade,
                     0,
-                    pGuard + guardPerAttackReceivedOrEvaded[0],
-                    dmgRed + dmgRedPerAttackReceivedOrEvaded[0],
+                    pGuard + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
+                    dmgRed + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
                     pNullify,
-                    defence * (1 + p2Def + p2DefSuper + defPerAttackEvaded[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
+                    defence * (1 + p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) / (1 + p2Def),
                     postSuperDefMult,
-                    defPerAttackReceived,
-                    defPerAttackEvaded[1:],
-                    defPerAttackGuarded,
-                    defPerAttackReceivedOrEvaded[1:],
-                    dmgRedPerAttackReceived,
-                    dmgRedPerAttackReceivedOrEvaded[1:],
-                    evasionPerAttackReceived,
-                    evasionPerAttackEvaded[1:],
-                    evasionPerAttackReceivedOrEvaded[1:],
-                    guardPerAttackReceived,
-                    guardPerAttackReceivedOrEvaded[1:],
+                    defBuffNextStatuses["Evade"],
                     maxDamage,
                     enemyCritChance,
                 )
@@ -1997,28 +1907,18 @@ class State:
                     iB,
                     nAA,
                     nAB,
-                    p2Def + p2DefSuper + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
+                    p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Guard")] + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
                     p2DefSuper,
                     evasionPostHit,
                     0,
-                    pGuard + guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0],
-                    dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
+                    pGuard + defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
+                    dmgRed + defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
                     pNullify,
                     defence
-                    * (1 + p2Def + p2DefSuper + defPerAttackGuarded[0] + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0])
+                    * (1 + p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Guard")] + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")])
                     / (1 + p2Def),
                     postSuperDefMult,
-                    defPerAttackReceived[1:],
-                    defPerAttackEvaded,
-                    defPerAttackGuarded[1:],
-                    defPerAttackReceivedOrEvaded[1:],
-                    dmgRedPerAttackReceived[1:],
-                    dmgRedPerAttackReceivedOrEvaded[1:],
-                    evasionPerAttackReceived[1:],
-                    evasionPerAttackEvaded,
-                    evasionPerAttackReceivedOrEvaded[1:],
-                    guardPerAttackReceived[1:],
-                    guardPerAttackReceivedOrEvaded[1:],
+                    defBuffNextStatuses["Guard"],
                     maxDamage,
                     enemyCritChance,
                 )
@@ -2028,26 +1928,16 @@ class State:
                     iB,
                     nAA,
                     nAB,
-                    p2Def + p2DefSuper + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0],
+                    p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
                     p2DefSuper,
                     evasionPostHit,
                     0,
-                    pGuard + guardPerAttackReceived[0] + guardPerAttackReceivedOrEvaded[0],
-                    dmgRed + dmgRedPerAttackReceived[0] + dmgRedPerAttackReceivedOrEvaded[0],
+                    pGuard + defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
+                    dmgRed + defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
                     pNullify,
-                    defence * (1 + p2Def + p2DefSuper + defPerAttackReceived[0] + defPerAttackReceivedOrEvaded[0]) / (1 + p2Def),
+                    defence * (1 + p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) / (1 + p2Def),
                     postSuperDefMult,
-                    defPerAttackReceived[1:],
-                    defPerAttackEvaded,
-                    defPerAttackGuarded,
-                    defPerAttackReceivedOrEvaded[1:],
-                    dmgRedPerAttackReceived[1:],
-                    dmgRedPerAttackReceivedOrEvaded[1:],
-                    evasionPerAttackReceived[1:],
-                    evasionPerAttackEvaded,
-                    evasionPerAttackReceivedOrEvaded[1:],
-                    guardPerAttackReceived[1:],
-                    guardPerAttackReceivedOrEvaded[1:],
+                    defBuffNextStatuses["Receive"],
                     maxDamage,
                     enemyCritChance,
                 )
@@ -2675,9 +2565,9 @@ class PerAttackReceived(PerEvent):
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs)
             case "DEF":
-                state.defPerAttackReceived += cappedBuffPerAttack
+                state.defBuffStatuses[("DEF", "Receive")] += cappedBuffPerAttack
             case "Dmg Red":
-                state.dmgRedPerAttackReceived += cappedBuffPerAttack
+                state.defBuffStatuses[("DmgRed", "Receive")] += cappedBuffPerAttack
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key = abs), "Crit", state)
                 state.setAvgAtkMod()
@@ -2700,7 +2590,7 @@ class PerAttackReceivedOrEvaded(PerEvent):
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Dmg Red":
-                state.dmgRedPerAttackReceivedOrEvaded += cappedBuffPerAttack
+                state.defBuffStatuses[("DmgRed", "ReceiveOrEvade")] += cappedBuffPerAttack
         if not (self.withinTheSameTurn):
             state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2723,9 +2613,9 @@ class PerAttackGuarded(PerEvent):
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "DEF":
-                state.defPerAttackReceived += cappedBuffPerAttack
+                state.defBuffStatuses[("DEF", "Receive")] += cappedBuffPerAttack
             case "Dmg Red":
-                state.dmgRedPerAttackReceived += cappedBuffPerAttack
+                state.defBuffStatuses[("DmgRed", "Receive")] += cappedBuffPerAttack
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
                 state.setAvgAtkMod()
@@ -2750,12 +2640,12 @@ class PerAttackEvaded(PerEvent):
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
             case "DEF":
-                state.defPerAttackEvaded += cappedBuffPerAttack
+                state.defBuffStatuses[("DEF", "Evade")] += cappedBuffPerAttack
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo), "Crit", state)
                 state.setAvgAtkMod()
             case "Evasion":
-                state.evasionPerAttackEvaded += cappedBuffPerAttack
+                state.defBuffStatuses[("Evasion", "Evade")] += cappedBuffPerAttack
         if not (self.withinTheSameTurn):
             state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2892,7 +2782,7 @@ class AfterAttackReceived(AfterEvent):
                 case "ATK":
                     state.p2Buff["ATK"] += cappedTurnBuff
                 case "DEF":
-                    state.defPerAttackReceived += cappedBuffPerAttack
+                    state.defBuffStatuses[("DEF", "Receive")] += cappedBuffPerAttack
                 case "AdditionalSuper":
                     state.aaPSuper.append(cappedTurnBuff)
                     state.aaPGuarantee.append(0)
@@ -2903,11 +2793,11 @@ class AfterAttackReceived(AfterEvent):
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.setAvgAtkMod()
                 case "Guard":
-                    state.guardPerAttackReceived += cappedBuffPerAttack
+                    state.defBuffStatuses[("Guard", "Receive")] += cappedBuffPerAttack
                 case "Dmg Red":
-                    state.dmgRedPerAttackReceived += cappedBuffPerAttack
+                    state.defBuffStatuses[("DmgRed", "Receive")] += cappedBuffPerAttack
                 case "Evasion":
-                    state.evasionPerAttackReceived += cappedBuffPerAttack
+                    state.defBuffStatuses[("Evasion", "Receive")] += cappedBuffPerAttack
 
     def setEventFactor(self, state):
         # If buff is a defensive one
@@ -2968,7 +2858,7 @@ class AfterGuardActivated(AfterEvent):
                 case "ATK":
                     state.p2Buff["ATK"] += cappedTurnBuff
                 case "DEF":
-                    state.defPerAttackGuarded += cappedBuffPerAttack
+                    state.defBuffStatuses[("DEF", "Guard")] += cappedBuffPerAttack
                 case "AdditionalSuper":
                     state.aaPSuper.append(cappedTurnBuff)
                     state.aaPGuarantee.append(0)
@@ -3032,7 +2922,7 @@ class AfterAttackEvaded(AfterEvent):
                 case "ATK":
                     state.p2Buff["ATK"] += cappedTurnBuff
                 case "DEF":
-                    state.defPerAttackEvaded += cappedBuffPerAttack
+                    state.defBuffStatuses[("DEF", "Evade")] += cappedBuffPerAttack
                 case "AdditionalSuper":
                     state.aaPSuper.append(cappedTurnBuff)
                     state.aaPGuarantee.append(0)
@@ -3043,7 +2933,7 @@ class AfterAttackEvaded(AfterEvent):
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.setAvgAtkMod()
                 case "Evasion":
-                    state.evasionPerAttackEvaded += cappedBuffPerAttack
+                    state.defBuffStatuses[("Evasion", "Evade")] += cappedBuffPerAttack
 
     def setEventFactor(self, state):
         # If buff is a defensive one
@@ -3104,7 +2994,7 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
                 case "ATK":
                     state.p2Buff["ATK"] += cappedTurnBuff
                 case "DEF":
-                    state.defPerAttackReceivedOrEvaded += cappedBuffPerAttack
+                    state.defBuffStatuses[("DEF", "ReceiveOrEvade")] += cappedBuffPerAttack
                 case "AdditionalSuper":
                     state.aaPSuper.append(cappedTurnBuff)
                     state.aaPGuarantee.append(0)
@@ -3115,11 +3005,11 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.setAvgAtkMod()
                 case "Guard":
-                    state.guardPerAttackReceivedOrEvaded += cappedBuffPerAttack
+                    state.defBuffStatuses[("Guard", "ReceiveOrEvade")] += cappedBuffPerAttack
                 case "Dmg Red":
-                    state.dmgRedPerAttackReceivedOrEvaded += cappedBuffPerAttack
+                    state.defBuffStatuses[("DmgRed", "ReceiveOrEvade")] += cappedBuffPerAttack
                 case "Evasion":
-                    state.evasionPerAttackReceivedOrEvaded += cappedBuffPerAttack
+                    state.defBuffStatuses[("Evasion", "ReceiveOrEvade")] += cappedBuffPerAttack
     
     def setEventFactor(self, state):
         # If buff is a defensive one
@@ -3167,23 +3057,23 @@ class UntilAttackRecieved(UntilEvent):
             match self.effect:
                 case "DEF":
                     state.p2Buff["DEF"] += self.effectiveBuff
-                    state.defPerAttackReceived[0] -= self.effectiveBuff
+                    state.defBuffStatuses[("DEF", "Receive")][0] -= self.effectiveBuff
                 case "Evasion":
                     state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
                     state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
-                    state.evasionPerAttackReceived[0] -= self.effectiveBuff
+                    state.defBuffStatuses[("Evasion", "Receive")][0] -= self.effectiveBuff
                 case "P2 DEF B":
                     state.p2DefB += self.effectiveBuff
-                    state.defPerAttackReceived[0] -= self.effectiveBuff
+                    state.defBuffStatuses[("DEF", "Receive")][0] -= self.effectiveBuff
                 case "Guard":
                     state.guard += self.effectiveBuff
-                    state.guardPerAttackReceived[0] -= self.effectiveBuff
+                    state.defBuffStatuses[("Guard", "Receive")][0] -= self.effectiveBuff
                 case "Dmg Red":
                     state.dmgRedSuperA += self.effectiveBuff
                     state.dmgRedSuperB += self.effectiveBuff
                     state.dmgRedNormalA += self.effectiveBuff
                     state.dmgRedNormalB += self.effectiveBuff
-                    state.dmgRedPerAttackReceived[0] -= self.effectiveBuff
+                    state.defBuffStatuses[("DmgRed", "Receive")][0] -= self.effectiveBuff
 
 
 class EveryTimeXEventsInBattle(PassiveAbility):
@@ -3500,4 +3390,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(319, "BU_TEQ_SS_Goten", 5, "DEF", "DGE", "ADD", SLOT_2)
+    unit = Unit(115, "LR_STR_Beerus_Whis", 5, "DGE", "DGE", "ADD", [2, 3, 2, 2, 2, 2, 2, 2, 2, 2])

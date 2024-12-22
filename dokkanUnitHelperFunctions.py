@@ -177,3 +177,16 @@ class MultiChanceBuff:
         self.prob = self.calcProb()
         if "Evasion" in effect:
             self.updateAttacksReceivedAndEvaded(state)
+
+def processDefBuffStatuses(defBuffStatuses, lastAttackFactor = 1):
+    defBuffNextStatuses = dict.fromkeys(DEF_STATUSES)
+    defBuffStatuses0 = dict.fromkeys(defBuffStatuses.keys())
+    for event in DEF_STATUSES:
+        defBuffNextStatuses[event] = copy.deepcopy(defBuffStatuses)
+        for key in defBuffStatuses.keys():
+            if key[1] in DEF_STATUS_IMPLICATIONS[event]:
+                defBuffStatuses0[key] = defBuffNextStatuses[event][key][0]
+                if lastAttackFactor == 1:
+                    defBuffNextStatuses[event][key] = defBuffNextStatuses[event][key][1:]
+                defBuffNextStatuses[event][key][0] *= lastAttackFactor
+    return defBuffNextStatuses, defBuffStatuses0
