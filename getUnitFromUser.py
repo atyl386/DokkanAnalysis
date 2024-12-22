@@ -1392,6 +1392,7 @@ class State:
         self.setAPT()
         self.setAvgDefMult()
         self.normalDamageTaken = self.branchDamageTaken(
+            1,
             0,
             -1,
             self.numNormalAttacksDirectedBeforeAttacking,
@@ -1420,6 +1421,7 @@ class State:
             ENEMY_NORMAL_CRIT_CHANCE,
         )
         self.saDamageTaken = self.branchDamageTaken(
+            1,
             0,
             -1,
             self.numSuperAttacksDirectedBeforeAttacking,
@@ -1785,7 +1787,9 @@ class State:
         else:
             self.APT += 0
     
-    def branchDamageTaken(self, iA, iB, nAA, nAB, p2Def, p2DefSuper, evasion, pEvadeExtra, pGuard, dmgRed, pNullify, defence, postSuperDefMult, defPerAttackReceived, defPerAttackEvaded, defPerAttackGuarded, defPerAttackReceivedOrEvaded, dmgRedPerAttackReceived, dmgRedPerAttackReceivedOrEvaded, evasionPerAttackReceived, evasionPerAttackEvaded, evasionPerAttackReceivedOrEvaded, guardPerAttackReceived, guardPerAttackReceivedOrEvaded, maxDamage, enemyCritChance):
+    def branchDamageTaken(self, pBranch, iA, iB, nAA, nAB, p2Def, p2DefSuper, evasion, pEvadeExtra, pGuard, dmgRed, pNullify, defence, postSuperDefMult, defPerAttackReceived, defPerAttackEvaded, defPerAttackGuarded, defPerAttackReceivedOrEvaded, dmgRedPerAttackReceived, dmgRedPerAttackReceivedOrEvaded, evasionPerAttackReceived, evasionPerAttackEvaded, evasionPerAttackReceivedOrEvaded, guardPerAttackReceived, guardPerAttackReceivedOrEvaded, maxDamage, enemyCritChance):
+        if pBranch == 0:
+            return 0
         """Returns the remaining damage taken by a unit in a turn recursively"""
         # Get damage taken by the attack pre super
         pEvadeB = self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"]
@@ -1833,10 +1837,9 @@ class State:
             evasionPerAttackReceivedOrEvadedB[0] *= 1 - (nAA - iA)
             guardPerAttackReceivedB[0] *= 1 - (nAA - iA)
             guardPerAttackReceivedB[0] *= 1 - (nAA - iA)
-            return (
-                attackDamageTaken * (nAA - iA)
-                + pE
-                * self.branchDamageTaken(
+            return pBranch * (
+                attackDamageTaken * (nAA - iA) + self.branchDamageTaken(
+                    pE,
                     iA,
                     0,
                     nAA,
@@ -1868,8 +1871,8 @@ class State:
                     maxDamage,
                     enemyCritChance,
                 )
-                + pG
-                * self.branchDamageTaken(
+                + self.branchDamageTaken(
+                    pG,
                     iA,
                     0,
                     nAA,
@@ -1910,8 +1913,8 @@ class State:
                     maxDamage,
                     enemyCritChance,
                 )
-                + pR
-                * self.branchDamageTaken(
+                + self.branchDamageTaken(
+                    pR,
                     iA,
                     0,
                     nAA,
@@ -1957,10 +1960,10 @@ class State:
                 iA += 1
             else:
                 iB += 1
-            return (
+            return pBranch * (
                 attackDamageTaken
-                + pE
-                * self.branchDamageTaken(
+                + self.branchDamageTaken(
+                    pE,
                     iA,
                     iB,
                     nAA,
@@ -1988,8 +1991,8 @@ class State:
                     maxDamage,
                     enemyCritChance,
                 )
-                + pG
-                * self.branchDamageTaken(
+                + self.branchDamageTaken(
+                    pG,
                     iA,
                     iB,
                     nAA,
@@ -2019,8 +2022,8 @@ class State:
                     maxDamage,
                     enemyCritChance,
                 )
-                + pR
-                * self.branchDamageTaken(
+                + self.branchDamageTaken(
+                    pR,
                     iA,
                     iB,
                     nAA,
@@ -2051,7 +2054,7 @@ class State:
             )
         else:
             # mulitply by extra factor if only part is expected. 0 =< nAB - iB < 1 )
-            return attackDamageTaken * (nAB - iB)
+            return pBranch * attackDamageTaken * (nAB - iB)
 
 class Stack:
     def __init__(self, stat, buff, duration):
