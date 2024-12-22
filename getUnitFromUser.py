@@ -1791,8 +1791,6 @@ class State:
         pEvadeB = self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"]
         dmgRedB = self.dmgRedNormalB - self.dmgRedNormalA
         evasion.updateChance("Start of Turn", pEvadeExtra, "")
-        if pEvadeExtra > 0:
-            print("f")
         pE_N = (1 - DODGE_CANCEL_FACTOR * (1 - self.buff["Disable Evasion Cancel"])) * evasion.prob
         pE = pE_N * (1 - pNullify) + pNullify
         pG = (1 - pE) * pGuard
