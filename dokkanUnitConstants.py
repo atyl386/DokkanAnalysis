@@ -530,7 +530,8 @@ EXTRA_BUFF_EFFECTS = ["ATK", "DEF", "Crit", "Ki", "Dmg Red", "Evasion", "aaPSupe
 ADDITIONAL_ATTACK_EFFECTS = ["AAChance", "AdditionalSuper"]
 ADDITIONAL_ATTACK_PARAMETERS = ["aaPSuper", "aaPGuarantee"]
 DEF_BUFFS = ["DEF", "DmgRed", "Evasion", "Guard"]
-DEF_STATUSES = ["Receive", "Guard", "Evade", "ReceiveOrEvade"]
+DEF_STATUS_EVENTS = ["Receive", "Guard", "Evade"]
+DEF_BUFF_STATUS_PAIRS = {"DEF": ["Receive", "Guard", "Evade", "ReceiveOrEvade"], "DmgRed": ["Receive", "ReceiveOrEvade"], "Evasion": ["Receive", "Evade", "ReceiveOrEvade"], "Guard": ["Receive", "ReceiveOrEvade"]}
 DEF_STATUS_IMPLICATIONS = {"Receive": ["Receive", "ReceiveOrEvade"], "Guard": ["Guard", "Receive", "ReceiveOrEvade"], "Evade" : ["Evade", "ReceiveOrEvade"], "ReceiveOrEvade": ["ReceiveOrEvade", "Receive", "Evade"]}
 SUPPORT_FACTORS = [
     KI_SUPPORT_FACTOR,
@@ -849,7 +850,7 @@ disableActionActiveDisableNormal = dict(zip(SLOTS, [1, 0, 0]))
 saFracConversion = dict(zip(SUPER_ATTACK_NULLIFICATION_TYPES, PROBABILITY_SUPER_ATTACK_TYPE))
 defBuffStatusesBlank = {}
 for defBuff in DEF_BUFFS:
-    for status in DEF_STATUSES:
+    for status in DEF_BUFF_STATUS_PAIRS[defBuff]:
         defBuffStatusesBlank[(defBuff, status)] = np.zeros(NUM_ATTACKS_PER_TURN)
 
 # Hidden-Potential + Equips

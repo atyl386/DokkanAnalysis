@@ -179,9 +179,9 @@ class MultiChanceBuff:
             self.updateAttacksReceivedAndEvaded(state)
 
 def processDefBuffStatuses(defBuffStatuses, lastAttackFactor = 1):
-    defBuffNextStatuses = dict.fromkeys(DEF_STATUSES)
+    defBuffNextStatuses = dict.fromkeys(DEF_STATUS_EVENTS)
     defBuffStatuses0 = dict.fromkeys(defBuffStatuses.keys())
-    for event in DEF_STATUSES:
+    for event in DEF_STATUS_EVENTS:
         defBuffNextStatuses[event] = copy.deepcopy(defBuffStatuses)
         for key in defBuffStatuses.keys():
             if key[1] in DEF_STATUS_IMPLICATIONS[event]:
