@@ -135,14 +135,24 @@ def getAttackDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef, enemyCri
         -(1 - pEvade)
         * min(
             (
-                guard * GUARD_MOD * (maxDamage * (AEAAT_MULTIPLIER * enemyCritChance + (1 - enemyCritChance)) * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
+                guard
+                * GUARD_MOD
+                * (
+                    maxDamage
+                    * (AEAAT_MULTIPLIER * enemyCritChance + (1 - enemyCritChance))
+                    * (AVG_GUARD_FACTOR - TDB_INC * tdb)
+                    * (1 - dmgRed)
+                    - avgDef
+                )
                 + (1 - guard)
                 * (
                     enemyCritChance * (maxDamage * (AEAAT_MULTIPLIER - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
                     + (1 - enemyCritChance) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
                 )
-            ) / AVG_HEALTH,
-            1),
+            )
+            / AVG_HEALTH,
+            1,
+        ),
         0,
     )
 
@@ -178,7 +188,8 @@ class MultiChanceBuff:
         if "Evasion" in effect:
             self.updateAttacksReceivedAndEvaded(state)
 
-def processDefBuffStatuses(defBuffStatuses, lastAttackFactor = 1):
+
+def processDefBuffStatuses(defBuffStatuses, lastAttackFactor=1):
     defBuffNextStatuses = dict.fromkeys(DEF_STATUS_EVENTS)
     defBuffStatuses0 = dict.fromkeys(defBuffStatuses.keys())
     for event in DEF_STATUS_EVENTS:

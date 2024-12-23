@@ -25,7 +25,7 @@ YES_NO = ["Y", "N"]
 
 # Enemy Crit
 
-ENEMY_CRIT_DEF_DEBUFF = 0.3 # Not constant, should update to whatever it is for the strongest boss with crit
+ENEMY_CRIT_DEF_DEBUFF = 0.3  # Not constant, should update to whatever it is for the strongest boss with crit
 
 # SBR
 ATT_DEBUFF_PASSIVE_CONVERSION_GRADIENT = 10  # 10% attack down for 2 turns = SBR score of +1
@@ -97,7 +97,15 @@ SPECIAL_ATTACK_MULTIPLIER_NAMES = [
 SPECIAL_ATTACK_MULTIPLIERS = [0, 1, 4.4, 5.0, 5.5, 7.5]
 
 # Domain
-DOMAIN_TYPES = ["Increase Damage Received", "Alternate Dimensional Space", "City (Future) (Rift in Time)", "Shining World of Void", "Molten Lava of Natade Village", "Earth Shrouded in Clouds", "Inside Majin Buu"]
+DOMAIN_TYPES = [
+    "Increase Damage Received",
+    "Alternate Dimensional Space",
+    "City (Future) (Rift in Time)",
+    "Shining World of Void",
+    "Molten Lava of Natade Village",
+    "Earth Shrouded in Clouds",
+    "Inside Majin Buu",
+]
 
 # Turns
 MAX_TURN = 20
@@ -135,14 +143,14 @@ SLOT_3 = [3, 3, 3, 3, 3, 3, 3, 3]
 # Teams
 NUM_CATEGORIES_PER_UNIT_MAX = 23
 NUM_CATEGORIES = 95
-AVG_NUM_CATEGORIES_PER_UNIT = 10 # Guess
+AVG_NUM_CATEGORIES_PER_UNIT = 10  # Guess
 
 # Attacking factors
 AVG_ENEMY_DEF = 100000
 AVG_ENEMY_DMG_RED = 0.7
 AVG_ATK_STAT = 5000000
 BYPASS_DEFENSE_FACTOR = 1 + AVG_ENEMY_DEF / AVG_ATK_STAT
-APT_2_DPT_FACTOR = (1 - AVG_ENEMY_DMG_RED) / BYPASS_DEFENSE_FACTOR # This is a bad approximation
+APT_2_DPT_FACTOR = (1 - AVG_ENEMY_DMG_RED) / BYPASS_DEFENSE_FACTOR  # This is a bad approximation
 CRIT_MULTIPLIER = 1.875  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
 AEAAT_MULTIPLIER = 1.5  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
 DISABLE_GUARD_MULTIPLIER = 1.12  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
@@ -255,10 +263,10 @@ ENEMY_SUPER_CRIT_CHANCE = 0.05
 ENEMY_NORMAL_CRIT_CHANCE = 0
 LOOK_AHEAD_FACTOR = 1.2  # Want to know which units will be good in the future when enemies hit even harder
 AVG_DAM_VARIANCE = 1.015
-MAX_T1_NORMAL_DAM = 1001000 # SSGSSE Vegeta Supreme Battle Spectacle
-MAX_NORMAL_DAM = 1350000 # SSGSSE Vegeta Supreme Battle Spectacle (900000 * 1.5)
-MAX_T1_SA_DAM = 2541000 # SSGSSK Goku & SSGSSE Vegeta (770000 * (3 + 0.3))
-MAX_SA_DAM = 3150000 # SSGSSK Goku & SSGSSE Vegeta (900000 * (3 + 0.5))
+MAX_T1_NORMAL_DAM = 1001000  # SSGSSE Vegeta Supreme Battle Spectacle
+MAX_NORMAL_DAM = 1350000  # SSGSSE Vegeta Supreme Battle Spectacle (900000 * 1.5)
+MAX_T1_SA_DAM = 2541000  # SSGSSK Goku & SSGSSE Vegeta (770000 * (3 + 0.3))
+MAX_SA_DAM = 3150000  # SSGSSK Goku & SSGSSE Vegeta (900000 * (3 + 0.5))
 MAX_NORMAL_DAM_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * AVG_DAM_VARIANCE
@@ -434,15 +442,23 @@ MAX_KI = [12, 24]
 KI_SUPPORT = 1
 ATK_DEF_SUPPORT = 0.2
 USEABILITY_SUPPORT_FACTOR = 0.2
-KI_SUPPORT_FACTOR = 0.25 # Guess
-AVG_SOT_STATS = 3 # Guess
-AVG_P2_STATS = 2 # Guess
+KI_SUPPORT_FACTOR = 0.25  # Guess
+AVG_SOT_STATS = 3  # Guess
+AVG_P2_STATS = 2  # Guess
 
 # Effects
 
 SPECIAL_SUPPORT_EFFECTS = ["P3 Disable Action", "Delay Target", "Intercept"]
 
-ORB_CHANGING_EFFECTS = ["Orb Change", "Double Orb Change", "Triple Orb Change", "Complete Orb Change", "Rainbow Orb Change", "Rainbow + Type Orb Change", "Double Rainbow Orb Change"]
+ORB_CHANGING_EFFECTS = [
+    "Orb Change",
+    "Double Orb Change",
+    "Triple Orb Change",
+    "Complete Orb Change",
+    "Rainbow Orb Change",
+    "Rainbow + Type Orb Change",
+    "Double Rainbow Orb Change",
+]
 
 REGULAR_SUPPORT_EFFECTS = [
     "Ki Support",
@@ -518,21 +534,50 @@ CRIT_SUPPORT_100_FACTOR = CRIT_MULTIPLIER / AVG_TYPE_ADVANATGE * ATK_SUPPORT_100
 DMG_RED_SUPPORT_100_FACTOR = 10
 EVASION_SUPPORT_100_FACTOR = 10 * (1 - DODGE_CANCEL_FACTOR)
 DISABLE_EVASION_CANCEL_SUPPORT_FACTOR = 10 * DODGE_CANCEL_FACTOR
-DOMAIN_SUPPORT_FACTOR = 1 # Support buff from negating eneny territory skill
+DOMAIN_SUPPORT_FACTOR = 1  # Support buff from negating eneny territory skill
 # Giant/Rage Form
-GIANT_RAGE_SUPPORT = DMG_RED_SUPPORT_100_FACTOR / 2 + 0.5 # Support for nullifying super attacks for a turn, circumvent locking
-GIANT_RAGE_HEAL = 0.2 # allows additional orbs to be collected
+GIANT_RAGE_SUPPORT = (
+    DMG_RED_SUPPORT_100_FACTOR / 2 + 0.5
+)  # Support for nullifying super attacks for a turn, circumvent locking
+GIANT_RAGE_HEAL = 0.2  # allows additional orbs to be collected
 AVG_SA_MULT = 5
-SUPER_ATTACK_SUPPORT_FACTORS = [ATK_SUPPORT_100_FACTOR / AVG_SA_MULT, DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS, CRIT_SUPPORT_100_FACTOR]
+SUPER_ATTACK_SUPPORT_FACTORS = [
+    ATK_SUPPORT_100_FACTOR / AVG_SA_MULT,
+    DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS,
+    CRIT_SUPPORT_100_FACTOR,
+]
 OTHER_SUPER_ATTACK_EFFECTS = ["Heal", "Crit", "Disable Action", "Lowers ATK", "Lowers DEF", "Attack All"]
 SUPER_ATTACK_EFFECTS = STACK_EFFECTS + SUPPORT_SUPER_ATTACK_EFFECTS + OTHER_SUPER_ATTACK_EFFECTS
-EXTRA_BUFF_EFFECTS = ["ATK", "DEF", "Crit", "Ki", "Dmg Red", "Evasion", "aaPSuper", "aaPGuarantee", "Guard", "AEAAT", "ATK Support", "Heal"]
+EXTRA_BUFF_EFFECTS = [
+    "ATK",
+    "DEF",
+    "Crit",
+    "Ki",
+    "Dmg Red",
+    "Evasion",
+    "aaPSuper",
+    "aaPGuarantee",
+    "Guard",
+    "AEAAT",
+    "ATK Support",
+    "Heal",
+]
 ADDITIONAL_ATTACK_EFFECTS = ["AAChance", "AdditionalSuper"]
 ADDITIONAL_ATTACK_PARAMETERS = ["aaPSuper", "aaPGuarantee"]
 DEF_BUFFS = ["DEF", "DmgRed", "Evasion", "Guard"]
 DEF_STATUS_EVENTS = ["Receive", "Guard", "Evade"]
-DEF_BUFF_STATUS_PAIRS = {"DEF": ["Receive", "Guard", "Evade", "ReceiveOrEvade"], "DmgRed": ["Receive", "Guard", "Evade", "ReceiveOrEvade"], "Evasion": ["Receive", "Evade", "ReceiveOrEvade"], "Guard": ["Receive", "Guard", "ReceiveOrEvade"]}
-DEF_STATUS_IMPLICATIONS = {"Receive": ["Receive", "ReceiveOrEvade"], "Guard": ["Guard", "Receive", "ReceiveOrEvade"], "Evade" : ["Evade", "ReceiveOrEvade"], "ReceiveOrEvade": ["ReceiveOrEvade", "Receive", "Evade"]}
+DEF_BUFF_STATUS_PAIRS = {
+    "DEF": ["Receive", "Guard", "Evade", "ReceiveOrEvade"],
+    "DmgRed": ["Receive", "Guard", "Evade", "ReceiveOrEvade"],
+    "Evasion": ["Receive", "Evade", "ReceiveOrEvade"],
+    "Guard": ["Receive", "Guard", "ReceiveOrEvade"],
+}
+DEF_STATUS_IMPLICATIONS = {
+    "Receive": ["Receive", "ReceiveOrEvade"],
+    "Guard": ["Guard", "Receive", "ReceiveOrEvade"],
+    "Evade": ["Evade", "ReceiveOrEvade"],
+    "ReceiveOrEvade": ["ReceiveOrEvade", "Receive", "Evade"],
+}
 SUPPORT_FACTORS = [
     KI_SUPPORT_FACTOR,
     ATK_SUPPORT_100_FACTOR / AVG_SOT_STATS,
@@ -556,7 +601,9 @@ SUPPORT_FACTORS = [
     0.5,
     0.5,
     1.0,
-    DMG_RED_SUPPORT_100_FACTOR / (NUM_SLOTS - 1) * P_DISABLE_SUPER, # /2 as only can affect 1 unit out the two others, times chance of disabling super.
+    DMG_RED_SUPPORT_100_FACTOR
+    / (NUM_SLOTS - 1)
+    * P_DISABLE_SUPER,  # /2 as only can affect 1 unit out the two others, times chance of disabling super.
     DMG_RED_SUPPORT_100_FACTOR,
     DMG_RED_SUPPORT_100_FACTOR,
 ]
@@ -589,7 +636,14 @@ CONDITIONS = [
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]
 
 # Standby Finish Effect Conditions
-START_OF_TURN_FINISH_EFFECT_CONDITIONS = ["Ki sphere obtained by allies", "Revive", "SA Counter", "Turn", "Broly SS Trio", "Dragon Balls"]
+START_OF_TURN_FINISH_EFFECT_CONDITIONS = [
+    "Ki sphere obtained by allies",
+    "Revive",
+    "SA Counter",
+    "Turn",
+    "Broly SS Trio",
+    "Dragon Balls",
+]
 END_OF_TURN_FINISH_EFFECT_CONDITIONS = ["Attack performed by allies"]
 FINISH_EFFECT_CONDITIONS = START_OF_TURN_FINISH_EFFECT_CONDITIONS + END_OF_TURN_FINISH_EFFECT_CONDITIONS
 
@@ -604,14 +658,14 @@ ORB_CHANGING_TYPES = ["No Orb Change"] + ORB_CHANGING_EFFECTS
 ORB_TYPES = ["Other", "Same", "Rainbow"]
 ORB_REQUIREMENT_TYPES = [ORB_TYPES, ["Other", "Same"], ["Rainbow"], ["Same"], ["Other"]]
 # All orb counds are averaged across all slots in the turn
-ORB_COUNTS_NO_ORB_CHANGING = [1.75, 1.75, 1] # From DokkanAverageKi.xlsx
-ORB_COUNTS_TYPE_ORB_CHANGING = [0.5, 5.25, 1.5] # From DokkanAverageKi.xlsx
-ORB_COUNTS_DOUBLE_ORB_CHANGING = [0, 7.85, 1.85] # See numTypeOrbsCurveFit.py & numRainbowOrbsCurveFit.py
-ORB_COUNTS_TRIPLE_ORB_CHANGING = [0, 8.55, 1.93] # See numTypeOrbsCurveFit.py & numRainbowOrbsCurveFit.py
+ORB_COUNTS_NO_ORB_CHANGING = [1.75, 1.75, 1]  # From DokkanAverageKi.xlsx
+ORB_COUNTS_TYPE_ORB_CHANGING = [0.5, 5.25, 1.5]  # From DokkanAverageKi.xlsx
+ORB_COUNTS_DOUBLE_ORB_CHANGING = [0, 7.85, 1.85]  # See numTypeOrbsCurveFit.py & numRainbowOrbsCurveFit.py
+ORB_COUNTS_TRIPLE_ORB_CHANGING = [0, 8.55, 1.93]  # See numTypeOrbsCurveFit.py & numRainbowOrbsCurveFit.py
 ORB_COUNTS_COMPLETE_ORB_CHANGING = [0, 23, 0]
-ORB_COUNTS_RAINBOW_ORB_CHANGING = [2.05, 2.05, 2.7] # From DokkanAverageKi.xlsx
-ORB_COUNTS_RAINBOW_PLUS_TYPE_ORB_CHANGING = [0.8, 5.55, 3.2] # Guess (Rainbow + Type - No)
-ORB_COUNTS_DOUBLE_RAINBOW_ORB_CHANGING = [2.35, 2.35, 4.4] # Guess (Rainbow + rainbow - No)
+ORB_COUNTS_RAINBOW_ORB_CHANGING = [2.05, 2.05, 2.7]  # From DokkanAverageKi.xlsx
+ORB_COUNTS_RAINBOW_PLUS_TYPE_ORB_CHANGING = [0.8, 5.55, 3.2]  # Guess (Rainbow + Type - No)
+ORB_COUNTS_DOUBLE_RAINBOW_ORB_CHANGING = [2.35, 2.35, 4.4]  # Guess (Rainbow + rainbow - No)
 
 KI_PER_SAME_TYPE_ORB = 2.0
 
@@ -793,7 +847,9 @@ attackAllDebuffConversion = dict(zip(ATTACK_ALL_SCORE, ATTACK_ALL_DEBUFF_FACTOR)
 # Support
 supportFactorConversion = dict(zip(SUPPORT_EFFECTS, SUPPORT_FACTORS))
 superAttackSupportFactorConversion = dict(zip(SUPPORT_SUPER_ATTACK_EFFECTS, SUPER_ATTACK_SUPPORT_FACTORS))
-disableActionActiveSupportFactorConversion = dict(zip(SLOTS, [0, supportFactorConversion["P3 Disable Action"], supportFactorConversion["P3 Disable Action"]]))
+disableActionActiveSupportFactorConversion = dict(
+    zip(SLOTS, [0, supportFactorConversion["P3 Disable Action"], supportFactorConversion["P3 Disable Action"]])
+)
 
 # Orb Changing
 orbRequirement2TypeConversion = dict(zip(ORB_REQUIREMENTS, ORB_REQUIREMENT_TYPES))
@@ -855,8 +911,12 @@ for defBuff in DEF_BUFFS:
 
 # Hidden-Potential + Equips
 hiddenPotentalStatsConverter = dict(zip(TYPES, [HIPO_AGL, HIPO_INT, HIPO_PHY, HIPO_STR, HIPO_TEQ]))
-oldHiddenPotentalStatsConverter = dict(zip(TYPES, [HIPO_AGL_OLD, HIPO_INT_OLD, HIPO_PHY_OLD, HIPO_STR_OLD, HIPO_TEQ_OLD]))
-f2pHiddenPotentalStatsConverter = dict(zip(TYPES, [HIPO_AGL_F2P, HIPO_INT_F2P, HIPO_PHY_F2P, HIPO_STR_F2P, HIPO_TEQ_F2P]))
+oldHiddenPotentalStatsConverter = dict(
+    zip(TYPES, [HIPO_AGL_OLD, HIPO_INT_OLD, HIPO_PHY_OLD, HIPO_STR_OLD, HIPO_TEQ_OLD])
+)
+f2pHiddenPotentalStatsConverter = dict(
+    zip(TYPES, [HIPO_AGL_F2P, HIPO_INT_F2P, HIPO_PHY_F2P, HIPO_STR_F2P, HIPO_TEQ_F2P])
+)
 # ATK, DEF, ADD, CRT, DGE
 HIPO_D0 = {
     "AGL": [0, 0, 0.1, 0, 0],

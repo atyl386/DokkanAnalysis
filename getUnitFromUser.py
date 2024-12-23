@@ -95,9 +95,7 @@ def getCondition(inputHelper):
         )
         match conditionType:
             case "Turn":
-                turnCondition = inputHelper.getAndSaveUserInput(
-                    "What is the ability turn condition?", default=5
-                )
+                turnCondition = inputHelper.getAndSaveUserInput("What is the ability turn condition?", default=5)
                 condition[i] = TurnCondition(turnCondition)
             case "TransformationTurn":
                 turnCondition = inputHelper.getAndSaveUserInput(
@@ -288,9 +286,9 @@ class Unit:
         self.giantRageActivationForm = -1
         if self.giantRageDuration != 0:
             self.giantRageActivationForm = self.inputHelper.getAndSaveUserInput(
-            "What # form can turn giant/rage mode?",
-            default=1,
-        )
+                "What # form can turn giant/rage mode?",
+                default=1,
+            )
 
     def getHiPo(self):
         if self.exclusivity == "DF_Old":
@@ -447,7 +445,10 @@ class Unit:
             if self.transformationTriggered:
                 # If the trigger condition for the finish is a revive, apply APT this turn, otherwise next.
                 try:
-                    hasFinishCounter = form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "Revive" or form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "SA Counter"
+                    hasFinishCounter = (
+                        form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "Revive"
+                        or form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "SA Counter"
+                    )
                 except:
                     hasFinishCounter = False
                 if hasFinishCounter:
@@ -464,8 +465,8 @@ class Unit:
                     applyTransformationAttackAPT = True
                     stateIdx -= 1
             else:
-                #state.numAttacksEvaded = branchAttacksEvaded(0, -1, state.numAttacksDirectedBeforeAttacking, state.numAttacksDirectedAfterAttacking, state.multiChanceBuff["EvasionA"], state.multiChanceBuff["EvasionB"].chances["Start of Turn"] - state.multiChanceBuff["EvasionA"].chances["Start of Turn"], state.buff["Disable Evasion Cancel"], state.defBuffStatuses[("Evasion", "Receive")], state.defBuffStatuses[("Evasion", "Evade")])
-                #state.numAttacksReceived = state.numAttacksDirected - state.numAttacksEvaded
+                # state.numAttacksEvaded = branchAttacksEvaded(0, -1, state.numAttacksDirectedBeforeAttacking, state.numAttacksDirectedAfterAttacking, state.multiChanceBuff["EvasionA"], state.multiChanceBuff["EvasionB"].chances["Start of Turn"] - state.multiChanceBuff["EvasionA"].chances["Start of Turn"], state.buff["Disable Evasion Cancel"], state.defBuffStatuses[("Evasion", "Receive")], state.defBuffStatuses[("Evasion", "Evade")])
+                # state.numAttacksReceived = state.numAttacksDirected - state.numAttacksEvaded
                 form.numAttacksGuarded += state.guard * state.numAttacksReceived
                 form.numAttacksEvaded += state.numAttacksEvaded
                 form.numAttacksReceived += state.numAttacksReceived
@@ -557,7 +558,7 @@ class Form:
             )
         ]
         self.getLinks()
-        #assert len(np.unique(self.linkNames)) == MAX_NUM_LINKS , "Duplicate links"
+        # assert len(np.unique(self.linkNames)) == MAX_NUM_LINKS , "Duplicate links"
         self.getSuperAttacks()
         ################################################ Turn Start #####################################################
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "default")
@@ -673,7 +674,9 @@ class Form:
         )
         if self.unit.giantRageActivationForm == self.formIdx:
             self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "giant_rage_mode")
-            giantRageModeATK = self.unit.inputHelper.getAndSaveUserInput("What is the giant/rage mode attack stat?", default=60000)
+            giantRageModeATK = self.unit.inputHelper.getAndSaveUserInput(
+                "What is the giant/rage mode attack stat?", default=60000
+            )
             self.abilities["Active / Finish Attacks"].append(GiantRageMode(self, [giantRageModeATK]))
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "active_skill_attack")
         self.abilities["Active / Finish Attacks"].extend(
@@ -732,7 +735,7 @@ class Form:
                     "What is the required amount?",
                     "Is buff applied when attacking?",
                     "Does the buff only apply within that turn?",
-                    "What is the maximum buff?"
+                    "What is the maximum buff?",
                 ],
                 [clc.Choice(ORB_REQUIREMENTS), None, clc.Choice(YES_NO), clc.Choice(YES_NO), None],
                 ["Any", 0, "N", "Y", 99.0],
@@ -767,7 +770,11 @@ class Form:
                 self,
                 "How many different buffs does the form get after receiving an attack?",
                 AfterAttackReceived,
-                ["How many turns does the buff last?", "How many attacks received are required?", "Does the buff start from the next attacking turn?"],
+                [
+                    "How many turns does the buff last?",
+                    "How many attacks received are required?",
+                    "Does the buff start from the next attacking turn?",
+                ],
                 [None, None, clc.Choice(YES_NO)],
                 [1, 0, "N"],
             )
@@ -789,12 +796,18 @@ class Form:
                 self,
                 "How many different buffs does the form get after evading an attack?",
                 AfterAttackEvaded,
-                ["How many turns does the buff last?", "How many evasions are required?", "Does the buff start from the next attacking turn?"],
+                [
+                    "How many turns does the buff last?",
+                    "How many evasions are required?",
+                    "Does the buff start from the next attacking turn?",
+                ],
                 [None, None, clc.Choice(YES_NO)],
                 [1, 0, "N"],
             )
         )
-        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_recieve_or_evade_attack")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
+            self.formElement, "after_recieve_or_evade_attack"
+        )
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -824,7 +837,9 @@ class Form:
                 [1.0, "N"],
             )
         )
-        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_received_or_evaded")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
+            self.formElement, "per_attack_received_or_evaded"
+        )
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -857,7 +872,9 @@ class Form:
                 [1.0, "N"],
             )
         )
-        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_x_attacks_received_in_battle")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
+            self.formElement, "after_x_attacks_received_in_battle"
+        )
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -868,7 +885,9 @@ class Form:
                 [5, 1.0, "Y"],
             )
         )
-        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_x_attacks_evaded_in_battle")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
+            self.formElement, "after_x_attacks_evaded_in_battle"
+        )
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
                 self,
@@ -886,23 +905,36 @@ class Form:
                 self,
                 "How many different buffs does the form get after performing an attack?",
                 AfterAttackPerformed,
-                ["How many turns does the buff last?", "How many attacks performed are required?", "Requires super attack?"],
+                [
+                    "How many turns does the buff last?",
+                    "How many attacks performed are required?",
+                    "Requires super attack?",
+                ],
                 [None, None, clc.Choice(YES_NO)],
                 [1, 5, "Y"],
             )
         )
-        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_x_attacks_in_battle")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
+            self.formElement, "after_x_attacks_in_battle"
+        )
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
                 "How many different buffs does the form get after performing X attacks in battle?",
                 EveryTimeXAttacksPerformedInBattle,
-                ["How many attacks performed are required?", "What is the maximum buff?", "Within the same turn?", "Requires super attack?"],
+                [
+                    "How many attacks performed are required?",
+                    "What is the maximum buff?",
+                    "Within the same turn?",
+                    "Requires super attack?",
+                ],
                 [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
                 [5, 1.0, "Y", "Y"],
             )
         )
-        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_super_performed")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
+            self.formElement, "per_attack_super_performed"
+        )
         self.abilities["Attack Enemy"].extend(
             abilityQuestionaire(
                 self,
@@ -973,7 +1005,9 @@ class Form:
             )
         )
         ################################################ Turn End #####################################################
-        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, f"form_{self.formIdx}_change_condition")
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
+            self.formElement, f"form_{self.formIdx}_change_condition"
+        )
         self.formChangeCondition = getCondition(unit.inputHelper)
         if self.formIdx < self.unit.numForms:
             self.newForm = True
@@ -1138,12 +1172,21 @@ class Form:
             case "Turn":
                 charge = 1
             case "Broly SS Trio":
-                charge = NUM_SLOTS * (3 * np.mean(NUM_ATTACKS_DIRECTED) + 2 * ORB_COUNTS_NO_ORB_CHANGING[1] + ORB_COUNTS_COMPLETE_ORB_CHANGING[0] + ORB_COUNTS_COMPLETE_ORB_CHANGING[2])
+                charge = NUM_SLOTS * (
+                    3 * np.mean(NUM_ATTACKS_DIRECTED)
+                    + 2 * ORB_COUNTS_NO_ORB_CHANGING[1]
+                    + ORB_COUNTS_COMPLETE_ORB_CHANGING[0]
+                    + ORB_COUNTS_COMPLETE_ORB_CHANGING[2]
+                )
             case "Dragon Balls":
-                charge = NUM_SLOTS * (1 + 4 * (7 / 23) / 2) * (
-                    orbChangeConversion["No Orb Change"]["Same"]
-                    + orbChangeConversion["Rainbow Orb Change"]["Rainbow"]
-                    + orbChangeConversion["Rainbow Orb Change"]["Other"]
+                charge = (
+                    NUM_SLOTS
+                    * (1 + 4 * (7 / 23) / 2)
+                    * (
+                        orbChangeConversion["No Orb Change"]["Same"]
+                        + orbChangeConversion["Rainbow Orb Change"]["Rainbow"]
+                        + orbChangeConversion["Rainbow Orb Change"]["Other"]
+                    )
                 )
             case _:
                 raise Exception(f"{chargeCondition} Charge Condition not implemented!")
@@ -1157,16 +1200,19 @@ class CarryOverBuff:
             self.value = []
         else:
             self.value = 0
+
     def get(self):
         if self.effect in ADDITIONAL_ATTACK_PARAMETERS:
             return copy.copy(self.value)
         else:
             return self.value
+
     def add(self, value):
         if self.effect in ADDITIONAL_ATTACK_PARAMETERS:
             self.value.append(value)
         else:
             self.value += value
+
     def sub(self, value):
         if self.effect in ADDITIONAL_ATTACK_PARAMETERS:
             self.value.remove(value)
@@ -1216,7 +1262,7 @@ class OrbCollect:
         self.prob = [1]
         self.num = [orbChangeConversion["No Orb Change"][orbType]]
         self.expected = copy.copy(self.num)
-    
+
     def getNumOrbs(self):
         return sum(self.expected)
 
@@ -1225,13 +1271,16 @@ class OrbCollection:
     def __init__(self):
         self.orbCollects = dict(zip(ORB_TYPES, [OrbCollect(orbType) for orbType in ORB_TYPES]))
         self.kiPerOrb = dict(zip(ORB_TYPES, [1, KI_PER_SAME_TYPE_ORB, 1]))
-    
+
     def getNumCategoryOrbs(self, orbCategory):
-        return [sum([self.orbCollects[orbType].expected[i] for orbType in orbRequirement2TypeConversion[orbCategory]]) for i in range(len(self.orbCollects["Same"].prob))]
+        return [
+            sum([self.orbCollects[orbType].expected[i] for orbType in orbRequirement2TypeConversion[orbCategory]])
+            for i in range(len(self.orbCollects["Same"].prob))
+        ]
 
     def getCollectKi(self):
         return sum([self.kiPerOrb[orbType] * self.orbCollects[orbType].getNumOrbs() for orbType in ORB_TYPES])
-    
+
     def addOrbChange(self, orbChange, prob):
         for orbType in ORB_TYPES:
             numOrbs = orbChangeConversion[orbChange][orbType]
@@ -1240,11 +1289,13 @@ class OrbCollection:
                 self.orbCollects[orbType].num = [numOrbs]
                 self.orbCollects[orbType].expected = [numOrbs]
             else:
-                self.orbCollects[orbType].prob = [p * (1 - prob) for p in self.orbCollects[orbType].prob] # Renormalise
+                self.orbCollects[orbType].prob = [p * (1 - prob) for p in self.orbCollects[orbType].prob]  # Renormalise
                 self.orbCollects[orbType].prob.append(prob)
                 assert sum(self.orbCollects[orbType].prob) == 1
                 self.orbCollects[orbType].num.append(numOrbs)
-                self.orbCollects[orbType].expected = np.multiply(self.orbCollects[orbType].prob, self.orbCollects[orbType].num)
+                self.orbCollects[orbType].expected = np.multiply(
+                    self.orbCollects[orbType].prob, self.orbCollects[orbType].num
+                )
 
 
 class State:
@@ -1261,7 +1312,6 @@ class State:
             "Damage Dealt Heal": 0,
             "Attacks Guaranteed to Hit": 0,
             "Disable Evasion Cancel": 0,
-
         }
         self.p1Buff = {}
         self.p2Buff = {}
@@ -1282,9 +1332,13 @@ class State:
                 self.multiChanceBuff[effect].updateChance("HiPo", form.unit.pHiPo[inputEffect], effect, self)
                 self.multiChanceBuff[effect].updateChance("Links", form.linkEffects[inputEffect], effect, self)
                 if inputEffect == "Evasion":
-                    self.multiChanceBuff[effect].updateChance("Start of Turn", form.carryOverBuffs[inputEffect].get(), effect, self)
+                    self.multiChanceBuff[effect].updateChance(
+                        "Start of Turn", form.carryOverBuffs[inputEffect].get(), effect, self
+                    )
                 else:
-                    self.multiChanceBuff[effect].updateChance("On Super", form.carryOverBuffs[inputEffect].get(), effect, self)
+                    self.multiChanceBuff[effect].updateChance(
+                        "On Super", form.carryOverBuffs[inputEffect].get(), effect, self
+                    )
         self.aaPSuper = form.carryOverBuffs["aaPSuper"].get()
         self.aaPGuarantee = form.carryOverBuffs["aaPGuarantee"].get()
         self.orbCollection = OrbCollection()
@@ -1366,9 +1420,21 @@ class State:
                     )
                 )
                 self.support += supportFactor * numSupers
-            pDisableSuper = min(min(numSupers, 1) * P_DISABLE_SUPER * self.form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]), self.numSuperAttacksDirectedAfterAttacking)
+            pDisableSuper = min(
+                min(numSupers, 1)
+                * P_DISABLE_SUPER
+                * self.form.superAttacks[superAttackType].effects["Disable Action"].buff
+                * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]),
+                self.numSuperAttacksDirectedAfterAttacking,
+            )
             self.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-            pDisableNormal = min(min(numSupers, 1) * min(1, self.numNormalAttacksDirectedAfterAttacking) * self.form.superAttacks[superAttackType].effects["Disable Action"].buff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]), self.numNormalAttacksDirectedAfterAttacking)
+            pDisableNormal = min(
+                min(numSupers, 1)
+                * min(1, self.numNormalAttacksDirectedAfterAttacking)
+                * self.form.superAttacks[superAttackType].effects["Disable Action"].buff
+                * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]),
+                self.numNormalAttacksDirectedAfterAttacking,
+            )
             self.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
             self.numAttacksDirected -= pDisableNormal
             self.numAttacksDirectedAfterAttacking -= pDisableNormal
@@ -1424,7 +1490,19 @@ class State:
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             ENEMY_SUPER_CRIT_CHANCE,
         )
-        self.buff["Heal"] += self.form.linkEffects["Heal"] + self.form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA + self.form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA + self.form.superAttacks["AS"].effects["Heal"].buff * self.aaSA + ((0.03 + 0.0015 * HIPO_RECOVERY_BOOST[self.form.unit.nCopies - 1]) * avgDefStartOfTurn * self.orbCollection.orbCollects["Same"].getNumOrbs() + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR) / AVG_HEALTH
+        self.buff["Heal"] += (
+            self.form.linkEffects["Heal"]
+            + self.form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA
+            + self.form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA
+            + self.form.superAttacks["AS"].effects["Heal"].buff * self.aaSA
+            + (
+                (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[self.form.unit.nCopies - 1])
+                * avgDefStartOfTurn
+                * self.orbCollection.orbCollects["Same"].getNumOrbs()
+                + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR
+            )
+            / AVG_HEALTH
+        )
         self.buff["Heal"] = min(self.buff["Heal"], 1)
         self.slotFactor = self.slot**SLOT_FACTOR_POWER
         self.useability = (
@@ -1488,9 +1566,17 @@ class State:
                         self.form.superAttacks["AS"].effects[stat].duration,
                     )
                 )
-    
+
     def getDefStat(self, p2Def):
-        return self.form.unit.DEF * (1 + LEADER_SKILL_STATS) * (1 + self.p1Buff["DEF"]) * (1 + self.form.linkEffects["DEF"]) * (1 + p2Def) * (1 + self.p3Buff["DEF"]) * (1 + self.stackedStats["DEF"])
+        return (
+            self.form.unit.DEF
+            * (1 + LEADER_SKILL_STATS)
+            * (1 + self.p1Buff["DEF"])
+            * (1 + self.form.linkEffects["DEF"])
+            * (1 + p2Def)
+            * (1 + self.p3Buff["DEF"])
+            * (1 + self.stackedStats["DEF"])
+        )
 
     def setAvgDefMult(self):
         self.avgDefMult = (
@@ -1502,13 +1588,16 @@ class State:
     def setAvgAtkMod(self):
         assert self.multiChanceBuff["Crit"].prob <= 1
         self.buff["AEAAT"] = min(self.buff["AEAAT"], 1)
-        self.atkModifier = self.multiChanceBuff["Crit"].prob * self.form.unit.critMultiplier + (1 - self.multiChanceBuff["Crit"].prob) * (
+        self.atkModifier = self.multiChanceBuff["Crit"].prob * self.form.unit.critMultiplier + (
+            1 - self.multiChanceBuff["Crit"].prob
+        ) * (
             self.buff["AEAAT"] * (AEAAT_MULTIPLIER + self.form.unit.TAB * AEAAT_TAB_INC)
             + (1 - self.buff["AEAAT"])
             * (
                 self.buff["Disable Guard"] * (DISABLE_GUARD_MULTIPLIER + self.form.unit.TAB * DISABLE_GUARD_TAB_INC)
                 + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + self.form.unit.TAB * DEFAULT_TAB_INC)
-            ) * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
+            )
+            * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
         )
 
     def getRandomKi(self):
@@ -1528,25 +1617,36 @@ class State:
         else:
             self.pUSA = 1 - ZTP_CDF(max(17 - self.buff["Ki"], 0), self.randomKi)
             self.pSA = 1 - self.pN - self.pUSA
-    
+
     def setAttacksPerformed(self):
         self.aaSA = branchAS(
-            -1, len(self.aaPSuper), self.form.unit.pHiPo["AA"], 1, self.aaPSuper, self.aaPGuarantee, self.form.unit.pHiPo["AA"]
+            -1,
+            len(self.aaPSuper),
+            self.form.unit.pHiPo["AA"],
+            1,
+            self.aaPSuper,
+            self.aaPGuarantee,
+            self.form.unit.pHiPo["AA"],
         )
         self.aa = branchAA(
-            -1, len(self.aaPSuper), self.form.unit.pHiPo["AA"], 1, self.aaPSuper, self.aaPGuarantee, self.form.unit.pHiPo["AA"]
+            -1,
+            len(self.aaPSuper),
+            self.form.unit.pHiPo["AA"],
+            1,
+            self.aaPSuper,
+            self.aaPGuarantee,
+            self.form.unit.pHiPo["AA"],
         )
         self.attacksPerformed = self.pAttack + self.aa * self.pNextAttack
         # Assume Binomial distribution for aaSA for the expected value
         self.superAttacksPerformed = self.pAttack + self.aaSA * self.pNextAttack
-    
+
     def kiModifier(self, ki):
         """Returns the ki modifier for a unit (only used for normals and Ultras)"""
         if ki <= 12:
             return 1
         else:
             return np.linspace(self.form.unit.kiMod12, 2, 13)[ki - 12]
-    
 
     def getAtkStat(self, p1Atk, p2Atk, kiMultiplier, saMultiplier):
         return (
@@ -1559,11 +1659,13 @@ class State:
             * kiMultiplier
             * saMultiplier
         )
-    
+
     def setNormal(self):
         """Sets the ATK stat of a normal"""
         kiMultiplier = self.kiModifier(self.ki)
-        self.normal = self.getAtkStat(self.p1Buff["ATK"] + self.stackedStats["ATK"], self.p2Buff["ATK"], kiMultiplier, 1)
+        self.normal = self.getAtkStat(
+            self.p1Buff["ATK"] + self.stackedStats["ATK"], self.p2Buff["ATK"], kiMultiplier, 1
+        )
 
     def SAMultiplier(self, baseMultiplier, nStacks, saAtk):
         """Returns the super-attack multiplier of a form"""
@@ -1571,18 +1673,29 @@ class State:
         if nStacks > 1:  # If stack attack
             stackingPenalty = saAtk
         return baseMultiplier + SA_BOOST_INC * HIPO_SA_BOOST[self.form.unit.nCopies - 1] - stackingPenalty
-    
+
     def getSA(self, baseMultiplier, nStacks, saAtk):
         """Returns the ATK stat of a super-attack"""
         kiMultiplier = self.form.unit.kiMod12
         saMultiplier = self.SAMultiplier(baseMultiplier, nStacks, saAtk)
-        return self.getAtkStat(self.p1Buff["ATK"], self.p2Buff["ATK"], kiMultiplier, saMultiplier + saAtk + self.stackedStats["ATK"])
+        return self.getAtkStat(
+            self.p1Buff["ATK"], self.p2Buff["ATK"], kiMultiplier, saMultiplier + saAtk + self.stackedStats["ATK"]
+        )
 
     def setUSA(self):
         """Returns the ATK stat of an ultra-super-attack"""
         kiMultiplier = self.kiModifier(max(self.ki, 18))
-        saMultiplier = self.SAMultiplier(self.form.superAttacks["18 Ki"].multiplier, self.form.superAttacks["18 Ki"].effects["ATK"].duration, self.form.superAttacks["18 Ki"].effects["ATK"].buff)
-        self.USA = self.getAtkStat(self.p1Buff["ATK"], self.p2Buff["ATK"], kiMultiplier, saMultiplier + self.form.superAttacks["18 Ki"].effects["ATK"].buff + self.stackedStats["ATK"])
+        saMultiplier = self.SAMultiplier(
+            self.form.superAttacks["18 Ki"].multiplier,
+            self.form.superAttacks["18 Ki"].effects["ATK"].duration,
+            self.form.superAttacks["18 Ki"].effects["ATK"].buff,
+        )
+        self.USA = self.getAtkStat(
+            self.p1Buff["ATK"],
+            self.p2Buff["ATK"],
+            kiMultiplier,
+            saMultiplier + self.form.superAttacks["18 Ki"].effects["ATK"].buff + self.stackedStats["ATK"],
+        )
 
     def getActiveAtk(self, ki, p2Atk, saMultActive):
         """Returns the ATK stat of an active-skill attack"""
@@ -1590,7 +1703,21 @@ class State:
         saMultiplier = saMultActive + SA_BOOST_INC * HIPO_SA_BOOST[self.form.unit.nCopies - 1]
         return self.getAtkStat(self.p1Buff["ATK"], p2Atk, kiMultiplier, saMultiplier * (1 + self.stackedStats["ATK"]))
 
-    def branchAPT(self, i, m12, mN, pAA, nProcs, crit, atkModifier, p2AtkBuff, atkPerAttackPerformed, critPerAttackPerformed, atkPerSuperPerformed, critPerSuperPerformed):
+    def branchAPT(
+        self,
+        i,
+        m12,
+        mN,
+        pAA,
+        nProcs,
+        crit,
+        atkModifier,
+        p2AtkBuff,
+        atkPerAttackPerformed,
+        critPerAttackPerformed,
+        atkPerSuperPerformed,
+        critPerSuperPerformed,
+    ):
         """Returns the total remaining APT of a unit in a turn recursively"""
         p2AtkFactor = (1 + self.p2Buff["ATK"] + p2AtkBuff) / (1 + self.p2Buff["ATK"])
         normal = mN * self.n_0 * p2AtkFactor * atkModifier
@@ -1671,15 +1798,23 @@ class State:
             self.nAA = len(self.aaPSuper)
             i = -1  # iteration counter
             nProcs = 1  # Initialise number of HiPo procs
-            saMultiplier = self.SAMultiplier(self.form.superAttacks["12 Ki"].multiplier, self.form.superAttacks["AS"].effects["ATK"].duration, self.form.superAttacks["AS"].effects["ATK"].buff)
-            m12 = saMultiplier + self.form.superAttacks["AS"].effects["ATK"].buff + self.stackedStats["ATK"]  # 12 ki multiplier after SA effect
+            saMultiplier = self.SAMultiplier(
+                self.form.superAttacks["12 Ki"].multiplier,
+                self.form.superAttacks["AS"].effects["ATK"].duration,
+                self.form.superAttacks["AS"].effects["ATK"].buff,
+            )
+            m12 = (
+                saMultiplier + self.form.superAttacks["AS"].effects["ATK"].buff + self.stackedStats["ATK"]
+            )  # 12 ki multiplier after SA effect
             self.a12_0 = self.addSA / m12  # Get 12 ki SA attack stat without multiplier
             baseAtk = 1 + self.p1Buff["ATK"] + self.stackedStats["ATK"]
             self.n_0 = self.normal / baseAtk
             pAA = self.form.unit.pHiPo["AA"]  # Probability of doing an additional attack next
             counterAtk = (
                 NUM_ATTACKS_DIRECTED[self.slot - 1] * self.form.normalCounterMult
-                + NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.form.saCounterMult
+                + NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1]
+                * self.multiChanceBuff["Nullify"].chances["SA Counter"]
+                * self.form.saCounterMult
             ) * self.normal
             crit = copy.deepcopy(self.multiChanceBuff["Crit"])
             pCrit0 = crit.prob
@@ -1688,7 +1823,12 @@ class State:
             crit.updateChance("On Super", self.critPerSuperPerformed[0] - self.critPerAttackPerformed[0], "Crit")
             crit.updateChance("Super Attack Effect", self.form.superAttacks["12 Ki"].effects["Crit"].buff, "Crit")
             critSA = copy.deepcopy(crit)
-            crit.updateChance("Super Attack Effect", self.form.superAttacks["18 Ki"].effects["Crit"].buff - self.form.superAttacks["12 Ki"].effects["Crit"].buff, "Crit")
+            crit.updateChance(
+                "Super Attack Effect",
+                self.form.superAttacks["18 Ki"].effects["Crit"].buff
+                - self.form.superAttacks["12 Ki"].effects["Crit"].buff,
+                "Crit",
+            )
             critUSA = copy.deepcopy(crit)
             if pCrit0 == 1:
                 atkModifierN = self.form.unit.critMultiplier
@@ -1761,52 +1901,94 @@ class State:
             self.APT += counterAtk * self.atkModifier
         else:
             self.APT += 0
-    
-    def branchDamageTaken(self, pBranch, iA, iB, nAA, nAB, p2Def, p2DefSuper, evasion, pEvadeExtra, pGuard, dmgRed, pNullify, defence, postSuperDefMult, defBuffStatuses, maxDamage, enemyCritChance):
+
+    def branchDamageTaken(
+        self,
+        pBranch,
+        iA,
+        iB,
+        nAA,
+        nAB,
+        p2Def,
+        p2DefSuper,
+        evasion,
+        pEvadeExtra,
+        pGuard,
+        dmgRed,
+        pNullify,
+        defence,
+        postSuperDefMult,
+        defBuffStatuses,
+        maxDamage,
+        enemyCritChance,
+    ):
         if pBranch == 0:
             return 0
         """Returns the remaining damage taken by a unit in a turn recursively"""
         # Get damage taken by the attack pre super
-        pEvadeB = self.multiChanceBuff["EvasionB"].chances["Start of Turn"] - self.multiChanceBuff["EvasionA"].chances["Start of Turn"]
+        pEvadeB = (
+            self.multiChanceBuff["EvasionB"].chances["Start of Turn"]
+            - self.multiChanceBuff["EvasionA"].chances["Start of Turn"]
+        )
         dmgRedB = self.dmgRedNormalB - self.dmgRedNormalA
         evasion.updateChance("Start of Turn", pEvadeExtra, "")
         pE_N = (1 - DODGE_CANCEL_FACTOR * (1 - self.buff["Disable Evasion Cancel"])) * evasion.prob
         pE = pE_N * (1 - pNullify) + pNullify
         pG = (1 - pE) * pGuard
         pR = 1 - pE - pG
-        attackDamageTaken = getAttackDamageTaken(pE, pGuard, maxDamage, self.form.unit.TDB, dmgRed, defence, enemyCritChance)
+        attackDamageTaken = getAttackDamageTaken(
+            pE, pGuard, maxDamage, self.form.unit.TDB, dmgRed, defence, enemyCritChance
+        )
         # If last attack in sequence pre super
         if iA >= nAA - 1 and iB == -1:
             evasionPostEvadeB = copy.deepcopy(evasion)
             evasionPostHitB = copy.deepcopy(evasion)
             evasionPostEvadeB.updateChance(
                 "Start of Turn",
-                (defBuffStatuses[("Evasion", "Evade")][0] + defBuffStatuses[("Evasion", "ReceiveOrEvade")][0]) * (nAA - iA) + pEvadeB,
+                (defBuffStatuses[("Evasion", "Evade")][0] + defBuffStatuses[("Evasion", "ReceiveOrEvade")][0])
+                * (nAA - iA)
+                + pEvadeB,
                 "",
             )
             evasionPostHitB.updateChance(
                 "Start of Turn",
-                (defBuffStatuses[("Evasion", "Receive")][0] + defBuffStatuses[("Evasion", "ReceiveOrEvade")][0]) * (nAA - iA) + pEvadeB,
+                (defBuffStatuses[("Evasion", "Receive")][0] + defBuffStatuses[("Evasion", "ReceiveOrEvade")][0])
+                * (nAA - iA)
+                + pEvadeB,
                 "",
             )
             # mulitply by extra factor if only part is expected. 0 =< nAA - iA < 1 )
             defBuffNextStatuses, defBuffStatuses0 = processDefBuffStatuses(defBuffStatuses, 1 - (nAA - iA))
             return pBranch * (
-                attackDamageTaken * (nAA - iA) + self.branchDamageTaken(
+                attackDamageTaken * (nAA - iA)
+                + self.branchDamageTaken(
                     pE,
                     iA,
                     0,
                     nAA,
                     nAB,
-                    p2Def + self.p2DefB + p2DefSuper + (defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA),
+                    p2Def
+                    + self.p2DefB
+                    + p2DefSuper
+                    + (defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA),
                     p2DefSuper,
                     evasionPostEvadeB,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "ReceiveOrEvade")] * (nAA - iA),
-                    dmgRed + dmgRedB + (defBuffStatuses0[("DmgRed", "Evade")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")]) * (nAA - iA),
+                    dmgRed
+                    + dmgRedB
+                    + (defBuffStatuses0[("DmgRed", "Evade")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")])
+                    * (nAA - iA),
                     pNullify,
                     defence
-                    * (1 + p2Def + self.p2DefB + p2DefSuper + (defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA))
+                    * (
+                        1
+                        + p2Def
+                        + self.p2DefB
+                        + p2DefSuper
+                        + (defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")])
+                        * (nAA - iA)
+                    )
                     / (1 + p2Def)
                     * (1 + self.avgDefMult)
                     / (1 + postSuperDefMult),
@@ -1824,12 +2006,30 @@ class State:
                     p2Def
                     + self.p2DefB
                     + p2DefSuper
-                    + (defBuffStatuses0[("DEF", "Guard")] + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA),
+                    + (
+                        defBuffStatuses0[("DEF", "Guard")]
+                        + defBuffStatuses0[("DEF", "Receive")]
+                        + defBuffStatuses0[("DEF", "ReceiveOrEvade")]
+                    )
+                    * (nAA - iA),
                     p2DefSuper,
                     evasionPostHitB,
                     0,
-                    pGuard + (defBuffStatuses0[("Guard", "Guard")] + defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")]) * (nAA - iA),
-                    dmgRed + dmgRedB + (defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "Guard")]+ defBuffStatuses0[("DmgRed", "ReceiveOrEvade")]) * (nAA - iA),
+                    pGuard
+                    + (
+                        defBuffStatuses0[("Guard", "Guard")]
+                        + defBuffStatuses0[("Guard", "Receive")]
+                        + defBuffStatuses0[("Guard", "ReceiveOrEvade")]
+                    )
+                    * (nAA - iA),
+                    dmgRed
+                    + dmgRedB
+                    + (
+                        defBuffStatuses0[("DmgRed", "Receive")]
+                        + defBuffStatuses0[("DmgRed", "Guard")]
+                        + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")]
+                    )
+                    * (nAA - iA),
                     pNullify,
                     defence
                     * (
@@ -1837,7 +2037,12 @@ class State:
                         + p2Def
                         + self.p2DefB
                         + p2DefSuper
-                        + (defBuffStatuses0[("DEF", "Guard")] + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA)
+                        + (
+                            defBuffStatuses0[("DEF", "Guard")]
+                            + defBuffStatuses0[("DEF", "Receive")]
+                            + defBuffStatuses0[("DEF", "ReceiveOrEvade")]
+                        )
+                        * (nAA - iA)
                     )
                     / (1 + p2Def)
                     * (1 + self.avgDefMult)
@@ -1853,15 +2058,30 @@ class State:
                     0,
                     nAA,
                     nAB,
-                    p2Def + self.p2DefB + p2DefSuper + (defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA),
+                    p2Def
+                    + self.p2DefB
+                    + p2DefSuper
+                    + (defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA),
                     p2DefSuper,
                     evasionPostHitB,
                     0,
-                    pGuard + (defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")]) * (nAA - iA),
-                    dmgRed + dmgRedB + (defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")]) * (nAA - iA),
+                    pGuard
+                    + (defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")])
+                    * (nAA - iA),
+                    dmgRed
+                    + dmgRedB
+                    + (defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")])
+                    * (nAA - iA),
                     pNullify,
                     defence
-                    * (1 + p2Def + self.p2DefB + p2DefSuper + (defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA))
+                    * (
+                        1
+                        + p2Def
+                        + self.p2DefB
+                        + p2DefSuper
+                        + (defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")])
+                        * (nAA - iA)
+                    )
                     / (1 + p2Def)
                     * (1 + self.avgDefMult)
                     / (1 + postSuperDefMult),
@@ -1876,10 +2096,14 @@ class State:
             evasionPostEvade = copy.deepcopy(evasion)
             evasionPostHit = copy.deepcopy(evasion)
             evasionPostEvade.updateChance(
-                "Start of Turn", defBuffStatuses0[("Evasion", "Evade")] + defBuffStatuses0[("Evasion", "ReceiveOrEvade")], ""
+                "Start of Turn",
+                defBuffStatuses0[("Evasion", "Evade")] + defBuffStatuses0[("Evasion", "ReceiveOrEvade")],
+                "",
             )
             evasionPostHit.updateChance(
-                "Start of Turn", defBuffStatuses0[("Evasion", "Receive")] + defBuffStatuses0[("Evasion", "ReceiveOrEvade")], ""
+                "Start of Turn",
+                defBuffStatuses0[("Evasion", "Receive")] + defBuffStatuses0[("Evasion", "ReceiveOrEvade")],
+                "",
             )
             if iA < nAA - 1:
                 iA += 1
@@ -1893,14 +2117,25 @@ class State:
                     iB,
                     nAA,
                     nAB,
-                    p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
+                    p2Def
+                    + p2DefSuper
+                    + defBuffStatuses0[("DEF", "Evade")]
+                    + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
                     p2DefSuper,
                     evasionPostEvade,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
                     dmgRed + defBuffStatuses0[("DmgRed", "Evade")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
                     pNullify,
-                    defence * (1 + p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) / (1 + p2Def),
+                    defence
+                    * (
+                        1
+                        + p2Def
+                        + p2DefSuper
+                        + defBuffStatuses0[("DEF", "Evade")]
+                        + defBuffStatuses0[("DEF", "ReceiveOrEvade")]
+                    )
+                    / (1 + p2Def),
                     postSuperDefMult,
                     defBuffNextStatuses["Evade"],
                     maxDamage,
@@ -1912,15 +2147,29 @@ class State:
                     iB,
                     nAA,
                     nAB,
-                    p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Guard")] + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
+                    p2Def
+                    + p2DefSuper
+                    + defBuffStatuses0[("DEF", "Guard")]
+                    + defBuffStatuses0[("DEF", "Receive")]
+                    + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
                     p2DefSuper,
                     evasionPostHit,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
-                    dmgRed + defBuffStatuses0[("DmgRed", "Guard")] + defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
+                    dmgRed
+                    + defBuffStatuses0[("DmgRed", "Guard")]
+                    + defBuffStatuses0[("DmgRed", "Receive")]
+                    + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
                     pNullify,
                     defence
-                    * (1 + p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Guard")] + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")])
+                    * (
+                        1
+                        + p2Def
+                        + p2DefSuper
+                        + defBuffStatuses0[("DEF", "Guard")]
+                        + defBuffStatuses0[("DEF", "Receive")]
+                        + defBuffStatuses0[("DEF", "ReceiveOrEvade")]
+                    )
                     / (1 + p2Def),
                     postSuperDefMult,
                     defBuffNextStatuses["Guard"],
@@ -1933,14 +2182,25 @@ class State:
                     iB,
                     nAA,
                     nAB,
-                    p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
+                    p2Def
+                    + p2DefSuper
+                    + defBuffStatuses0[("DEF", "Receive")]
+                    + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
                     p2DefSuper,
                     evasionPostHit,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
                     dmgRed + defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
                     pNullify,
-                    defence * (1 + p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) / (1 + p2Def),
+                    defence
+                    * (
+                        1
+                        + p2Def
+                        + p2DefSuper
+                        + defBuffStatuses0[("DEF", "Receive")]
+                        + defBuffStatuses0[("DEF", "ReceiveOrEvade")]
+                    )
+                    / (1 + p2Def),
                     postSuperDefMult,
                     defBuffNextStatuses["Receive"],
                     maxDamage,
@@ -1950,6 +2210,7 @@ class State:
         else:
             # mulitply by extra factor if only part is expected. 0 =< nAB - iB < 1 )
             return pBranch * attackDamageTaken * (nAB - iB)
+
 
 class Stack:
     def __init__(self, stat, buff, duration):
@@ -1974,7 +2235,7 @@ class GiantRageMode(SingleTurnAbility):
     def __init__(self, form, args):
         super().__init__(form)
         self.ATK = args[0]
-        form.unit.inputHelper.parent = form.unit.inputHelper.parentMap[form.unit.inputHelper.parent]        
+        form.unit.inputHelper.parent = form.unit.inputHelper.parentMap[form.unit.inputHelper.parent]
         self.giantRageForm = Form(form.unit, 1, form.formIdx + 1, giantRageMode=True)
 
     def applyToState(self, state):
@@ -1984,7 +2245,7 @@ class GiantRageMode(SingleTurnAbility):
             self.giantRageModeState = State(self.giantRageForm, state.slot, state.turn)
             giantRageUnit = copy.deepcopy(state.form.unit)
             giantRageUnit.ATK = self.ATK
-            self.giantRageModeState.form.unit = giantRageUnit 
+            self.giantRageModeState.form.unit = giantRageUnit
             self.giantRageModeState.setState()  # Calculate the APT of the state
             state.APT += self.giantRageModeState.APT * NUM_SLOTS * giantRageUnit.giantRageDuration
             state.support += GIANT_RAGE_SUPPORT
@@ -2000,7 +2261,9 @@ class Revive(SingleTurnAbility):
 
     def applyToState(self, state):
         # Usually want to revive the turn before fight peak
-        if self.form.checkCondition(self.condition, self.activated, True) and abs(PEAK_TURN - RETURN_PERIOD_PER_SLOT[0] - state.turn) < abs(state.turn + RETURN_PERIOD_PER_SLOT[state.slot -1] - PEAK_TURN + RETURN_PERIOD_PER_SLOT[0]):
+        if self.form.checkCondition(self.condition, self.activated, True) and abs(
+            PEAK_TURN - RETURN_PERIOD_PER_SLOT[0] - state.turn
+        ) < abs(state.turn + RETURN_PERIOD_PER_SLOT[state.slot - 1] - PEAK_TURN + RETURN_PERIOD_PER_SLOT[0]):
             self.activated = True
             state.buff["Heal"] = min(state.buff["Heal"] + self.hpRegen, 1)
             if self.isThisCharacterOnly:
@@ -2017,6 +2280,7 @@ class Domain(SingleTurnAbility):
         self.domainType, buff, self.prop, self.duration = args
         self.effectiveBuff = buff * aprioriProbMod(self.prop, True)
         form.unit.inputHelper.parent = form.unit.inputHelper.parentMap[form.unit.inputHelper.parent]
+
     def applyToState(self, state):
         if state.form.checkCondition(self.condition, self.activated, True):
             self.activated = True
@@ -2026,169 +2290,395 @@ class Domain(SingleTurnAbility):
             state.support += DOMAIN_SUPPORT_FACTOR
             match self.domainType:
                 case "Increase Damage Received":
-                    state.form.abilities["Start of Turn"].extend([
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", self.effectiveBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params)
-                    ])
+                    state.form.abilities["Start of Turn"].extend(
+                        [
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                self.effectiveBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params),
+                        ]
+                    )
                 case "Alternate Dimensional Space":
-                    extremeClassBuff = 0.1 * aprioriProbMod(self.prop, True) # prop to account for may be buffing enemies too
-                    explodRageMovBossBuff = 0.1 * aprioriProbMod(0.5 * math.factorial(NUM_CATEGORIES - 2) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 2)), True) # 0.5 to account for not all allies being exploding rage or movie bosses. The other part comes from calculating the probability an average enemy is not on the movie bosses or exploding rage categories.
-                    state.form.abilities["Start of Turn"].extend([
-                        TurnDependent(
-                            state.form, 1, False, "Dmg Red A", 0.26, self.duration, params
+                    extremeClassBuff = 0.1 * aprioriProbMod(
+                        self.prop, True
+                    )  # prop to account for may be buffing enemies too
+                    explodRageMovBossBuff = 0.1 * aprioriProbMod(
+                        0.5
+                        * math.factorial(NUM_CATEGORIES - 2)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 2)
                         ),
-                        TurnDependent(
-                            state.form, 1, False, "Ki Support", 4 * KI_SUPPORT_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "Ki", 4, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", extremeClassBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "DEF Support", extremeClassBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 0.5, True, "ATK Support", explodRageMovBossBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 0.5, True, "DEF Support", explodRageMovBossBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(state.form, 1, False, "P3 ATK", 0.2, 1, params),
-                        TurnDependent(state.form, 1, False, "P3 DEF", 0.2, 1, params),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", self.effectiveBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params)
-                    ])
+                        True,
+                    )  # 0.5 to account for not all allies being exploding rage or movie bosses. The other part comes from calculating the probability an average enemy is not on the movie bosses or exploding rage categories.
+                    state.form.abilities["Start of Turn"].extend(
+                        [
+                            TurnDependent(state.form, 1, False, "Dmg Red A", 0.26, self.duration, params),
+                            TurnDependent(
+                                state.form, 1, False, "Ki Support", 4 * KI_SUPPORT_FACTOR, self.duration, params
+                            ),
+                            TurnDependent(state.form, 1, False, "Ki", 4, self.duration, params),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                extremeClassBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "DEF Support",
+                                extremeClassBuff * DEF_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                0.5,
+                                True,
+                                "ATK Support",
+                                explodRageMovBossBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                0.5,
+                                True,
+                                "DEF Support",
+                                explodRageMovBossBuff * DEF_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.2, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.2, 1, params),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                self.effectiveBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params),
+                        ]
+                    )
                 case "City (Future) (Rift in Time)":
-                    extremeClassBuff = 0.1 * aprioriProbMod(self.prop, True) # prop to account for may be buffing enemies too
-                    superBossesBuff = 0.1 * aprioriProbMod(math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # The other part comes from calculating the probability an average enemy is not on the super bosses category.
-                    state.form.abilities["Start of Turn"].extend([
-                        TurnDependent(
-                            state.form, 1, False, "Ki Support", 2 * KI_SUPPORT_FACTOR, self.duration, params
+                    extremeClassBuff = 0.1 * aprioriProbMod(
+                        self.prop, True
+                    )  # prop to account for may be buffing enemies too
+                    superBossesBuff = 0.1 * aprioriProbMod(
+                        math.factorial(NUM_CATEGORIES - 1)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)
                         ),
-                        TurnDependent(
-                            state.form, 1, False, "Ki", 2, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", extremeClassBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "DEF Support", extremeClassBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", superBossesBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "DEF Support", superBossesBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(state.form, 1, False, "P3 ATK", 0.2, 1, params),
-                        TurnDependent(state.form, 1, False, "P3 DEF", 0.2, 1, params),
-                    ])
+                        True,
+                    )  # The other part comes from calculating the probability an average enemy is not on the super bosses category.
+                    state.form.abilities["Start of Turn"].extend(
+                        [
+                            TurnDependent(
+                                state.form, 1, False, "Ki Support", 2 * KI_SUPPORT_FACTOR, self.duration, params
+                            ),
+                            TurnDependent(state.form, 1, False, "Ki", 2, self.duration, params),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                extremeClassBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "DEF Support",
+                                extremeClassBuff * DEF_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                superBossesBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "DEF Support",
+                                superBossesBuff * DEF_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.2, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.2, 1, params),
+                        ]
+                    )
                 case "Shining World of Void":
-                    superClassBuff = 0.15 * aprioriProbMod(self.prop, True) # prop to account for may be buffing enemies too
-                    RoGBuff = 0.15 * aprioriProbMod(2/3 * math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # 2/3 comes from not every ally on RoG. The other part comes from calculating the probability an average enemy is not on the RoG category.
-                    state.form.abilities["Start of Turn"].extend([
-                        TurnDependent(
-                            state.form, 1, False, "Ki Support", 4 * KI_SUPPORT_FACTOR, self.duration, params
+                    superClassBuff = 0.15 * aprioriProbMod(
+                        self.prop, True
+                    )  # prop to account for may be buffing enemies too
+                    RoGBuff = 0.15 * aprioriProbMod(
+                        2
+                        / 3
+                        * math.factorial(NUM_CATEGORIES - 1)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)
                         ),
-                        TurnDependent(
-                            state.form, 1, False, "Ki", 4, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", superClassBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "DEF Support", superClassBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", RoGBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "Disable Evasion Cancel Support", RoGBuff * DISABLE_EVASION_CANCEL_SUPPORT_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(state.form, 1, False, "P3 ATK", 0.3, 1, params),
-                        TurnDependent(state.form, 1, False, "P3 DEF", 0.15, 1, params),
-                        TurnDependent(state.form, 1, False, "Disable Evasion Cancel", 0.15, 1, params),
-                    ])
+                        True,
+                    )  # 2/3 comes from not every ally on RoG. The other part comes from calculating the probability an average enemy is not on the RoG category.
+                    state.form.abilities["Start of Turn"].extend(
+                        [
+                            TurnDependent(
+                                state.form, 1, False, "Ki Support", 4 * KI_SUPPORT_FACTOR, self.duration, params
+                            ),
+                            TurnDependent(state.form, 1, False, "Ki", 4, self.duration, params),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                superClassBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "DEF Support",
+                                superClassBuff * DEF_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                RoGBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "Disable Evasion Cancel Support",
+                                RoGBuff * DISABLE_EVASION_CANCEL_SUPPORT_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.3, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.15, 1, params),
+                            TurnDependent(state.form, 1, False, "Disable Evasion Cancel", 0.15, 1, params),
+                        ]
+                    )
                 case "Molten Lava of Natade Village":
-                    UncontrollablePowerBuff = 0.15 * aprioriProbMod(2/3 * math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # 2/3 comes from not every ally on Uncontrollable Power. The other part comes from calculating the probability an average enemy is not on the Uncontrollable Power category.
-                    MovieHeroesDebuff = 0.1 * aprioriProbMod(1 - math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # The other part comes from calculating the probability an average enemy is on the Movie Heroes category.
-                    state.form.abilities["Start of Turn"].extend([
-                        TurnDependent(
-                            state.form, 1, False, "Orb Change", 1, self.duration, params
+                    UncontrollablePowerBuff = 0.15 * aprioriProbMod(
+                        2
+                        / 3
+                        * math.factorial(NUM_CATEGORIES - 1)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)
                         ),
-                        TurnDependent(
-                            state.form, 1, False, "Guard", 1, self.duration, params
+                        True,
+                    )  # 2/3 comes from not every ally on Uncontrollable Power. The other part comes from calculating the probability an average enemy is not on the Uncontrollable Power category.
+                    MovieHeroesDebuff = 0.1 * aprioriProbMod(
+                        1
+                        - math.factorial(NUM_CATEGORIES - 1)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)
                         ),
-                        TurnDependent(
-                            state.form, 1, False, "AEAAT", 1, 99, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", UncontrollablePowerBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "DEF Support", UncontrollablePowerBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", MovieHeroesDebuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(state.form, 1, False, "P3 ATK", 0.15 + MovieHeroesDebuff, 1, params),
-                        TurnDependent(state.form, 1, False, "P3 DEF", 0.15, 1, params),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", self.effectiveBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params)
-                    ])
+                        True,
+                    )  # The other part comes from calculating the probability an average enemy is on the Movie Heroes category.
+                    state.form.abilities["Start of Turn"].extend(
+                        [
+                            TurnDependent(state.form, 1, False, "Orb Change", 1, self.duration, params),
+                            TurnDependent(state.form, 1, False, "Guard", 1, self.duration, params),
+                            TurnDependent(state.form, 1, False, "AEAAT", 1, 99, params),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                UncontrollablePowerBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "DEF Support",
+                                UncontrollablePowerBuff * DEF_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                MovieHeroesDebuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.15 + MovieHeroesDebuff, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.15, 1, params),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                self.effectiveBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params),
+                        ]
+                    )
                 case "Earth Shrouded in Clouds":
-                    DemonicPowerBuff = 0.15 * aprioriProbMod(1.0 * math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # 1.0 comes from every ally being on Uncontrollable Power. The other part comes from calculating the probability an average enemy is not on the Demonic Power category.
-                    EarthBredFightersDebuff = 0.15 * aprioriProbMod(1 - math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # The other part comes from calculating the probability an average enemy is on the Earth-Bred Fighters category.
-                    state.form.abilities["Start of Turn"].extend([
-                        TurnDependent(
-                            state.form, 1, False, "Heal", 0.1, self.duration, params
+                    DemonicPowerBuff = 0.15 * aprioriProbMod(
+                        1.0
+                        * math.factorial(NUM_CATEGORIES - 1)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)
                         ),
-                        TurnDependent(
-                            state.form, 1, False, "Ki", 2, self.duration, params
+                        True,
+                    )  # 1.0 comes from every ally being on Uncontrollable Power. The other part comes from calculating the probability an average enemy is not on the Demonic Power category.
+                    EarthBredFightersDebuff = 0.15 * aprioriProbMod(
+                        1
+                        - math.factorial(NUM_CATEGORIES - 1)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)
                         ),
-                        TurnDependent(
-                            state.form, 1, False, "Ki Support", 2, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", DemonicPowerBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "DEF Support", DemonicPowerBuff * DEF_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", EarthBredFightersDebuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(state.form, 1, False, "P3 ATK", 0.15 + EarthBredFightersDebuff, 1, params),
-                        TurnDependent(state.form, 1, False, "P3 DEF", 0.15, 1, params),
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", self.effectiveBuff * ATK_SUPPORT_100_FACTOR, self.duration, params
-                        ),
-                        TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params)
-                    ])
+                        True,
+                    )  # The other part comes from calculating the probability an average enemy is on the Earth-Bred Fighters category.
+                    state.form.abilities["Start of Turn"].extend(
+                        [
+                            TurnDependent(state.form, 1, False, "Heal", 0.1, self.duration, params),
+                            TurnDependent(state.form, 1, False, "Ki", 2, self.duration, params),
+                            TurnDependent(state.form, 1, False, "Ki Support", 2, self.duration, params),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                DemonicPowerBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "DEF Support",
+                                DemonicPowerBuff * DEF_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                EarthBredFightersDebuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.15 + EarthBredFightersDebuff, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.15, 1, params),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                self.effectiveBuff * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params),
+                        ]
+                    )
                 case "Inside Majin Buu":
-                    PowerAbsorptionOrTransformationBoostBuff = 0.15 * aprioriProbMod(1.0 * math.factorial(NUM_CATEGORIES - 2) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 2)), True) # 1.0 comes from every ally being on either Power Absoption or Transformation Boost. The other part comes from calculating the probability an average enemy is not on either category.
-                    MajinBuuSagaBuff = 0.15 * aprioriProbMod(0.75 * math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # 0.75 comes from 75% of allies being on either Power Absoption or Transformation Boost. The other part comes from calculating the probability an average enemy is not on either category.
-                    state.form.abilities["Start of Turn"].extend([
-                        TurnDependent(
-                            state.form, 1, False, "ATK Support", (PowerAbsorptionOrTransformationBoostBuff + MajinBuuSagaBuff) * ATK_SUPPORT_100_FACTOR, self.duration, params
+                    PowerAbsorptionOrTransformationBoostBuff = 0.15 * aprioriProbMod(
+                        1.0
+                        * math.factorial(NUM_CATEGORIES - 2)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 2)
                         ),
-                        TurnDependent(
-                            state.form, 1, False, "DEF Support", (PowerAbsorptionOrTransformationBoostBuff + MajinBuuSagaBuff) * DEF_SUPPORT_100_FACTOR, self.duration, params
+                        True,
+                    )  # 1.0 comes from every ally being on either Power Absoption or Transformation Boost. The other part comes from calculating the probability an average enemy is not on either category.
+                    MajinBuuSagaBuff = 0.15 * aprioriProbMod(
+                        0.75
+                        * math.factorial(NUM_CATEGORIES - 1)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)
                         ),
-                        TurnDependent(state.form, 1, False, "P3 ATK", 0.3, 1, params),
-                        TurnDependent(state.form, 1, False, "P3 DEF", 0.3, 1, params),
-                    ])
+                        True,
+                    )  # 0.75 comes from 75% of allies being on either Power Absoption or Transformation Boost. The other part comes from calculating the probability an average enemy is not on either category.
+                    state.form.abilities["Start of Turn"].extend(
+                        [
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                (PowerAbsorptionOrTransformationBoostBuff + MajinBuuSagaBuff) * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "DEF Support",
+                                (PowerAbsorptionOrTransformationBoostBuff + MajinBuuSagaBuff) * DEF_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.3, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.3, 1, params),
+                        ]
+                    )
                 case _:
                     raise Exception(f"{self.domainType} Domain Type not implemented!")
-                    
+
 
 class ActiveSkillBuff(SingleTurnAbility):
     def __init__(self, form, args):
@@ -2197,14 +2687,18 @@ class ActiveSkillBuff(SingleTurnAbility):
         self.activations = 0
 
     def applyToState(self, state):
-        if self.form.checkCondition(self.condition, self.activations == self.maxActivations, True) and (self.form.unit.fightPeak or self.duration > 1):
+        if self.form.checkCondition(self.condition, self.activations == self.maxActivations, True) and (
+            self.form.unit.fightPeak or self.duration > 1
+        ):
             self.activations += 1
             start = state.turn
             end = start + self.duration - 1
             params = [start, end]
             if self.effect in P3_EFFECTS_SUFFIX:
                 self.effect = "P3 " + self.effect
-            ability = TurnDependent(self.form, 1, False, self.effect, self.buff, effectDuration=self.duration, args=params)
+            ability = TurnDependent(
+                self.form, 1, False, self.effect, self.buff, effectDuration=self.duration, args=params
+            )
             self.form.abilities["Start of Turn"].append(ability)
 
 
@@ -2220,7 +2714,12 @@ class ActiveSkillAttack(SingleTurnAbility):
             state.attacksPerformed += 1  # Parameter should be used to determine buffs from per attack performed buffs
             state.superAttacksPerformed += 1
             state.activeSkillAttackActivated = True
-            activeAtk = state.getActiveAtk(rarity2MaxKi[state.form.unit.rarity], state.p2Buff["ATK"] + self.p2AttackBuff, self.activeMult) * state.atkModifier
+            activeAtk = (
+                state.getActiveAtk(
+                    rarity2MaxKi[state.form.unit.rarity], state.p2Buff["ATK"] + self.p2AttackBuff, self.activeMult
+                )
+                * state.atkModifier
+            )
             if yesNo2Bool[self.triggersTransformation]:
                 self.form.unit.transformationAttackAPT = activeAtk
                 self.form.unit.transformationTriggered = True
@@ -2243,7 +2742,12 @@ class StandbyFinishSkill(SingleTurnAbility):
         if state.form.checkCondition(self.condition, self.activated, True):
             self.activated = True
             self.activeMult += self.buffPerCharge * state.form.charge
-            self.form.unit.transformationAttackAPT = state.getActiveAtk(rarity2MaxKi[self.form.unit.rarity], state.p2Buff["ATK"], self.activeMult * (1 + self.attackBuff)) * state.atkModifier
+            self.form.unit.transformationAttackAPT = (
+                state.getActiveAtk(
+                    rarity2MaxKi[self.form.unit.rarity], state.p2Buff["ATK"], self.activeMult * (1 + self.attackBuff)
+                )
+                * state.atkModifier
+            )
             self.form.unit.transformationTriggered = True
             if self.form.unit.numForms > self.form.formIdx:
                 self.form.unit.nextForm = 1
@@ -2358,9 +2862,13 @@ class Buff(PassiveAbility):
                     case "Evasion against Supers":
                         state.evadeSuper += effectiveBuff
                     case "Disable Action B":
-                        pDisableSuper = P_DISABLE_SUPER * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                        pDisableSuper = P_DISABLE_SUPER * (
+                            1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"]
+                        )
                         state.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-                        pDisableNormal = min(1, state.numNormalAttacksDirectedAfterAttacking) * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                        pDisableNormal = min(1, state.numNormalAttacksDirectedAfterAttacking) * (
+                            1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"]
+                        )
                         state.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
                         state.numAttacksDirected -= pDisableNormal
                         state.numAttacksDirectedAfterAttacking -= pDisableNormal
@@ -2400,9 +2908,13 @@ class Buff(PassiveAbility):
                         state.multiChanceBuff["EvasionA"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
                         state.multiChanceBuff["EvasionB"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
                     case "P3 Disable Action":
-                        state.numSuperAttacksDirectedBeforeAttacking -= disableActionActiveDisableSuper[state.slot] * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                        state.numSuperAttacksDirectedBeforeAttacking -= disableActionActiveDisableSuper[state.slot] * (
+                            1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"]
+                        )
                         state.numAttacksDirected -= disableActionActiveDisableNormal[state.slot]
-                        state.numNormalAttacksDirectedBeforeAttacking -= disableActionActiveDisableNormal[state.slot] * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                        state.numNormalAttacksDirectedBeforeAttacking -= disableActionActiveDisableNormal[
+                            state.slot
+                        ] * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
                         state.support += disableActionActiveSupportFactorConversion[state.slot] * supportBuff
                     case "Delay Target":
                         state.support += supportFactorConversion[self.effect] * supportBuff
@@ -2464,6 +2976,7 @@ class PerEvent(PassiveAbility):
         self.max = max
         self.applied = 0
 
+
 class PerKi(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
@@ -2485,7 +2998,9 @@ class PerTurn(PerEvent):
         self.initialTurn = args[2]
 
     def applyToState(self, state):
-        if (not(self.appliedAtStartOfTurn) and state.turn - (state.form.initialTurn - 1) == self.initialTurn) or state.turn - (state.form.initialTurn - 1) < self.initialTurn:
+        if (
+            not (self.appliedAtStartOfTurn) and state.turn - (state.form.initialTurn - 1) == self.initialTurn
+        ) or state.turn - (state.form.initialTurn - 1) < self.initialTurn:
             isActive = 0
         else:
             isActive = 1
@@ -2543,7 +3058,7 @@ class PerAttackPerformed(PerEvent):
                     state.critPerAttackPerformed = cappedBuffPerAttack
         match self.effect:
             case "Ki":
-                pass # Handled by carryOverBuffs
+                pass  # Handled by carryOverBuffs
             case "ATK":
                 state.atkPerSuperPerformed = cappedCumBuffPerAttack
             case "DEF":
@@ -2578,19 +3093,27 @@ class PerAttackReceived(PerEvent):
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs)
             case "ATK":
-                state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs)
+                state.p2Buff["ATK"] += min(
+                    self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs
+                )
             case "DEF":
                 state.defBuffStatuses[("DEF", "Receive")] += cappedBuffPerAttack
             case "Dmg Red":
                 state.defBuffStatuses[("DmgRed", "Receive")] += cappedBuffPerAttack
             case "Crit":
-                state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key = abs), "Crit", state)
+                state.multiChanceBuff["Crit"].updateChance(
+                    "On Super",
+                    min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs),
+                    "Crit",
+                    state,
+                )
                 state.setAvgAtkMod()
             case _:
                 raise Exception(f"{self.effect} Per Attack Received Buff Effect not implemented!")
         if not (self.withinTheSameTurn):
             state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
+
 
 class PerAttackReceivedOrEvaded(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
@@ -2614,6 +3137,7 @@ class PerAttackReceivedOrEvaded(PerEvent):
             state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
 
+
 class PerAttackGuarded(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
@@ -2636,7 +3160,12 @@ class PerAttackGuarded(PerEvent):
             case "Dmg Red":
                 state.defBuffStatuses[("DmgRed", "Receive")] += cappedBuffPerAttack
             case "Crit":
-                state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
+                state.multiChanceBuff["Crit"].updateChance(
+                    "On Super",
+                    min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo),
+                    "Crit",
+                    state,
+                )
                 state.setAvgAtkMod()
             case _:
                 raise Exception(f"{self.effect} Per Attack Guarded Buff Effect not implemented!")
@@ -2663,7 +3192,9 @@ class PerAttackEvaded(PerEvent):
             case "DEF":
                 state.defBuffStatuses[("DEF", "Evade")] += cappedBuffPerAttack
             case "Crit":
-                state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo), "Crit", state)
+                state.multiChanceBuff["Crit"].updateChance(
+                    "On Super", min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo), "Crit", state
+                )
                 state.setAvgAtkMod()
             case "Evasion":
                 state.defBuffStatuses[("Evasion", "Evade")] += cappedBuffPerAttack
@@ -2677,7 +3208,7 @@ class PerAttackEvaded(PerEvent):
 
 
 class AfterEvent(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, threshold = 1):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, effectDuration, threshold=1):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.effectDuration = effectDuration
         self.turnsLeft = effectDuration
@@ -2691,7 +3222,7 @@ class AfterEvent(PassiveAbility):
         else:
             self.applied = 0
         self.eventFactor = 1
-    
+
     def updateBuffToGo(self):
         if self.effect in ADDITIONAL_ATTACK_EFFECTS:
             self.buffToGo = 1.0
@@ -2708,7 +3239,7 @@ class AfterEvent(PassiveAbility):
                 state.form.carryOverBuffs[self.effect].sub(self.applied)
                 self.applied = 0
             self.turnsLeft = self.effectDuration
-    
+
     def setTurnBuff(self, state):
         # geometric cdf
         turnBuff = self.effectiveBuff * self.eventFactor
@@ -2716,7 +3247,7 @@ class AfterEvent(PassiveAbility):
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
         elif self.effect in REGULAR_SUPPORT_EFFECTS:
-            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1] * self.eventFactor
         else:
             match self.effect:
                 case "ATK":
@@ -2745,10 +3276,13 @@ class AfterEvent(PassiveAbility):
                 case _:
                     raise Exception(f"{self.effect} After Event Buff Effect not implemented!")
 
-
     def nextTurnUpdate(self, state):
         # If abiltiy going to be active next turn
-        if not(np.any(self.applied)) and (self.increment - self.required >= 0 or self.isNextTurnBuff) and self.effectDuration > RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+        if (
+            not (np.any(self.applied))
+            and (self.increment - self.required >= 0 or self.isNextTurnBuff)
+            and self.effectDuration > RETURN_PERIOD_PER_SLOT[state.slot - 1]
+        ):
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 state.form.carryOverBuffs["aaPSuper"].add(state.aaPSuper[-1])
                 state.form.carryOverBuffs["aaPGuarantee"].add(state.aaPGuarantee[-1])
@@ -2778,7 +3312,7 @@ class AfterAttackPerformed(AfterEvent):
         else:
             self.increment = state.attacksPerformed
             self.required = max(self.threshold - state.form.attacksPerformed, 0)
-        if not(np.any(self.applied)):
+        if not (np.any(self.applied)):
             self.setEventFactor()
             self.setTurnBuff(state)
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
@@ -2794,16 +3328,20 @@ class AfterAttackReceived(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
         self.nextAttackingTurn = yesNo2Bool[args[2]]
-    
+
     def setTurnBuff(self, state):
         # geometric cdf
         turnBuff = self.effectiveBuff * self.eventFactor
         cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
-        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1), cappedTurnBuff)
+        cappedBuffPerAttack = np.insert(
+            np.zeros(NUM_ATTACKS_PER_TURN - 1),
+            min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1),
+            cappedTurnBuff,
+        )
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
         elif self.effect in REGULAR_SUPPORT_EFFECTS:
-            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1] * self.eventFactor
         else:
             match self.effect:
                 case "ATK":
@@ -2853,7 +3391,7 @@ class AfterAttackReceived(AfterEvent):
         self.updateBuffToGo()
         # Check if ability will be active next turn
         if self.threshold > 1:
-            if not(self.isNextTurnBuff) and self.nextAttackingTurn:
+            if not (self.isNextTurnBuff) and self.nextAttackingTurn:
                 self.required = 99
             else:
                 self.required = max(self.threshold - state.form.numAttacksReceived, 0)
@@ -2861,27 +3399,31 @@ class AfterAttackReceived(AfterEvent):
             self.resetAppliedBuffs(state)
         else:
             self.setEventFactor(state)
-            if not(self.nextAttackingTurn):
+            if not (self.nextAttackingTurn):
                 self.setTurnBuff(state)
             if self.effect not in REGULAR_SUPPORT_EFFECTS:
                 self.nextTurnUpdate(state)
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
-          
+
 class AfterGuardActivated(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
-    
+
     def setTurnBuff(self, state):
         # geometric cdf
         turnBuff = self.effectiveBuff * self.eventFactor
         cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
-        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1), cappedTurnBuff)
+        cappedBuffPerAttack = np.insert(
+            np.zeros(NUM_ATTACKS_PER_TURN - 1),
+            min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1),
+            cappedTurnBuff,
+        )
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
         elif self.effect in REGULAR_SUPPORT_EFFECTS:
-            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1] * self.eventFactor
         else:
             match self.effect:
                 case "ATK":
@@ -2904,7 +3446,6 @@ class AfterGuardActivated(AfterEvent):
                 case _:
                     raise Exception(f"{self.effect} After Guard Activated Buff Effect not implemented!")
 
-
     def setEventFactor(self, state):
         if state.guard == 0:
             self.eventFactor = 0
@@ -2920,7 +3461,6 @@ class AfterGuardActivated(AfterEvent):
                         self.eventFactor = 1
                     else:
                         self.eventFactor = 0
-
 
     def applyToState(self, state):
         self.increment = state.numAttacksReceived * state.guard
@@ -2942,16 +3482,20 @@ class AfterAttackEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
         self.nextAttackingTurn = yesNo2Bool[args[2]]
-    
+
     def setTurnBuff(self, state):
         # geometric cdf
         turnBuff = self.effectiveBuff * self.eventFactor
         cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
-        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1), cappedTurnBuff)
+        cappedBuffPerAttack = np.insert(
+            np.zeros(NUM_ATTACKS_PER_TURN - 1),
+            min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1),
+            cappedTurnBuff,
+        )
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
         elif self.effect in REGULAR_SUPPORT_EFFECTS:
-            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1] * self.eventFactor
         else:
             match self.effect:
                 case "ATK":
@@ -2985,7 +3529,6 @@ class AfterAttackEvaded(AfterEvent):
                 else:
                     self.eventFactor = 0
 
-
     def applyToState(self, state):
         self.increment = state.numAttacksEvaded
         if self.nextAttackingTurn:
@@ -2995,10 +3538,12 @@ class AfterAttackEvaded(AfterEvent):
             else:
                 self.isNextTurnBuff = True
                 # This only works if effect is guaranteed dodge. Is working out how much extra evasion chance is to be gained on average by dodding threshold attacks in a turn
-                self.effectiveBuff = (1 - state.multiChanceBuff["EvasionA"].chances["Start of Turn"]) * (1 - poisson.cdf(self.threshold - 1, self.increment))
+                self.effectiveBuff = (1 - state.multiChanceBuff["EvasionA"].chances["Start of Turn"]) * (
+                    1 - poisson.cdf(self.threshold - 1, self.increment)
+                )
         self.updateBuffToGo()
         if self.threshold > 1:
-            if not(self.isNextTurnBuff) and self.nextAttackingTurn:
+            if not (self.isNextTurnBuff) and self.nextAttackingTurn:
                 self.required = 99
             else:
                 self.required = max(self.threshold - state.form.numAttacksEvaded, 0)
@@ -3006,26 +3551,31 @@ class AfterAttackEvaded(AfterEvent):
             self.resetAppliedBuffs(state)
         else:
             self.setEventFactor(state)
-            if not(self.nextAttackingTurn):
+            if not (self.nextAttackingTurn):
                 self.setTurnBuff(state)
             if self.effect not in REGULAR_SUPPORT_EFFECTS:
                 self.nextTurnUpdate(state)
         if np.any(self.applied):
             self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
+
 class AfterAttackReceivedOrEvaded(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
-    
+
     def setTurnBuff(self, state):
         # geometric cdf
         turnBuff = self.effectiveBuff * self.eventFactor
         cappedTurnBuff = min(self.buffToGo, turnBuff, key=abs)
-        cappedBuffPerAttack = np.insert(np.zeros(NUM_ATTACKS_PER_TURN - 1), min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1), cappedTurnBuff)
+        cappedBuffPerAttack = np.insert(
+            np.zeros(NUM_ATTACKS_PER_TURN - 1),
+            min(round(max(self.required - 1, 0)), NUM_ATTACKS_PER_TURN - 1),
+            cappedTurnBuff,
+        )
         if self.effect in state.buff.keys():
             state.buff[self.effect] += cappedTurnBuff
         elif self.effect in REGULAR_SUPPORT_EFFECTS:
-            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot -1] * self.eventFactor
+            state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1] * self.eventFactor
         else:
             match self.effect:
                 case "ATK":
@@ -3049,7 +3599,7 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
                     state.defBuffStatuses[("Evasion", "ReceiveOrEvade")] += cappedBuffPerAttack
                 case _:
                     raise Exception(f"{self.effect} After Attack Received Or Evaded Buff Effect not implemented!")
-    
+
     def setEventFactor(self, state):
         # If buff is a defensive one
         if self.effect in ["DEF", "Dmg Red", "Evasion"]:
@@ -3083,7 +3633,7 @@ class UntilEvent(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.eventFactor = 1
-    
+
 
 class UntilAttackRecieved(UntilEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
@@ -3098,8 +3648,12 @@ class UntilAttackRecieved(UntilEvent):
                     state.p2Buff["DEF"] += self.effectiveBuff
                     state.defBuffStatuses[("DEF", "Receive")][0] -= self.effectiveBuff
                 case "Evasion":
-                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
-                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionA"].updateChance(
+                        "Start of Turn", self.effectiveBuff, "Evasion", state
+                    )
+                    state.multiChanceBuff["EvasionB"].updateChance(
+                        "Start of Turn", self.effectiveBuff, "Evasion", state
+                    )
                     state.defBuffStatuses[("Evasion", "Receive")][0] -= self.effectiveBuff
                 case "P2 DEF B":
                     state.p2DefB += self.effectiveBuff
@@ -3155,9 +3709,17 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.setAvgAtkMod()
                 case "Disable Action":
-                    pDisableSuper = P_DISABLE_SUPER * cappedTurnBuff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                    pDisableSuper = (
+                        P_DISABLE_SUPER
+                        * cappedTurnBuff
+                        * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                    )
                     state.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-                    pDisableNormal = min(1, state.numNormalAttacksDirectedAfterAttacking) * cappedTurnBuff * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                    pDisableNormal = (
+                        min(1, state.numNormalAttacksDirectedAfterAttacking)
+                        * cappedTurnBuff
+                        * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
+                    )
                     state.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
                     state.numAttacksDirected -= pDisableNormal
                     state.numAttacksDirectedAfterAttacking -= pDisableNormal
@@ -3167,7 +3729,7 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                 # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
                 state.setAttacksPerformed()
             self.required = self.threshold
-            if not(yesNo2Bool[self.withinTheSameTurn]):
+            if not (yesNo2Bool[self.withinTheSameTurn]):
                 state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
                 self.applied += cappedTurnBuff
 
@@ -3242,7 +3804,9 @@ class PerformingSuperAttackDefence(PassiveAbility):
                 state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
                 # If have activated active skill attack this turn
                 if state.superAttacksPerformed > 0:
-                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionB"].updateChance(
+                        "Start of Turn", self.effectiveBuff, "Evasion", state
+                    )
             case _:
                 raise Exception(f"{self.effect} Super Attack Defence Buff Effect not implemented!")
 
@@ -3251,17 +3815,21 @@ class KiSphereDependent(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         self.orbType, self.required, self.whenAttacking, self.withinTheSameTurn, max = args
         super().__init__(form, activationProbability, knownApriori, effect, buff, max)
-        
+
     def applyToState(self, state):
-        if self.required == 0: # If buff per orb
+        if self.required == 0:  # If buff per orb
             effectFactor = sum(state.orbCollection.getNumCategoryOrbs(self.orbType))
-        else: # If fixed buff if obtain X orbs
-            effectFactor = 1 - np.prod([poisson.cdf(self.required - 1, state.orbCollection.getNumCategoryOrbs(self.orbType))])  
+        else:  # If fixed buff if obtain X orbs
+            effectFactor = 1 - np.prod(
+                [poisson.cdf(self.required - 1, state.orbCollection.getNumCategoryOrbs(self.orbType))]
+            )
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, self.effectiveBuff)
         buffFromOrbs = cappedTurnBuff * effectFactor
         if self.effect in REGULAR_SUPPORT_EFFECTS:
-            state.support += supportFactorConversion[self.effect] * min(buffToGo, self.supportBuff[state.slot - 1]) * effectFactor
+            state.support += (
+                supportFactorConversion[self.effect] * min(buffToGo, self.supportBuff[state.slot - 1]) * effectFactor
+            )
         elif self.effect in state.buff.keys():
             state.buff[self.effect] += buffFromOrbs
         elif self.effect in state.p1Buff.keys():
@@ -3443,4 +4011,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(222, "LR_PHY_Android17_Frieza", 3, "DEF", "ADD","DGE", [2, 2, 2, 2, 2, 2, 2, 2, 2, 2])
+    unit = Unit(222, "LR_PHY_Android17_Frieza", 3, "DEF", "ADD", "DGE", [2, 2, 2, 2, 2, 2, 2, 2, 2, 2])

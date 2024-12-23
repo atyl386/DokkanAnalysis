@@ -14,6 +14,7 @@ optimiseslots = False
 accountRanking = True
 useMultiprocessing = True
 
+
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
     dokkanAccountXML = ET.parse(dokkanAccountXmlFilePath)
     units = list(dokkanAccountXML.getroot())
@@ -24,13 +25,14 @@ def parseDokkanAccountXML(dokkanAccountXmlFilePath):
         unitDict = {}
         for field in fields:
             if field.tag == "num_copies":
-                unitDict[field.tag] = int(field.attrib['value'])
+                unitDict[field.tag] = int(field.attrib["value"])
             elif field.tag == "slots":
-                unitDict[field.tag] = literal_eval(field.attrib['value'])
+                unitDict[field.tag] = literal_eval(field.attrib["value"])
             else:
-                unitDict[field.tag] = field.attrib['value']
+                unitDict[field.tag] = field.attrib["value"]
         dokkanAccountDict[_id] = unitDict
     return dokkanAccountDict
+
 
 def save_object(obj, filename):
     obj.inputHelper.file = None
@@ -111,6 +113,7 @@ class Evaluator:
             score += self.attributeWeights[i] * np.dot(self.turnWeights, attribute)
         return score
 
+
 def processRainbowUnit(ID, User, NUM_COPIES_MAX):
     unit = Unit(
         ID,
@@ -123,6 +126,7 @@ def processRainbowUnit(ID, User, NUM_COPIES_MAX):
     )
     attributeValues = unit.getAttributes()
     return unit, attributeValues
+
 
 def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX):
     units = [None] * (NUM_COPIES_MAX - 1)
@@ -143,7 +147,8 @@ def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_
         evaluations[nCopies - 1] = overallEvaluator.evaluate(units[nCopies - 1])
     return units, attributeValues, evaluations
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
     nUnits = len(User)
     a, b = (1 - AVG_PEAK_TURN) / PEAK_TURN_STD, (99 - AVG_PEAK_TURN) / PEAK_TURN_STD
@@ -162,7 +167,7 @@ if __name__ == '__main__':
         "APT": 11,
         "Normal Defence": 7,
         "Super Attack Defence": 7,
-        "Slot Bonus": 9
+        "Slot Bonus": 9,
     }
 
     top100AttributeDict = copy.copy(attributeDict)
@@ -188,14 +193,20 @@ if __name__ == '__main__':
         print("Processing Rainbow Units")
         if useMultiprocessing:
             with multiprocessing.Pool() as pool:
-                output = np.asarray(pool.starmap(processRainbowUnit, tqdm.tqdm([(ID, User, NUM_COPIES_MAX) for ID in reverseOrderIDs], total=nUnits)), dtype="object")
+                output = np.asarray(
+                    pool.starmap(
+                        processRainbowUnit,
+                        tqdm.tqdm([(ID, User, NUM_COPIES_MAX) for ID in reverseOrderIDs], total=nUnits),
+                    ),
+                    dtype="object",
+                )
         else:
             output = []
             for ID in reverseOrderIDs:
                 output.insert(len(output), processRainbowUnit(ID, User, NUM_COPIES_MAX))
             output = np.asarray(output, dtype=object)
-        units[-1] = np.array(list(output[:,0]))
-        attributeValues[:, :, :, -1] = list(output[:,1])
+        units[-1] = np.array(list(output[:, 0]))
+        attributeValues[:, :, :, -1] = list(output[:, 1])
         [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
         for ID in reverseOrderIDs:
             normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
@@ -231,7 +242,7 @@ if __name__ == '__main__':
                     stateIdx += 1
                     nextTurn += RETURN_PERIOD_PER_SLOT[best_slot - 1]
                 dokkanAccountRoot.find(f"_{ID}").find("slots").set("value", str(best_slots))
-                dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding='utf-8')
+                dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
         if analyseHiPo:
             for ID in reverseOrderIDs:
                 print(ID)
@@ -256,15 +267,29 @@ if __name__ == '__main__':
                 unit = dokkanAccountRoot.find(f"_{ID}")
                 for i, equip in enumerate(["BRZ_equip", "HiPo_choice_1", "HiPo_choice_2"]):
                     unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
-                dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding='utf-8')
+                dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
         print("Processing Other Units")
         if useMultiprocessing:
             with multiprocessing.Pool() as pool:
-                output = np.asarray(pool.starmap(processOtherUnit, tqdm.tqdm([(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX) for ID in reverseOrderIDs], total=nUnits)), dtype="object")
+                output = np.asarray(
+                    pool.starmap(
+                        processOtherUnit,
+                        tqdm.tqdm(
+                            [
+                                (ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX)
+                                for ID in reverseOrderIDs
+                            ],
+                            total=nUnits,
+                        ),
+                    ),
+                    dtype="object",
+                )
         else:
             output = []
             for ID in reverseOrderIDs:
-                output.insert(len(output), processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX))
+                output.insert(
+                    len(output), processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX)
+                )
             output = np.asarray(output, dtype=object)
         units[:-1] = np.array(list(output[:, 0])).T
         attributeValues[:, :, :, :-1] = list(output[:, 1])
@@ -284,7 +309,7 @@ if __name__ == '__main__':
         scores[i] = overallEvaluator.evaluate(units[i])
     ranking = np.flip(np.argsort(scores))
     rankingFilePath = os.path.join(CWD, "DokkanKitOutputs", "overallRanking.txt")
-    rankingFile = open(rankingFilePath, "w") 
+    rankingFile = open(rankingFilePath, "w")
     for rank in ranking:
         rankingFile.write(f"{units[rank].commonName} \n")
 
@@ -295,12 +320,19 @@ if __name__ == '__main__':
         for ID in range(1, nUnits + 1):
             numCopies = User[ID]["num_copies"]
             if numCopies > 0:
-                pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/" + HIPO_DUPES[numCopies - 1] + "/unit_" + str(ID) + ".pkl", "rb")
+                pkl = open(
+                    "C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/"
+                    + HIPO_DUPES[numCopies - 1]
+                    + "/unit_"
+                    + str(ID)
+                    + ".pkl",
+                    "rb",
+                )
                 units.append(pickle.load(pkl))
                 pkl.close()
                 scores.append(top100Evaluator.evaluate(units[-1]))
         ranking = np.flip(np.argsort(scores))
         rankingFilePath = os.path.join(CWD, "DokkanKitOutputs", "accountRanking.txt")
-        rankingFile = open(rankingFilePath, "w") 
+        rankingFile = open(rankingFilePath, "w")
         for rank in ranking:
             rankingFile.write(f"{units[rank].commonName} \n")
