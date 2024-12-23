@@ -4,6 +4,7 @@ from scipy.stats import truncnorm
 import shutil
 import pickle
 import multiprocessing
+import tqdm
 
 HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 
@@ -111,7 +112,6 @@ class Evaluator:
         return score
 
 def processRainbowUnit(ID, User, NUM_COPIES_MAX):
-    print(ID)
     unit = Unit(
         ID,
         User[ID]["common_name"],
@@ -125,7 +125,6 @@ def processRainbowUnit(ID, User, NUM_COPIES_MAX):
     return unit, attributeValues
 
 def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX):
-    print(ID)
     units = [None] * (NUM_COPIES_MAX - 1)
     attributeValues = np.zeros((NUM_EVAL_TURNS, NUM_ATTRIBUTES, NUM_COPIES_MAX - 1))
     evaluations = np.zeros(NUM_COPIES_MAX - 1)
@@ -186,9 +185,10 @@ if __name__ == '__main__':
         units = [[None] * nUnits for i in range(NUM_COPIES_MAX)]
         evaluations = np.zeros((nUnits, NUM_COPIES_MAX))
         reverseOrderIDs = np.flip(list(User.keys()))
+        print("Processing Rainbow Units")
         if useMultiprocessing:
             with multiprocessing.Pool() as pool:
-                output = np.asarray(pool.starmap(processRainbowUnit, [(ID, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
+                output = np.asarray(pool.starmap(processRainbowUnit, tqdm.tqdm([(ID, User, NUM_COPIES_MAX) for ID in reverseOrderIDs], total=nUnits)), dtype="object")
         else:
             output = []
             for ID in reverseOrderIDs:
@@ -257,9 +257,10 @@ if __name__ == '__main__':
                 for i, equip in enumerate(["BRZ_equip", "HiPo_choice_1", "HiPo_choice_2"]):
                     unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
                 dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding='utf-8')
+        print("Processing Other Units")
         if useMultiprocessing:
             with multiprocessing.Pool() as pool:
-                output = np.asarray(pool.starmap(processOtherUnit, [(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX) for ID in reverseOrderIDs]), dtype="object")
+                output = np.asarray(pool.starmap(processOtherUnit, tqdm.tqdm([(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX) for ID in reverseOrderIDs], total=nUnits)), dtype="object")
         else:
             output = []
             for ID in reverseOrderIDs:
@@ -270,6 +271,7 @@ if __name__ == '__main__':
         evaluations[:, :-1] = list(output[:, 2])
         maxEvaluation = max(evaluations[:, -1])
         evaluations = logisticMap(evaluations, maxEvaluation)
+        print("Writing results to files")
         writeSummary(units, attributeValues, evaluations)
 
     # Calculate Overall Rankings

@@ -6,8 +6,6 @@ import click as clc
 
 # TODO:
 # - Implement damage theshold
-# - Make loading bar
-# - Make matches error if no match found
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
