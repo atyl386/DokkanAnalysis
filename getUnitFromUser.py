@@ -1300,7 +1300,7 @@ class State:
         # Dictionary for variables which have a 1-1 relationship with Buff EFFECTS
         self.buff = {
             "Ki": LEADER_SKILL_KI + form.carryOverBuffs["Ki"].get(),
-            "AEAAT": 0,
+            "AEAAT": form.carryOverBuffs["AEAAT"].get(),
             "Disable Guard": 0,
             "Heal": form.carryOverBuffs["Heal"].get(),
             "Damage Dealt Heal": 0,
@@ -4011,4 +4011,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(35, "DF_INT_Hirudegarn", 5, "ATK", "DGE", "ADD", SLOT_1)
+    unit = Unit(320, "DF_INT_SS_Goku_Mini_Daima", 5, "DEF", "ADD", "DGE", SLOT_2)
