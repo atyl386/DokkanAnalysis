@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Fix AfterAttackEvaded not working for Daima Goku
 # - Implement damage theshold
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
@@ -3222,7 +3223,7 @@ class AfterEvent(PassiveAbility):
         if self.effect in ADDITIONAL_ATTACK_EFFECTS:
             self.buffToGo = 1.0
         else:
-            self.buffToGo = self.effectiveBuff - self.applied
+            self.buffToGo = self.maxEffectiveBuff - self.applied
 
     def resetAppliedBuffs(self, state):
         if self.turnsLeft < RETURN_PERIOD_PER_SLOT[state.slot - 1]:
@@ -3233,6 +3234,7 @@ class AfterEvent(PassiveAbility):
             else:
                 state.form.carryOverBuffs[self.effect].sub(self.applied)
                 self.applied = 0
+                self.required = self.threshold
             self.turnsLeft = self.effectDuration
 
     def setTurnBuff(self, state):
@@ -3275,7 +3277,7 @@ class AfterEvent(PassiveAbility):
         # If abiltiy going to be active next turn
         if (
             not (np.any(self.applied))
-            and (self.increment - self.required >= 0 or self.isNextTurnBuff)
+            and (self.increment - self.required >= 0)
             and self.effectDuration > RETURN_PERIOD_PER_SLOT[state.slot - 1]
         ):
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
@@ -3376,20 +3378,20 @@ class AfterAttackReceived(AfterEvent):
 
     def applyToState(self, state):
         self.increment = state.numAttacksReceived
-        if self.nextAttackingTurn:
-            if np.any(self.applied):
-                self.isNextTurnBuff = False
-                self.resetAppliedBuffs(state)
-            else:
-                self.isNextTurnBuff = True
-                self.effectiveBuff = self.maxEffectiveBuff * (1 - poisson.cdf(self.threshold - 1, self.increment))
-        self.updateBuffToGo()
         # Check if ability will be active next turn
         if self.threshold > 1:
             if not (self.isNextTurnBuff) and self.nextAttackingTurn:
                 self.required = 99
             else:
                 self.required = max(self.threshold - state.form.numAttacksReceived, 0)
+        if self.nextAttackingTurn:
+            if np.any(self.applied) and self.turnsLeft < RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+                self.isNextTurnBuff = False
+                self.resetAppliedBuffs(state)
+            else:
+                self.isNextTurnBuff = True
+                self.effectiveBuff = self.maxEffectiveBuff * (1 - poisson.cdf(self.required - 1, self.increment))
+        self.updateBuffToGo()
         if np.any(self.applied):
             self.resetAppliedBuffs(state)
         else:
@@ -3526,22 +3528,25 @@ class AfterAttackEvaded(AfterEvent):
 
     def applyToState(self, state):
         self.increment = state.numAttacksEvaded
-        if self.nextAttackingTurn:
-            if np.any(self.applied):
-                self.isNextTurnBuff = False
-                self.resetAppliedBuffs(state)
-            else:
-                self.isNextTurnBuff = True
-                # This only works if effect is guaranteed dodge. Is working out how much extra evasion chance is to be gained on average by dodding threshold attacks in a turn
-                self.effectiveBuff = (1 - state.multiChanceBuff["EvasionA"].chances["Start of Turn"]) * (
-                    1 - poisson.cdf(self.threshold - 1, self.increment)
-                )
-        self.updateBuffToGo()
         if self.threshold > 1:
             if not (self.isNextTurnBuff) and self.nextAttackingTurn:
                 self.required = 99
             else:
                 self.required = max(self.threshold - state.form.numAttacksEvaded, 0)
+        if self.nextAttackingTurn:
+            if np.any(self.applied) and self.turnsLeft < RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+                self.isNextTurnBuff = False
+                self.resetAppliedBuffs(state)
+            else:
+                self.isNextTurnBuff = True
+                if self.effect == "Evasion":
+                    # Is working out how much extra evasion chance is to be gained on average by dodding threshold attacks in a turn
+                    self.effectiveBuff = (self.maxEffectiveBuff - state.multiChanceBuff["EvasionA"].chances["Start of Turn"]) * (
+                        1 - poisson.cdf(self.required - 1, self.increment)
+                    )
+                else:
+                    self.effectiveBuff = self.maxEffectiveBuff * (1 - poisson.cdf(self.required - 1, self.increment))
+        self.updateBuffToGo()
         if np.any(self.applied):
             self.resetAppliedBuffs(state)
         else:
@@ -4006,4 +4011,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(320, "DF_INT_SS_Goku_Mini_Daima", 5, "DEF", "ADD", "DGE", SLOT_2)
+    unit = Unit(35, "DF_INT_Hirudegarn", 5, "ATK", "DGE", "ADD", SLOT_1)
