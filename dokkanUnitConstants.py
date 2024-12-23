@@ -531,7 +531,7 @@ ADDITIONAL_ATTACK_EFFECTS = ["AAChance", "AdditionalSuper"]
 ADDITIONAL_ATTACK_PARAMETERS = ["aaPSuper", "aaPGuarantee"]
 DEF_BUFFS = ["DEF", "DmgRed", "Evasion", "Guard"]
 DEF_STATUS_EVENTS = ["Receive", "Guard", "Evade"]
-DEF_BUFF_STATUS_PAIRS = {"DEF": ["Receive", "Guard", "Evade", "ReceiveOrEvade"], "DmgRed": ["Receive", "ReceiveOrEvade"], "Evasion": ["Receive", "Evade", "ReceiveOrEvade"], "Guard": ["Receive", "ReceiveOrEvade"]}
+DEF_BUFF_STATUS_PAIRS = {"DEF": ["Receive", "Guard", "Evade", "ReceiveOrEvade"], "DmgRed": ["Receive", "Guard", "Evade", "ReceiveOrEvade"], "Evasion": ["Receive", "Evade", "ReceiveOrEvade"], "Guard": ["Receive", "Guard", "ReceiveOrEvade"]}
 DEF_STATUS_IMPLICATIONS = {"Receive": ["Receive", "ReceiveOrEvade"], "Guard": ["Guard", "Receive", "ReceiveOrEvade"], "Evade" : ["Evade", "ReceiveOrEvade"], "ReceiveOrEvade": ["ReceiveOrEvade", "Receive", "Evade"]}
 SUPPORT_FACTORS = [
     KI_SUPPORT_FACTOR,

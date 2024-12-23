@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Implement damage theshold
 # - Make loading bar
 # - Make matches error if no match found
 # - Make more SAin slot one, adjsut slot 1 weighting accoridnly
@@ -150,6 +151,8 @@ def getCondition(inputHelper):
                 condition[i] = ReviveCondition()
             case "NA":
                 condition[i] = Condition()
+            case _:
+                raise Exception(f"{conditionType} Condition type not implemented!")
     if numConditions == 2:
         return CompositeCondition(operator, condition)
     else:
@@ -1095,8 +1098,8 @@ class Form:
                 # Currently assumes have type orb changing
                 charge = (
                     (
-                        orbChangeConversion["Type Orb Change"]["Same"]
-                        + orbChangeConversion["Type Orb Change"]["Rainbow"]
+                        orbChangeConversion["Orb Change"]["Same"]
+                        + orbChangeConversion["Orb Change"]["Rainbow"]
                         + (NUM_SLOTS - 1)
                         * (
                             orbChangeConversion["No Orb Change"]["Same"]
@@ -1144,6 +1147,8 @@ class Form:
                     + orbChangeConversion["Rainbow Orb Change"]["Rainbow"]
                     + orbChangeConversion["Rainbow Orb Change"]["Other"]
                 )
+            case _:
+                raise Exception(f"{chargeCondition} Charge Condition not implemented!")
         return charge
 
 
@@ -1350,6 +1355,8 @@ class State:
                     numSupers = self.pAttack * self.pSA
                 case "AS":
                     numSupers = self.pAttack * self.aaSA * self.pNextAttack
+                case _:
+                    raise Exception(f"{superAttackType} Super Attack Type not implemented!")
             for superAttackEFfect in SUPPORT_SUPER_ATTACK_EFFECTS:
                 supportFactor = (
                     superAttackSupportFactorConversion[superAttackEFfect]
@@ -1798,7 +1805,7 @@ class State:
                     evasionPostEvadeB,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "ReceiveOrEvade")] * (nAA - iA),
-                    dmgRed + dmgRedB + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")] * (nAA - iA),
+                    dmgRed + dmgRedB + (defBuffStatuses0[("DmgRed", "Evade")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")]) * (nAA - iA),
                     pNullify,
                     defence
                     * (1 + p2Def + self.p2DefB + p2DefSuper + (defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA))
@@ -1823,8 +1830,8 @@ class State:
                     p2DefSuper,
                     evasionPostHitB,
                     0,
-                    pGuard + (defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")]) * (nAA - iA),
-                    dmgRed + dmgRedB + (defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")]) * (nAA - iA),
+                    pGuard + (defBuffStatuses0[("Guard", "Guard")] + defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")]) * (nAA - iA),
+                    dmgRed + dmgRedB + (defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "Guard")]+ defBuffStatuses0[("DmgRed", "ReceiveOrEvade")]) * (nAA - iA),
                     pNullify,
                     defence
                     * (
@@ -1893,7 +1900,7 @@ class State:
                     evasionPostEvade,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
-                    dmgRed + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
+                    dmgRed + defBuffStatuses0[("DmgRed", "Evade")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
                     pNullify,
                     defence * (1 + p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) / (1 + p2Def),
                     postSuperDefMult,
@@ -1912,7 +1919,7 @@ class State:
                     evasionPostHit,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
-                    dmgRed + defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
+                    dmgRed + defBuffStatuses0[("DmgRed", "Guard")] + defBuffStatuses0[("DmgRed", "Receive")] + defBuffStatuses0[("DmgRed", "ReceiveOrEvade")],
                     pNullify,
                     defence
                     * (1 + p2Def + p2DefSuper + defBuffStatuses0[("DEF", "Guard")] + defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")])
@@ -2115,7 +2122,7 @@ class Domain(SingleTurnAbility):
                     MovieHeroesDebuff = 0.1 * aprioriProbMod(1 - math.factorial(NUM_CATEGORIES - 1) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT) / (math.factorial(NUM_CATEGORIES) * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)), True) # The other part comes from calculating the probability an average enemy is on the Movie Heroes category.
                     state.form.abilities["Start of Turn"].extend([
                         TurnDependent(
-                            state.form, 1, False, "Type Orb Change", 1, self.duration, params
+                            state.form, 1, False, "Orb Change", 1, self.duration, params
                         ),
                         TurnDependent(
                             state.form, 1, False, "Guard", 1, self.duration, params
@@ -2181,6 +2188,8 @@ class Domain(SingleTurnAbility):
                         TurnDependent(state.form, 1, False, "P3 ATK", 0.3, 1, params),
                         TurnDependent(state.form, 1, False, "P3 DEF", 0.3, 1, params),
                     ])
+                case _:
+                    raise Exception(f"{self.domainType} Domain Type not implemented!")
                     
 
 class ActiveSkillBuff(SingleTurnAbility):
@@ -2407,6 +2416,8 @@ class Buff(PassiveAbility):
                     case "Intercept":
                         state.support += supportFactorConversion[self.effect] * supportBuff
                         state.numAttacksReceived *= NUM_SLOTS
+                    case _:
+                        raise Exception(f"{self.effect} Buff Effect not implemented!")
             state.randomKi = state.getRandomKi()
 
 
@@ -2505,6 +2516,8 @@ class PerTurn(PerEvent):
                 case "Evasion":
                     state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
                     state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
+                case _:
+                    raise Exception(f"{self.effect} Per Turn Buff Effect not implemented!")
         self.applied += cappedTurnBuff
 
 
@@ -2524,13 +2537,15 @@ class PerAttackPerformed(PerEvent):
         cappedTurnBuff = min(buffToGo, turnBuff)
         cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
-        if not (self.requiresSuperAttack):
+        if not (self.requiresSuperAttack) and self.effect in ["ATK", "Crit"]:
             match self.effect:
                 case "ATK":
                     state.atkPerAttackPerformed = cappedCumBuffPerAttack
                 case "Crit":
                     state.critPerAttackPerformed = cappedBuffPerAttack
         match self.effect:
+            case "Ki":
+                pass # Handled by carryOverBuffs
             case "ATK":
                 state.atkPerSuperPerformed = cappedCumBuffPerAttack
             case "DEF":
@@ -2542,6 +2557,8 @@ class PerAttackPerformed(PerEvent):
                 state.dmgRedNormalB += cappedTurnBuff
             case "Evasion":
                 state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, self.effect, state)
+            case _:
+                raise Exception(f"{self.effect} Per Attack Performed Buff Effect not implemented!")
         if not (self.withinTheSameTurn):
             state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2571,6 +2588,8 @@ class PerAttackReceived(PerEvent):
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key = abs), "Crit", state)
                 state.setAvgAtkMod()
+            case _:
+                raise Exception(f"{self.effect} Per Attack Received Buff Effect not implemented!")
         if not (self.withinTheSameTurn):
             state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2591,6 +2610,8 @@ class PerAttackReceivedOrEvaded(PerEvent):
         match self.effect:
             case "Dmg Red":
                 state.defBuffStatuses[("DmgRed", "ReceiveOrEvade")] += cappedBuffPerAttack
+            case _:
+                raise Exception(f"{self.effect} Per Attack Received Or Evaded Buff Effect not implemented!")
         if not (self.withinTheSameTurn):
             state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2619,6 +2640,8 @@ class PerAttackGuarded(PerEvent):
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance("On Super", min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo), "Crit", state)
                 state.setAvgAtkMod()
+            case _:
+                raise Exception(f"{self.effect} Per Attack Guarded Buff Effect not implemented!")
         self.applied += cappedTurnBuff
 
 
@@ -2646,6 +2669,10 @@ class PerAttackEvaded(PerEvent):
                 state.setAvgAtkMod()
             case "Evasion":
                 state.defBuffStatuses[("Evasion", "Evade")] += cappedBuffPerAttack
+            case "Dmg Red":
+                state.defBuffStatuses[("DmgRed", "Evade")] += cappedBuffPerAttack
+            case _:
+                raise Exception(f"{self.effect} Per Attack Evaded Buff Effect not implemented!")
         if not (self.withinTheSameTurn):
             state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
             self.applied += cappedTurnBuff
@@ -2717,6 +2744,8 @@ class AfterEvent(PassiveAbility):
                 case "Evasion":
                     state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
                     state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
+                case _:
+                    raise Exception(f"{self.effect} After Event Buff Effect not implemented!")
 
 
     def nextTurnUpdate(self, state):
@@ -2798,6 +2827,8 @@ class AfterAttackReceived(AfterEvent):
                     state.defBuffStatuses[("DmgRed", "Receive")] += cappedBuffPerAttack
                 case "Evasion":
                     state.defBuffStatuses[("Evasion", "Receive")] += cappedBuffPerAttack
+                case _:
+                    raise Exception(f"{self.effect} After Attack Received Buff Effect not implemented!")
 
     def setEventFactor(self, state):
         # If buff is a defensive one
@@ -2868,6 +2899,12 @@ class AfterGuardActivated(AfterEvent):
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.setAvgAtkMod()
+                case "Dmg Red":
+                    state.defBuffStatuses[("DmgRed", "Guard")] += cappedBuffPerAttack
+                case "Guard":
+                    state.defBuffStatuses[("Guard", "Guard")] += cappedBuffPerAttack
+                case _:
+                    raise Exception(f"{self.effect} After Guard Activated Buff Effect not implemented!")
 
 
     def setEventFactor(self, state):
@@ -2934,6 +2971,8 @@ class AfterAttackEvaded(AfterEvent):
                     state.setAvgAtkMod()
                 case "Evasion":
                     state.defBuffStatuses[("Evasion", "Evade")] += cappedBuffPerAttack
+                case _:
+                    raise Exception(f"{self.effect} After Attack Evaded Buff Effect not implemented!")
 
     def setEventFactor(self, state):
         # If buff is a defensive one
@@ -3010,6 +3049,8 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
                     state.defBuffStatuses[("DmgRed", "ReceiveOrEvade")] += cappedBuffPerAttack
                 case "Evasion":
                     state.defBuffStatuses[("Evasion", "ReceiveOrEvade")] += cappedBuffPerAttack
+                case _:
+                    raise Exception(f"{self.effect} After Attack Received Or Evaded Buff Effect not implemented!")
     
     def setEventFactor(self, state):
         # If buff is a defensive one
@@ -3074,6 +3115,8 @@ class UntilAttackRecieved(UntilEvent):
                     state.dmgRedNormalA += self.effectiveBuff
                     state.dmgRedNormalB += self.effectiveBuff
                     state.defBuffStatuses[("DmgRed", "Receive")][0] -= self.effectiveBuff
+                case _:
+                    raise Exception(f"{self.effect} Until Attack Evaded Buff Effect not implemented!")
 
 
 class EveryTimeXEventsInBattle(PassiveAbility):
@@ -3091,6 +3134,8 @@ class EveryTimeXEventsInBattle(PassiveAbility):
             match self.effect:
                 case "Ki":
                     state.buff["Ki"] += cappedTurnBuff
+                case "ATK":
+                    state.p2Buff["ATK"] += cappedTurnBuff
                 case "AdditionalSuper":
                     state.aaPSuper.append(cappedTurnBuff)
                     state.aaPGuarantee.append(0)
@@ -3118,6 +3163,8 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                     state.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
                     state.numAttacksDirected -= pDisableNormal
                     state.numAttacksDirectedAfterAttacking -= pDisableNormal
+                case _:
+                    raise Exception(f"{self.effect} Every Time X Events in Battle Buff Effect not implemented!")
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
                 # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
                 state.setAttacksPerformed()
@@ -3170,6 +3217,8 @@ class PerformingSuperAttackOffence(PassiveAbility):
                     state.firstAttackBuff += self.effectiveBuff
                 else:
                     state.p2Buff["ATK"] += self.effectiveBuff
+            case _:
+                raise Exception(f"{self.effect} Super Attack Offense Buff Effect not implemented!")
 
 
 class PerformingSuperAttackDefence(PassiveAbility):
@@ -3196,6 +3245,8 @@ class PerformingSuperAttackDefence(PassiveAbility):
                 # If have activated active skill attack this turn
                 if state.superAttacksPerformed > 0:
                     state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
+            case _:
+                raise Exception(f"{self.effect} Super Attack Defence Buff Effect not implemented!")
 
 
 class KiSphereDependent(PerEvent):
@@ -3252,6 +3303,8 @@ class KiSphereDependent(PerEvent):
                     state.p2DefB += buffFromOrbs
                 case "P2 DEF":
                     state.p2Buff["DEF"] += buffFromOrbs
+                case _:
+                    raise Exception(f"{self.effect} Ki Sphere dependent Buff Effect not implemented!")
         if not (yesNo2Bool[self.withinTheSameTurn]):
             state.form.carryOverBuffs[self.effect].add(buffFromOrbs)
             self.applied += buffFromOrbs
@@ -3387,7 +3440,9 @@ class CompositeCondition:
                 return np.any([condition.isSatisfied(form) for condition in self.conditions])
             case "AFTER":
                 return self.conditions[0].isSatisfied(form)
+            case _:
+                raise Exception(f"{self.operator} Composite Condition Operator not implemented!")
 
 
 if __name__ == "__main__":
-    unit = Unit(115, "LR_STR_Beerus_Whis", 5, "DGE", "DGE", "ADD", [2, 3, 2, 2, 2, 2, 2, 2, 2, 2])
+    unit = Unit(222, "LR_PHY_Android17_Frieza", 3, "DEF", "ADD","DGE", [2, 2, 2, 2, 2, 2, 2, 2, 2, 2])
