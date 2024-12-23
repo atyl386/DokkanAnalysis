@@ -6,7 +6,6 @@ import click as clc
 
 # TODO:
 # - Implement damage theshold
-# - Make more SAin slot one, adjsut slot 1 weighting accoridnly
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
@@ -246,15 +245,9 @@ class Unit:
                 "Has the unit EZA'd?", type=clc.Choice(yesNo2Bool.keys(), case_sensitive=False), default="N"
             )
         ]
-        self.jp_date = dt.datetime.strptime(
+        self.date = dt.datetime.strptime(
             self.inputHelper.getAndSaveUserInput(
                 "When did the unit release on the Japanse version of Dokkan? (MM/YY)", default="01/24"
-            ),
-            "%m/%y",
-        )
-        self.gbl_date = dt.datetime.strptime(
-            self.inputHelper.getAndSaveUserInput(
-                "When did the unit release on the Global version of Dokkan? (MM/YY)", default="01/24"
             ),
             "%m/%y",
         )

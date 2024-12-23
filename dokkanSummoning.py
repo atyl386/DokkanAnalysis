@@ -42,11 +42,12 @@ def SummonRating(ID):
     if unit.EZA:
         EZA = 6 / 7
         futureEZA = 0
-        globalEZADate = unit.gbl_date
+        EZADate = unit.date
     else:
         EZA = 1
-        globalEZADate = unit.gbl_date + relativedelta(months=4 * 12)
-        futureEZA = rarityScore * EZADiscountFactor ** (relativedelta(globalEZADate, now).years) * EZADI
+        EZADate = unit.date + relativedelta(months=4 * 12)
+        timeUntilEZA_years = relativedelta(EZADate, now)
+        futureEZA = rarityScore * EZADiscountFactor ** (timeUntilEZA_years.years + timeUntilEZA_years.months/12) * EZADI
     for i in range(NUM_COPIES_MAX):
         df = pd.read_excel("DokkanUnits/" + HiPo_dupes[i] + "/unitSummary.xlsx", index_col="ID")
         evals[i] = df.at[ID, "Evaluation"]
@@ -137,12 +138,10 @@ S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
 S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
 Rotation = np.mean([S1,S2,S3])
 print(Rotation) """
-GotenksJiren = Banner([313, 230, 222, 158, 159, 33, 33, 33, 33, 33, 33, 33], 'cyan', SSR_rate=0.2)
-print(GotenksJiren.summonScore)
-WWDL_1 = Banner([36, 19, 31, 30, 17, 150, 39, 34, 8, 33, 40, 140, 11, 170, 21, 257, 41, 21, 93, 163, 135, 127, 126, 86, 104, 142, 142, 60, 60, 60, 128, 128, 128, 127, 10, 188, 188, 183, 183, 116, 25, 116, 116, 25, 25, 101, 101, 211, 25, 101, 116, 25, 25, 25, 101, 170],'red', discount=50*(2 + 10 * 2)/100)
-print(WWDL_1.summonScore)
-WWDL_2 = Banner([25, 18, 5, 7, 32, 134, 45, 38, 46, 25, 10, 20, 9, 25, 170, 48, 48, 25, 164, 155, 98, 170, 146, 131, 25, 145, 129, 25, 54, 8, 25, 132, 116, 25, 146, 116, 8, 126, 8, 25, 116, 25, 25, 48, 170, 41, 25, 48, 48, 25, 156, 25, 25, 25, 101, 101],'red', discount=50*(2 + 10 * 2)/100)
-print(WWDL_2.summonScore)
+#WWDL_1 = Banner([36, 19, 31, 30, 17, 150, 39, 34, 8, 33, 40, 140, 11, 170, 21, 257, 41, 21, 93, 163, 135, 127, 126, 86, 104, 142, 142, 60, 60, 60, 128, 128, 128, 127, 10, 188, 188, 183, 183, 116, 25, 116, 116, 25, 25, 101, 101, 211, 25, 101, 116, 25, 25, 25, 101, 170],'red', discount=50*(2 + 10 * 2)/100)
+#print(WWDL_1.summonScore)
+#WWDL_2 = Banner([25, 18, 5, 7, 32, 134, 45, 38, 46, 25, 10, 20, 9, 25, 170, 48, 48, 25, 164, 155, 98, 170, 146, 131, 25, 145, 129, 25, 54, 8, 25, 132, 116, 25, 146, 116, 8, 126, 8, 25, 116, 25, 25, 48, 170, 41, 25, 48, 48, 25, 156, 25, 25, 25, 101, 101],'red', discount=50*(2 + 10 * 2)/100)
+#print(WWDL_2.summonScore)
 # NYSU2023_S1 = Banner([38,38,38,38,38,70,70,38,79,38,70,88,89,89,38,38,77,38,88],'red')
 # NYSU2023_S2 = Banner([70,70,70,81,70,81,70,81,81,69,85,69,38],'red')
 # NYSU2023_S3 = Banner([38,70,70,58,84,57,86,85,70,87,38,38],'red')
