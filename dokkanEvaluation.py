@@ -214,8 +214,8 @@ if __name__ == "__main__":
         dokkanAccountXML = ET.parse(DOKKAN_ACCOUNT_XML_FILE_PATH)
         dokkanAccountRoot = dokkanAccountXML.getroot()
         if optimiseslots:
-            print(ID)
             for ID in reverseOrderIDs:
+                print(ID)
                 best_slots = copy.copy(User[ID]["slots"])
                 stateIdx = 0
                 nextTurn = 1
