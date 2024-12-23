@@ -3122,6 +3122,8 @@ class PerAttackReceivedOrEvaded(PerEvent):
         cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
+            case "ATK":
+                state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "Dmg Red":
                 state.defBuffStatuses[("DmgRed", "ReceiveOrEvade")] += cappedBuffPerAttack
             case _:
@@ -4004,4 +4006,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(222, "LR_PHY_Android17_Frieza", 3, "DEF", "ADD", "DGE", [2, 2, 2, 2, 2, 2, 2, 2, 2, 2])
+    unit = Unit(320, "DF_INT_SS_Goku_Mini_Daima", 5, "DEF", "ADD", "DGE", SLOT_2)

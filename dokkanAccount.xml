@@ -2551,4 +2551,12 @@
         <HiPo_choice_2 value="CRT" />
         <slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
     </_319>
+    <_320>
+        <common_name value="DF_INT_SS_Goku_Mini_Daima" />
+        <num_copies value="0" />
+        <BRZ_equip value="DEF" />
+        <HiPo_choice_1 value="ADD" />
+        <HiPo_choice_2 value="CRT" />
+        <slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" /> 
+    </_320>
 </id>
