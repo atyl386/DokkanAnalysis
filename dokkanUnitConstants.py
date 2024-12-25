@@ -146,8 +146,6 @@ NUM_CATEGORIES = 95
 AVG_NUM_CATEGORIES_PER_UNIT = 10  # Guess
 
 # Attacking factors
-AVG_ENEMY_DEF = 100000
-AVG_ENEMY_DMG_RED = 0.7
 CRIT_MULTIPLIER = 1.875  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
 AEAAT_MULTIPLIER = 1.5  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
 DISABLE_GUARD_MULTIPLIER = 1.12  # https://docs.google.com/document/d/1Kjk7QnNmfax80qXM8LL4b9woN_GxR0rqyAibR8BoDFY/edit
@@ -255,12 +253,23 @@ PROBABILITY_KILL_ENEMY_PER_ATTACK = (
 )
 
 # Enemy
+LOOK_AHEAD_FACTOR = 1.2  # Want to know which units will be good in the future when enemies are even stronger
+AVG_ENEMY_DMG_RED = 0.7
+MAX_T1_ENEMY_DEF = 500000  # UI Goku Supreme Battle Spectacle
+MAX_ENEMY_DEF = 2000000 # Goku & Frieza SMB
+MAX_ENEMY_DEF_PER_TURN = (
+    LOOK_AHEAD_FACTOR
+    * np.append(
+        np.linspace(MAX_T1_ENEMY_DEF, MAX_ENEMY_DEF, PEAK_TURN),
+        [MAX_ENEMY_DEF] * (MAX_TURN - PEAK_TURN),
+        axis=0,
+    )
+)
 AVG_ENEMY_DMG_THRESHOLD = 10000000 # Goku & Frieza SMB
 ENEMY_DMG_THRESHOLD_CHANCE = 0.05
 ENEMY_DODGE_CHANCE = 0.05
 ENEMY_SUPER_CRIT_CHANCE = 0.05
 ENEMY_NORMAL_CRIT_CHANCE = 0
-LOOK_AHEAD_FACTOR = 1.2  # Want to know which units will be good in the future when enemies hit even harder
 AVG_DAM_VARIANCE = 1.015
 MAX_T1_NORMAL_DAM = 1001000  # SSGSSE Vegeta Supreme Battle Spectacle
 MAX_NORMAL_DAM = 1350000  # SSGSSE Vegeta Supreme Battle Spectacle (900000 * 1.5)

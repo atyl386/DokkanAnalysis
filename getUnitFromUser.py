@@ -1687,7 +1687,7 @@ class State:
     
     def atk2Dmg(self, atk, pCrit):
         """Returns the damage dealt by an attack"""
-        return max((1 - AVG_ENEMY_DMG_RED) * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]) * (atk * self.form.unit.critMultiplier * pCrit + (atk * self.noCritAtkModifier - AVG_ENEMY_DEF) * (1 - pCrit)), 0)
+        return max((1 - AVG_ENEMY_DMG_RED) * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]) * (atk * self.form.unit.critMultiplier * pCrit + (atk * self.noCritAtkModifier - MAX_ENEMY_DEF_PER_TURN[self.turn - 1]) * (1 - pCrit)), 0)
 
     def branchDPT(
         self,
