@@ -409,10 +409,10 @@ class Unit:
         self.transformationTriggered = False
         self.fightPeak = False
         # Only non-zero in between activating the stanby finish skill attack and applying to subsequent state
-        self.transformationAttackAPT = 0
+        self.transformationAttackDPT = 0
         self.nextForm = 1
-        applyTransformationAttackAPT = False
-        self.critMultiplier = (CRIT_MULTIPLIER + self.TAB * CRIT_TAB_INC) * BYPASS_DEFENSE_FACTOR
+        applyTransformationAttackDPT = False
+        self.critMultiplier = CRIT_MULTIPLIER + self.TAB * CRIT_TAB_INC
         while turn <= MAX_TURN:
             stateIdx += 1
             slot = self.slots[stateIdx]
@@ -436,7 +436,7 @@ class Unit:
             state.setState()
             # If have finished a standby
             if self.transformationTriggered:
-                # If the trigger condition for the finish is a revive, apply APT this turn, otherwise next.
+                # If the trigger condition for the finish is a revive, apply DPT this turn, otherwise next.
                 try:
                     hasFinishCounter = (
                         form.abilities["Attack Enemy"][-1].finishSkillChargeCondition == "Revive"
@@ -445,17 +445,17 @@ class Unit:
                 except:
                     hasFinishCounter = False
                 if hasFinishCounter:
-                    applyTransformationAttackAPT = True
+                    applyTransformationAttackDPT = True
                     self.nextForm = -1
-                if applyTransformationAttackAPT:
-                    state.attributes["APT"] += self.transformationAttackAPT
+                if applyTransformationAttackDPT:
+                    state.attributes["DPT"] += self.transformationAttackDPT
                     turn = nextTurn
-                    self.transformationAttackAPT = 0
+                    self.transformationAttackDPT = 0
                     state.attacksPerformed += 1
                     state.superAttacksPerformed += 1
                     self.states.append(state)
-                else:  # Set this to True so apply APT in next state (e.g. Buu Bois)
-                    applyTransformationAttackAPT = True
+                else:  # Set this to True so apply DPT in next state (e.g. Buu Bois)
+                    applyTransformationAttackDPT = True
                     stateIdx -= 1
             else:
                 # state.numAttacksEvaded = branchAttacksEvaded(0, -1, state.numAttacksDirectedBeforeAttacking, state.numAttacksDirectedAfterAttacking, state.multiChanceBuff["EvasionA"], state.multiChanceBuff["EvasionB"].chances["Start of Turn"] - state.multiChanceBuff["EvasionA"].chances["Start of Turn"], state.buff["Disable Evasion Cancel"], state.defBuffStatuses[("Evasion", "Receive")], state.defBuffStatuses[("Evasion", "Evade")])
@@ -1356,12 +1356,12 @@ class State:
         self.numAttacksDirected = NUM_ATTACKS_DIRECTED[self.slot - 1]
         # Required for getting damage received for individual attacks
         self.defBuffStatuses = copy.deepcopy(defBuffStatusesBlank)
-        # Required for getting APTs for individual attacks
+        # Required for getting DPTs for individual attacks
         self.atkPerAttackPerformed = np.zeros(MAX_TURN)
         self.atkPerSuperPerformed = np.zeros(MAX_TURN)
         self.critPerAttackPerformed = np.zeros(MAX_TURN)
         self.critPerSuperPerformed = np.zeros(MAX_TURN)
-        self.APT = 0
+        self.DPT = 0
         self.activeSkillAttackActivated = False
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
         self.randomKi = self.getRandomKi()
@@ -1370,7 +1370,7 @@ class State:
         self.updateStackedStats()
         for ability in self.form.abilities["Start of Turn"]:
             ability.applyToState(self)
-        self.setAvgAtkMod()
+        self.setNoCritAtkMod()
 
         for ability in self.form.abilities["Active / Finish Attacks"]:
             ability.applyToState(self)
@@ -1380,7 +1380,7 @@ class State:
         avgDefStartOfTurn = self.getDefStat(self.form.carryOverBuffs["DEF"].get())
         for ability in self.form.abilities["Receive Attacks"]:
             ability.applyToState(self)
-        self.setAvgAtkMod()
+        self.setNoCritAtkMod()
         self.ki = min(round(self.buff["Ki"] + self.randomKi), rarity2MaxKi[self.form.unit.rarity])
         self.setAttackDistribution()
         self.pAttack = 1 - PROBABILITY_KILL_ENEMY_BEFORE_ATTACKING[self.slot - 1]
@@ -1443,7 +1443,7 @@ class State:
             self.form.superAttacks["AS"].effects["ATK"].buff,
         )
         self.setUSA()
-        self.setAPT()
+        self.setDPT()
         self.setAvgDefMult()
         self.normalDamageTaken = self.branchDamageTaken(
             1,
@@ -1492,7 +1492,7 @@ class State:
                 (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[self.form.unit.nCopies - 1])
                 * avgDefStartOfTurn
                 * self.orbCollection.orbCollects["Same"].getNumOrbs()
-                + self.buff["Damage Dealt Heal"] * self.APT * APT_2_DPT_FACTOR
+                + self.buff["Damage Dealt Heal"] * self.DPT
             )
             / AVG_HEALTH
         )
@@ -1510,7 +1510,7 @@ class State:
             self.useability,  # Requires user input, should make a version that loads from file
             self.buff["Heal"],
             self.support,
-            self.APT,
+            self.DPT,
             self.normalDamageTaken,
             self.saDamageTaken,
             self.slotFactor,
@@ -1578,20 +1578,9 @@ class State:
         if self.form.unit.rarity == "LR":  # If unit is a LR
             self.avgDefMult += self.pUSA * self.form.superAttacks["18 Ki"].effects["DEF"].buff
 
-    def setAvgAtkMod(self):
-        assert self.multiChanceBuff["Crit"].prob <= 1
+    def setNoCritAtkMod(self):
         self.buff["AEAAT"] = min(self.buff["AEAAT"], 1)
-        self.atkModifier = self.multiChanceBuff["Crit"].prob * self.form.unit.critMultiplier + (
-            1 - self.multiChanceBuff["Crit"].prob
-        ) * (
-            self.buff["AEAAT"] * (AEAAT_MULTIPLIER + self.form.unit.TAB * AEAAT_TAB_INC)
-            + (1 - self.buff["AEAAT"])
-            * (
-                self.buff["Disable Guard"] * (DISABLE_GUARD_MULTIPLIER + self.form.unit.TAB * DISABLE_GUARD_TAB_INC)
-                + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + self.form.unit.TAB * DEFAULT_TAB_INC)
-            )
-            * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"])
-        )
+        self.noCritAtkModifier = self.buff["AEAAT"] * (AEAAT_MULTIPLIER + self.form.unit.TAB * AEAAT_TAB_INC) + (1 - self.buff["AEAAT"]) * (self.buff["Disable Guard"] * (DISABLE_GUARD_MULTIPLIER + self.form.unit.TAB * DISABLE_GUARD_TAB_INC) + (1 - self.buff["Disable Guard"]) * (AVG_TYPE_ADVANATGE + self.form.unit.TAB * DEFAULT_TAB_INC))
 
     def getRandomKi(self):
         return (
@@ -1695,8 +1684,12 @@ class State:
         kiMultiplier = self.kiModifier(ki)
         saMultiplier = saMultActive + SA_BOOST_INC * HIPO_SA_BOOST[self.form.unit.nCopies - 1]
         return self.getAtkStat(self.p1Buff["ATK"], p2Atk, kiMultiplier, saMultiplier * (1 + self.stackedStats["ATK"]))
+    
+    def atk2Dmg(self, atk, pCrit):
+        """Returns the damage dealt by an attack"""
+        return max((1 - AVG_ENEMY_DMG_RED) * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]) * (atk * self.form.unit.critMultiplier * pCrit + (atk * self.noCritAtkModifier - AVG_ENEMY_DEF) * (1 - pCrit)), 0)
 
-    def branchAPT(
+    def branchDPT(
         self,
         i,
         m12,
@@ -1704,17 +1697,16 @@ class State:
         pAA,
         nProcs,
         crit,
-        atkModifier,
         p2AtkBuff,
         atkPerAttackPerformed,
         critPerAttackPerformed,
         atkPerSuperPerformed,
         critPerSuperPerformed,
     ):
-        """Returns the total remaining APT of a unit in a turn recursively"""
+        """Returns the total remaining DPT of a unit in a turn recursively"""
         p2AtkFactor = (1 + self.p2Buff["ATK"] + p2AtkBuff) / (1 + self.p2Buff["ATK"])
-        normal = mN * self.n_0 * p2AtkFactor * atkModifier
-        additional12Ki = m12 * self.a12_0 * p2AtkFactor * atkModifier
+        normal = self.atk2Dmg(mN * self.n_0 * p2AtkFactor, crit.prob)
+        additional12Ki = self.atk2Dmg(m12 * self.a12_0 * p2AtkFactor, crit.prob)
         if i == self.nAA - 1:  # If no more additional attacks
             return 0.5 * pAA * (additional12Ki + normal)  # Add average hidden-potential attack damage
         else:
@@ -1727,65 +1719,51 @@ class State:
             crit.updateChance("On Super", critPerSuperPerformed[0] - critPerAttackPerformed[0], "Crit")
             crit.updateChance("Super Attack Effect", self.form.superAttacks["AS"].effects["Crit"].buff, "Crit")
             crit2 = copy.deepcopy(crit)
-            if crit0.prob == 1:
-                atkModifier1 = self.form.unit.critMultiplier
-                atkModifier2 = self.form.unit.critMultiplier
-            else:
-                atkModifier1 = (atkModifier - self.form.unit.critMultiplier * crit0.prob) / (1 - crit0.prob) * (
-                    1 - crit1.prob
-                ) + crit1.prob * self.form.unit.critMultiplier
-                atkModifier2 = (atkModifier - self.form.unit.critMultiplier * crit0.prob) / (1 - crit0.prob) * (
-                    1 - crit2.prob
-                ) + crit2.prob * self.form.unit.critMultiplier
-
-            tempAPT0 = self.branchAPT(
+            tempDPT0 = self.branchDPT(
                 i,
                 m12,
                 mN,
                 pAA,
                 nProcs,
                 crit0,
-                atkModifier,
                 p2AtkBuff,
                 atkPerAttackPerformed,
                 critPerAttackPerformed,
                 atkPerSuperPerformed,
                 critPerSuperPerformed,
             )
-            tempAPT1 = self.branchAPT(
+            tempDPT1 = self.branchDPT(
                 i,
                 m12,
                 mN,
                 pAA + self.form.unit.pHiPo["AA"] * (1 - self.form.unit.pHiPo["AA"]) ** nProcs,
                 nProcs + 1,
                 crit1,
-                atkModifier1,
                 p2AtkBuff + atkPerAttackPerformed[0],
                 atkPerAttackPerformed[1:],
                 critPerAttackPerformed[1:],
                 atkPerSuperPerformed,
                 critPerSuperPerformed,
             )
-            tempAPT2 = self.branchAPT(
+            tempDPT2 = self.branchDPT(
                 i,
                 m12 + self.form.superAttacks["AS"].effects["ATK"].buff,
                 mN + self.form.superAttacks["AS"].effects["ATK"].buff,
                 pAA + self.form.unit.pHiPo["AA"] * (1 - self.form.unit.pHiPo["AA"]) ** nProcs,
                 nProcs + 1,
                 crit2,
-                atkModifier2,
                 p2AtkBuff + atkPerSuperPerformed[0],
                 atkPerAttackPerformed,
                 critPerAttackPerformed,
                 atkPerSuperPerformed[1:],
                 critPerSuperPerformed[1:],
             )
-            return self.aaPSuper[i] * (tempAPT2 + additional12Ki) + (1 - self.aaPSuper[i]) * (
-                self.aaPGuarantee[i] * (tempAPT1 + normal) + (1 - self.aaPGuarantee[i]) * (tempAPT0)
+            return self.aaPSuper[i] * (tempDPT2 + additional12Ki) + (1 - self.aaPSuper[i]) * (
+                self.aaPGuarantee[i] * (tempDPT1 + normal) + (1 - self.aaPGuarantee[i]) * (tempDPT0)
             )
 
-    def setAPT(self):
-        """Returns the APT of a unit in a turn"""
+    def setDPT(self):
+        """Returns the DPT of a unit in a turn"""
         if self.form.canAttack:
             # Number of additional attacks from passive in each turn
             self.nAA = len(self.aaPSuper)
@@ -1803,14 +1781,8 @@ class State:
             baseAtk = 1 + self.p1Buff["ATK"] + self.stackedStats["ATK"]
             self.n_0 = self.normal / baseAtk
             pAA = self.form.unit.pHiPo["AA"]  # Probability of doing an additional attack next
-            counterAtk = (
-                NUM_ATTACKS_DIRECTED[self.slot - 1] * self.form.normalCounterMult
-                + NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1]
-                * self.multiChanceBuff["Nullify"].chances["SA Counter"]
-                * self.form.saCounterMult
-            ) * self.normal
             crit = copy.deepcopy(self.multiChanceBuff["Crit"])
-            pCrit0 = crit.prob
+            counterDmg = NUM_ATTACKS_DIRECTED[self.slot - 1] * self.atk2Dmg(self.form.normalCounterMult * self.normal, crit.prob) + NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.normal, crit.prob)
             crit.updateChance("On Super", self.critPerAttackPerformed[0], "Crit")
             critN = copy.deepcopy(crit)
             crit.updateChance("On Super", self.critPerSuperPerformed[0] - self.critPerAttackPerformed[0], "Crit")
@@ -1823,31 +1795,16 @@ class State:
                 "Crit",
             )
             critUSA = copy.deepcopy(crit)
-            if pCrit0 == 1:
-                atkModifierN = self.form.unit.critMultiplier
-                atkModifierSA = self.form.unit.critMultiplier
-                atkModifierUSA = self.form.unit.critMultiplier
-            else:
-                atkModifierN = (self.atkModifier - self.form.unit.critMultiplier * pCrit0) / (1 - pCrit0) * (
-                    1 - critN.prob
-                ) + critN.prob * self.form.unit.critMultiplier
-                atkModifierSA = (self.atkModifier - self.form.unit.critMultiplier * pCrit0) / (1 - pCrit0) * (
-                    1 - critSA.prob
-                ) + critSA.prob * self.form.unit.critMultiplier
-                atkModifierUSA = (self.atkModifier - self.form.unit.critMultiplier * pCrit0) / (1 - pCrit0) * (
-                    1 - critUSA.prob
-                ) + critUSA.prob * self.form.unit.critMultiplier
             if self.pN > 0:
-                self.APT += self.pN * (
-                    self.normal * atkModifierN * (1 + self.firstAttackBuff)
-                    + self.branchAPT(
+                self.DPT += self.pN * (self.atk2Dmg(
+                    self.normal * (1 + self.firstAttackBuff), critN.prob)
+                    + self.branchDPT(
                         i,
                         m12,
                         baseAtk,
                         pAA,
                         nProcs,
                         critN,
-                        atkModifierN,
                         self.atkPerAttackPerformed[0],
                         self.atkPerAttackPerformed[1:],
                         self.critPerAttackPerformed[1:],
@@ -1856,16 +1813,15 @@ class State:
                     )
                 )
             if self.pSA > 0:
-                self.APT += self.pSA * (
-                    self.SA * atkModifierSA * (1 + self.firstAttackBuff)
-                    + self.branchAPT(
+                self.DPT += self.pSA * (self.atk2Dmg(
+                    self.SA * (1 + self.firstAttackBuff), critSA.prob)
+                    + self.branchDPT(
                         i,
                         m12 + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
                         baseAtk + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
                         pAA,
                         nProcs,
                         critSA,
-                        atkModifierSA,
                         self.atkPerSuperPerformed[0],
                         self.atkPerAttackPerformed,
                         self.critPerAttackPerformed,
@@ -1874,16 +1830,15 @@ class State:
                     )
                 )
             if self.form.unit.rarity == "LR":  # If  is a LR
-                self.APT += self.pUSA * (
-                    self.USA * atkModifierUSA * (1 + self.firstAttackBuff)
-                    + self.branchAPT(
+                self.DPT += self.pUSA * (self.atk2Dmg(
+                    self.USA * (1 + self.firstAttackBuff), critUSA.prob)
+                    + self.branchDPT(
                         i,
                         m12 + self.form.superAttacks["18 Ki"].effects["ATK"].buff,
                         baseAtk + self.form.superAttacks["18 Ki"].effects["ATK"].buff,
                         pAA,
                         nProcs,
                         critUSA,
-                        atkModifierUSA,
                         self.atkPerSuperPerformed[0],
                         self.atkPerAttackPerformed,
                         self.critPerAttackPerformed,
@@ -1891,9 +1846,7 @@ class State:
                         self.critPerSuperPerformed[1:],
                     )
                 )
-            self.APT += counterAtk * self.atkModifier
-        else:
-            self.APT += 0
+            self.DPT += counterDmg
 
     def branchDamageTaken(
         self,
@@ -2239,8 +2192,8 @@ class GiantRageMode(SingleTurnAbility):
             giantRageUnit = copy.deepcopy(state.form.unit)
             giantRageUnit.ATK = self.ATK
             self.giantRageModeState.form.unit = giantRageUnit
-            self.giantRageModeState.setState()  # Calculate the APT of the state
-            state.APT += self.giantRageModeState.APT * NUM_SLOTS * giantRageUnit.giantRageDuration
+            self.giantRageModeState.setState()  # Calculate the DPT of the state
+            state.DPT += self.giantRageModeState.DPT * NUM_SLOTS * giantRageUnit.giantRageDuration
             state.support += GIANT_RAGE_SUPPORT
             state.buff["Heal"] += GIANT_RAGE_HEAL
 
@@ -2711,14 +2664,14 @@ class ActiveSkillAttack(SingleTurnAbility):
                 state.getActiveAtk(
                     rarity2MaxKi[state.form.unit.rarity], state.p2Buff["ATK"] + self.p2AttackBuff, self.activeMult
                 )
-                * state.atkModifier
             )
+            activeDmg = state.atk2Dmg(activeAtk, state.multiChanceBuff["Crit"].prob)
             if yesNo2Bool[self.triggersTransformation]:
-                self.form.unit.transformationAttackAPT = activeAtk
+                self.form.unit.transformationAttackDPT = activeDmg
                 self.form.unit.transformationTriggered = True
                 self.form.unit.nextForm = 1
             else:
-                state.APT += activeAtk
+                state.DPT += activeDmg
 
 
 # This skill is to apply to a unit already in it's standby mode.
@@ -2735,12 +2688,11 @@ class StandbyFinishSkill(SingleTurnAbility):
         if state.form.checkCondition(self.condition, self.activated, True):
             self.activated = True
             self.activeMult += self.buffPerCharge * state.form.charge
-            self.form.unit.transformationAttackAPT = (
+            self.form.unit.transformationAttackDPT = state.atk2Dmg(
                 state.getActiveAtk(
                     rarity2MaxKi[self.form.unit.rarity], state.p2Buff["ATK"], self.activeMult * (1 + self.attackBuff)
                 )
-                * state.atkModifier
-            )
+            , state.multiChanceBuff["Crit"].prob)
             self.form.unit.transformationTriggered = True
             if self.form.unit.numForms > self.form.formIdx:
                 self.form.unit.nextForm = 1
@@ -2896,7 +2848,7 @@ class Buff(PassiveAbility):
                         state.p3Buff["DEF"] += effectiveBuff
                     case "P3 Crit":
                         state.multiChanceBuff["Crit"].updateChance("Active Skill", effectiveBuff, "Crit", state)
-                        state.setAvgAtkMod()
+                        state.setNoCritAtkMod()
                     case "P3 Evasion":
                         state.multiChanceBuff["EvasionA"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
                         state.multiChanceBuff["EvasionB"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
@@ -3013,7 +2965,7 @@ class PerTurn(PerEvent):
                     state.p1Buff["DEF"] += cappedTurnBuff
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
-                    state.setAvgAtkMod()
+                    state.setNoCritAtkMod()
                 case "Dmg Red":
                     state.dmgRedSuperA += cappedTurnBuff
                     state.dmgRedSuperB += cappedTurnBuff
@@ -3100,7 +3052,7 @@ class PerAttackReceived(PerEvent):
                     "Crit",
                     state,
                 )
-                state.setAvgAtkMod()
+                state.setNoCritAtkMod()
             case _:
                 raise Exception(f"{self.effect} Per Attack Received Buff Effect not implemented!")
         if not (self.withinTheSameTurn):
@@ -3161,7 +3113,7 @@ class PerAttackGuarded(PerEvent):
                     "Crit",
                     state,
                 )
-                state.setAvgAtkMod()
+                state.setNoCritAtkMod()
             case _:
                 raise Exception(f"{self.effect} Per Attack Guarded Buff Effect not implemented!")
         self.applied += cappedTurnBuff
@@ -3190,7 +3142,7 @@ class PerAttackEvaded(PerEvent):
                 state.multiChanceBuff["Crit"].updateChance(
                     "On Super", min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo), "Crit", state
                 )
-                state.setAvgAtkMod()
+                state.setNoCritAtkMod()
             case "Evasion":
                 state.defBuffStatuses[("Evasion", "Evade")] += cappedBuffPerAttack
             case "Dmg Red":
@@ -3258,7 +3210,7 @@ class AfterEvent(PassiveAbility):
                     state.aaPSuper.append(cappedTurnBuff * self.superChance)
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
-                    state.setAvgAtkMod()
+                    state.setNoCritAtkMod()
                 case "Guard":
                     state.guard += cappedTurnBuff
                 case "Dmg Red":
@@ -3352,7 +3304,7 @@ class AfterAttackReceived(AfterEvent):
                     state.aaPSuper.append(cappedTurnBuff * self.superChance)
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
-                    state.setAvgAtkMod()
+                    state.setNoCritAtkMod()
                 case "Guard":
                     state.defBuffStatuses[("Guard", "Receive")] += cappedBuffPerAttack
                 case "Dmg Red":
@@ -3434,7 +3386,7 @@ class AfterGuardActivated(AfterEvent):
                     state.aaPSuper.append(cappedTurnBuff * self.superChance)
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
-                    state.setAvgAtkMod()
+                    state.setNoCritAtkMod()
                 case "Dmg Red":
                     state.defBuffStatuses[("DmgRed", "Guard")] += cappedBuffPerAttack
                 case "Guard":
@@ -3506,7 +3458,7 @@ class AfterAttackEvaded(AfterEvent):
                     state.aaPSuper.append(cappedTurnBuff * self.superChance)
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
-                    state.setAvgAtkMod()
+                    state.setNoCritAtkMod()
                 case "Evasion":
                     state.defBuffStatuses[("Evasion", "Evade")] += cappedBuffPerAttack
                 case _:
@@ -3589,7 +3541,7 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
                     state.aaPSuper.append(cappedTurnBuff * self.superChance)
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
-                    state.setAvgAtkMod()
+                    state.setNoCritAtkMod()
                 case "Guard":
                     state.defBuffStatuses[("Guard", "ReceiveOrEvade")] += cappedBuffPerAttack
                 case "Dmg Red":
@@ -3706,7 +3658,7 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                     state.buff["Heal"] += cappedTurnBuff
                 case "Crit":
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
-                    state.setAvgAtkMod()
+                    state.setNoCritAtkMod()
                 case "Disable Action":
                     pDisableSuper = (
                         P_DISABLE_SUPER
