@@ -5,7 +5,7 @@
 		<input prompt="What is the unit's class?" response="S" />
 		<input prompt="What is the unit's type?" response="INT" />
 		<input prompt="Has the unit EZA'd?" response="N" />
-		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="1/25" />
+		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="12/24" />
 		<input prompt="What is the unit's Max Level HP stat?" response="14100" />
 		<input prompt="What is the unit's Max Level ATK stat?" response="11600" />
 		<input prompt="What is the unit's Max Level DEF stat?" response="6325" />

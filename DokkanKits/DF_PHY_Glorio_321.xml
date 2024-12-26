@@ -5,7 +5,7 @@
 		<input prompt="What is the unit's class?" response="S" />
 		<input prompt="What is the unit's type?" response="PHY" />
 		<input prompt="Has the unit EZA'd?" response="N" />
-		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="1/25" />
+		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="12/24" />
 		<input prompt="What is the unit's Max Level HP stat?" response="13950" />
 		<input prompt="What is the unit's Max Level ATK stat?" response="11360" />
 		<input prompt="What is the unit's Max Level DEF stat?" response="6700" />
@@ -20,7 +20,7 @@
 		<input prompt="How many turns does the unit seal for?" response="0" />
 		<input prompt="How many turns does the unit stun for?" response="0" />
 		<input prompt="How many turns does the unit lower the enemy attack by attacking?" response="2" />
-		<input prompt="How much is attack lowered by on attack?" response="Lowers" />
+		<input prompt="How much is attack lowered by on attack?" response="Greatly Lowers" />
 		<input prompt="How many turns does the unit lower the enemy attack passively?" response="0" />
 		<input prompt="How much of a buff does the unit get when facing multiple enemies?" response="NA" />
 		<input prompt="Does the unit have an active skill that has SBR effects?" response="N" />
@@ -46,7 +46,7 @@
 				</link_3>
 				<link_4>
 					<input prompt="What is the form's link # 4" response="Speedy Retribution" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="0" />
 				</link_4>
 				<link_5>
 					<input prompt="What is the form's link # 5" response="Shocking Speed" />
