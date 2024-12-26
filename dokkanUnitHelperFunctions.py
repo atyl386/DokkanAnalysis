@@ -156,6 +156,12 @@ def getAttackDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef, enemyCri
         0,
     )
 
+def dmgThreshold(dmg):
+    if dmg < AVG_ENEMY_DMG_THRESHOLD:
+        return (1 - ENEMY_DMG_THRESHOLD_CHANCE) * dmg
+    else:
+        return dmg
+
 
 def aprioriProbMod(p, knownApriori):
     if knownApriori:
