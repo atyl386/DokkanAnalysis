@@ -130,6 +130,10 @@ class Banner:
 
 
 SummonRatings()
+DaimaGoku = Banner([320, 161, 35, 44, 47, 47, 47], "red")
+print(DaimaGoku.summonScore)
+Glorio = Banner([321, 160, 42, 37, 40, 40, 40], "red")
+print(Glorio.summonScore)
 """ Halloween = Banner([115, 116, 83, 68, 64, 5, 78, 63, 62, 20], 'red')
 HalloweenStep2 = Banner([64, 78, 63, 62, 20], 'red')
 HalloweenStep3A = Banner([127, 128, 118, 108, 107, 124, 74, 73, 50, 52], 'red')

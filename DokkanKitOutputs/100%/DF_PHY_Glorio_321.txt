@@ -29,28 +29,15 @@ State # 2 / Turn # 6
 Leader Skill: 9.0 
 SBR: 0.75 
 HP: 19350.0 
-Useability: 0.4575569358178054 
-Healing: 0.14959957666212106 
-Support: 3.6666666666666665 
-DPT: 39974680.040787846 
-Normal Defence: -0.004118075582895519 
-Super Attack Defence: 0.0 
-Slot Bonus: 0.3333333333333333 
-
-State # 3 / Turn # 9 
- 
-Leader Skill: 9.0 
-SBR: 0.75 
-HP: 19350.0 
-Useability: 0.4575569358178054 
-Healing: 0.18859823702179077 
-Support: 3.6666666666666665 
-DPT: 42505700.09960158 
+Useability: 0.4666149068322981 
+Healing: 0.16570224107345025 
+Support: 3.875 
+DPT: 50775188.67514485 
 Normal Defence: 0.0 
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
-State # 4 / Turn # 12 
+State # 3 / Turn # 9 
  
 Leader Skill: 9.0 
 SBR: 0.75 
@@ -63,33 +50,20 @@ Normal Defence: 0.0
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
+State # 4 / Turn # 12 
+ 
+Leader Skill: 9.0 
+SBR: 0.75 
+HP: 19350.0 
+Useability: 0.43944099378881984 
+Healing: 0.28269822215245943 
+Support: 3.25 
+DPT: 48309699.21988046 
+Normal Defence: 0.0 
+Super Attack Defence: 0.0 
+Slot Bonus: 0.3333333333333333 
+
 State # 5 / Turn # 15 
- 
-Leader Skill: 9.0 
-SBR: 0.75 
-HP: 19350.0 
-Useability: 0.43944099378881984 
-Healing: 0.26659555774113025 
-Support: 3.25 
-DPT: 40862040.46275866 
-Normal Defence: 0.0 
-Super Attack Defence: 0.0 
-Slot Bonus: 0.3333333333333333 
-
-State # 6 / Turn # 18 
- 
-Leader Skill: 9.0 
-SBR: 0.75 
-HP: 19350.0 
-Useability: 0.43944099378881984 
-Healing: 0.30559421810079995 
-Support: 3.25 
-DPT: 43533585.17503069 
-Normal Defence: 0.0 
-Super Attack Defence: 0.0 
-Slot Bonus: 0.3333333333333333 
-
-State # 7 / Turn # 18 
  
 Leader Skill: 9.0 
 SBR: 0.75 
@@ -102,20 +76,7 @@ Normal Defence: 0.0
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
-State # 8 / Turn # 18 
- 
-Leader Skill: 9.0 
-SBR: 0.75 
-HP: 19350.0 
-Useability: 0.43944099378881984 
-Healing: 0.38359153882013935 
-Support: 3.25 
-DPT: 51999701.115982756 
-Normal Defence: 0.0 
-Super Attack Defence: 0.0 
-Slot Bonus: 0.3333333333333333 
-
-State # 9 / Turn # 18 
+State # 6 / Turn # 18 
  
 Leader Skill: 9.0 
 SBR: 0.75 

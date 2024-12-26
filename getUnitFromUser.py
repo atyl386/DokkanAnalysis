@@ -488,8 +488,9 @@ class Unit:
 
     def interpStates(self):
         stateTurns = [state.turn for state in self.states]
-        attributes = self.getAttributes()
-        interpAttrs = np.array([np.interp(EVAL_TURNS, stateTurns, attributes[:, i]) for i in range(NUM_ATTRIBUTES)]).T
+        self.uninterpolatedStates = copy.deepcopy(self.states)
+        self.uninterpolatedAttributes = self.getAttributes()
+        interpAttrs = np.array([np.interp(EVAL_TURNS, stateTurns, self.uninterpolatedAttributes[:, i]) for i in range(NUM_ATTRIBUTES)]).T
         self.setAttributes(interpAttrs)
 
     def saveUnit(self):
@@ -499,10 +500,10 @@ class Unit:
                 CWD, "DokkanKitOutputs", HIPO_DUPES[self.nCopies - 1], self.commonName + "_" + self.id + ".txt"
             )
             outputFile = open(outputFilePath, "w")
-            for i, state in enumerate(self.states):
+            for i, state in enumerate(self.uninterpolatedStates):
                 outputFile.write(f"State # {i} / Turn # {state.turn} \n \n")
                 for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
-                    outputFile.write(f"{attributeName}: {state.attributes[attributeName]} \n")
+                    outputFile.write(f"{attributeName}: {self.uninterpolatedAttributes[i, j]} \n")
                 outputFile.write("\n")
 
 

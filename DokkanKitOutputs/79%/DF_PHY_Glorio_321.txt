@@ -29,28 +29,15 @@ State # 2 / Turn # 6
 Leader Skill: 9.0 
 SBR: 0.75 
 HP: 18350.0 
-Useability: 0.4575569358178054 
-Healing: 0.10908854085804227 
-Support: 3.6666666666666665 
-DPT: 35206107.9979645 
-Normal Defence: -0.005684536447581413 
+Useability: 0.4666149068322981 
+Healing: 0.12083066074736551 
+Support: 3.875 
+DPT: 44692618.8341306 
+Normal Defence: 0.0 
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
 State # 3 / Turn # 9 
- 
-Leader Skill: 9.0 
-SBR: 0.75 
-HP: 18350.0 
-Useability: 0.4575569358178054 
-Healing: 0.13752650204066869 
-Support: 3.6666666666666665 
-DPT: 37463770.29100011 
-Normal Defence: -0.0008425203972900015 
-Super Attack Defence: 0.0 
-Slot Bonus: 0.3333333333333333 
-
-State # 4 / Turn # 12 
  
 Leader Skill: 9.0 
 SBR: 0.75 
@@ -63,33 +50,20 @@ Normal Defence: -0.0025275611918700045
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
-State # 5 / Turn # 15 
+State # 4 / Turn # 12 
  
 Leader Skill: 9.0 
 SBR: 0.75 
 HP: 18350.0 
 Useability: 0.43944099378881984 
-Healing: 0.1944024244059215 
+Healing: 0.20614454429524476 
 Support: 3.25 
-DPT: 36674541.60813179 
-Normal Defence: -0.0008425203972900015 
-Super Attack Defence: 0.0 
-Slot Bonus: 0.3333333333333333 
-
-State # 6 / Turn # 18 
- 
-Leader Skill: 9.0 
-SBR: 0.75 
-HP: 18350.0 
-Useability: 0.43944099378881984 
-Healing: 0.22284038558854793 
-Support: 3.25 
-DPT: 39209857.489316694 
+DPT: 43508775.80982812 
 Normal Defence: 0.0 
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
-State # 7 / Turn # 18 
+State # 5 / Turn # 15 
  
 Leader Skill: 9.0 
 SBR: 0.75 
@@ -102,20 +76,7 @@ Normal Defence: 0.0
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
-State # 8 / Turn # 18 
- 
-Leader Skill: 9.0 
-SBR: 0.75 
-HP: 18350.0 
-Useability: 0.43944099378881984 
-Healing: 0.27971630795380076 
-Support: 3.25 
-DPT: 47039996.32530231 
-Normal Defence: 0.0 
-Super Attack Defence: 0.0 
-Slot Bonus: 0.3333333333333333 
-
-State # 9 / Turn # 18 
+State # 6 / Turn # 18 
  
 Leader Skill: 9.0 
 SBR: 0.75 

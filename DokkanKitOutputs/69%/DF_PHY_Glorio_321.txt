@@ -29,28 +29,15 @@ State # 2 / Turn # 6
 Leader Skill: 9.0 
 SBR: 0.75 
 HP: 18050.0 
-Useability: 0.4575569358178054 
-Healing: 0.10000540115967219 
-Support: 3.6666666666666665 
-DPT: 27652712.997568518 
-Normal Defence: -0.006302075079174336 
+Useability: 0.4666149068322981 
+Healing: 0.11058539053628048 
+Support: 3.875 
+DPT: 35167849.47804197 
+Normal Defence: 0.0 
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
 State # 3 / Turn # 9 
- 
-Leader Skill: 9.0 
-SBR: 0.75 
-HP: 18050.0 
-Useability: 0.4575569358178054 
-Healing: 0.1257798667781176 
-Support: 3.6666666666666665 
-DPT: 29293892.14718229 
-Normal Defence: -0.001975018853965146 
-Super Attack Defence: 0.0 
-Slot Bonus: 0.3333333333333333 
-
-State # 4 / Turn # 12 
  
 Leader Skill: 9.0 
 SBR: 0.75 
@@ -63,33 +50,20 @@ Normal Defence: -0.005925056561895437
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
-State # 5 / Turn # 15 
+State # 4 / Turn # 12 
  
 Leader Skill: 9.0 
 SBR: 0.75 
 HP: 18050.0 
 Useability: 0.43944099378881984 
-Healing: 0.17732879801500842 
+Healing: 0.18790878739161673 
 Support: 3.25 
-DPT: 28347603.181518584 
-Normal Defence: -0.0019750188539651454 
-Super Attack Defence: 0.0 
-Slot Bonus: 0.3333333333333333 
-
-State # 6 / Turn # 18 
- 
-Leader Skill: 9.0 
-SBR: 0.75 
-HP: 18050.0 
-Useability: 0.43944099378881984 
-Healing: 0.20310326363345382 
-Support: 3.25 
-DPT: 30288318.813182298 
+DPT: 33748416.02954642 
 Normal Defence: 0.0 
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
-State # 7 / Turn # 18 
+State # 5 / Turn # 15 
  
 Leader Skill: 9.0 
 SBR: 0.75 
@@ -102,20 +76,7 @@ Normal Defence: 0.0
 Super Attack Defence: 0.0 
 Slot Bonus: 0.3333333333333333 
 
-State # 8 / Turn # 18 
- 
-Leader Skill: 9.0 
-SBR: 0.75 
-HP: 18050.0 
-Useability: 0.43944099378881984 
-Healing: 0.2546521948703447 
-Support: 3.25 
-DPT: 36593019.09690993 
-Normal Defence: 0.0 
-Super Attack Defence: 0.0 
-Slot Bonus: 0.3333333333333333 
-
-State # 9 / Turn # 18 
+State # 6 / Turn # 18 
  
 Leader Skill: 9.0 
 SBR: 0.75 
