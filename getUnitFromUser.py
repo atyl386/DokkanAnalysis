@@ -501,7 +501,7 @@ class Unit:
             )
             outputFile = open(outputFilePath, "w")
             for i, state in enumerate(self.uninterpolatedStates):
-                outputFile.write(f"State # {i} / Turn # {state.turn} \n \n")
+                outputFile.write(f"Form # {state.form.formIdx} / State # {i + 1} / Turn # {state.turn} \n \n")
                 for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
                     outputFile.write(f"{attributeName}: {self.uninterpolatedAttributes[i, j]} \n")
                 outputFile.write("\n")
