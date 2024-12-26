@@ -51,12 +51,13 @@ LEADER_SKILL_TIERS = [
     "2 x 150%",
     "2 x 150-170% / 1 x 170%",
     "2 x 170% / 1 x 180%",
-    "200% limited / 2 x 180%",
+    "2 x 180%",
+    "200% limited",
     "200% small",
     "200% medium",
     "200% large",
 ]
-LEADER_SKILL_SCORES = [0, 1, 2, 4, 5, 7, 8, 9, 10]  # [-]
+LEADER_SKILL_SCORES = [0, 0.5, 1, 1.5, 2, 2.5, 7, 8, 9, 10]  # [-]
 LEADER_SKILL_KI = 6.0
 LEADER_SKILL_STATS = 4.0
 
