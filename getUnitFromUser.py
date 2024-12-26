@@ -5,7 +5,6 @@ import math
 import click as clc
 
 # TODO:
-# - Implement damage theshold - will basically need to implement DPT to do this
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we be using the averages/std for each turn rather than averaged over all turns?
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
