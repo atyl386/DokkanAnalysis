@@ -36,7 +36,7 @@ def SummonRating(ID):
             EZADI = 0.7
 
     if unit.exclusivity in ["DFLR", "DF", "CLR", "LR"]:
-        rarityScore = 50  # These are summonRatings, have to be tuned
+        rarityScore = 75  # These are summonRatings, have to be tuned
     else:
         rarityScore = 25
     if unit.EZA:
@@ -130,9 +130,9 @@ class Banner:
 
 
 SummonRatings()
-DaimaGoku = Banner([320, 161, 35, 44, 47, 47, 47], "red")
+DaimaGoku = Banner([320, 161, 35, 44, 47, 43, 41], "red", threePlus1=True)
 print(DaimaGoku.summonScore)
-Glorio = Banner([321, 160, 42, 37, 40, 40, 40], "red")
+Glorio = Banner([321, 160, 42, 37, 40, 36, 48], "red", threePlus1=True)
 print(Glorio.summonScore)
 """ Halloween = Banner([115, 116, 83, 68, 64, 5, 78, 63, 62, 20], 'red')
 HalloweenStep2 = Banner([64, 78, 63, 62, 20], 'red')

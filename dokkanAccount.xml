@@ -281,7 +281,7 @@
     </_35>
     <_36>
         <common_name value="DF_TEQ_23_WT_Goku" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1281,7 +1281,7 @@
     </_160>
     <_161>
         <common_name value="DF_AGL_SS3_Goku_Angel" />
-        <num_copies value="1" />
+        <num_copies value="2" />
         <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1481,7 +1481,7 @@
     </_185>
     <_186>
         <common_name value="BU_AGL_SS2_Future_Trunks" />
-        <num_copies value="3" />
+        <num_copies value="4" />
         <BRZ_equip value="DEF" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="ADD" />
@@ -1505,7 +1505,7 @@
     </_188>
     <_189>
         <common_name value="BU_PHY_23_WT_Tien" />
-        <num_copies value="2" />
+        <num_copies value="4" />
         <BRZ_equip value="DGE" />
         <HiPo_choice_1 value="DGE" />
         <HiPo_choice_2 value="CRT" />
@@ -2561,7 +2561,7 @@
     </_320>
     <_321>
         <common_name value="DF_PHY_Glorio" />
-        <num_copies value="0" />
+        <num_copies value="1" />
         <BRZ_equip value="ATK" />
         <HiPo_choice_1 value="CRT" />
         <HiPo_choice_2 value="ADD" />
