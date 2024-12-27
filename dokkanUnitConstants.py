@@ -25,7 +25,10 @@ YES_NO = ["Y", "N"]
 
 # Enemy Crit
 
-ENEMY_CRIT_DEF_DEBUFF = 0.3  # Not constant, should update to whatever it is for the strongest boss with crit
+ENEMY_SUPER_AVG_CRIT_DEF_DEBUFF = 0.3 # Not constant, should update to whatever it is for the strongest boss with crit
+ENEMY_NORMAL_AVG_CRIT_DEF_DEBUFF = 1 # Not constant, should update to whatever it is for the strongest boss with crit
+ENEMY_SUPER_CRIT_CHANCE = 0.05
+ENEMY_NORMAL_CRIT_CHANCE = 0.05
 
 # SBR
 ATT_DEBUFF_PASSIVE_CONVERSION_GRADIENT = 10  # 10% attack down for 2 turns = SBR score of +1
@@ -269,8 +272,6 @@ MAX_ENEMY_DEF_PER_TURN = (
 AVG_ENEMY_DMG_THRESHOLD = 10000000 # Goku & Frieza SMB
 ENEMY_DMG_THRESHOLD_CHANCE = 0.05
 ENEMY_DODGE_CHANCE = 0.05
-ENEMY_SUPER_CRIT_CHANCE = 0.05
-ENEMY_NORMAL_CRIT_CHANCE = 0
 AVG_DAM_VARIANCE = 1.015
 MAX_T1_NORMAL_DAM = 1001000  # SSGSSE Vegeta Supreme Battle Spectacle
 MAX_NORMAL_DAM = 1350000  # SSGSSE Vegeta Supreme Battle Spectacle (900000 * 1.5)

@@ -130,7 +130,7 @@ def branchAttacksEvaded(
         return pE * (nAB - iB)
 
 
-def getAttackDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef, enemyCritChance):
+def getAttackDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef, critChance, critDefDebuff):
     return min(
         -(1 - pEvade)
         * min(
@@ -138,13 +138,13 @@ def getAttackDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef, enemyCri
                 guard
                 * GUARD_MOD
                 * (
-                    enemyCritChance * (maxDamage * (AEAAT_MULTIPLIER - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
-                    + (1 - enemyCritChance) * (maxDamage * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
+                    critChance * (maxDamage * (AEAAT_MULTIPLIER - TDB_INC * tdb) * (1 - dmgRed) - avgDef * (1 - critDefDebuff))
+                    + (1 - critChance) * (maxDamage * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
                 )
                 + (1 - guard)
                 * (
-                    enemyCritChance * (maxDamage * (AEAAT_MULTIPLIER - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
-                    + (1 - enemyCritChance) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
+                    critChance * (maxDamage * (AEAAT_MULTIPLIER - TDB_INC * tdb) * (1 - dmgRed) - avgDef * (1 - critDefDebuff))
+                    + (1 - critChance) * (maxDamage * (AVG_TYPE_ADVANATGE - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
                 )
             )
             / AVG_HEALTH,

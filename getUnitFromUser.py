@@ -1456,11 +1456,12 @@ class State:
             self.guard,
             self.dmgRedNormalA,
             0,
-            self.avgDefPreSuper * (1 - ENEMY_CRIT_DEF_DEBUFF * ENEMY_NORMAL_CRIT_CHANCE),
+            self.avgDefPreSuper,
             self.stackedStats["DEF"],
             self.defBuffStatuses,
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             ENEMY_NORMAL_CRIT_CHANCE,
+            ENEMY_NORMAL_AVG_CRIT_DEF_DEBUFF,
         )
         self.saDamageTaken = self.branchDamageTaken(
             1,
@@ -1475,11 +1476,12 @@ class State:
             self.guard,
             self.dmgRedSuperA,
             self.multiChanceBuff["Nullify"].prob,
-            self.avgDefPreSuper * (1 - ENEMY_CRIT_DEF_DEBUFF * ENEMY_SUPER_CRIT_CHANCE),
+            self.avgDefPreSuper,
             self.stackedStats["DEF"],
             self.defBuffStatuses,
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             ENEMY_SUPER_CRIT_CHANCE,
+            ENEMY_SUPER_AVG_CRIT_DEF_DEBUFF
         )
         self.buff["Heal"] += (
             self.form.linkEffects["Heal"]
@@ -1865,6 +1867,7 @@ class State:
         defBuffStatuses,
         maxDamage,
         enemyCritChance,
+        enemyCritDefDebuff,
     ):
         if pBranch == 0:
             return 0
@@ -1881,7 +1884,7 @@ class State:
         pG = (1 - pE) * pGuard
         pR = 1 - pE - pG
         attackDamageTaken = getAttackDamageTaken(
-            pE, pGuard, maxDamage, self.form.unit.TDB, dmgRed, defence, enemyCritChance
+            pE, pGuard, maxDamage, self.form.unit.TDB, dmgRed, defence, enemyCritChance, enemyCritDefDebuff,
         )
         # If last attack in sequence pre super
         if iA >= nAA - 1 and iB == -1:
@@ -1940,6 +1943,7 @@ class State:
                     defBuffNextStatuses["Evade"],
                     maxDamage,
                     enemyCritChance,
+                    enemyCritDefDebuff,
                 )
                 + self.branchDamageTaken(
                     pG,
@@ -1995,6 +1999,7 @@ class State:
                     defBuffNextStatuses["Guard"],
                     maxDamage,
                     enemyCritChance,
+                    enemyCritDefDebuff,
                 )
                 + self.branchDamageTaken(
                     pR,
@@ -2033,6 +2038,7 @@ class State:
                     defBuffNextStatuses["Receive"],
                     maxDamage,
                     enemyCritChance,
+                    enemyCritDefDebuff,
                 )
             )
         elif iA < nAA - 1 or iB < nAB - 1:
@@ -2084,6 +2090,7 @@ class State:
                     defBuffNextStatuses["Evade"],
                     maxDamage,
                     enemyCritChance,
+                    enemyCritDefDebuff,
                 )
                 + self.branchDamageTaken(
                     pG,
@@ -2119,6 +2126,7 @@ class State:
                     defBuffNextStatuses["Guard"],
                     maxDamage,
                     enemyCritChance,
+                    enemyCritDefDebuff,
                 )
                 + self.branchDamageTaken(
                     pR,
@@ -2149,6 +2157,7 @@ class State:
                     defBuffNextStatuses["Receive"],
                     maxDamage,
                     enemyCritChance,
+                    enemyCritDefDebuff,
                 )
             )
         else:
