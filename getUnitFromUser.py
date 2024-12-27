@@ -6,11 +6,9 @@ import click as clc
 
 # TODO:
 # - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
-# - Should we be using the averages/std for each turn rather than averaged over all turns?
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
 # - Simplify getEventFactor code
 # - Implement dodging counters
-# - Have an additional flag in evaluation to not calc the 55%->90% ones if just want ranking.txt update.
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
