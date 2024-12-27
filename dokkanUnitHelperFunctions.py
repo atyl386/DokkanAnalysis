@@ -138,11 +138,8 @@ def getAttackDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef, enemyCri
                 guard
                 * GUARD_MOD
                 * (
-                    maxDamage
-                    * (AEAAT_MULTIPLIER * enemyCritChance + (1 - enemyCritChance))
-                    * (AVG_GUARD_FACTOR - TDB_INC * tdb)
-                    * (1 - dmgRed)
-                    - avgDef
+                    enemyCritChance * (maxDamage * (AEAAT_MULTIPLIER - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
+                    + (1 - enemyCritChance) * (maxDamage * (AVG_GUARD_FACTOR - TDB_INC * tdb) * (1 - dmgRed) - avgDef)
                 )
                 + (1 - guard)
                 * (
