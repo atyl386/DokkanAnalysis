@@ -910,7 +910,7 @@ superAttackConversion = dict(zip(SUPER_ATTACK_MULTIPLIER_NAMES, superAttackMulti
 # Slot
 slot2ReturnPeriod = dict(zip(SLOTS, RETURN_PERIOD_PER_SLOT))
 disableActionActiveDisableSuper = dict(zip(SLOTS, [P_DISABLE_SUPER, 0, 0]))
-disableActionActiveDisableNormal = dict(zip(SLOTS, [1, 0, 0]))
+disableActionActiveDisableNormal = dict(zip(SLOTS, [1 - P_DISABLE_SUPER, 0, 0]))
 
 # Enemy Attacks
 saFracConversion = dict(zip(SUPER_ATTACK_NULLIFICATION_TYPES, PROBABILITY_SUPER_ATTACK_TYPE))

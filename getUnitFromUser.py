@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Make disbale action atttacks received reduction a function
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
 # - Simplify getEventFactor code
 # - Implement dodging counters
@@ -2813,13 +2814,13 @@ class Buff(PassiveAbility):
                     case "Evasion against Supers":
                         state.evadeSuper += effectiveBuff
                     case "Disable Action B":
-                        pDisableSuper = P_DISABLE_SUPER * (
+                        pDisableSuper = min(state.numSuperAttacksDirectedAfterAttacking / state.numAttacksDirectedAfterAttacking * (
                             1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"]
-                        )
+                        ), state.numSuperAttacksDirectedAfterAttacking)
                         state.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-                        pDisableNormal = min(1, state.numNormalAttacksDirectedAfterAttacking) * (
+                        pDisableNormal = min(state.numNormalAttacksDirectedAfterAttacking / state.numAttacksDirectedAfterAttacking * (
                             1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"]
-                        )
+                        ), state.numNormalAttacksDirectedAfterAttacking)
                         state.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
                         state.numAttacksDirected -= pDisableNormal
                         state.numAttacksDirectedAfterAttacking -= pDisableNormal
@@ -3670,17 +3671,17 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.setNoCritAtkMod()
                 case "Disable Action":
-                    pDisableSuper = (
-                        P_DISABLE_SUPER
+                    pDisableSuper = min(
+                        state.numSuperAttacksDirectedAfterAttacking / state.numAttacksDirectedAfterAttacking
                         * cappedTurnBuff
                         * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
-                    )
+                    , state.numSuperAttacksDirectedAfterAttacking)
                     state.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-                    pDisableNormal = (
-                        min(1, state.numNormalAttacksDirectedAfterAttacking)
+                    pDisableNormal = min(
+                        state.numNormalAttacksDirectedAfterAttacking / state.numAttacksDirectedAfterAttacking
                         * cappedTurnBuff
                         * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
-                    )
+                    , state.numNormalAttacksDirectedAfterAttacking)
                     state.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
                     state.numAttacksDirected -= pDisableNormal
                     state.numAttacksDirectedAfterAttacking -= pDisableNormal
