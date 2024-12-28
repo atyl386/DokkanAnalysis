@@ -64,10 +64,10 @@ DF_INT_Piccolo_Jr
 BU_TEQ_Caulifla 
 LR_INT_Universe_7 
 CLR_PHY_SS_Future_Trunks 
-DFLR_TEQ_God_Goku_Vegeta 
 F2PLR_PHY_Version_Z_Goku 
 DF_STR_Transforming_Kelfa 
 BU_INT_Xeno_Pan 
+DFLR_TEQ_God_Goku_Vegeta 
 F2PLR_TEQ_SS_Goku 
 LR_AGL_Krillin_Gohan_Namek 
 CLR_INT_SS_Trio 
@@ -87,7 +87,6 @@ BU_TEQ_SS_Kid_Trunks
 BU_AGL_Skinny_Buu 
 DF_PHY_God_Goku 
 DF_PHY_SSR_Goku_Black 
-DFLR_PHY_SS4_Gogeta 
 BU_PHY_Gotenks 
 LR_AGL_Ultimate_Gohan 
 BU_INT_Kid_Gohan_Namek 
@@ -97,6 +96,7 @@ BU_AGL_SS2_Future_Trunks
 DFLR_AGL_SS2_Gohan_Youth 
 BU_AGL_Mechikabura 
 F2PLR_TEQ_Demon_King_Piccolo 
+DFLR_PHY_SS4_Gogeta 
 DF_TEQ_SS3_Gotenks 
 BU_INT_Vados 
 DF_TEQ_Future_Androids 
@@ -184,8 +184,8 @@ CLR_PHY_Metal_Cooler
 BU_TEQ_2nd_Form_Cell 
 BU_INT_Pride_Troopers 
 BU_INT_Namek_Vegeta 
-BU_STR_SS_Vegeks 
 DFLR_INT_Perfect_Cell 
+BU_STR_SS_Vegeks 
 F2PLR_PHY_Babidi_Buu 
 DF_AGL_Fusion_Zamasu 
 LR_AGL_Golden_Frieza 

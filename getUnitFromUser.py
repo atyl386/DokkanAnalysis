@@ -1412,7 +1412,7 @@ class State:
                 self.support += supportFactor * numSupers
             pDisableSuper = min(
                 min(numSupers, 1)
-                * P_DISABLE_SUPER
+                * self.numSuperAttacksDirectedAfterAttacking / self.numAttacksDirectedAfterAttacking
                 * self.form.superAttacks[superAttackType].effects["Disable Action"].buff
                 * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]),
                 self.numSuperAttacksDirectedAfterAttacking,
@@ -1420,7 +1420,7 @@ class State:
             self.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
             pDisableNormal = min(
                 min(numSupers, 1)
-                * min(1, self.numNormalAttacksDirectedAfterAttacking)
+                * self.numNormalAttacksDirectedAfterAttacking / self.numAttacksDirectedAfterAttacking
                 * self.form.superAttacks[superAttackType].effects["Disable Action"].buff
                 * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]),
                 self.numNormalAttacksDirectedAfterAttacking,
