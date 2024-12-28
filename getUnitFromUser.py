@@ -6,7 +6,7 @@ import click as clc
 
 # TODO:
 # - Simplify getEventFactor code
-# - Implement dodging counters
+# - Implement dodging counters, i.e. TEQ UI Goku
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
 # - Update rainbow orb changing units for those with don't change their own type
 # - Try factor out some code within ability class into class functions
