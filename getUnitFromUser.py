@@ -2878,6 +2878,9 @@ class Buff(PassiveAbility):
                         state.support += supportFactorConversion[self.effect] * supportBuff
                         state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
                         state.numAttacksReceived = NUM_ATTACKS_PER_TURN
+                        pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
+                        state.numAttacksEvaded = NUM_ATTACKS_PER_TURN * pEvade
+                        state.numAttacksEvadedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * pEvade
                     case _:
                         raise Exception(f"{self.effect} Buff Effect not implemented!")
             state.randomKi = state.getRandomKi()
