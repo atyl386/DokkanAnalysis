@@ -5,8 +5,6 @@ import math
 import click as clc
 
 # TODO:
-# - Make disbale action atttacks received reduction a function
-# - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
 # - Simplify getEventFactor code
 # - Implement dodging counters
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
@@ -1411,24 +1409,7 @@ class State:
                     )
                 )
                 self.support += supportFactor * numSupers
-            pDisableSuper = min(
-                min(numSupers, 1)
-                * self.numSuperAttacksDirectedAfterAttacking / self.numAttacksDirectedAfterAttacking
-                * self.form.superAttacks[superAttackType].effects["Disable Action"].buff
-                * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]),
-                self.numSuperAttacksDirectedAfterAttacking,
-            )
-            self.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-            pDisableNormal = min(
-                min(numSupers, 1)
-                * self.numNormalAttacksDirectedAfterAttacking / self.numAttacksDirectedAfterAttacking
-                * self.form.superAttacks[superAttackType].effects["Disable Action"].buff
-                * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]),
-                self.numNormalAttacksDirectedAfterAttacking,
-            )
-            self.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
-            self.numAttacksDirected -= pDisableNormal
-            self.numAttacksDirectedAfterAttacking -= pDisableNormal
+            self.disableAction(pSuper = min(numSupers, 1) * self.form.superAttacks[superAttackType].effects["Disable Action"].buff)
         self.setNormal()
         self.SA = self.getSA(
             self.form.superAttacks["12 Ki"].multiplier,
@@ -1688,6 +1669,14 @@ class State:
     def atk2Dmg(self, atk, pCrit):
         """Returns the damage dealt by an attack"""
         return (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]) * (dmgThreshold(atk * self.form.unit.critMultiplier * (1 - AVG_ENEMY_DMG_RED)) * pCrit + dmgThreshold(max(atk * self.noCritAtkModifier - MAX_ENEMY_DEF_PER_TURN[self.turn - 1], 0) * (1 - AVG_ENEMY_DMG_RED)) * (1 - pCrit))
+    
+    def disableAction(self, pSuper = 1):
+        pDisableSuper = min(pSuper * self.numSuperAttacksDirectedAfterAttacking / self.numAttacksDirectedAfterAttacking * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]), self.numSuperAttacksDirectedAfterAttacking)
+        self.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
+        pDisableNormal = min(pSuper * self.numNormalAttacksDirectedAfterAttacking / self.numAttacksDirectedAfterAttacking * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]), self.numNormalAttacksDirectedAfterAttacking)
+        self.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
+        self.numAttacksDirected -= pDisableNormal
+        self.numAttacksDirectedAfterAttacking -= pDisableNormal
 
     def branchDPT(
         self,
@@ -2814,16 +2803,7 @@ class Buff(PassiveAbility):
                     case "Evasion against Supers":
                         state.evadeSuper += effectiveBuff
                     case "Disable Action B":
-                        pDisableSuper = min(state.numSuperAttacksDirectedAfterAttacking / state.numAttacksDirectedAfterAttacking * (
-                            1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"]
-                        ), state.numSuperAttacksDirectedAfterAttacking)
-                        state.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-                        pDisableNormal = min(state.numNormalAttacksDirectedAfterAttacking / state.numAttacksDirectedAfterAttacking * (
-                            1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"]
-                        ), state.numNormalAttacksDirectedAfterAttacking)
-                        state.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
-                        state.numAttacksDirected -= pDisableNormal
-                        state.numAttacksDirectedAfterAttacking -= pDisableNormal
+                        state.disableAction()
                     case "AdditionalSuper":
                         state.aaPSuper.append(activationProbability)
                         state.aaPGuarantee.append(0)
@@ -3671,20 +3651,7 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                     state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
                     state.setNoCritAtkMod()
                 case "Disable Action":
-                    pDisableSuper = min(
-                        state.numSuperAttacksDirectedAfterAttacking / state.numAttacksDirectedAfterAttacking
-                        * cappedTurnBuff
-                        * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
-                    , state.numSuperAttacksDirectedAfterAttacking)
-                    state.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
-                    pDisableNormal = min(
-                        state.numNormalAttacksDirectedAfterAttacking / state.numAttacksDirectedAfterAttacking
-                        * cappedTurnBuff
-                        * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"])
-                    , state.numNormalAttacksDirectedAfterAttacking)
-                    state.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
-                    state.numAttacksDirected -= pDisableNormal
-                    state.numAttacksDirectedAfterAttacking -= pDisableNormal
+                    state.disableAction()
                 case _:
                     raise Exception(f"{self.effect} Every Time X Events in Battle Buff Effect not implemented!")
             if self.effect in ADDITIONAL_ATTACK_EFFECTS:
