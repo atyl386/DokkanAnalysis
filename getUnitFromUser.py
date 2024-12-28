@@ -5,7 +5,6 @@ import math
 import click as clc
 
 # TODO:
-# - Is intercept setup correctly to increase number of attacks received? Pajamas beerus doesn't seem to build up
 # - Should we change diable effects on super from assuming if it cancels the super, it is targetting that unit?
 # - Simplify getEventFactor code
 # - Implement dodging counters
@@ -2877,7 +2876,8 @@ class Buff(PassiveAbility):
                         state.numAttacksReceived = 0
                     case "Intercept":
                         state.support += supportFactorConversion[self.effect] * supportBuff
-                        state.numAttacksReceived *= NUM_SLOTS
+                        state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
+                        state.numAttacksReceived = NUM_ATTACKS_PER_TURN
                     case _:
                         raise Exception(f"{self.effect} Buff Effect not implemented!")
             state.randomKi = state.getRandomKi()
