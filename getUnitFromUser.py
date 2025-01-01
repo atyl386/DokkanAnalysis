@@ -242,7 +242,7 @@ class Unit:
         ]
         self.date = dt.datetime.strptime(
             self.inputHelper.getAndSaveUserInput(
-                "When did the unit release on the Japanse version of Dokkan? (MM/YY)", default="01/24"
+                "When did the unit release on the Japanse version of Dokkan? (MM/YY)", default="01/25"
             ),
             "%m/%y",
         )
