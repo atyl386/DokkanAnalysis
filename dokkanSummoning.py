@@ -130,32 +130,36 @@ class Banner:
 
 
 SummonRatings()
-DaimaGoku = Banner([320, 161, 35, 44, 47, 43, 41], "red", threePlus1=True)
-print(DaimaGoku.summonScore)
-Glorio = Banner([321, 160, 42, 37, 40, 36, 48], "red", threePlus1=True)
-print(Glorio.summonScore)
-""" Halloween = Banner([115, 116, 83, 68, 64, 5, 78, 63, 62, 20], 'red')
-HalloweenStep2 = Banner([64, 78, 63, 62, 20], 'red')
-HalloweenStep3A = Banner([127, 128, 118, 108, 107, 124, 74, 73, 50, 52], 'red')
-S1 = Halloween.summonScore*25/20
-S2 = (6*Halloween.summonScore+20*HalloweenStep2.summonScore)/7
-S3 = (8*Halloween.summonScore+20*HalloweenStep3A.summonScore + 20*Halloween.summonScore)/10
-Rotation = np.mean([S1,S2,S3])
-print(Rotation) """
 #WWDL_1 = Banner([36, 19, 31, 30, 17, 150, 39, 34, 8, 33, 40, 140, 11, 170, 21, 257, 41, 21, 93, 163, 135, 127, 126, 86, 104, 142, 142, 60, 60, 60, 128, 128, 128, 127, 10, 188, 188, 183, 183, 116, 25, 116, 116, 25, 25, 101, 101, 211, 25, 101, 116, 25, 25, 25, 101, 170],'red', discount=50*(2 + 10 * 2)/100)
 #print(WWDL_1.summonScore)
 #WWDL_2 = Banner([25, 18, 5, 7, 32, 134, 45, 38, 46, 25, 10, 20, 9, 25, 170, 48, 48, 25, 164, 155, 98, 170, 146, 131, 25, 145, 129, 25, 54, 8, 25, 132, 116, 25, 146, 116, 8, 126, 8, 25, 116, 25, 25, 48, 170, 41, 25, 48, 48, 25, 156, 25, 25, 25, 101, 101],'red', discount=50*(2 + 10 * 2)/100)
 #print(WWDL_2.summonScore)
-# NYSU2023_S1 = Banner([38,38,38,38,38,70,70,38,79,38,70,88,89,89,38,38,77,38,88],'red')
-# NYSU2023_S2 = Banner([70,70,70,81,70,81,70,81,81,69,85,69,38],'red')
-# NYSU2023_S3 = Banner([38,70,70,58,84,57,86,85,70,87,38,38],'red')
-# NYSU2023_S4 = Banner([14,29,67,68,20,63,62,11,78,28,80],'red')
-# NYSU2023_S5 = Banner([65,66,76,75,26,77,85,53,21,81,35,81,53,53,53],'red')
-# NYSU2023 = Banner([14,29,67,68,20,63,62,11,78,28,80,38,70,70,58,84,57,86,85,70,87,38,38,38,38,38,38,38,70,70,38,79,38,70,88,89,89,38,38,77,38,88],'red')
-# S1 = (9*NYSU2023.summonScore+20*NYSU2023_S1.summonScore)/10*5/2
-# S2 = (9*NYSU2023.summonScore+20*NYSU2023_S2.summonScore)/10*5/3
-# S3 = (9*NYSU2023.summonScore+20*NYSU2023_S3.summonScore)/10
-# S4 = (9*NYSU2023.summonScore+20*NYSU2023_S4.summonScore)/10
-# S5 = (9*NYSU2023.summonScore+20*NYSU2023_S5.summonScore)/10
-# Rotation = np.mean([S1,S2,S3,S4,S5])
-# print(Rotation)
+
+""" NYSU2025_DF_S1_S1A = Banner([82, 65, 173, 29, 16, 87, 89],"red")
+NYSU2025_DF_S1_S1B = Banner([298, 262, 258, 211, 170, 156, 101],"red")
+NYSU2025_DF_S1_S2 = Banner([283, 257, 248, 21, 93, 164, 163],"red")
+NYSU2025_DF_S1_S3 = Banner([102, 7, 32, 31, 134, 150, 19],"red")
+NYSU2025_DF_S1_S4 = Banner([162, 28, 15, 5, 30, 17, 18],"red")
+NYSU2025_DF_S1_S5 = Banner([218, 84, 110, 100, 97],"red")
+NYSU2025_DF_S1 = Banner([283, 257, 248, 21, 93, 164, 163, 102, 317, 32, 31, 134, 150, 19, 162, 28, 15, 5, 30, 17, 18, 218, 84, 110, 100, 97],"red")
+DF_S1 = (8*NYSU2025_DF_S1.summonScore+20*NYSU2025_DF_S1_S1A.summonScore+20*NYSU2025_DF_S1_S1B.summonScore)/10*5/2
+DF_S2 = (9*NYSU2025_DF_S1.summonScore+20*NYSU2025_DF_S1_S2.summonScore)/10*5/3
+DF_S3 = (9*NYSU2025_DF_S1.summonScore+20*NYSU2025_DF_S1_S3.summonScore)/10
+DF_S4 = (9*NYSU2025_DF_S1.summonScore+20*NYSU2025_DF_S1_S4.summonScore)/10
+DF_S5 = (9*NYSU2025_DF_S1.summonScore+20*NYSU2025_DF_S1_S5.summonScore)/10
+DF_Rotation = np.mean([DF_S1,DF_S2,DF_S3,DF_S4,DF_S5])
+print(DF_Rotation) """
+
+NYSU2025_CARNIVAL_S1 = Banner([216, 186, 159, 158, 109, 99, 96],"cyan")
+NYSU2025_CARNIVAL_S2 = Banner([118, 106, 119, 112, 26, 115, 123],"cyan")
+NYSU2025_CARNIVAL_S3 = Banner([12, 52, 25, 120, 105, 121, 38],"cyan")
+NYSU2025_CARNIVAL_S4 = Banner([231, 222, 217, 49, 50, 78, 80],"cyan")
+NYSU2025_CARNIVAL_S5 = Banner([230, 214, 165, 157, 24],"cyan")
+NYSU2025_CARNIVAL = Banner([118, 106, 119, 112, 26, 115, 123, 12, 52, 25, 120, 105, 121, 38, 231, 222, 217, 49, 50, 78, 80, 230, 214, 165, 157, 24],"cyan")
+CARNIVAL_S1 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S1.summonScore)/10*5/2
+CARNIVAL_S2 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S2.summonScore)/10*5/3
+CARNIVAL_S3 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S3.summonScore)/10
+CARNIVAL_S4 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S4.summonScore)/10
+CARNIVAL_S5 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S5.summonScore)/10
+Carnival_Rotation = np.mean([CARNIVAL_S1,CARNIVAL_S2,CARNIVAL_S3,CARNIVAL_S4,CARNIVAL_S5])
+print(Carnival_Rotation)
