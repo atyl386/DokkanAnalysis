@@ -101,11 +101,6 @@ class Evaluator:
     def __init__(self, turnWeights, attributeWeights):
         self.turnWeights = turnWeights
         self.attributeWeights = np.array(list(attributeWeights))
-        self.normaliseWeights()
-
-    def normaliseWeights(self):
-        self.turnWeights = self.turnWeights / np.sqrt((self.turnWeights**2).sum())
-        self.attributeWeights = self.attributeWeights / np.sqrt((self.attributeWeights**2).sum())
 
     def evaluate(self, unit):
         score = 0.0
@@ -295,6 +290,7 @@ if __name__ == "__main__":
         attributeValues[:, :, :, :-1] = list(output[:, 1])
         evaluations[:, :-1] = list(output[:, 2])
         maxEvaluation = max(evaluations[:, -1])
+        print("Computing Ranking Scores")
         evaluations = logisticMap(evaluations, maxEvaluation)
         print("Writing results to files")
         writeSummary(units, attributeValues, evaluations)
