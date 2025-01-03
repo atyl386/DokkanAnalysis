@@ -13,6 +13,7 @@ analyseHiPo = False
 optimiseslots = False
 accountRanking = True
 useMultiprocessing = True
+removeWeakUnits = True
 
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
@@ -263,6 +264,18 @@ if __name__ == "__main__":
                 for i, equip in enumerate(["BRZ_equip", "HiPo_choice_1", "HiPo_choice_2"]):
                     unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
                 dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
+        if removeWeakUnits:
+            evalElement = ET.Element("eval", {"value": "True"})
+            noEvalElement = ET.Element("eval", {"value": "False"})
+            for ID in reverseOrderIDs:
+                element = dokkanAccountRoot.find(f"_{ID}")
+                if evaluations[-ID, -1] < MIN_EVALUATION:
+                    element.append(noEvalElement)
+                else:
+                    element.append(evalElement)
+            ET.indent(dokkanAccountXML, space="\t", level=0)
+            dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
+            exit()
         print("Processing Other Units")
         if useMultiprocessing:
             with multiprocessing.Pool() as pool:
