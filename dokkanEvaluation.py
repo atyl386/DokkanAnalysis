@@ -104,6 +104,11 @@ class Evaluator:
     def __init__(self, turnWeights, attributeWeights):
         self.turnWeights = turnWeights
         self.attributeWeights = np.array(list(attributeWeights))
+        self.normaliseWeights()
+
+    def normaliseWeights(self):
+        self.turnWeights = self.turnWeights / np.sqrt((self.turnWeights**2).sum())
+        self.attributeWeights = self.attributeWeights / np.sqrt((self.attributeWeights**2).sum())
 
     def evaluate(self, unit):
         score = 0.0
