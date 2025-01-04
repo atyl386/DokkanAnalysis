@@ -13,7 +13,7 @@ analyseHiPo = False
 optimiseslots = False
 accountRanking = True
 useMultiprocessing = True
-updateEvaluationUnits = False
+updateEvaluationUnits = True
 
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
@@ -211,7 +211,7 @@ if __name__ == "__main__":
             output = np.asarray(output, dtype=object)
         units[-1] = np.array(list(output[:, 0]))
         attributeValues[:, :, :, -1] = list(output[:, 1])
-        [rainbowMeans, rainbowStds] = summaryStats(attributeValues[evalUnitIdxs, :, :, -1])
+        [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
         for ID in reverseOrderIDs:
             normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
             evaluations[ID - 1, -1] = overallEvaluator.evaluate(units[-1][ID - 1])
@@ -313,6 +313,7 @@ if __name__ == "__main__":
         maxEvaluation = max(evaluations[:, -1])
         print("Computing Ranking Scores")
         minEvaluation = np.mean(evaluations[:, -1]) + np.std(evaluations[:, -1]) * MIN_EVALUATION_DEVIATION
+        minEvaluation = -7
         evaluations = logisticMap(evaluations, maxEvaluation, minEvaluation)
         print("Writing results to files")
         writeSummary(units, attributeValues, evaluations)
