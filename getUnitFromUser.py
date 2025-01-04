@@ -5,6 +5,7 @@ import math
 import click as clc
 
 # TODO:
+# - Fix normaliseWights and check effect on summoningRatings
 # - Simplify getEventFactor code
 # - Implement dodging counters, i.e. TEQ UI Goku
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)

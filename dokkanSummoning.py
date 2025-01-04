@@ -36,9 +36,9 @@ def SummonRating(ID):
             EZADI = 0.7
 
     if unit.exclusivity in ["DFLR", "DF", "CLR", "LR"]:
-        rarityScore = 75  # These are summonRatings, have to be tuned
+        rarityScore = 50  # These are summonRatings, have to be tuned
     else:
-        rarityScore = 25
+        rarityScore = 15
     if unit.EZA:
         EZA = 6 / 7
         futureEZA = 0
@@ -123,7 +123,7 @@ class Banner:
         self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus
 
     def shouldSummmon(self):
-        if self.summonScore > 20:  # Will need to be tuned
+        if self.summonScore > 10:  # Will need to be tuned
             return True
         else:
             return False
@@ -140,7 +140,7 @@ print(Glorio.summonScore)
 #WWDL_2 = Banner([25, 18, 5, 7, 32, 134, 45, 38, 46, 25, 10, 20, 9, 25, 170, 48, 48, 25, 164, 155, 98, 170, 146, 131, 25, 145, 129, 25, 54, 8, 25, 132, 116, 25, 146, 116, 8, 126, 8, 25, 116, 25, 25, 48, 170, 41, 25, 48, 48, 25, 156, 25, 25, 25, 101, 101],'red', discount=50*(2 + 10 * 2)/100)
 #print(WWDL_2.summonScore)
 
-""" NYSU2025_DF_S1_S1A = Banner([82, 65, 173, 29, 16, 87, 89],"red")
+NYSU2025_DF_S1_S1A = Banner([82, 65, 173, 29, 16, 87, 89],"red")
 NYSU2025_DF_S1_S1B = Banner([298, 262, 258, 211, 170, 156, 101],"red")
 NYSU2025_DF_S1_S2 = Banner([283, 257, 248, 21, 93, 164, 163],"red")
 NYSU2025_DF_S1_S3 = Banner([102, 7, 32, 31, 134, 150, 19],"red")
@@ -153,9 +153,9 @@ DF_S3 = (9*NYSU2025_DF_S1.summonScore+20*NYSU2025_DF_S1_S3.summonScore)/10
 DF_S4 = (9*NYSU2025_DF_S1.summonScore+20*NYSU2025_DF_S1_S4.summonScore)/10
 DF_S5 = (9*NYSU2025_DF_S1.summonScore+20*NYSU2025_DF_S1_S5.summonScore)/10
 DF_Rotation = np.mean([DF_S1,DF_S2,DF_S3,DF_S4,DF_S5])
-print(DF_Rotation) """
+print(DF_Rotation)
 
-""" NYSU2025_CARNIVAL_S1 = Banner([216, 186, 159, 158, 109, 99, 96],"cyan")
+NYSU2025_CARNIVAL_S1 = Banner([216, 186, 159, 158, 109, 99, 96],"cyan")
 NYSU2025_CARNIVAL_S2 = Banner([118, 106, 119, 112, 26, 115, 123],"cyan")
 NYSU2025_CARNIVAL_S3 = Banner([12, 52, 25, 120, 105, 121, 38],"cyan")
 NYSU2025_CARNIVAL_S4 = Banner([231, 222, 217, 49, 50, 78, 80],"cyan")
@@ -167,4 +167,4 @@ CARNIVAL_S3 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S3.summonSco
 CARNIVAL_S4 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S4.summonScore)/10
 CARNIVAL_S5 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S5.summonScore)/10
 Carnival_Rotation = np.mean([CARNIVAL_S1,CARNIVAL_S2,CARNIVAL_S3,CARNIVAL_S4,CARNIVAL_S5])
-print(Carnival_Rotation) """
+print(Carnival_Rotation)

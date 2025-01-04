@@ -13,7 +13,7 @@ analyseHiPo = False
 optimiseslots = False
 accountRanking = True
 useMultiprocessing = True
-updateEvaluationUnits = True
+updateEvaluationUnits = False
 
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
@@ -313,7 +313,6 @@ if __name__ == "__main__":
         maxEvaluation = max(evaluations[:, -1])
         print("Computing Ranking Scores")
         minEvaluation = np.mean(evaluations[:, -1]) + np.std(evaluations[:, -1]) * MIN_EVALUATION_DEVIATION
-        minEvaluation = -7
         evaluations = logisticMap(evaluations, maxEvaluation, minEvaluation)
         print("Writing results to files")
         writeSummary(units, attributeValues, evaluations)
