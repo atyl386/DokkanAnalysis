@@ -268,9 +268,12 @@ if __name__ == "__main__":
                     unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
                 dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
         if updateEvaluationUnits:
+            meanRainbowEvaluation = np.mean(evaluations[:, -1])
+            stdRainbowEvations = np.std(evaluations[:, -1])
+            minEvaluation = meanRainbowEvaluation + stdRainbowEvations * MIN_EVALUATION_DEVIATION
             for ID in reverseOrderIDs:
                 evalNode = dokkanAccountRoot.find(f"_{ID}/eval")
-                if evaluations[-ID, -1] < MIN_EVALUATION:
+                if evaluations[-ID, -1] < minEvaluation:
                     evalNode.set("value", "False")
                 else:
                     evalNode.set("value", "True")
@@ -304,7 +307,8 @@ if __name__ == "__main__":
         evaluations[:, :-1] = list(output[:, 2])
         maxEvaluation = max(evaluations[:, -1])
         print("Computing Ranking Scores")
-        evaluations = logisticMap(evaluations, maxEvaluation)
+        minEvaluation = np.mean(evaluations[:, -1]) + np.std(evaluations[:, -1]) * MIN_EVALUATION_DEVIATION
+        evaluations = logisticMap(evaluations, maxEvaluation, minEvaluation)
         print("Writing results to files")
         writeSummary(units, attributeValues, evaluations)
 

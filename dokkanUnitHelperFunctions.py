@@ -167,7 +167,7 @@ def aprioriProbMod(p, knownApriori):
         return p
 
 
-def logisticMap(x, x_max, L=100, d=1, x_min=MIN_EVALUATION):
+def logisticMap(x, x_max, x_min, L=100, d=1):
     L = L + d
     x_0 = (x_min + x_max) / 2
     k = 2 * np.log((L - d) / d) / (x_max - x_min)

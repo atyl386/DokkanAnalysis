@@ -119,7 +119,7 @@ PEAK_TURN = 7  # Most important turn
 NUM_COPIES_MAX = 5
 AVG_PEAK_TURN = 3.75744
 PEAK_TURN_STD = 1.857813
-MIN_EVALUATION = -7 # Should correspond to the unscaled evaluation that is still useable
+MIN_EVALUATION_DEVIATION = -1/3 # sigma. Corresponds to unit being just useable
 ATTTRIBUTE_NAMES = [
     "Leader Skill",
     "SBR",

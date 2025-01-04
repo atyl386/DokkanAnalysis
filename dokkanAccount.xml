@@ -618,7 +618,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[3, 2, 3, 3, 3, 3, 3, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_69>
 	<_70>
 		<common_name value="BU_AGL_Pan_GT" />
@@ -672,7 +672,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[3, 2, 3, 3, 3, 3, 3, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_75>
 	<_76>
 		<common_name value="BU_INT_Kid_Gohan_Namek" />
@@ -735,7 +735,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_82>
 	<_83>
 		<common_name value="CLR_INT_Gammas" />
@@ -762,7 +762,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[1, 2, 3, 1, 1, 1, 1, 1, 1, 1]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_85>
 	<_86>
 		<common_name value="DF_INT_Future_Gohan" />
@@ -861,7 +861,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_96>
 	<_97>
 		<common_name value="DF_AGL_1st_Form_Frieza" />
@@ -1320,7 +1320,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_147>
 	<_148>
 		<common_name value="BU_AGL_Cell_Jr" />
@@ -1374,7 +1374,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_153>
 	<_154>
 		<common_name value="BU_AGL_SS_Gotenks" />
@@ -2580,7 +2580,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_287>
 	<_288>
 		<common_name value="BU_AGL_SS3_Gotenks_Xeno" />
