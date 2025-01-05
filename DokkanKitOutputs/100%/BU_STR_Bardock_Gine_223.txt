@@ -29,28 +29,28 @@ Form # 1 / State # 3 / Turn # 5
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 15887.0 
-Useability: 0.08692732919254657 
+Useability: 0.08502795031055901 
 Healing: 0.0365484207375 
-Support: 1.3537857142857141 
+Support: 1.135357142857143 
 DPT: 11955367.870711433 
-Normal Defence: -0.33283681030628487 
-Super Attack Defence: -0.165 
-Slot Bonus: 0.5 
+Normal Defence: -0.27946704542361983 
+Super Attack Defence: -0.132 
+Slot Bonus: 0.3333333333333333 
 
-Form # 1 / State # 4 / Turn # 7 
+Form # 1 / State # 4 / Turn # 8 
  
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 15887.0 
-Useability: 0.08036211180124224 
+Useability: 0.07846273291925465 
 Healing: 0.2565484207375 
-Support: 0.5987857142857145 
+Support: 0.38035714285714284 
 DPT: 15162568.594576469 
-Normal Defence: -0.5696740521474848 
-Super Attack Defence: -0.165 
-Slot Bonus: 0.5 
+Normal Defence: -0.46949850824481976 
+Super Attack Defence: -0.132 
+Slot Bonus: 0.3333333333333333 
 
-Form # 1 / State # 5 / Turn # 9 
+Form # 1 / State # 5 / Turn # 11 
  
 Leader Skill: 0.0 
 SBR: 0.0 
@@ -63,7 +63,7 @@ Normal Defence: -0.5696740521474848
 Super Attack Defence: -0.165 
 Slot Bonus: 0.5 
 
-Form # 1 / State # 6 / Turn # 11 
+Form # 1 / State # 6 / Turn # 13 
  
 Leader Skill: 0.0 
 SBR: 0.0 
@@ -76,7 +76,7 @@ Normal Defence: -0.5696740521474848
 Super Attack Defence: -0.165 
 Slot Bonus: 0.5 
 
-Form # 1 / State # 7 / Turn # 13 
+Form # 1 / State # 7 / Turn # 15 
  
 Leader Skill: 0.0 
 SBR: 0.0 
@@ -89,7 +89,7 @@ Normal Defence: -0.5696740521474848
 Super Attack Defence: -0.165 
 Slot Bonus: 0.5 
 
-Form # 1 / State # 8 / Turn # 15 
+Form # 1 / State # 8 / Turn # 17 
  
 Leader Skill: 0.0 
 SBR: 0.0 
@@ -102,20 +102,7 @@ Normal Defence: -0.5696740521474848
 Super Attack Defence: -0.165 
 Slot Bonus: 0.5 
 
-Form # 1 / State # 9 / Turn # 17 
- 
-Leader Skill: 0.0 
-SBR: 0.0 
-HP: 15887.0 
-Useability: 0.07927515527950312 
-Healing: 0.0365484207375 
-Support: 0.47378571428571437 
-DPT: 11955367.870711433 
-Normal Defence: -0.5696740521474848 
-Super Attack Defence: -0.165 
-Slot Bonus: 0.5 
-
-Form # 1 / State # 10 / Turn # 19 
+Form # 1 / State # 9 / Turn # 19 
  
 Leader Skill: 0.0 
 SBR: 0.0 

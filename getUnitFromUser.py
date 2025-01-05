@@ -6,6 +6,7 @@ import click as clc
 import glob
 
 # TODO:
+# - Make better way to integrate the no eval unit finding into normal evaluation run
 # - Simplify getEventFactor code
 # - Implement dodging counters, i.e. TEQ UI Goku
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
