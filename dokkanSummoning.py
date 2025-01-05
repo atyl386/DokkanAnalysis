@@ -10,7 +10,7 @@ User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
 nUnits = len(User)
 
 
-def SummonRating(ID):
+def SummonRating(ID, unitSummaries):
     unit = Unit(ID, processUnit=False)
     unit.getConstants()
     nCopies = User[ID]["num_copies"]
@@ -47,8 +47,7 @@ def SummonRating(ID):
         futureEZA = rarityScore * EZADiscountFactor ** (timeUntilEZA_years.years + timeUntilEZA_years.months/12) * EZADI
     if os.path.exists("DokkanUnits/" + HiPo_dupes[0] + "/unit_" + str(ID) + ".pkl"):
         for i in range(NUM_COPIES_MAX):
-            df = pd.read_excel("DokkanUnits/" + HiPo_dupes[i] + "/unitSummary.xlsx", index_col="ID")
-            evals[i] = df.at[ID, "Evaluation"]
+            evals[i] = unitSummaries[HiPo_dupes[i]].at[ID, "Evaluation"]
         if nCopies == 5:
             dupeImprovement = 0
         elif nCopies > 0:
@@ -62,6 +61,9 @@ def SummonRating(ID):
 
 
 def SummonRatings():
+    unitSummaries = dict.fromkeys(HiPo_dupes)
+    for i in range(NUM_COPIES_MAX):
+        unitSummaries[HiPo_dupes[i]] = pd.read_excel("DokkanUnits/" + HiPo_dupes[i] + "/unitSummary.xlsx", index_col="ID")
     IDs = list(User.keys())
     commonName = [""] * nUnits
     nCopies = [0] * nUnits
@@ -69,7 +71,7 @@ def SummonRatings():
     for ID in IDs:
         commonName[ID - 1] = User[ID]["common_name"]
         nCopies[ID - 1] = User[ID]["num_copies"]
-        summonRatings[ID - 1] = SummonRating(ID)
+        summonRatings[ID - 1] = SummonRating(ID, unitSummaries)
     df = pd.DataFrame(
         data=np.transpose([IDs, commonName, nCopies, summonRatings]),
         columns=["ID", "common_name", "num_copies", "Summon Rating"],
@@ -93,7 +95,9 @@ class Banner:
         gFeaturedEvery3=False,
         anniversaryFormat=False,
     ):
-        self.units = np.mean([SummonRating(unit) for unit in units])
+        df = pd.read_excel("SummonRating.xlsx", index_col="ID")
+        self.summonRatings = [df.at[unit, "Summon Rating"] for unit in units]
+        self.units = np.mean(self.summonRatings)
         if coin == "red" or coin == "cyan":
             self.coin = 1
         elif coin == "limited" or coin == "yellow":
@@ -132,15 +136,17 @@ class Banner:
 SummonRatings()
 
 DaimaGoku = Banner([320, 161, 35, 44, 47, 43, 41], "red", threePlus1=True)
+print(DaimaGoku.summonRatings)
 print(DaimaGoku.summonScore)
 Glorio = Banner([321, 160, 42, 37, 40, 36, 48], "red", threePlus1=True)
+print(Glorio.summonRatings)
 print(Glorio.summonScore)
 #WWDL_1 = Banner([36, 19, 31, 30, 17, 150, 39, 34, 8, 33, 40, 140, 11, 170, 21, 257, 41, 21, 93, 163, 135, 127, 126, 86, 104, 142, 142, 60, 60, 60, 128, 128, 128, 127, 10, 188, 188, 183, 183, 116, 25, 116, 116, 25, 25, 101, 101, 211, 25, 101, 116, 25, 25, 25, 101, 170],'red', discount=50*(2 + 10 * 2)/100)
 #print(WWDL_1.summonScore)
 #WWDL_2 = Banner([25, 18, 5, 7, 32, 134, 45, 38, 46, 25, 10, 20, 9, 25, 170, 48, 48, 25, 164, 155, 98, 170, 146, 131, 25, 145, 129, 25, 54, 8, 25, 132, 116, 25, 146, 116, 8, 126, 8, 25, 116, 25, 25, 48, 170, 41, 25, 48, 48, 25, 156, 25, 25, 25, 101, 101],'red', discount=50*(2 + 10 * 2)/100)
 #print(WWDL_2.summonScore)
 
-NYSU2025_DF_S1_S1A = Banner([82, 65, 173, 29, 16, 87, 89],"red")
+""" NYSU2025_DF_S1_S1A = Banner([82, 65, 173, 29, 16, 87, 89],"red")
 NYSU2025_DF_S1_S1B = Banner([298, 262, 258, 211, 170, 156, 101],"red")
 NYSU2025_DF_S1_S2 = Banner([283, 257, 248, 21, 93, 164, 163],"red")
 NYSU2025_DF_S1_S3 = Banner([102, 7, 32, 31, 134, 150, 19],"red")
@@ -167,4 +173,4 @@ CARNIVAL_S3 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S3.summonSco
 CARNIVAL_S4 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S4.summonScore)/10
 CARNIVAL_S5 = (9*NYSU2025_CARNIVAL.summonScore+20*NYSU2025_CARNIVAL_S5.summonScore)/10
 Carnival_Rotation = np.mean([CARNIVAL_S1,CARNIVAL_S2,CARNIVAL_S3,CARNIVAL_S4,CARNIVAL_S5])
-print(Carnival_Rotation)
+print(Carnival_Rotation) """

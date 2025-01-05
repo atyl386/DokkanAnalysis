@@ -6,8 +6,6 @@ import click as clc
 import glob
 
 # TODO:
-# - Don't do unecessary calls of pd.read_excel in dokkanSummoning.py
-# - Fix normaliseWights and check effect on summoningRatings
 # - Simplify getEventFactor code
 # - Implement dodging counters, i.e. TEQ UI Goku
 # - Implement Super EZA summoning bonuses 9don't think this really needs to be done as they aren't being added to banners)
