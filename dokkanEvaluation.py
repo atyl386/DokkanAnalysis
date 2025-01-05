@@ -279,10 +279,9 @@ if __name__ == "__main__":
         if updateEvaluationUnits:
             meanRainbowEvaluation = np.mean(evaluations[:, -1])
             stdRainbowEvations = np.std(evaluations[:, -1])
-            minEvaluation = meanRainbowEvaluation + stdRainbowEvations * MIN_EVALUATION_DEVIATION
-            for ID in reverseOrderIDs:
+            for i, ID in enumerate(reverseOrderIDs):
                 evalNode = dokkanAccountRoot.find(f"_{ID}/eval")
-                if evaluations[-ID, -1] < minEvaluation:
+                if evaluations[i, -1] < MIN_EVALUATION:
                     evalNode.set("value", "False")
                 else:
                     evalNode.set("value", "True")
@@ -316,8 +315,7 @@ if __name__ == "__main__":
         evaluations[:, :-1] = list(output[:, 2])
         maxEvaluation = max(evaluations[:, -1])
         print("Computing Ranking Scores")
-        minEvaluation = np.mean(evaluations[:, -1]) + np.std(evaluations[:, -1]) * MIN_EVALUATION_DEVIATION
-        evaluations = logisticMap(evaluations, maxEvaluation, minEvaluation)
+        evaluations = logisticMap(evaluations, maxEvaluation)
         print("Writing results to files")
         writeSummary(units, attributeValues, evaluations)
 
