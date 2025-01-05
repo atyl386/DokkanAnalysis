@@ -14,6 +14,7 @@ optimiseslots = False
 accountRanking = True
 useMultiprocessing = True
 updateEvaluationUnits = False
+onlyEvaluationUnits = True
 
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
@@ -153,7 +154,11 @@ def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_
 
 if __name__ == "__main__":
     User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
-    nUnits = len(User)
+    if onlyEvaluationUnits:
+        evalUnitIDs = [ID for ID in User.keys() if User[ID]["eval"]]
+    else:
+        evalUnitIDs = User.keys()
+    nUnits = len(evalUnitIDs)
     a, b = (1 - AVG_PEAK_TURN) / PEAK_TURN_STD, (99 - AVG_PEAK_TURN) / PEAK_TURN_STD
     turnDistribution = truncnorm(a, b, AVG_PEAK_TURN, PEAK_TURN_STD)
 
@@ -192,8 +197,7 @@ if __name__ == "__main__":
         attributeValues = np.zeros((nUnits, NUM_EVAL_TURNS, NUM_ATTRIBUTES, NUM_COPIES_MAX))
         units = [[None] * nUnits for i in range(NUM_COPIES_MAX)]
         evaluations = np.zeros((nUnits, NUM_COPIES_MAX))
-        reverseOrderIDs = np.flip(list(User.keys()))
-        evalUnitIdxs = [i for i in range(len(reverseOrderIDs)) if User[reverseOrderIDs[i]]["eval"]]
+        reverseOrderIDs = np.flip(evalUnitIDs)
         print("Processing Rainbow Units")
         if useMultiprocessing:
             with multiprocessing.Pool() as pool:
@@ -211,10 +215,10 @@ if __name__ == "__main__":
             output = np.asarray(output, dtype=object)
         units[-1] = np.array(list(output[:, 0]))
         attributeValues[:, :, :, -1] = list(output[:, 1])
-        [rainbowMeans, rainbowStds] = summaryStats(attributeValues[evalUnitIdxs, :, :, -1])
-        for ID in reverseOrderIDs:
-            normalizeUnit(units[-1][ID - 1], rainbowMeans, rainbowStds)
-            evaluations[ID - 1, -1] = overallEvaluator.evaluate(units[-1][ID - 1])
+        [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
+        for i in range(nUnits):
+            normalizeUnit(units[-1][i], rainbowMeans, rainbowStds)
+            evaluations[i, -1] = overallEvaluator.evaluate(units[-1][i])
         dokkanAccountXML = ET.parse(DOKKAN_ACCOUNT_XML_FILE_PATH)
         dokkanAccountRoot = dokkanAccountXML.getroot()
         if optimiseslots:
@@ -320,8 +324,8 @@ if __name__ == "__main__":
     # Calculate Overall Rankings
     scores = [0.0] * nUnits
     units = [None] * nUnits
-    for i in range(nUnits):
-        pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(i + 1) + ".pkl", "rb")
+    for i, ID in enumerate(evalUnitIDs):
+        pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(ID) + ".pkl", "rb")
         units[i] = pickle.load(pkl)
         pkl.close()
         scores[i] = overallEvaluator.evaluate(units[i])
@@ -335,7 +339,7 @@ if __name__ == "__main__":
         # Calculate Account Rankings
         scores = []
         units = []
-        for ID in range(1, nUnits + 1):
+        for ID in evalUnitIDs:
             numCopies = User[ID]["num_copies"]
             if numCopies > 0:
                 pkl = open(

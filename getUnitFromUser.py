@@ -3,8 +3,10 @@ from dokkanUnitHelperFunctions import *
 import xml.etree.ElementTree as ET
 import math
 import click as clc
+import glob
 
 # TODO:
+# - Don't do unecessary calls of pd.read_excel in dokkanSummoning.py
 # - Fix normaliseWights and check effect on summoningRatings
 # - Simplify getEventFactor code
 # - Implement dodging counters, i.e. TEQ UI Goku
@@ -166,8 +168,10 @@ MultiChanceBuff.updateAttacksReceivedAndEvaded = updateAttacksReceivedAndEvaded
 
 
 class InputHelper:
-    def __init__(self, id, commonName):
-        self.filePath = os.path.join(CWD, "DokkanKits", commonName + "_" + id + ".xml")
+    def __init__(self, id):
+        matchingFilePaths = glob.glob(os.path.join(CWD, "DokkanKits", "*_" + id + ".xml"))
+        assert(len(matchingFilePaths) == 1), f"Multiple files found for unit {id}"
+        self.filePath = matchingFilePaths[0]
         if os.path.exists(self.filePath):
             self.tree = ET.parse(self.filePath)
             self.parent = self.tree.getroot()
@@ -206,7 +210,7 @@ class InputHelper:
 
 
 class Unit:
-    def __init__(self, id, commonName, nCopies, brz, HiPo1, HiPo2, slots, save=True):
+    def __init__(self, id, commonName=None, nCopies=None, brz=None, HiPo1=None, HiPo2=None, slots=None, save=True, processUnit=True):
         self.id = str(id)
         self.commonName = commonName
         self.nCopies = nCopies
@@ -214,14 +218,15 @@ class Unit:
         self.HiPo1 = HiPo1
         self.HiPo2 = HiPo2
         self.save = save
-        self.inputHelper = InputHelper(self.id, commonName)
+        self.inputHelper = InputHelper(self.id)
         self.slots = slots
-        self.getConstants()
-        self.getHiPo()
-        self.getSBR()
-        self.getStates()
-        self.interpStates()
-        self.saveUnit()
+        if processUnit:
+            self.getConstants()
+            self.getHiPo()
+            self.getSBR()
+            self.getStates()
+            self.interpStates()
+            self.saveUnit()
 
     def getConstants(self):
         self.inputHelper.parent = self.inputHelper.getChildElement(self.inputHelper.tree.getroot(), "constants")

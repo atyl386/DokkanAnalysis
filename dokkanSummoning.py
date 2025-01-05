@@ -1,11 +1,9 @@
-import pickle
 import pandas as pd
 import datetime as dt
 from dateutil.relativedelta import relativedelta
 import numpy as np
-from dokkanUnitConstants import NUM_COPIES_MAX
-from dokkanEvaluation import parseDokkanAccountXML
-from dokkanUnitConstants import DOKKAN_ACCOUNT_XML_FILE_PATH
+from dokkanUnitConstants import NUM_COPIES_MAX, DOKKAN_ACCOUNT_XML_FILE_PATH
+from dokkanEvaluation import parseDokkanAccountXML, Unit, os
 
 HiPo_dupes = ["55%", "69%", "79%", "90%", "100%"]
 User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
@@ -13,9 +11,8 @@ nUnits = len(User)
 
 
 def SummonRating(ID):
-    pkl = open("C:/Users/Tyler/Documents/DokkanAnalysis/DokkanUnits/100%/unit_" + str(ID) + ".pkl", "rb")
-    unit = pickle.load(pkl)
-    pkl.close()
+    unit = Unit(ID, processUnit=False)
+    unit.getConstants()
     nCopies = User[ID]["num_copies"]
     evals = [0.0] * NUM_COPIES_MAX
     now = dt.datetime.today()
@@ -48,16 +45,19 @@ def SummonRating(ID):
         EZADate = unit.date + relativedelta(months=4 * 12)
         timeUntilEZA_years = relativedelta(EZADate, now)
         futureEZA = rarityScore * EZADiscountFactor ** (timeUntilEZA_years.years + timeUntilEZA_years.months/12) * EZADI
-    for i in range(NUM_COPIES_MAX):
-        df = pd.read_excel("DokkanUnits/" + HiPo_dupes[i] + "/unitSummary.xlsx", index_col="ID")
-        evals[i] = df.at[ID, "Evaluation"]
-    if nCopies == 5:
-        dupeImprovement = 0
-    elif nCopies > 0:
-        dupeImprovement = max((evals[nCopies] - evals[nCopies - 1]) / (evals[-1]), 0)
+    if os.path.exists("DokkanUnits/" + HiPo_dupes[0] + "/unit_" + str(ID) + ".pkl"):
+        for i in range(NUM_COPIES_MAX):
+            df = pd.read_excel("DokkanUnits/" + HiPo_dupes[i] + "/unitSummary.xlsx", index_col="ID")
+            evals[i] = df.at[ID, "Evaluation"]
+        if nCopies == 5:
+            dupeImprovement = 0
+        elif nCopies > 0:
+            dupeImprovement = max((evals[nCopies] - evals[nCopies - 1]) / (evals[-1]), 0)
+        else:
+            dupeImprovement = max((evals[nCopies]) / (evals[-1]), 0)
+        summonRating = max(max(evals[-1], 0) * dupeImprovement * EZA, max(0.2, futureEZA), 0)
     else:
-        dupeImprovement = max((evals[nCopies]) / (evals[-1]), 0)
-    summonRating = max(max(evals[-1], 0) * dupeImprovement * EZA, max(0.2, futureEZA), 0)
+        summonRating = max(0.2, futureEZA)
     return summonRating
 
 
