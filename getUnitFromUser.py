@@ -6,6 +6,7 @@ import click as clc
 import glob
 
 # TODO:
+# - Make nullification a regular Buff so can do per turn like STR Kid Buu
 # - Make better way to integrate the no eval unit finding into normal evaluation run
 # - Simplify getEventFactor code
 # - Implement dodging counters, i.e. TEQ UI Goku
@@ -3945,4 +3946,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(47, "DF_PHY_SS2_Goku", 5, "ATK", "ADD", "DGE", SLOT_2, "True")
+    unit = Unit(40, "DF_STR_Kid_Buu", 5, "ATK", "ADD", "DGE", SLOT_2, "True")
