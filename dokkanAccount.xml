@@ -1356,7 +1356,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 1, 2, 1, 1, 2, 1, 1, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_151>
 	<_152>
 		<common_name value="BU_PHY_Giant_Ribrianne" />
@@ -1833,7 +1833,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_204>
 	<_205>
 		<common_name value="BU_AGL_Baby_Janemba" />
@@ -2004,7 +2004,7 @@
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
 		<slots value="[2, 2, 3, 3, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_223>
 	<_224>
 		<common_name value="BU_INT_Paragus_Broly" />
@@ -2058,7 +2058,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_229>
 	<_230>
 		<common_name value="CLR_AGL_Jiren" />
@@ -2121,7 +2121,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_236>
 	<_237>
 		<common_name value="F2P_STR_SS2_Great_Saiyaman" />
