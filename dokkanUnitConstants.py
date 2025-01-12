@@ -275,9 +275,9 @@ ENEMY_DMG_THRESHOLD_CHANCE = 0.05
 ENEMY_DODGE_CHANCE = 0.05
 AVG_DAM_VARIANCE = 1.015
 MAX_T1_NORMAL_DAM = 1001000  # SSGSSE Vegeta Supreme Battle Spectacle
-MAX_NORMAL_DAM = 1350000  # SSGSSE Vegeta Supreme Battle Spectacle (900000 * 1.5)
+MAX_NORMAL_DAM = 1900000  # Goku & Frieza Supreme Battle Spectacle (950000 * 2)
 MAX_T1_SA_DAM = 2541000  # SSGSSK Goku & SSGSSE Vegeta (770000 * (3 + 0.3))
-MAX_SA_DAM = 3150000  # SSGSSK Goku & SSGSSE Vegeta (900000 * (3 + 0.5))
+MAX_SA_DAM = 3800000  # Goku & Frieza Supreme Battle Spectacle (950000 * (3 + 1))
 MAX_NORMAL_DAM_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * AVG_DAM_VARIANCE
