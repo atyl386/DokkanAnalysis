@@ -1674,7 +1674,7 @@ class State:
     
     def atk2Dmg(self, atk, pCrit):
         """Returns the damage dealt by an attack"""
-        return (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]) * (dmgThreshold(atk * self.form.unit.critMultiplier * (1 - AVG_ENEMY_DMG_RED)) * pCrit + dmgThreshold(max(atk * self.noCritAtkModifier - MAX_ENEMY_DEF_PER_TURN[self.turn - 1], 0) * (1 - AVG_ENEMY_DMG_RED)) * (1 - pCrit))
+        return (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]) * (dmgThreshold(atk * self.form.unit.critMultiplier * (1 - AVG_ENEMY_DMG_RED), MAX_ENEMY_DMG_THRESHOLD_PER_TURN[self.turn - 1]) * pCrit + dmgThreshold(max(atk * self.noCritAtkModifier - MAX_ENEMY_DEF_PER_TURN[self.turn - 1], 0) * (1 - AVG_ENEMY_DMG_RED), MAX_ENEMY_DMG_THRESHOLD_PER_TURN[self.turn - 1]) * (1 - pCrit))
     
     def disableAction(self, pSuper = 1):
         pDisableSuper = min(pSuper * self.numSuperAttacksDirectedAfterAttacking / self.numAttacksDirectedAfterAttacking * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]), self.numSuperAttacksDirectedAfterAttacking)

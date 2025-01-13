@@ -153,8 +153,8 @@ def getAttackDamageTaken(pEvade, guard, maxDamage, tdb, dmgRed, avgDef, critChan
         0,
     )
 
-def dmgThreshold(dmg):
-    if dmg < AVG_ENEMY_DMG_THRESHOLD:
+def dmgThreshold(dmg, threshold):
+    if dmg < threshold:
         return (1 - ENEMY_DMG_THRESHOLD_CHANCE) * dmg
     else:
         return dmg
