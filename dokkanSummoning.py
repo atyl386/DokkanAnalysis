@@ -96,8 +96,9 @@ class Banner:
         anniversaryFormat=False,
     ):
         df = pd.read_excel("SummonRating.xlsx", index_col="ID")
-        self.summonRatings = [df.at[unit, "Summon Rating"] for unit in units]
-        self.units = np.mean(self.summonRatings)
+        summonRatingData = [(df.at[unit, "common_name"], round(df.at[unit, "Summon Rating"], 2)) for unit in units]
+        self.summonRatings = dict([(key, val) for key, val in summonRatingData])
+        self.units = np.mean(list(self.summonRatings.values()))
         if coin == "red" or coin == "cyan":
             self.coin = 1
         elif coin == "limited" or coin == "yellow":
