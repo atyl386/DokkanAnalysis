@@ -8,7 +8,7 @@ import tqdm
 
 HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 
-reCalc = True
+reCalc = False
 analyseHiPo = False
 optimiseslots = False
 accountRanking = True
@@ -168,12 +168,12 @@ if __name__ == "__main__":
     attributeDict = {
         "Leader Skill": 3,
         "SBR": 1,
-        "HP": 2,
+        "HP": 1.5,
         "Useability": 5,
         "Healing": 1.5,
         "Support": 5,
         "APT": 11,
-        "Normal Defence": 7,
+        "Normal Defence": 9,
         "Super Attack Defence": 7,
         "Slot Bonus": 9,
     }
