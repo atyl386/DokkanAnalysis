@@ -45,8 +45,8 @@ BU_AGL_SS2_Future_Trunks
 DF_STR_Transforming_Kelfa 
 DF_AGL_SS3_Goku_Angel 
 DF_TEQ_Future_Androids 
-BU_INT_Vados 
 DFLR_STR_GT_Goku_Vegeta 
+BU_INT_Vados 
 DF_AGL_Paikuhan 
 DF_TEQ_SS3_Gotenks 
 BU_TEQ_Evil_Buu 
@@ -95,9 +95,9 @@ DF_TEQ_Buuhan
 DFLR_INT_SFPS4_Goku 
 F2PLR_PHY_Yamcha_Puar 
 DF_STR_LSS_Broly 
+DF_TEQ_SoH_Trunks 
 BU_INT_Android_16 
 F2PLR_PHY_Version_Z_Goku 
-DF_TEQ_SoH_Trunks 
 F2P_STR_Towa 
 F2P_AGL_Kid_Pan 
 BU_TEQ_Mai 
@@ -114,8 +114,8 @@ BU_AGL_SS_Gotenks
 DF_TEQ_23_WT_Goku 
 BU_INT_Whis 
 BU_PHY_Giant_Ribrianne 
-F2P_STR_Videl 
 BU_TEQ_Kyawei 
+F2P_STR_Videl 
 LR_STR_Beerus_Whis 
 LR_AGL_Super_Baby_2 
 LR_AGL_SS2_Caulifla_Kale 
@@ -132,8 +132,8 @@ F2P_PHY_Mighty_Mask
 F2PLR_INT_Babidi 
 F2P_INT_Bulma_Youth 
 DFLR_INT_Perfect_Cell 
-BU_PHY_Gowasu_Zamasu 
 DF_AGL_SS_Bardock 
+BU_PHY_Gowasu_Zamasu 
 BU_PHY_Robelu 
 F2P_PHY_Gohan_Goku_Exchange 
 LR_STR_Goku_Hit 
@@ -166,8 +166,8 @@ CLR_PHY_SS_Future_Trunks
 F2P_AGL_Grandpa_Gohan 
 CLR_STR_SS_Goku_Hatchiyak 
 DF_STR_Super_17 
-BU_INT_Piccolo_ToP 
 DF_PHY_Piccolo 
+BU_INT_Piccolo_ToP 
 BU_INT_SS3_Gohanks_Xeno 
 BU_TEQ_Dark_King_Demigra 
 BU_TEQ_Videl 
@@ -176,9 +176,9 @@ BU_STR_SS_Vegeks
 LR_TEQ_Great_Ape_Vegeta 
 F2P_PHY_Frieza_Cooler 
 LR_INT_Ginyu_Force 
-DF_PHY_God_Toppo 
 DF_STR_Super_Vegeta 
 BU_AGL_SS3_Gotenks_Xeno 
+DF_PHY_God_Toppo 
 DF_AGL_Berserk_Kale 
 DFLR_STR_Final_Form_Cooler 
 DF_PHY_Goku_Black 
@@ -187,8 +187,6 @@ CLR_PHY_Metal_Cooler
 DF_STR_Gamma_1 
 F2P_INT_Gohan_Youth 
 DF_PHY_Android_17 
-BU_INT_Golden_Frieza 
-BU_TEQ_God_Goku 
 BU_INT_SS_Vegeta_Xeno 
 DF_AGL_Gamma_2 
 BU_AGL_King_Vegeta 
