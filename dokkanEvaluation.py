@@ -175,7 +175,7 @@ if __name__ == "__main__":
         "APT": 11,
         "Normal Defence": 12,
         "Super Attack Defence": 7,
-        "Slot Bonus": 10,
+        "Slot Bonus": 11,
     }
 
     top100AttributeDict = copy.copy(attributeDict)
