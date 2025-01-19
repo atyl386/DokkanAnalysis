@@ -8,7 +8,7 @@ import tqdm
 
 HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 
-reCalc = True
+reCalc = False
 analyseHiPo = False
 optimiseslots = False
 accountRanking = True
@@ -166,7 +166,7 @@ if __name__ == "__main__":
         np.arange(1, NUM_EVAL_TURNS + 1)
     )
     attributeDict = {
-        "Leader Skill": 3,
+        "Leader Skill": 2,
         "SBR": 1,
         "HP": 1.5,
         "Useability": 5,
