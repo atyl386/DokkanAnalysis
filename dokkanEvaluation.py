@@ -170,12 +170,12 @@ if __name__ == "__main__":
         "SBR": 1,
         "HP": 1.5,
         "Useability": 5,
-        "Healing": 1.5,
+        "Healing": 2,
         "Support": 5,
         "APT": 11,
-        "Normal Defence": 11,
+        "Normal Defence": 12,
         "Super Attack Defence": 7,
-        "Slot Bonus": 9,
+        "Slot Bonus": 10,
     }
 
     top100AttributeDict = copy.copy(attributeDict)
