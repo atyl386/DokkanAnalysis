@@ -173,7 +173,7 @@ if __name__ == "__main__":
         "Healing": 1.5,
         "Support": 5,
         "APT": 11,
-        "Normal Defence": 10,
+        "Normal Defence": 11,
         "Super Attack Defence": 7,
         "Slot Bonus": 9,
     }
