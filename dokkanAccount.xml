@@ -195,7 +195,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 2, 3, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_22>
 	<_23>
 		<common_name value="CLR_AGL_Kai_Goku" />
@@ -1077,7 +1077,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[3, 3, 3, 3, 3, 3, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_120>
 	<_121>
 		<common_name value="LR_AGL_Golden_Frieza" />
@@ -1149,7 +1149,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 3, 3, 3, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_128>
 	<_129>
 		<common_name value="DF_PHY_Transforming_Vegeta" />
@@ -2589,7 +2589,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 3, 3, 3, 3, 3, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_288>
 	<_289>
 		<common_name value="BU_INT_SS3_Gohanks_Xeno" />

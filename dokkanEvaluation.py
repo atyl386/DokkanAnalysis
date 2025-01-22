@@ -13,7 +13,7 @@ analyseHiPo = False
 optimiseslots = False
 accountRanking = True
 useMultiprocessing = True
-updateEvaluationUnits = False
+updateEvaluationUnits = True
 onlyEvaluationUnits = True
 
 
