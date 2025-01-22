@@ -2888,4 +2888,13 @@
 		<slots value="[2, 2, 3, 3, 3, 3, 3, 2, 2, 2]" />
 		<eval value="True" />
 	</_321>
+	<_322>
+		<common_name value="DF_AGL_Super_Vegito" />
+		<num_copies value="3" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_322>
 </id>

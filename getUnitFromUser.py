@@ -168,14 +168,15 @@ MultiChanceBuff.updateAttacksReceivedAndEvaded = updateAttacksReceivedAndEvaded
 
 
 class InputHelper:
-    def __init__(self, id):
+    def __init__(self, id, commonName):
         matchingFilePaths = glob.glob(os.path.join(CWD, "DokkanKits", "*_" + id + ".xml"))
-        assert(len(matchingFilePaths) == 1), f"Multiple files found for unit {id}"
-        self.filePath = matchingFilePaths[0]
-        if os.path.exists(self.filePath):
+        assert(len(matchingFilePaths) <= 1), f"Multiple files found for unit {id}"
+        if len(matchingFilePaths) == 1:
+            self.filePath = matchingFilePaths[0]
             self.tree = ET.parse(self.filePath)
             self.parent = self.tree.getroot()
         else:
+            self.filePath = os.path.join(CWD, "DokkanKits", commonName + "_" + id + ".xml")
             self.parent = ET.Element("inputTree")
             self.tree = ET.ElementTree(self.parent)
         self.parentMap = {}
@@ -218,7 +219,7 @@ class Unit:
         self.HiPo1 = HiPo1
         self.HiPo2 = HiPo2
         self.save = save
-        self.inputHelper = InputHelper(self.id)
+        self.inputHelper = InputHelper(self.id, commonName)
         self.slots = slots
         if processUnit:
             self.getConstants()
@@ -3946,4 +3947,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(40, "DF_STR_Kid_Buu", 5, "ATK", "ADD", "DGE", SLOT_2, "True")
+    unit = Unit(322, "DF_AGL_Super_Vegito", 5, "ATK", "ADD", "DGE", SLOT_2, "True")
