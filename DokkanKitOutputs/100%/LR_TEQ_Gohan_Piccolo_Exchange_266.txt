@@ -3,7 +3,7 @@ Form # 1 / State # 1 / Turn # 1
 Leader Skill: 1.0 
 SBR: 0.0 
 HP: 24475.0 
-Useability: 0.4173913043478261 
+Useability: 0.4 
 Healing: 0.2378236427692308 
 Support: 0.0 
 DPT: 13299790.160893358 
@@ -16,7 +16,7 @@ Form # 1 / State # 2 / Turn # 3
 Leader Skill: 1.0 
 SBR: 0.0 
 HP: 24475.0 
-Useability: 0.4173913043478261 
+Useability: 0.4 
 Healing: 0.24278056712600116 
 Support: 0.0 
 DPT: 13446002.593305651 
@@ -29,7 +29,7 @@ Form # 2 / State # 3 / Turn # 5
 Leader Skill: 1.0 
 SBR: 0.0 
 HP: 24475.0 
-Useability: 0.4091925465838509 
+Useability: 0.3921428571428571 
 Healing: 0.31880775855392746 
 Support: 0.7 
 DPT: 18425171.37749063 
@@ -42,7 +42,7 @@ Form # 2 / State # 4 / Turn # 7
 Leader Skill: 1.0 
 SBR: 0.0 
 HP: 24475.0 
-Useability: 0.37267080745341613 
+Useability: 0.35714285714285715 
 Healing: 0.3246534924603578 
 Support: 0.0 
 DPT: 19269415.717039663 
@@ -55,7 +55,7 @@ Form # 2 / State # 5 / Turn # 9
 Leader Skill: 1.0 
 SBR: 0.0 
 HP: 24475.0 
-Useability: 0.39334211180124223 
+Useability: 0.37695285714285715 
 Healing: 0.35312830613492463 
 Support: 0.39619999999999994 
 DPT: 20332476.304069057 
@@ -68,7 +68,7 @@ Form # 2 / State # 6 / Turn # 11
 Leader Skill: 1.0 
 SBR: 0.0 
 HP: 24475.0 
-Useability: 0.39334211180124223 
+Useability: 0.37695285714285715 
 Healing: 0.371214637143506 
 Support: 0.39619999999999994 
 DPT: 21395536.891098455 
@@ -81,7 +81,7 @@ Form # 2 / State # 7 / Turn # 13
 Leader Skill: 1.0 
 SBR: 0.0 
 HP: 24475.0 
-Useability: 0.39334211180124223 
+Useability: 0.37695285714285715 
 Healing: 0.38930096815208737 
 Support: 0.39619999999999994 
 DPT: 22458597.47812785 
@@ -94,7 +94,7 @@ Form # 2 / State # 8 / Turn # 15
 Leader Skill: 1.0 
 SBR: 0.0 
 HP: 24475.0 
-Useability: 0.39334211180124223 
+Useability: 0.37695285714285715 
 Healing: 0.40738729916066874 
 Support: 0.39619999999999994 
 DPT: 23521658.065157242 
@@ -107,7 +107,7 @@ Form # 2 / State # 9 / Turn # 17
 Leader Skill: 1.0 
 SBR: 0.0 
 HP: 24475.0 
-Useability: 0.39334211180124223 
+Useability: 0.37695285714285715 
 Healing: 0.4254736301692501 
 Support: 0.39619999999999994 
 DPT: 24584718.652186636 
@@ -120,7 +120,7 @@ Form # 2 / State # 10 / Turn # 19
 Leader Skill: 1.0 
 SBR: 0.0 
 HP: 24475.0 
-Useability: 0.39334211180124223 
+Useability: 0.37695285714285715 
 Healing: 0.4435599611778315 
 Support: 0.39619999999999994 
 DPT: 25647779.239216033 
