@@ -267,7 +267,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[3, 3, 3, 3, 3, 3, 3, 3, 1, 1]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_30>
 	<_31>
 		<common_name value="DF_TEQ_Bardock" />
@@ -465,7 +465,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[3, 3, 3, 3, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_52>
 	<_53>
 		<common_name value="CLR_PHY_SS_Future_Trunks" />
@@ -528,7 +528,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 2, 3, 3, 3, 3, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_59>
 	<_60>
 		<common_name value="DF_AGL_Gogeta_Blue" />
@@ -933,7 +933,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 3, 3, 3, 3, 3, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_104>
 	<_105>
 		<common_name value="LR_INT_Fusion_Zamasu" />
@@ -1122,7 +1122,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 2, 3, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_125>
 	<_126>
 		<common_name value="DF_PHY_SS_Vegito" />
@@ -1158,7 +1158,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 3, 3, 3, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_129>
 	<_130>
 		<common_name value="BU_STR_Recoome_Guldo" />
@@ -2598,7 +2598,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 3, 3, 3, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_289>
 	<_290>
 		<common_name value="BU_PHY_SS_Goku_Xeno" />
@@ -2810,7 +2810,7 @@
 	<_313>
 		<common_name value="CLR_TEQ_SS3_Gotenks" />
 		<num_copies value="1" />
-		<BRZ_equip value="DEF" />
+		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
 		<slots value="[1, 1, 1, 1, 2, 2, 2, 2, 2, 2]" />
@@ -2910,18 +2910,18 @@
 		<common_name value="BU_STR_Hercule" />
 		<num_copies value="0" />
 		<BRZ_equip value="DEF" />
-		<HiPo_choice_1 value="ADD" />
-		<HiPo_choice_2 value="DGE" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
 		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_324>
 	<_325>
 		<common_name value="CLR_STR_Evolution_Blue_Vegeta" />
 		<num_copies value="0" />
-		<BRZ_equip value="ATK" />
+		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="ADD" />
-		<HiPo_choice_2 value="DGE" />
-		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[2, 2, 1, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_325>
 	<_326>
@@ -2930,7 +2930,7 @@
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
-		<slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<slots value="[1, 2, 2, 2, 2, 2, 2, 2, 1, 1]" />
 		<eval value="True" />
 	</_326>
 	<_327>
@@ -2938,8 +2938,8 @@
 		<num_copies value="0" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
-		<HiPo_choice_2 value="DGE" />
-		<slots value="[3, 1, 1, 2, 2, 2, 2, 2, 2, 2]" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[3, 1, 1, 1, 1, 1, 1, 1, 1, 2]" />
 		<eval value="True" />
 	</_327>
 </id>
