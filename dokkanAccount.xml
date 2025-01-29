@@ -190,7 +190,7 @@
 	</_21>
 	<_22>
 		<common_name value="CLR_INT_Kid_Gohan" />
-		<num_copies value="0" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -235,7 +235,7 @@
 	</_26>
 	<_27>
 		<common_name value="BU_TEQ_Frost_Final_Form" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -253,7 +253,7 @@
 	</_28>
 	<_29>
 		<common_name value="BU_TEQ_Vegeta_Nappa" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -451,7 +451,7 @@
 	</_50>
 	<_51>
 		<common_name value="CLR_PHY_Metal_Cooler" />
-		<num_copies value="2" />
+		<num_copies value="4" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -460,7 +460,7 @@
 	</_51>
 	<_52>
 		<common_name value="LR_INT_Turles_Goku" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -469,7 +469,7 @@
 	</_52>
 	<_53>
 		<common_name value="CLR_PHY_SS_Future_Trunks" />
-		<num_copies value="2" />
+		<num_copies value="4" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -541,7 +541,7 @@
 	</_60>
 	<_61>
 		<common_name value="DFLR_PHY_SS4_Gogeta" />
-		<num_copies value="3" />
+		<num_copies value="5" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -559,7 +559,7 @@
 	</_62>
 	<_63>
 		<common_name value="DFLR_AGL_Vegito_Blue" />
-		<num_copies value="3" />
+		<num_copies value="5" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -739,7 +739,7 @@
 	</_82>
 	<_83>
 		<common_name value="CLR_INT_Gammas" />
-		<num_copies value="1" />
+		<num_copies value="4" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
@@ -856,7 +856,7 @@
 	</_95>
 	<_96>
 		<common_name value="BU_INT_Dodoria" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -1009,7 +1009,7 @@
 	</_112>
 	<_113>
 		<common_name value="LR_PHY_Super_Janemba" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
@@ -1045,7 +1045,7 @@
 	</_116>
 	<_117>
 		<common_name value="LR_TEQ_Great_Ape_Vegeta" />
-		<num_copies value="3" />
+		<num_copies value="5" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -1054,7 +1054,7 @@
 	</_117>
 	<_118>
 		<common_name value="LR_AGL_Nappa_Vegeta_Exchange" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -1414,7 +1414,7 @@
 	</_157>
 	<_158>
 		<common_name value="BU_TEQ_Evil_Buu" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2080,7 +2080,7 @@
 	</_231>
 	<_232>
 		<common_name value="BU_AGL_Bulma_Bunny" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -2260,7 +2260,7 @@
 	</_251>
 	<_252>
 		<common_name value="BU_TEQ_Videl" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2278,7 +2278,7 @@
 	</_253>
 	<_254>
 		<common_name value="CLR_STR_Family_Kamehameha" />
-		<num_copies value="0" />
+		<num_copies value="3" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="CRT" />
@@ -2341,7 +2341,7 @@
 	</_260>
 	<_261>
 		<common_name value="BU_INT_Cui" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -2521,7 +2521,7 @@
 	</_280>
 	<_281>
 		<common_name value="BU_INT_Angila_Medamatcha" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -2908,7 +2908,7 @@
 	</_323>
 	<_324>
 		<common_name value="BU_STR_Hercule" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2935,7 +2935,7 @@
 	</_326>
 	<_327>
 		<common_name value="DFLR_TEQ_Super_Vegito" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="CRT" />
