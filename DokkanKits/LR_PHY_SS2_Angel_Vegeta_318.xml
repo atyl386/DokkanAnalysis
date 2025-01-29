@@ -275,7 +275,7 @@
 				</ability_1>
 				<ability_2>
 					<input prompt="What is the maximum buff?" response="1.8" />
-					<input prompt="What type of buff does the unit get?" response="DEF" />
+					<input prompt="What type of buff does the unit get?" response="P2 DEF B" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
 				</ability_2>

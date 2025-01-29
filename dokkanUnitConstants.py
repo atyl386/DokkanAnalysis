@@ -538,7 +538,6 @@ EFFECTS = [
     "Evasion against Supers",
     "Ki (Type Ki Sphere)",
     "Ki (Ki Sphere)",
-    "Ki (Ki Sphere)",
     "Ki (Same Type Ki Sphere)",
     "Ki (Rainbow Ki Sphere)",
     "Heal",

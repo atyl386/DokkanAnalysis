@@ -2931,9 +2931,16 @@ class PerKi(PerEvent):
         supportBuff = effectiveBuff * np.minimum(self.effectDuration, RETURN_PERIOD_PER_SLOT)
         if self.effect in REGULAR_SUPPORT_EFFECTS:
             state.support += supportFactorConversion[self.effect] * supportBuff[state.slot - 1]
-        elif self.effect in STACK_EFFECTS:
-            state.p2Buff[self.effect] += effectiveBuff
-
+        else:
+            match self.effect:
+                case "ATK":
+                    state.p2Buff["ATK"] += effectiveBuff
+                case "DEF":
+                    state.p2Buff["DEF"] += effectiveBuff
+                case "P2 DEF B":
+                    state.p2DefB += effectiveBuff
+                case _:
+                    raise Exception(f"{self.effect} Per Ki Buff Effect not implemented!")
 
 class PerTurn(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
@@ -3950,4 +3957,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(325, "CLR_STR_Evolution_Blue_Vegeta", 5, "ATK", "ADD", "DGE", SLOT_2, "True")
+    unit = Unit(326, "CLR_SS4_Goku", 5, "ATK", "ADD", "DGE", SLOT_2, "True")
