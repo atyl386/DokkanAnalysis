@@ -3075,6 +3075,8 @@ class PerAttackReceivedOrEvaded(PerEvent):
         match self.effect:
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+            case "DEF":
+                state.defBuffStatuses[("DEF", "ReceiveOrEvade")] += cappedBuffPerAttack
             case "Dmg Red":
                 state.defBuffStatuses[("DmgRed", "ReceiveOrEvade")] += cappedBuffPerAttack
             case _:
@@ -3948,4 +3950,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(323, "DF_INT_Buuhan", 5, "ATK", "ADD", "DGE", SLOT_2, "True")
+    unit = Unit(324, "BU_STR_Hercule", 5, "ATK", "ADD", "DGE", SLOT_2, "True")

@@ -2906,4 +2906,13 @@
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_323>
+	<_324>
+		<common_name value="BU_STR_Hercule" />
+		<num_copies value="0" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+		<eval value="True" />
+	</_324>
 </id>
