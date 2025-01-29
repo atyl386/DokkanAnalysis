@@ -2924,4 +2924,13 @@
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_325>
+	<_326>
+		<common_name value="CLR_AGL_SS4_Goku" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_326>
 </id>
