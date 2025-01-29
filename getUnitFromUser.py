@@ -433,7 +433,7 @@ class Unit:
             form.turn = turn
             nextTurn = turn + RETURN_PERIOD_PER_SLOT[slot - 1]
             form.nextTurnRelative = nextTurn - form.initialTurn + 1
-            if abs(PEAK_TURN - turn) < abs(nextTurn - PEAK_TURN) and not (self.fightPeak):
+            if abs(PEAK_TURN - turn) <= abs(nextTurn - PEAK_TURN) and not (self.fightPeak):
                 self.fightPeak = True
             state = State(form, slot, turn)
             state.setState()
@@ -3957,4 +3957,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(326, "CLR_AGL_SS4_Goku", 5, "ATK", "ADD", "DGE", SLOT_2, "True")
+    unit = Unit(327, "DFLR_TEQ_Super_Vegito", 5, "ATK", "ADD", "DGE", [3, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")

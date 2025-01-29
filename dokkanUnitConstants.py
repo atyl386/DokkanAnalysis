@@ -66,7 +66,7 @@ LEADER_SKILL_KI = 6.0
 LEADER_SKILL_STATS = 4.4
 
 # Super Attack
-KI_MODIFIERS_12 = ["1.3", "1.35", "1.4", "1.45", "1.5", "1.6"]  # [-]
+KI_MODIFIERS_12 = ["1.3", "1.35", "1.4", "1.45", "1.5", "1.6", "1.7"]  # [-]
 SUPER_ATTACK_MULTIPLIER_NAMES = [
     "Destructive",
     "Supreme",

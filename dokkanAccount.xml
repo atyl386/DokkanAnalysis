@@ -2933,4 +2933,13 @@
 		<slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_326>
+	<_327>
+		<common_name value="DFLR_TEQ_Super_Vegito" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[3, 1, 1, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_327>
 </id>
