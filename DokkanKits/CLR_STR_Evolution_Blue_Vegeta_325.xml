@@ -1,0 +1,13 @@
+<inputTree>
+	<constants>
+		<input prompt="What is the unit's exclusivity?" response="CLR" />
+		<input prompt="What is the unit's name?" response="Super Saiyan God SS Evolved Vegeta" />
+		<input prompt="What is the unit's class?" response="S" />
+		<input prompt="What is the unit's type?" response="STR" />
+		<input prompt="Has the unit EZA'd?" response="N" />
+		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="01/25" />
+		<input prompt="What is the unit's Max Level HP stat?" response="17325" />
+		<input prompt="What is the unit's Max Level ATK stat?" response="15020" />
+		<input prompt="What is the unit's Max Level DEF stat?" response="10188" />
+	</constants>
+</inputTree>

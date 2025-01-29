@@ -259,9 +259,9 @@ class Unit:
         self.DEF = self.inputHelper.getAndSaveUserInput("What is the unit's Max Level DEF stat?", default=0)
         self.leaderSkill = leaderSkillConversion[
             self.inputHelper.getAndSaveUserInput(
-                "How would you rate the unit's leader skill on a scale of 1-10? 200% limited / 2 x 180% - e.g. LR Hatchiyak Goku 200% small - e.g. LR Metal Cooler 200% medium - e.g. PHY God Goku 200% large - e.g. LR Vegeta and Trunks",
+                "How would you rate the unit's leader skill on a scale of 1-10?",
                 type=clc.Choice(leaderSkillConversion.keys(), case_sensitive=False),
-                default="<150%",
+                default="<200%",
             )
         ]
         self.teams = self.inputHelper.getAndSaveUserInput(
@@ -3950,4 +3950,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(324, "BU_STR_Hercule", 5, "ATK", "ADD", "DGE", SLOT_2, "True")
+    unit = Unit(325, "CLR_STR_Evolution_Blue_Vegeta", 5, "ATK", "ADD", "DGE", SLOT_2, "True")

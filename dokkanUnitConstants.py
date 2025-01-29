@@ -49,20 +49,21 @@ SBR_DF = 0.25  # Discount factor of SBR ability per turn
 
 # Leader Skill
 LEADER_SKILL_TIERS = [
-    "<150%",
-    "1 x 150%",
-    "2 x 150%",
-    "2 x 150-170% / 1 x 170%",
-    "2 x 170% / 1 x 180%",
-    "2 x 180%",
-    "200% limited",
+    "<200%",
     "200% small",
-    "200% medium",
     "200% large",
+    "220% small",
+    "220% large",
+    "2 x 220% + 1 x 250% large",
+    #"250% limited",
+    #"250% small",
+    #"250% medium",
+    #"250% large",
+    ""
 ]
-LEADER_SKILL_SCORES = [0, 0.5, 1, 1.5, 2, 2.5, 7, 8, 9, 10]  # [-]
+LEADER_SKILL_SCORES = [0, 4, 6, 8, 9, 10]  # [-]
 LEADER_SKILL_KI = 6.0
-LEADER_SKILL_STATS = 4.0
+LEADER_SKILL_STATS = 4.4
 
 # Super Attack
 KI_MODIFIERS_12 = ["1.3", "1.35", "1.4", "1.45", "1.5", "1.6"]  # [-]
@@ -168,7 +169,7 @@ GUARD_MOD = (
 DODGE_CANCEL_FACTOR = 0.1
 
 # Health
-AVG_HEALTH = 650000
+AVG_HEALTH = 650000 * LEADER_SKILL_STATS / 4.0
 EXPECTED_HEALTH_FRAC = 2 / 3
 LESS_HEALTH_REMAINING_MIN = 0.2
 MORE_HEALTH_REMAINING_MIN = 0.1
