@@ -453,35 +453,7 @@
 				<input prompt="How many Domain skills does the form have?" response="0" />
 			</domain>
 			<active_skill_buffs>
-				<input prompt="How many active skill buffs does the form have?" response="4" />
-				<ability_1>
-					<input prompt="What type of buff does the unit get?" response="Ki" />
-					<input prompt="What is the value of the buff?" response="3.0" />
-					<input prompt="How many turns does it last?" response="99" />
-					<input prompt="How many times can it be activated?" response="1" />
-					<input prompt="How many conditions have to be met?" response="0" />
-				</ability_1>
-				<ability_2>
-					<input prompt="What type of buff does the unit get?" response="ATK" />
-					<input prompt="What is the value of the buff?" response="0.18" />
-					<input prompt="How many turns does it last?" response="99" />
-					<input prompt="How many times can it be activated?" response="1" />
-					<input prompt="How many conditions have to be met?" response="0" />
-				</ability_2>
-				<ability_3>
-					<input prompt="What type of buff does the unit get?" response="DEF" />
-					<input prompt="What is the value of the buff?" response="0.18" />
-					<input prompt="How many turns does it last?" response="99" />
-					<input prompt="How many times can it be activated?" response="1" />
-					<input prompt="How many conditions have to be met?" response="0" />
-				</ability_3>
-				<ability_4>
-					<input prompt="What type of buff does the unit get?" response="Guard" />
-					<input prompt="What is the value of the buff?" response="1.0" />
-					<input prompt="How many turns does it last?" response="99" />
-					<input prompt="How many times can it be activated?" response="1" />
-					<input prompt="How many conditions have to be met?" response="0" />
-				</ability_4>
+				<input prompt="How many active skill buffs does the form have?" response="0" />
 			</active_skill_buffs>
 			<offensive_on_super>
 				<input prompt="How many different offensive buffs does the form get when performing a super attack / attacking?" response="1" />
