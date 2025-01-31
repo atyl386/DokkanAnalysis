@@ -128,7 +128,7 @@ class Banner:
         self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus
 
     def shouldSummmon(self):
-        if self.summonScore > 10:  # Will need to be tuned. Could be as high as 15
+        if self.summonScore > 12.5:  # Will need to be tuned. Could be as high as 15
             return True
         else:
             return False
