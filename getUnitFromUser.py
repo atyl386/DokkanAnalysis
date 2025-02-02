@@ -294,10 +294,10 @@ class Unit:
             HiPoStats = f2pHiddenPotentalStatsConverter[self._type][:, self.nCopies - 1]
         else:
             HiPoStats = hiddenPotentalStatsConverter[self._type][:, self.nCopies - 1]
-        if self.id in HIPO_SPECIAL_EQUIP_UNIT_IDS:
-            HiPoBrz = HIPO_SPECIAL_EQUIPS[self.name]["BRZ"]
-            HiPoSlv = HIPO_SPECIAL_EQUIPS[self.name]["SLV"]
-            HiPoGld = HIPO_SPECIAL_EQUIPS[self.name]["GLD"]
+        if self.id in HIPO_SPECIAL_EQUIPS.keys():
+            HiPoBrz = HIPO_SPECIAL_EQUIPS[self.id]["BRZ"]
+            HiPoSlv = HIPO_SPECIAL_EQUIPS[self.id]["SLV"]
+            HiPoGld = HIPO_SPECIAL_EQUIPS[self.id]["GLD"]
         else:
             if self.brz in STACK_EFFECTS:
                 HiPoBrz = HIPO_BRZ[self.brz]
@@ -305,11 +305,11 @@ class Unit:
                 HiPoBrz = HIPO_BRZ[(self.HiPo1, self.HiPo2)]
             HiPoSlv = HIPO_SLV[self.HiPo1]
             HiPoGld = HIPO_GLD[(self.HiPo1, self.HiPo2)]
-        HiPoAbilities = np.array(HIPO_D0[self._type]) + HiPoBrz + HiPoSlv
+        HiPoAbilities = np.array(HIPO_D0[self._type]) + np.array(HiPoBrz) + np.array(HiPoSlv)
         if self.nCopies > 1:
             HiPoAbilities += HIPO_D1[(self.HiPo1, self.HiPo2)]
         if self.nCopies > 2:
-            HiPoAbilities += np.array(HIPO_D2[(self.HiPo1, self.HiPo2)]) + HiPoGld
+            HiPoAbilities += np.array(HIPO_D2[(self.HiPo1, self.HiPo2)]) + np.array(HiPoGld)
         self.HP += HiPoStats[0]
         self.ATK += HiPoStats[1] + HiPoAbilities[0]
         self.DEF += HiPoStats[2] + HiPoAbilities[1]

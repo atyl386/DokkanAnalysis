@@ -528,7 +528,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 2, 3, 3, 3, 3, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_59>
 	<_60>
 		<common_name value="DF_AGL_Gogeta_Blue" />
@@ -555,7 +555,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 3, 3, 3, 3, 3, 2, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_62>
 	<_63>
 		<common_name value="DFLR_AGL_Vegito_Blue" />
@@ -924,7 +924,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 3, 3, 3, 3, 3, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_103>
 	<_104>
 		<common_name value="DF_PHY_Piccolo" />
@@ -1347,7 +1347,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 3, 3, 3, 2, 2, 2, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_150>
 	<_151>
 		<common_name value="BU_AGL_Android_8" />

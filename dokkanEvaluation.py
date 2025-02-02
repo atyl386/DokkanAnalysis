@@ -253,7 +253,7 @@ if __name__ == "__main__":
                 dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
         if analyseHiPo:
             for ID in reverseOrderIDs:
-                if ID not in HIPO_SPECIAL_EQUIP_UNIT_IDS:
+                if ID not in HIPO_SPECIAL_EQUIPS.keys():
                     print(ID)
                     best_HiPo = -1
                     best_eval = -np.inf
