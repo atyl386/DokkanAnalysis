@@ -805,8 +805,9 @@ AEAAT_TAB_INC = 0.01
 DISABLE_GUARD_TAB_INC = 0.01
 DEFAULT_TAB_INC = 0.005
 TDB_INC = 0.02
-BRZ_STAT = 550
-BRZ_HIPO = 0.02
+BRZ_STAT = 600
+BRZ_HIPO_1 = 0.02
+BRZ_HIPO_2 = 0.01
 SLV_HIPO = 0.05
 GLD_HIPO1 = 0.05
 GLD_HIPO2 = 0.02
@@ -964,9 +965,12 @@ HIPO_D2 = {
 HIPO_BRZ = {
     "ATK": [BRZ_STAT, 0, 0, 0, 0],
     "DEF": [0, BRZ_STAT, 0, 0, 0],
-    "ADD": [0, 0, 2 * BRZ_HIPO, 0, 0],
-    "CRT": [0, 0, 0, 2 * BRZ_HIPO, 0],
-    "DGE": [0, 0, 0, 0, BRZ_HIPO],
+    ("ADD", "CRT"): [0, 0, 2 * BRZ_HIPO_1, 2 * BRZ_HIPO_2, 0],
+    ("ADD", "DGE"): [0, 0, 2 * BRZ_HIPO_1, 0, BRZ_HIPO_2],
+    ("CRT", "DGE"): [0, 0, 0, 2 * BRZ_HIPO_1, BRZ_HIPO_2],
+    ("CRT", "ADD"): [0, 0, 2 * BRZ_HIPO_2, 2 * BRZ_HIPO_1, 0],
+    ("DGE", "ADD"): [0, 0, 2 * BRZ_HIPO_2, 0, BRZ_HIPO_1],
+    ("DGE", "CRT"): [0, 0, 0, 2 * BRZ_HIPO_2, BRZ_HIPO_1],
 }
 HIPO_SLV = {
     "ADD": [0, 0, 2 * SLV_HIPO, 0, 0],
@@ -980,4 +984,11 @@ HIPO_GLD = {
     ("CRT", "ADD"): [0, 0, 2 * GLD_HIPO2, 2 * GLD_HIPO1, 0],
     ("DGE", "ADD"): [0, 0, 2 * GLD_HIPO2, 0, GLD_HIPO1],
     ("DGE", "CRT"): [0, 0, 0, 2 * GLD_HIPO2, GLD_HIPO1],
+}
+
+HIPO_SPECIAL_EQUIP_UNIT_IDS = []
+HIPO_SPECIAL_EQUIPS = {
+    "UnitID" : {"BRZ": [0, BRZ_STAT, 0, 0, 0],
+                  "SLV": [0, 0, 0, 0, 0],
+                  "GLD": [0, 0, 0, 0, 0]},
 }
