@@ -2779,7 +2779,7 @@ class Buff(PassiveAbility):
         supportBuff = self.supportBuff[state.slot - 1] * pHaveKi
         activationProbability = self.activationProbability * pHaveKi
         # Check if state is elligible for ability
-        if state.turn >= self.start and state.turn <= self.end and state.slot in self.slots:
+        if (state.turn >= self.start) and (state.turn <= self.end) and (state.slot in self.slots):
             # If a support ability
             if self.effect in REGULAR_SUPPORT_EFFECTS:
                 state.support += supportFactorConversion[self.effect] * supportBuff
@@ -3969,4 +3969,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(327, "DFLR_TEQ_Super_Vegito", 5, "ATK", "ADD", "DGE", [3, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
+    unit = Unit(328, "DF_INT_Super_Janemba", 5, "ATK", "ADD", "DGE", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
