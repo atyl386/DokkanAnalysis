@@ -2951,4 +2951,13 @@
 		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_328>
+	<_329>
+		<common_name value="DF_STR_Super_Gogeta" />
+		<num_copies value="5" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_329>
 </id>
