@@ -253,30 +253,29 @@ if __name__ == "__main__":
                 dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
         if analyseHiPo:
             for ID in reverseOrderIDs:
-                if ID not in HIPO_SPECIAL_EQUIPS.keys():
-                    print(ID)
-                    best_HiPo = -1
-                    best_eval = -np.inf
-                    for i, HiPo_build in enumerate(HIPO_BUILDS):
-                        HiPo_unit = Unit(
-                            ID,
-                            User[ID]["common_name"],
-                            NUM_COPIES_MAX,
-                            HiPo_build[0],
-                            HiPo_build[1],
-                            HiPo_build[2],
-                            User[ID]["slots"],
-                            save=False,
-                        )
-                        normalizeUnit(HiPo_unit, rainbowMeans, rainbowStds)
-                        HiPo_evaluation = overallEvaluator.evaluate(HiPo_unit)
-                        if HiPo_evaluation > best_eval:
-                            best_HiPo = i
-                            best_eval = HiPo_evaluation
-                    unit = dokkanAccountRoot.find(f"_{ID}")
-                    for i, equip in enumerate(["BRZ_equip", "HiPo_choice_1", "HiPo_choice_2"]):
-                        unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
-                    dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
+                print(ID)
+                best_HiPo = -1
+                best_eval = -np.inf
+                for i, HiPo_build in enumerate(HIPO_BUILDS):
+                    HiPo_unit = Unit(
+                        ID,
+                        User[ID]["common_name"],
+                        NUM_COPIES_MAX,
+                        HiPo_build[0],
+                        HiPo_build[1],
+                        HiPo_build[2],
+                        User[ID]["slots"],
+                        save=False,
+                    )
+                    normalizeUnit(HiPo_unit, rainbowMeans, rainbowStds)
+                    HiPo_evaluation = overallEvaluator.evaluate(HiPo_unit)
+                    if HiPo_evaluation > best_eval:
+                        best_HiPo = i
+                        best_eval = HiPo_evaluation
+                unit = dokkanAccountRoot.find(f"_{ID}")
+                for i, equip in enumerate(["BRZ_equip", "HiPo_choice_1", "HiPo_choice_2"]):
+                    unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
+                dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
         if updateEvaluationUnits:
             meanRainbowEvaluation = np.mean(evaluations[:, -1])
             stdRainbowEvations = np.std(evaluations[:, -1])
