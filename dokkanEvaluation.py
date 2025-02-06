@@ -152,6 +152,37 @@ def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_
     return units, attributeValues, evaluations
 
 
+def optimiseSlots(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds):
+    print(ID)
+    best_slots = copy.copy(User[ID]["slots"])
+    stateIdx = 0
+    nextTurn = 1
+    while nextTurn < MAX_TURN:
+        best_eval = -np.inf
+        for slot in SLOTS:
+            best_slots[stateIdx] = slot
+            unit = Unit(
+                ID,
+                User[ID]["common_name"],
+                NUM_COPIES_MAX,
+                User[ID]["BRZ_equip"],
+                User[ID]["HiPo_choice_1"],
+                User[ID]["HiPo_choice_2"],
+                best_slots,
+                save=False,
+            )
+            normalizeUnit(unit, rainbowMeans, rainbowStds)
+            evaluation = overallEvaluator.evaluate(unit)
+            if evaluation > best_eval:
+                best_slot = slot
+                best_eval = evaluation
+        best_slots[stateIdx] = best_slot
+        stateIdx += 1
+        nextTurn += RETURN_PERIOD_PER_SLOT[best_slot - 1]
+    dokkanAccountRoot.find(f"_{ID}").find("slots").set("value", str(best_slots))
+    dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
+
+
 if __name__ == "__main__":
     User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
     if onlyEvaluationUnits:
@@ -223,34 +254,7 @@ if __name__ == "__main__":
         dokkanAccountRoot = dokkanAccountXML.getroot()
         if optimiseslots:
             for ID in reverseOrderIDs:
-                print(ID)
-                best_slots = copy.copy(User[ID]["slots"])
-                stateIdx = 0
-                nextTurn = 1
-                while nextTurn < MAX_TURN:
-                    best_eval = -np.inf
-                    for slot in SLOTS:
-                        best_slots[stateIdx] = slot
-                        unit = Unit(
-                            ID,
-                            User[ID]["common_name"],
-                            NUM_COPIES_MAX,
-                            User[ID]["BRZ_equip"],
-                            User[ID]["HiPo_choice_1"],
-                            User[ID]["HiPo_choice_2"],
-                            best_slots,
-                            save=False,
-                        )
-                        normalizeUnit(unit, rainbowMeans, rainbowStds)
-                        evaluation = overallEvaluator.evaluate(unit)
-                        if evaluation > best_eval:
-                            best_slot = slot
-                            best_eval = evaluation
-                    best_slots[stateIdx] = best_slot
-                    stateIdx += 1
-                    nextTurn += RETURN_PERIOD_PER_SLOT[best_slot - 1]
-                dokkanAccountRoot.find(f"_{ID}").find("slots").set("value", str(best_slots))
-                dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
+                optimiseSlots(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds)
         if analyseHiPo:
             for ID in reverseOrderIDs:
                 print(ID)
