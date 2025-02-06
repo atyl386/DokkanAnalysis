@@ -10,10 +10,10 @@ HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 
 reCalc = True
 analyseHiPo = False
-optimiseslots = True
+optimiseslots = False
 accountRanking = True
 useMultiprocessing = True
-useMultiprocessingForOptimisation = True
+useMultiprocessingForOptimisation = False
 updateEvaluationUnits = False
 onlyEvaluationUnits = True
 
@@ -183,6 +183,30 @@ def optimiseSlots(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoo
     dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
 
 
+def optimiseHiPo(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds):
+    best_HiPo = -1
+    best_eval = -np.inf
+    for i, HiPo_build in enumerate(HIPO_BUILDS):
+        HiPo_unit = Unit(
+            ID,
+            User[ID]["common_name"],
+            NUM_COPIES_MAX,
+            HiPo_build[0],
+            HiPo_build[1],
+            HiPo_build[2],
+            User[ID]["slots"],
+            save=False,
+        )
+        normalizeUnit(HiPo_unit, rainbowMeans, rainbowStds)
+        HiPo_evaluation = overallEvaluator.evaluate(HiPo_unit)
+        if HiPo_evaluation > best_eval:
+            best_HiPo = i
+            best_eval = HiPo_evaluation
+    unit = dokkanAccountRoot.find(f"_{ID}")
+    for i, equip in enumerate(["BRZ_equip", "HiPo_choice_1", "HiPo_choice_2"]):
+        unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
+    dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
+
 if __name__ == "__main__":
     User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
     if onlyEvaluationUnits:
@@ -253,7 +277,7 @@ if __name__ == "__main__":
         dokkanAccountXML = ET.parse(DOKKAN_ACCOUNT_XML_FILE_PATH)
         dokkanAccountRoot = dokkanAccountXML.getroot()
         if optimiseslots:
-            print("Optimsing Slots")
+            print("Optimising Slots")
             if useMultiprocessingForOptimisation:
                 with multiprocessing.Pool() as pool:
                     pool.starmap(
@@ -264,30 +288,16 @@ if __name__ == "__main__":
                 for ID in reverseOrderIDs:
                     optimiseSlots(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds)
         if analyseHiPo:
-            for ID in reverseOrderIDs:
-                print(ID)
-                best_HiPo = -1
-                best_eval = -np.inf
-                for i, HiPo_build in enumerate(HIPO_BUILDS):
-                    HiPo_unit = Unit(
-                        ID,
-                        User[ID]["common_name"],
-                        NUM_COPIES_MAX,
-                        HiPo_build[0],
-                        HiPo_build[1],
-                        HiPo_build[2],
-                        User[ID]["slots"],
-                        save=False,
+            print("Optimising Hidden Potential")
+            if useMultiprocessingForOptimisation:
+                with multiprocessing.Pool() as pool:
+                    pool.starmap(
+                        optimiseHiPo,
+                        tqdm.tqdm([(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds) for ID in reverseOrderIDs], total=nUnits),
                     )
-                    normalizeUnit(HiPo_unit, rainbowMeans, rainbowStds)
-                    HiPo_evaluation = overallEvaluator.evaluate(HiPo_unit)
-                    if HiPo_evaluation > best_eval:
-                        best_HiPo = i
-                        best_eval = HiPo_evaluation
-                unit = dokkanAccountRoot.find(f"_{ID}")
-                for i, equip in enumerate(["BRZ_equip", "HiPo_choice_1", "HiPo_choice_2"]):
-                    unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
-                dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
+            else:
+                for ID in reverseOrderIDs:
+                    optimiseHiPo(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds)
         if updateEvaluationUnits:
             meanRainbowEvaluation = np.mean(evaluations[:, -1])
             stdRainbowEvations = np.std(evaluations[:, -1])

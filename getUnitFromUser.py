@@ -6,8 +6,6 @@ import click as clc
 import glob
 
 # TODO:
-# - Multiprocess optimisation of slots and equips/HiPo
-# - Make the the equips in dokkanAccount.xml customisable, e.g. for anniversary units
 # - Make nullification a regular Buff so can do per turn like STR Kid Buu
 # - Make better way to integrate the no eval unit finding into normal evaluation run
 # - Simplify getEventFactor code
