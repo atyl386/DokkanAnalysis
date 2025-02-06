@@ -13,7 +13,6 @@ analyseHiPo = False
 optimiseslots = False
 accountRanking = True
 useMultiprocessing = True
-useMultiprocessingForOptimisation = False
 updateEvaluationUnits = False
 onlyEvaluationUnits = True
 
@@ -278,7 +277,7 @@ if __name__ == "__main__":
         dokkanAccountRoot = dokkanAccountXML.getroot()
         if optimiseslots:
             print("Optimising Slots")
-            if useMultiprocessingForOptimisation:
+            if useMultiprocessing:
                 with multiprocessing.Pool() as pool:
                     pool.starmap(
                         optimiseSlots,
@@ -289,7 +288,7 @@ if __name__ == "__main__":
                     optimiseSlots(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds)
         if analyseHiPo:
             print("Optimising Hidden Potential")
-            if useMultiprocessingForOptimisation:
+            if useMultiprocessing:
                 with multiprocessing.Pool() as pool:
                     pool.starmap(
                         optimiseHiPo,
