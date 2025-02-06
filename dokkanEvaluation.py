@@ -10,9 +10,10 @@ HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 
 reCalc = True
 analyseHiPo = False
-optimiseslots = False
+optimiseslots = True
 accountRanking = True
 useMultiprocessing = True
+useMultiprocessingForOptimisation = True
 updateEvaluationUnits = False
 onlyEvaluationUnits = True
 
@@ -153,7 +154,6 @@ def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_
 
 
 def optimiseSlots(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds):
-    print(ID)
     best_slots = copy.copy(User[ID]["slots"])
     stateIdx = 0
     nextTurn = 1
@@ -253,8 +253,16 @@ if __name__ == "__main__":
         dokkanAccountXML = ET.parse(DOKKAN_ACCOUNT_XML_FILE_PATH)
         dokkanAccountRoot = dokkanAccountXML.getroot()
         if optimiseslots:
-            for ID in reverseOrderIDs:
-                optimiseSlots(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds)
+            print("Optimsing Slots")
+            if useMultiprocessingForOptimisation:
+                with multiprocessing.Pool() as pool:
+                    pool.starmap(
+                        optimiseSlots,
+                        tqdm.tqdm([(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds) for ID in reverseOrderIDs], total=nUnits),
+                    )
+            else:
+                for ID in reverseOrderIDs:
+                    optimiseSlots(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds)
         if analyseHiPo:
             for ID in reverseOrderIDs:
                 print(ID)
