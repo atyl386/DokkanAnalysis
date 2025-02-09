@@ -2969,4 +2969,13 @@
 		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_330>
+	<_331>
+		<common_name value="DFLR_INT_Super_Saiyan_Goku" />
+		<num_copies value="3" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+		<eval value="True" />
+	</_331>
 </id>
