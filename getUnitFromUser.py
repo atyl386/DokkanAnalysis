@@ -6,6 +6,7 @@ import click as clc
 import glob
 
 # TODO:
+# - Check the Super Vegito active skill means he counters more
 # - Make nullification a regular Buff so can do per turn like STR Kid Buu
 # - Make better way to integrate the no eval unit finding into normal evaluation run
 # - Simplify getEventFactor code
@@ -3967,4 +3968,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(329, "DF_STR_Super_Gogeta", 5, "ATK", "ADD", "DGE", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
+    unit = Unit(331, "DFLR_INT_Super_Saiyan_Goku", 5, "ATK", "ADD", "DGE", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
