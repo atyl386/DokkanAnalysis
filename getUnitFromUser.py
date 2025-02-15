@@ -156,9 +156,9 @@ def getCondition(inputHelper):
 # Overwrite this class function as has additional
 def updateAttacksReceivedAndEvaded(self, state):
     pEvade = self.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
-    state.numAttacksReceived = NUM_ATTACKS_DIRECTED[state.slot - 1] * (1 - pEvade)
+    state.numAttacksReceived = state.numAttacksDirected * (1 - pEvade)
     state.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * (1 - pEvade)
-    state.numAttacksEvaded = NUM_ATTACKS_DIRECTED[state.slot - 1] * pEvade
+    state.numAttacksEvaded = state.numAttacksDirected * pEvade
     state.numAttacksEvadedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * pEvade
 
 
@@ -477,6 +477,7 @@ class Unit:
                 form.numAttacksGuarded += state.guard * state.numAttacksReceived
                 form.numAttacksEvaded += state.numAttacksEvaded
                 form.numAttacksReceived += state.numAttacksReceived
+                form.numAttacksDirected += state.numAttacksDirected
                 self.nextForm = form.checkCondition(
                     form.formChangeCondition,
                     form.transformed,
@@ -536,6 +537,7 @@ class Form:
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.numAttacksGuarded = 0
         self.numAttacksEvaded = 0
+        self.numAttacksDirected = 0
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
         self.charge = 0
@@ -1790,7 +1792,7 @@ class State:
             self.n_0 = self.normal / baseAtk
             pAA = self.form.unit.pHiPo["AA"]  # Probability of doing an additional attack next
             crit = copy.deepcopy(self.multiChanceBuff["Crit"])
-            counterDmg = NUM_ATTACKS_DIRECTED[self.slot - 1] * self.atk2Dmg(self.form.normalCounterMult * self.normal, crit.prob) + NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.normal, crit.prob)
+            counterDmg = self.numAttacksDirected * self.atk2Dmg(self.form.normalCounterMult * self.normal, crit.prob) + NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.normal, crit.prob)
             crit.updateChance("On Super", self.critPerAttackPerformed[0], "Crit")
             critN = copy.deepcopy(crit)
             crit.updateChance("On Super", self.critPerSuperPerformed[0] - self.critPerAttackPerformed[0], "Crit")
@@ -2874,10 +2876,15 @@ class Buff(PassiveAbility):
                         state.dmgRedNormalA = 1
                         state.dmgRedNormalB = 1
                         state.numAttacksReceived = 0
+                        state.numAttacksDirected = 0
+                        state.numAttacksReceivedBeforeAttacking = 0
+                        state.numAttacksEvaded = 0
+                        state.numAttacksEvadedBeforeAttacking = 0
                     case "Intercept":
                         state.support += supportFactorConversion[self.effect] * supportBuff
                         state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
-                        state.numAttacksReceived = NUM_ATTACKS_PER_TURN
+                        state.numAttacksDirected = NUM_ATTACKS_PER_TURN
+
                         pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
                         state.numAttacksEvaded = NUM_ATTACKS_PER_TURN * pEvade
                         state.numAttacksEvadedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * pEvade
@@ -3968,4 +3975,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(331, "DFLR_INT_Super_Saiyan_Goku", 5, "ATK", "ADD", "DGE", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
+    unit = Unit(327, "DFLR_TEQ_Super_Vegito", 5, "ATK", "ADD", "DGE", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
