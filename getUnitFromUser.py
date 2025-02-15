@@ -477,7 +477,6 @@ class Unit:
                 form.numAttacksGuarded += state.guard * state.numAttacksReceived
                 form.numAttacksEvaded += state.numAttacksEvaded
                 form.numAttacksReceived += state.numAttacksReceived
-                form.numAttacksDirected += state.numAttacksDirected
                 self.nextForm = form.checkCondition(
                     form.formChangeCondition,
                     form.transformed,
@@ -537,7 +536,6 @@ class Form:
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.numAttacksGuarded = 0
         self.numAttacksEvaded = 0
-        self.numAttacksDirected = 0
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
         self.charge = 0
@@ -1335,6 +1333,13 @@ class State:
             self.p3Buff[effect] = 0
         self.p2Buff["ATK"] += form.linkEffects["On Super ATK"]
         self.multiChanceBuff = {}
+        self.numAttacksDirected = NUM_ATTACKS_DIRECTED[self.slot - 1]
+        self.numNormalAttacksDirectedBeforeAttacking = NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
+        self.numNormalAttacksDirectedAfterAttacking = NUM_NORMAL_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
+        self.numSuperAttacksDirectedBeforeAttacking = NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
+        self.numSuperAttacksDirectedAfterAttacking = NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
+        self.numAttacksDirectedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
+        self.numAttacksDirectedAfterAttacking = NUM_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
         for effect in MULTI_CHANCE_EFFECTS:
             self.multiChanceBuff[effect] = MultiChanceBuff(effect)
             if effect in MULTI_CHANCE_EFFECTS_NO_NULLIFY:
@@ -1364,13 +1369,6 @@ class State:
         self.guard = form.carryOverBuffs["Guard"].get()
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
-        self.numNormalAttacksDirectedBeforeAttacking = NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
-        self.numNormalAttacksDirectedAfterAttacking = NUM_NORMAL_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
-        self.numSuperAttacksDirectedBeforeAttacking = NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
-        self.numSuperAttacksDirectedAfterAttacking = NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
-        self.numAttacksDirectedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
-        self.numAttacksDirectedAfterAttacking = NUM_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
-        self.numAttacksDirected = NUM_ATTACKS_DIRECTED[self.slot - 1]
         # Required for getting damage received for individual attacks
         self.defBuffStatuses = copy.deepcopy(defBuffStatusesBlank)
         # Required for getting DPTs for individual attacks
@@ -2884,10 +2882,11 @@ class Buff(PassiveAbility):
                         state.support += supportFactorConversion[self.effect] * supportBuff
                         state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
                         state.numAttacksDirected = NUM_ATTACKS_PER_TURN
-
                         pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
                         state.numAttacksEvaded = NUM_ATTACKS_PER_TURN * pEvade
                         state.numAttacksEvadedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * pEvade
+                        state.numAttacksReceived = state.numAttacksDirected * (1 - pEvade)
+                        state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * (1-pEvade)
                     case _:
                         raise Exception(f"{self.effect} Buff Effect not implemented!")
             state.randomKi = state.getRandomKi()
