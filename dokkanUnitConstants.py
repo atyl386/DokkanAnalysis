@@ -1017,6 +1017,12 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 400, 0.08, 0.08, 0],
         "GLD": [0, 600, 0.12, 0, 0]
     },
+    # LR Broly Cheelai & Lemo
+    "49" : {
+        "BRZ": [0, 900, 0, 0, 0],
+        "SLV": [0, 1200, 0, 0, 0.06],
+        "GLD": [0, 0, 0.12, 0.12, 0]
+    },
     # PHY Metal Cooler (sub-optimal)
     "51" : {
         "BRZ": [0, 800, 0, 0, 0],
@@ -1100,6 +1106,12 @@ HIPO_SPECIAL_EQUIPS = {
         "BRZ": [0, 800, 0, 0, 0],
         "SLV": [0, 400, 0.08, 0, 0],
         "GLD": [0, 0, 0.10, 0.06, 0]
+    },
+    # LR INT Rose Goku Black (sub-optimal)
+    "106" : {
+        "BRZ": [0, 900, 0, 0, 0],
+        "SLV": [0, 1200, 0, 0, 0.06],
+        "GLD": [0, 0, 0.12, 0.12, 0]
     },
     # LR Super Janemba
     "113" : {
