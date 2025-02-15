@@ -3014,4 +3014,13 @@
 		<slots value="[2, 2, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_335>
+	<_336>
+		<common_name value="CLR_PHY_SS2_Gohan" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_336>
 </id>
