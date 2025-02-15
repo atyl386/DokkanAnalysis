@@ -6,7 +6,6 @@ import click as clc
 import glob
 
 # TODO:
-# - Check the Super Vegito active skill means he counters more
 # - Make nullification a regular Buff so can do per turn like STR Kid Buu
 # - Make better way to integrate the no eval unit finding into normal evaluation run
 # - Simplify getEventFactor code
