@@ -2978,4 +2978,13 @@
 		<slots value="[1, 2, 2, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_331>
+	<_332>
+		<common_name value="DF_TEQ_Perfect_Cell" />
+		<num_copies value="2" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_332>
 </id>

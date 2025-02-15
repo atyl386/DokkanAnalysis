@@ -3973,4 +3973,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(327, "DFLR_TEQ_Super_Vegito", 5, "ATK", "ADD", "DGE", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
+    unit = Unit(332, "DF_TEQ_Perfect_Cell", 5, "ATK", "ADD", "DGE", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
