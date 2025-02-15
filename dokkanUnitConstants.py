@@ -1091,14 +1091,14 @@ HIPO_SPECIAL_EQUIPS = {
     },
     # AGL UI (sub-optimal)
     "90" : {
-        "BRZ": [0, 800, 0, 0, 0],
-        "SLV": [0, 400, 0, 0.12, 0],
+        "BRZ": [0, 900, 0, 0, 0],
+        "SLV": [0, 1200, 0, 0, 0.06],
         "GLD": [0, 600, 0.12, 0, 0]
     },
-    # INT Evolution Blue Vegeta (sub-optimal)
+    # INT Evolution Blue Vegeta
     "91" : {
-        "BRZ": [0, 800, 0, 0, 0],
-        "SLV": [0, 400, 0, 0.12, 0],
+        "BRZ": [0, 900, 0, 0, 0],
+        "SLV": [0, 1200, 0, 0, 0.06],
         "GLD": [0, 600, 0.12, 0, 0]
     },
     # LR Gobros (sub-optimal)
