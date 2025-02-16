@@ -136,6 +136,12 @@ class Banner:
 
 SummonRatings()
 
+SuperGogeta = Banner([337, 334, 253, 81, 4, 3, 58, 90, 259, 330], "red", threePlus1=True)
+print(SuperGogeta.summonRatings)
+print(SuperGogeta.summonScore)
+GohanGokuFriezaToP = Banner([336, 335, 245, 67, 64, 23, 1, 279, 333, 332], "cyan", threePlus1=True)
+print(GohanGokuFriezaToP.summonRatings)
+print(GohanGokuFriezaToP.summonScore)
 SuperVegito = Banner([327, 324, 246, 66, 63, 2, 61, 91, 95, 61], "red", threePlus1=True)
 print(SuperVegito.summonRatings)
 print(SuperVegito.summonScore)

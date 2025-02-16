@@ -1,7 +1,7 @@
 <id>
 	<_1>
 		<common_name value="CLR_TEQ_SS_Goku" />
-		<num_copies value="2" />
+		<num_copies value="4" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -253,7 +253,7 @@
 	</_28>
 	<_29>
 		<common_name value="BU_TEQ_Vegeta_Nappa" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -568,7 +568,7 @@
 	</_63>
 	<_64>
 		<common_name value="CLR_STR_SS_Future_Gohan" />
-		<num_copies value="1" />
+		<num_copies value="3" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -595,7 +595,7 @@
 	</_66>
 	<_67>
 		<common_name value="CLR_PHY_Gogeta_Blue" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -721,7 +721,7 @@
 	</_80>
 	<_81>
 		<common_name value="DFLR_STR_Beast_Gohan" />
-		<num_copies value="1" />
+		<num_copies value="4" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
@@ -784,7 +784,7 @@
 	</_87>
 	<_88>
 		<common_name value="BU_PHY_Gowasu_Zamasu" />
-		<num_copies value="2" />
+		<num_copies value="5" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -2161,7 +2161,7 @@
 	</_240>
 	<_241>
 		<common_name value="BU_TEQ_Mai" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -2197,7 +2197,7 @@
 	</_244>
 	<_245>
 		<common_name value="CLR_TEQ_Broly" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="CRT" />
@@ -2260,7 +2260,7 @@
 	</_251>
 	<_252>
 		<common_name value="BU_TEQ_Videl" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2269,7 +2269,7 @@
 	</_252>
 	<_253>
 		<common_name value="DFLR_INT_LSS_Broly" />
-		<num_copies value="1" />
+		<num_copies value="4" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -2323,7 +2323,7 @@
 	</_258>
 	<_259>
 		<common_name value="DFLR_TEQ_Super_Gogeta" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
@@ -2503,7 +2503,7 @@
 	</_278>
 	<_279>
 		<common_name value="LR_INT_Vegeta_Goku_Exchange" />
-		<num_copies value="2" />
+		<num_copies value="5" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2908,7 +2908,7 @@
 	</_323>
 	<_324>
 		<common_name value="BU_STR_Hercule" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2998,7 +2998,7 @@
 	</_333>
 	<_334>
 		<common_name value="BU_AGL_Beerus" />
-		<num_copies value="0" />
+		<num_copies value="3" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3016,7 +3016,7 @@
 	</_335>
 	<_336>
 		<common_name value="CLR_PHY_SS2_Gohan" />
-		<num_copies value="0" />
+		<num_copies value="3" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="CRT" />
@@ -3025,7 +3025,7 @@
 	</_336>
 	<_337>
 		<common_name value="DFLR_AGL_Super_Gogeta" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="CRT" />
 		<HiPo_choice_2 value="ADD" />
