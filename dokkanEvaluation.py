@@ -277,7 +277,7 @@ if __name__ == "__main__":
         dokkanAccountRoot = dokkanAccountXML.getroot()
         if optimiseslots:
             print("Optimising Slots")
-            if useMultiprocessing:
+            if False: # multiprocessing is not working
                 with multiprocessing.Pool() as pool:
                     pool.starmap(
                         optimiseSlots,
@@ -288,7 +288,7 @@ if __name__ == "__main__":
                     optimiseSlots(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds)
         if analyseHiPo:
             print("Optimising Hidden Potential")
-            if useMultiprocessing:
+            if False: # multiprocessing is not working
                 with multiprocessing.Pool() as pool:
                     pool.starmap(
                         optimiseHiPo,
