@@ -1046,10 +1046,10 @@
 	<_117>
 		<common_name value="LR_TEQ_Great_Ape_Vegeta" />
 		<num_copies value="5" />
-		<BRZ_equip value="DGE" />
+		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
-		<slots value="[2, 2, 2, 2, 3, 2, 2, 2, 2, 2]" />
+		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_117>
 	<_118>
