@@ -3050,4 +3050,13 @@
 		<slots value="[3, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_339>
+	<_340>
+		<common_name value="LR_STR_Kaioken_Goku" />
+		<num_copies value="3" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_340>
 </id>
