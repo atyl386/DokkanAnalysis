@@ -14,8 +14,8 @@ LR_PHY_Broly_Cheelai_Lemo
 LR_TEQ_Great_Ape_Vegeta 
 DF_INT_Super_Janemba 
 CLR_TEQ_SS3_Gotenks 
-CLR_PHY_Gogeta_Blue 
 CLR_STR_Family_Kamehameha 
+CLR_PHY_Gogeta_Blue 
 DF_TEQ_Beerus 
 DFLR_INT_Evolution_Blue_Vegeta 
 DFLR_PHY_Buutenks 
@@ -36,6 +36,7 @@ DF_INT_SS3_Angel_Goku
 DF_PHY_Glorio 
 LR_STR_Team_Turles 
 LR_TEQ_SS_Broly 
+LR_STR_Kaioken_Goku 
 BU_STR_Hercule 
 DFLR_STR_Gogeta_Blue 
 DFLR_TEQ_Vegito_Blue 
@@ -44,7 +45,6 @@ DF_TEQ_Perfect_Cell
 LR_TEQ_Full_Power_Jiren 
 DFLR_STR_SS_Vegito 
 DF_STR_Boujack 
-LR_STR_Kaioken_Goku 
 LR_STR_UI_Goku 
 LR_STR_Bulma_Youth 
 F2PLR_AGL_Demon_King_Piccolo 
@@ -123,11 +123,11 @@ BU_AGL_Krillin_Android18
 BU_TEQ_Kyawei 
 F2P_STR_Videl 
 LR_INT_God_Goku 
-BU_STR_Whis 
 F2PLR_PHY_Yamcha_Puar 
+BU_STR_Whis 
 LR_INT_Ginyu_Force 
-BU_TEQ_Bulla 
 BU_PHY_Giant_Ribrianne 
+BU_TEQ_Bulla 
 BU_INT_Whis 
 DF_INT_Piccolo_Jr 
 BU_INT_Dodoria 
@@ -141,8 +141,8 @@ DF_TEQ_Super_Trunks
 F2P_AGL_RoF_Krillin 
 LR_AGL_Nappa_Vegeta_Exchange 
 F2P_PHY_Mighty_Mask 
-F2P_INT_Bulma_Youth 
 DF_TEQ_SoH_Trunks 
+F2P_INT_Bulma_Youth 
 BU_INT_Pride_Troopers 
 BU_TEQ_Videl 
 F2P_PHY_Frieza_Cooler 
@@ -187,8 +187,8 @@ LR_AGL_Super_Baby_2
 BU_AGL_King_Vegeta 
 DFLR_INT_Perfect_Cell 
 DF_AGL_Berserk_Kale 
-LR_PHY_Android_Trio 
 BU_TEQ_God_Trunks 
+LR_PHY_Android_Trio 
 BU_PHY_Warrior_In_Black 
 CLR_TEQ_SS_Goku 
 DF_STR_Gamma_1 
