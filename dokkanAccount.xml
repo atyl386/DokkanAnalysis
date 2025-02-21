@@ -3032,4 +3032,13 @@
 		<slots value="[3, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_337>
+	<_338>
+		<common_name value="F2P_PHY_Trunks_Goten" />
+		<num_copies value="5" />
+		<BRZ_equip value="DGE" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[3, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="False" />
+	</_338>
 </id>
