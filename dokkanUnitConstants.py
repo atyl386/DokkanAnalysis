@@ -1243,3 +1243,7 @@ HIPO_SPECIAL_EQUIPS = {
         "GLD": [0, 0, 0.12, 0.12, 0]
     },
 }
+
+FIXED_SLOT_UNITS = {
+    332: "DF TEQ Pefect Cell",
+}

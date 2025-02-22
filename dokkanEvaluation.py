@@ -153,6 +153,8 @@ def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_
 
 
 def optimiseSlots(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds):
+    if ID in FIXED_SLOT_UNITS:
+        return
     best_slots = copy.copy(User[ID]["slots"])
     stateIdx = 0
     nextTurn = 1
