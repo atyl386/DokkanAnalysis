@@ -2454,7 +2454,7 @@ class Domain(SingleTurnAbility):
                             ),
                             TurnDependent(state.form, 1, False, "P3 ATK", 0.3, 1, params),
                             TurnDependent(state.form, 1, False, "P3 DEF", 0.15, 1, params),
-                            TurnDependent(state.form, 1, False, "Disable Evasion Cancel", 0.15, 1, params),
+                            TurnDependent(state.form, 1, False, "Disable Evasion Cancel", 1, 1, params),
                         ]
                     )
                 case "Molten Lava of Natade Village":
@@ -3974,4 +3974,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(117, "LR_TEQ_Great_Ape_Vegeta", 5, "DEF", "DGE", "CRT", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
+    unit = Unit(218, "DFLR_TEQ_UI_Goku", 5, "DEF", "DGE", "CRT", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
