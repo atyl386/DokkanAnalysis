@@ -27,7 +27,7 @@ YES_NO = ["Y", "N"]
 
 ENEMY_SUPER_AVG_CRIT_DEF_DEBUFF = 0.3 # Not constant, should update to whatever it is for the strongest boss with crit
 ENEMY_NORMAL_AVG_CRIT_DEF_DEBUFF = 1 # Not constant, should update to whatever it is for the strongest boss with crit
-ENEMY_SUPER_CRIT_CHANCE = 0.05
+ENEMY_SUPER_CRIT_CHANCE = 0.2 # 10th Anniversary Goku & Vegeta Story Red Zone last 3 stages
 ENEMY_NORMAL_CRIT_CHANCE = 0.05
 
 # SBR
@@ -166,7 +166,7 @@ GUARD_MOD = (
 )
 
 # Dodge
-DODGE_CANCEL_FACTOR = 0.05
+DODGE_CANCEL_FACTOR = 1 - (1 - 0.5)**(0.5) # 10th Anniversary Goku & Vegeta Story Red Zone last 3 stages. Inverse of aprioriProbMult as know which stages have dodge cancelling
 
 # Health
 AVG_HEALTH = 650000 * LEADER_SKILL_STATS / 4.0
@@ -281,13 +281,13 @@ MAX_ENEMY_DMG_THRESHOLD_PER_TURN = (
         axis=0
     )
 ) 
-ENEMY_DMG_THRESHOLD_CHANCE = 0.1
+ENEMY_DMG_THRESHOLD_CHANCE = 1/3
 ENEMY_DODGE_CHANCE = 0.05
 AVG_DAM_VARIANCE = 1.015
 MAX_T1_NORMAL_DAM = 1687500  # TEQ Gogeta (450000 * (1 + 0.5) * (1 + 1.5)
-MAX_NORMAL_DAM = 1900000  # Goku & Frieza Supreme Battle Spectacle (950000 * 2)
+MAX_NORMAL_DAM = 2730000  # Goku Black & Zamasu (1500000 * (1 + 0.3) * (1 + 0.4))
 MAX_T1_SA_DAM = 4500000  # TEQ Gogeta 450000 * (3.5 + 0.5) * (1 + 1.5)
-MAX_SA_DAM = 5700000  # Goku & Frieza Supreme Battle Spectacle (2850000 * (1 + 1))
+MAX_SA_DAM = 6930000  # Goku Black & Zamasu (1500000 * (3 + 0.3) * (1 + 0.4))
 MAX_NORMAL_DAM_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * AVG_DAM_VARIANCE
