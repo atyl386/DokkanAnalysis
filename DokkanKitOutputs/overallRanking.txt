@@ -22,11 +22,11 @@ DF_INT_SS_Goku_Mini_Daima
 CLR_STR_Evolution_Blue_Vegeta 
 DFLR_INT_Super_Saiyan_Goku 
 LR_PHY_SS2_Angel_Vegeta 
+LR_TEQ_Great_Ape_Vegeta 
 LR_STR_Cell_Max 
 DFLR_INT_LSS_Broly 
 DFLR_INT_Evolution_Blue_Vegeta 
 LR_INT_SS2_Gohan 
-LR_TEQ_Great_Ape_Vegeta 
 DF_TEQ_Buuhan 
 DFLR_PHY_Goku_Gohan_Trunks 
 DF_INT_Buuhan 
@@ -36,6 +36,7 @@ LR_PHY_Broly_Cheelai_Lemo
 DF_INT_Super_Janemba 
 DF_PHY_SS_Goten_Trunks 
 DF_TEQ_SS_Vegeta 
+LR_STR_Kaioken_Goku 
 DF_AGL_Super_Vegito 
 DF_INT_Fat_Buu 
 DFLR_PHY_Buutenks 
@@ -44,12 +45,11 @@ BU_STR_Hercule
 DF_TEQ_Majin_Vegeta 
 BU_AGL_Beerus 
 DF_TEQ_Beerus 
-LR_STR_Kaioken_Goku 
 DF_STR_Lord_Slug 
 DF_INT_Ultimate_Gohan 
 DFLR_TEQ_Fusion_Zamasu 
-DF_STR_Super_Gogeta 
 DF_STR_SS3_DragonFist_Goku 
+DF_STR_Super_Gogeta 
 DF_STR_Boujack 
 LR_TEQ_Gohan_Piccolo_Exchange 
 DF_INT_Hirudegarn 
@@ -111,8 +111,8 @@ DF_PHY_Kid_Buu
 LR_INT_Universe_7 
 DF_INT_Yamcha 
 BU_AGL_Cell_Jr 
-BU_TEQ_SS_Kid_Trunks 
 DF_TEQ_23_WT_Goku 
+BU_TEQ_SS_Kid_Trunks 
 BU_PHY_Gotenks 
 BU_INT_Future_Mai 
 BU_STR_Dyspo 
