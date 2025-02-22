@@ -166,7 +166,7 @@ GUARD_MOD = (
 )
 
 # Dodge
-DODGE_CANCEL_FACTOR = 1 - (1 - 0.5)**(0.5) # 10th Anniversary Goku & Vegeta Story Red Zone last 3 stages. Inverse of aprioriProbMult as know which stages have dodge cancelling
+DODGE_CANCEL_FACTOR = 1 - (1 - 0.25)**(0.5) # 10th Anniversary Goku & Vegeta Story Red Zone stages. Inverse of aprioriProbMult as know which stages have dodge cancelling
 
 # Health
 AVG_HEALTH = 650000 * LEADER_SKILL_STATS / 4.0

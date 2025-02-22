@@ -6,7 +6,6 @@ import click as clc
 import glob
 
 # TODO:
-# - Fix TEQ UI to still dodge when domain is up
 # - Make nullification a regular Buff so can do per turn like STR Kid Buu
 # - Make better way to integrate the no eval unit finding into normal evaluation run
 # - Simplify getEventFactor code
