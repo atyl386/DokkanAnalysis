@@ -489,7 +489,7 @@
 					<input prompt="Is it a max HP condition?" response="Y" />
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.4" />
+					<input prompt="What is the value of the buff?" response="0.1225" /> <!-- 1 - (1 - 0.77) ** (0.5) -->
 				</ability_1>
 			</health_dependent>
 			<health_scale>
