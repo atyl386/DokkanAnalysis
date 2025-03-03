@@ -3077,4 +3077,13 @@
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_342>
+	<_343>
+		<common_name value="DF_PHY_SS3_Vegeta_Daima" />
+		<num_copies value="0" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="CRT" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_343>
 </id>
