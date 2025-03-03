@@ -3819,6 +3819,9 @@ class KiSphereDependent(PerEvent):
                 case "Dmg Red A":
                     state.dmgRedSuperA += buffFromOrbs
                     state.dmgRedNormalA += buffFromOrbs
+                case "Dmg Red B":
+                    state.dmgRedSuperB += buffFromOrbs
+                    state.dmgRedNormalB += buffFromOrbs
                 case "AdditionalSuper":
                     state.aaPSuper.append(effectFactor)
                     state.aaPGuarantee.append(0)

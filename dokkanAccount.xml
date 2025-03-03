@@ -3068,4 +3068,13 @@
 		<slots value="[2, 2, 2, 3, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_341>
+	<_342>
+		<common_name value="DF_INT_SS_Vegeta_GT" />
+		<num_copies value="4" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_342>
 </id>
