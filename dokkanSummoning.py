@@ -135,7 +135,9 @@ class Banner:
 
 
 SummonRatings()
-
+SS3VegetaDaima = Banner([343, 321, 320, 260, 161, 160, 341, 342, 171, 9], "red", gFeaturedEvery3=True)
+print(SS3VegetaDaima.summonRatings)
+print(SS3VegetaDaima.summonScore)
 SuperGogeta = Banner([337, 334, 253, 81, 4, 3, 58, 90, 259, 330], "red", threePlus1=True)
 print(SuperGogeta.summonRatings)
 print(SuperGogeta.summonScore)
