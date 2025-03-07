@@ -271,7 +271,7 @@ MAX_ENEMY_DEF_PER_TURN = (
         axis=0,
     )
 )
-MAX_T1_ENEMY_DMG_THRESHOLD = 4000000 # Red Zone Blue Vegeta
+MAX_T1_ENEMY_DMG_THRESHOLD = 5000000 # Red Zone Blue Goku
 MAX_ENEMY_DMG_THRESHOLD = 10000000 # Goku & Frieza SMB
 MAX_ENEMY_DMG_THRESHOLD_PER_TURN = (
     LOOK_AHEAD_FACTOR
@@ -1319,6 +1319,12 @@ HIPO_SPECIAL_EQUIPS = {
         "BRZ": [0, 900, 0, 0, 0],
         "SLV": [0, 1200, 0, 0, 0.06],
         "GLD": [0, 0, 0.12, 0.12, 0]
+    },
+    # DF PHY SS GT Goku
+    "341" : {
+        "BRZ": [800, 0, 0, 0, 0],
+        "SLV": [0, 400, 0.08, 0, 0],
+        "GLD": [0, 0, 0.10, 0.06, 0]
     },
 }
 
