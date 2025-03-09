@@ -1360,6 +1360,9 @@ class State:
         self.p2DefB = 0
         self.p2DefSuper = 0
         self.evadeSuper = 0
+        self.preAttackNormal = 0
+        self.postAttackNormal = 0
+        self.p2ATKBuffPostAtttack = 0
         self.support = form.carryOverBuffs["ATK Support"].get()  # Support score
         self.dmgRedNormalA = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedNormalB = form.carryOverBuffs["Dmg Red"].get()
@@ -1402,6 +1405,7 @@ class State:
         self.setAttacksPerformed()
         self.guard = min(self.guard, 1)
         self.avgDefPreSuper = self.getDefStat(self.p2Buff["DEF"])
+        self.preAttackNormal = self.preSuperAttack()
         for ability in self.form.abilities["Attack Enemy"]:
             ability.applyToState(self)
         self.addStacks()
@@ -1440,6 +1444,7 @@ class State:
             self.form.superAttacks["AS"].effects["ATK"].buff,
         )
         self.setUSA()
+        self.postAttackNormal = self.postSuperAttack()
         self.setDPT()
         self.setAvgDefMult()
         self.normalDamageTaken = self.branchDamageTaken(
@@ -1695,6 +1700,57 @@ class State:
         self.numNormalAttacksDirectedAfterAttacking -= pDisableNormal
         self.numAttacksDirected -= pDisableNormal
         self.numAttacksDirectedAfterAttacking -= pDisableNormal
+    
+    def atkAfterAttacksPerformed(self):
+        p2Buff = 0
+        attacksToPerform = self.attacksPerformed
+        i = 0
+        for attack in self.atkPerAttackPerformed:
+            if attacksToPerform >= 1:
+                p2Buff += attack
+            else:
+                p2Buff += attacksToPerform * attack
+                break
+            attacksToPerform -= 1
+            i += 1
+
+        superAttacksToPerform = self.superAttacksPerformed
+        multBuff = 0
+        i = 0
+        for attack in self.atkPerSuperPerformed:
+            if i == 0 and self.form.unit.rarity == "LR":
+                p2Buff += attack
+                multBuff += self.form.superAttacks["18 Ki"].effects["ATK"].buff
+            if attacksToPerform >= 1:
+                p2Buff += attack
+                multBuff += self.form.superAttacks["12 Ki"].effects["ATK"].buff
+            else:
+                p2Buff += attacksToPerform * attack
+                multBuff += attacksToPerform * self.form.superAttacks["12 Ki"].effects["ATK"].buff
+                break
+            superAttacksToPerform -= 1
+            i += 1
+
+        return p2Buff, multBuff           
+    
+    def preSuperAttack(self):
+        kiMultiplier = self.kiModifier(self.ki)
+        return self.getAtkStat(
+            self.p1Buff["ATK"],
+            self.p2Buff["ATK"],
+            kiMultiplier,
+            1 + self.stackedStats["ATK"]
+        )
+
+    def postSuperAttack(self):
+        kiMultiplier = self.kiModifier(self.ki)
+        p2Buff, saMultBuff = self.atkAfterAttacksPerformed()
+        return self.getAtkStat(
+            self.p1Buff["ATK"],
+            self.p2Buff["ATK"] + p2Buff + self.p2ATKBuffPostAtttack / 2, # divide by 2 as if the extra buff for having received all the attacks
+            kiMultiplier,
+            1 + self.stackedStats["ATK"] + saMultBuff
+        )
 
     def branchDPT(
         self,
@@ -1789,7 +1845,8 @@ class State:
             self.n_0 = self.normal / baseAtk
             pAA = self.form.unit.pHiPo["AA"]  # Probability of doing an additional attack next
             crit = copy.deepcopy(self.multiChanceBuff["Crit"])
-            counterDmg = self.numAttacksDirected * self.atk2Dmg(self.form.normalCounterMult * self.normal, crit.prob) + NUM_SUPER_ATTACKS_DIRECTED[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.normal, crit.prob)
+            counterDmgPreSuper = self.numAttacksDirectedBeforeAttacking * self.atk2Dmg(self.form.normalCounterMult * self.preAttackNormal, crit.prob) + NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.preAttackNormal, crit.prob)
+            counterDmgPostSuper = self.numAttacksDirectedAfterAttacking * self.atk2Dmg(self.form.normalCounterMult * self.postAttackNormal, crit.prob) + NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.postAttackNormal, crit.prob)
             crit.updateChance("On Super", self.critPerAttackPerformed[0], "Crit")
             critN = copy.deepcopy(crit)
             crit.updateChance("On Super", self.critPerSuperPerformed[0] - self.critPerAttackPerformed[0], "Crit")
@@ -1853,7 +1910,8 @@ class State:
                         self.critPerSuperPerformed[1:],
                     )
                 )
-            self.DPT += counterDmg
+            counterDmgPostSuper = self.numAttacksDirectedAfterAttacking * self.atk2Dmg(self.form.normalCounterMult * self.normal * (1 + self.form.superAttacks["12 Ki"].effects["ATK"].buff), crit.prob) + NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.normal, crit.prob)
+            self.DPT += (counterDmgPreSuper + counterDmgPostSuper)
 
     def branchDamageTaken(
         self,
@@ -3063,6 +3121,9 @@ class PerAttackReceived(PerEvent):
                 state.p2Buff["ATK"] += min(
                     self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs
                 )
+                state.p2ATKBuffPostAtttack += min(
+                    self.effectiveBuff * state.numAttacksReceivedAfterAttacking, buffToGo - self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, key=abs
+                )
             case "DEF":
                 state.defBuffStatuses[("DEF", "Receive")] += cappedBuffPerAttack
             case "Dmg Red":
@@ -3098,6 +3159,9 @@ class PerAttackReceivedOrEvaded(PerEvent):
         match self.effect:
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+                state.p2ATKBuffPostAtttack += min(
+                    self.effectiveBuff * state.numAttacksReceivedAfterAttacking, buffToGo - self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, key=abs
+                )
             case "DEF":
                 state.defBuffStatuses[("DEF", "ReceiveOrEvade")] += cappedBuffPerAttack
             case "Dmg Red":
@@ -3126,6 +3190,9 @@ class PerAttackGuarded(PerEvent):
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+                state.p2ATKBuffPostAtttack += min(
+                    self.effectiveBuff * state.numAttacksReceivedAfterAttacking, buffToGo - self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, key=abs
+                )
             case "DEF":
                 state.defBuffStatuses[("DEF", "Receive")] += cappedBuffPerAttack
             case "Dmg Red":
@@ -3160,6 +3227,9 @@ class PerAttackEvaded(PerEvent):
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
             case "ATK":
                 state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
+                state.p2ATKBuffPostAtttack += min(
+                    self.effectiveBuff * state.numAttacksReceivedAfterAttacking, buffToGo - self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, key=abs
+                )
             case "DEF":
                 state.defBuffStatuses[("DEF", "Evade")] += cappedBuffPerAttack
             case "Crit":
