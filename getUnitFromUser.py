@@ -7,7 +7,6 @@ import glob
 
 # TODO:
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
-# - Fix numAttacksDirectedAfterAttacking on intercept
 # - Make nullification a regular Buff so can do per turn like STR Kid Buu
 # - Make better way to integrate the no eval unit finding into normal evaluation run
 # - Simplify getEventFactor code
@@ -2937,14 +2936,16 @@ class Buff(PassiveAbility):
                         state.numAttacksEvaded = 0
                         state.numAttacksEvadedBeforeAttacking = 0
                     case "Intercept":
-                        state.support += supportFactorConversion[self.effect] * supportBuff
-                        state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
-                        state.numAttacksDirected = NUM_ATTACKS_PER_TURN
                         pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
+                        state.support += supportFactorConversion[self.effect] * supportBuff
+                        state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * (1 - pEvade)
+                        state.numAttacksDirected = NUM_ATTACKS_PER_TURN
+                        state.numAttacksDirectedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
+                        state.numAttacksDirectedAfterAttacking = NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
                         state.numAttacksEvaded = NUM_ATTACKS_PER_TURN * pEvade
                         state.numAttacksEvadedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * pEvade
                         state.numAttacksReceived = state.numAttacksDirected * (1 - pEvade)
-                        state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * (1-pEvade)
+                        state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * (1 - pEvade)
                     case _:
                         raise Exception(f"{self.effect} Buff Effect not implemented!")
             state.randomKi = state.getRandomKi()
