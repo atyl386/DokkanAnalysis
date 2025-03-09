@@ -3159,10 +3159,10 @@ class PerAttackReceivedOrEvaded(PerEvent):
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "ATK":
-                preAtkBuff = min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+                preAtkBuff = min(self.effectiveBuff * state.numAttacksDirectedBeforeAttacking, buffToGo)
                 state.p2Buff["ATK"] += preAtkBuff
                 state.p2ATKBuffPostAtttack += min(
-                    self.effectiveBuff * (state.numAttacksReceived - state.numAttacksReceivedBeforeAttacking), buffToGo - preAtkBuff, key=abs
+                    self.effectiveBuff * (state.numAttacksDirected - state.numAttacksDirectedBeforeAttacking), buffToGo - preAtkBuff, key=abs
                 )
             case "DEF":
                 state.defBuffStatuses[("DEF", "ReceiveOrEvade")] += cappedBuffPerAttack
