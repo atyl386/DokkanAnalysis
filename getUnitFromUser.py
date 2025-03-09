@@ -6,6 +6,8 @@ import click as clc
 import glob
 
 # TODO:
+# - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
+# - Fix numAttacksDirectedAfterAttacking on intercept
 # - Make nullification a regular Buff so can do per turn like STR Kid Buu
 # - Make better way to integrate the no eval unit finding into normal evaluation run
 # - Simplify getEventFactor code
@@ -1910,7 +1912,6 @@ class State:
                         self.critPerSuperPerformed[1:],
                     )
                 )
-            counterDmgPostSuper = self.numAttacksDirectedAfterAttacking * self.atk2Dmg(self.form.normalCounterMult * self.normal * (1 + self.form.superAttacks["12 Ki"].effects["ATK"].buff), crit.prob) + NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.normal, crit.prob)
             self.DPT += (counterDmgPreSuper + counterDmgPostSuper)
 
     def branchDamageTaken(
@@ -3118,11 +3119,10 @@ class PerAttackReceived(PerEvent):
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs)
             case "ATK":
-                state.p2Buff["ATK"] += min(
-                    self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs
-                )
+                preAtkBuff = min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+                state.p2Buff["ATK"] += preAtkBuff
                 state.p2ATKBuffPostAtttack += min(
-                    self.effectiveBuff * state.numAttacksReceivedAfterAttacking, buffToGo - self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, key=abs
+                    self.effectiveBuff * (state.numAttacksReceived - state.numAttacksReceivedBeforeAttacking), buffToGo - preAtkBuff, key=abs
                 )
             case "DEF":
                 state.defBuffStatuses[("DEF", "Receive")] += cappedBuffPerAttack
@@ -3158,9 +3158,10 @@ class PerAttackReceivedOrEvaded(PerEvent):
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "ATK":
-                state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+                preAtkBuff = min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+                state.p2Buff["ATK"] += preAtkBuff
                 state.p2ATKBuffPostAtttack += min(
-                    self.effectiveBuff * state.numAttacksReceivedAfterAttacking, buffToGo - self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, key=abs
+                    self.effectiveBuff * (state.numAttacksReceived - state.numAttacksReceivedBeforeAttacking), buffToGo - preAtkBuff, key=abs
                 )
             case "DEF":
                 state.defBuffStatuses[("DEF", "ReceiveOrEvade")] += cappedBuffPerAttack
@@ -3189,9 +3190,10 @@ class PerAttackGuarded(PerEvent):
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
             case "ATK":
-                state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+                preAtkBuff = min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking * state.guard, buffToGo)
+                state.p2Buff["ATK"] += preAtkBuff
                 state.p2ATKBuffPostAtttack += min(
-                    self.effectiveBuff * state.numAttacksReceivedAfterAttacking, buffToGo - self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, key=abs
+                    self.effectiveBuff * (state.numAttacksReceived - state.numAttacksReceivedBeforeAttacking) * state.guard, buffToGo - preAtkBuff, key=abs
                 )
             case "DEF":
                 state.defBuffStatuses[("DEF", "Receive")] += cappedBuffPerAttack
@@ -3226,9 +3228,10 @@ class PerAttackEvaded(PerEvent):
             case "Ki":
                 state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
             case "ATK":
-                state.p2Buff["ATK"] += min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
+                preAtkBuff = min(self.effectiveBuff * state.numAttacksEvadedBeforeAttacking, buffToGo)
+                state.p2Buff["ATK"] += preAtkBuff
                 state.p2ATKBuffPostAtttack += min(
-                    self.effectiveBuff * state.numAttacksReceivedAfterAttacking, buffToGo - self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, key=abs
+                    self.effectiveBuff * (state.numAttacksEvaded - state.numAttacksEvadedBeforeAttacking), buffToGo - preAtkBuff, key=abs
                 )
             case "DEF":
                 state.defBuffStatuses[("DEF", "Evade")] += cappedBuffPerAttack
@@ -4046,4 +4049,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(343, "DF_PHY_SS3_Vegeta_Daima", 5, "ATK", "ADD", "DGE", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
+    unit = Unit(327, "DFLR_TEQ_Super_Vegito", 5, "ATK", "ADD", "DGE", [1, 1, 1, 2, 2, 2, 2, 2, 2, 2], "True")
