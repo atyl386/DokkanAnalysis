@@ -4,11 +4,11 @@ Leader Skill: 0.0
 SBR: 0.0 
 HP: 20082.0 
 Useability: 0.39831349206349204 
-Healing: 0.03510142230807692 
+Healing: 0.03353427792346154 
 Support: 1.4166666666666665 
-DPT: 7577641.0097241765 
-Normal Defence: -0.6188119672724054 
-Super Attack Defence: -0.3637649084893063 
+DPT: 7717999.856070952 
+Normal Defence: -0.6165328856591028 
+Super Attack Defence: -0.3557232440255936 
 Slot Bonus: 1.0 
 
 Form # 1 / State # 2 / Turn # 3 
@@ -17,11 +17,11 @@ Leader Skill: 0.0
 SBR: 0.0 
 HP: 20082.0 
 Useability: 0.39831349206349204 
-Healing: 0.06779116873184923 
+Healing: 0.06443989969174463 
 Support: 1.4166666666666665 
-DPT: 7920373.996112845 
-Normal Defence: -0.6649634524775437 
-Super Attack Defence: -0.3637649084893063 
+DPT: 8101439.612562393 
+Normal Defence: -0.672809588764643 
+Super Attack Defence: -0.3557232440255936 
 Slot Bonus: 1.0 
 
 Form # 1 / State # 3 / Turn # 5 
@@ -30,25 +30,25 @@ Leader Skill: 0.0
 SBR: 0.0 
 HP: 20082.0 
 Useability: 0.39831349206349204 
-Healing: 0.09065809747039587 
+Healing: 0.08661055982010661 
 Support: 1.4166666666666665 
-DPT: 3486894.280784791 
-Normal Defence: -0.8246270656292195 
-Super Attack Defence: -0.11192766415055577 
-Slot Bonus: 0.3333333333333333 
+DPT: 3434946.7536253603 
+Normal Defence: -0.9921942175667708 
+Super Attack Defence: -0.136816632317536 
+Slot Bonus: 0.5 
 
-Form # 1 / State # 4 / Turn # 8 
+Form # 1 / State # 4 / Turn # 7 
  
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20082.0 
 Useability: 0.39831349206349204 
-Healing: 0.11317122170534381 
+Healing: 0.10811855907990989 
 Support: 1.4166666666666665 
-DPT: 8179002.847937079 
-Normal Defence: -1.0477397895700866 
-Super Attack Defence: -0.3637649084893063 
-Slot Bonus: 1.0 
+DPT: 6260464.159112204 
+Normal Defence: -0.8063972308795571 
+Super Attack Defence: -0.10945330585402879 
+Slot Bonus: 0.3333333333333333 
 
 Form # 1 / State # 5 / Turn # 10 
  
@@ -56,11 +56,11 @@ Leader Skill: 0.0
 SBR: 0.0 
 HP: 20082.0 
 Useability: 0.39831349206349204 
-Healing: 0.13568434594029175 
+Healing: 0.1296265583397132 
 Support: 1.4166666666666665 
-DPT: 3441321.4219120718 
-Normal Defence: -0.8246270656292195 
-Super Attack Defence: -0.11192766415055577 
+DPT: 3416031.91978095 
+Normal Defence: -0.8063972308795571 
+Super Attack Defence: -0.10945330585402879 
 Slot Bonus: 0.3333333333333333 
 
 Form # 1 / State # 6 / Turn # 13 
@@ -69,11 +69,11 @@ Leader Skill: 0.0
 SBR: 0.0 
 HP: 20082.0 
 Useability: 0.39831349206349204 
-Healing: 0.15819747017523966 
+Healing: 0.1511345575995165 
 Support: 1.4166666666666665 
-DPT: 3441321.4219120718 
-Normal Defence: -0.8246270656292195 
-Super Attack Defence: -0.11192766415055577 
+DPT: 3416031.91978095 
+Normal Defence: -0.8063972308795571 
+Super Attack Defence: -0.10945330585402879 
 Slot Bonus: 0.3333333333333333 
 
 Form # 1 / State # 7 / Turn # 16 
@@ -82,23 +82,36 @@ Leader Skill: 0.0
 SBR: 0.0 
 HP: 20082.0 
 Useability: 0.39831349206349204 
-Healing: 0.1807105944101876 
+Healing: 0.17264255685931978 
 Support: 1.4166666666666665 
-DPT: 3441321.4219120718 
-Normal Defence: -0.8246270656292195 
-Super Attack Defence: -0.11192766415055577 
-Slot Bonus: 0.3333333333333333 
+DPT: 3402504.0856136577 
+Normal Defence: -0.9921942175667708 
+Super Attack Defence: -0.136816632317536 
+Slot Bonus: 0.5 
 
-Form # 1 / State # 8 / Turn # 19 
+Form # 1 / State # 8 / Turn # 18 
  
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20082.0 
 Useability: 0.39831349206349204 
-Healing: 0.2032237186451355 
+Healing: 0.19415055611912307 
 Support: 1.4166666666666665 
-DPT: 3427247.614371488 
-Normal Defence: -0.6335156971004011 
-Super Attack Defence: -0.13990958018819474 
+DPT: 3402504.0856136577 
+Normal Defence: -0.8497254617023947 
+Super Attack Defence: -0.136816632317536 
+Slot Bonus: 0.5 
+
+Form # 1 / State # 9 / Turn # 20 
+ 
+Leader Skill: 0.0 
+SBR: 0.0 
+HP: 20082.0 
+Useability: 0.39831349206349204 
+Healing: 0.2156585553789264 
+Support: 1.4166666666666665 
+DPT: 3402504.0856136577 
+Normal Defence: -0.43852646783866917 
+Super Attack Defence: -0.136816632317536 
 Slot Bonus: 0.5 
 
