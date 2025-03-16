@@ -3095,4 +3095,13 @@
 		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_344>
+	<_345>
+		<common_name value="DF_AGL_Kid_Goku" />
+		<num_copies value="0" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_345>
 </id>
