@@ -2561,7 +2561,7 @@
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[3, 2, 3, 3, 3, 3, 3, 2, 2, 2]" />
+		<slots value="[3, 3, 3, 3, 3, 3, 3, 2, 2, 2]" />
 		<eval value="True" />
 	</_285>
 	<_286>
@@ -2570,7 +2570,7 @@
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_286>
 	<_287>
@@ -2795,7 +2795,7 @@
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 2, 1, 2, 1, 1, 1, 1, 1, 1]" />
+		<slots value="[2, 2, 1, 2, 2, 1, 1, 2, 2, 1]" />
 		<eval value="True" />
 	</_311>
 	<_312>
@@ -2822,7 +2822,7 @@
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[1, 1, 2, 2, 2, 2, 1, 1, 2, 1]" />
+		<slots value="[1, 1, 2, 2, 2, 1, 1, 2, 2, 1]" />
 		<eval value="True" />
 	</_314>
 	<_315>
@@ -2903,7 +2903,7 @@
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[3, 2, 3, 3, 3, 2, 3, 3, 2, 2]" />
+		<slots value="[3, 2, 3, 3, 2, 3, 3, 3, 2, 2]" />
 		<eval value="True" />
 	</_323>
 	<_324>
@@ -3092,7 +3092,7 @@
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+		<slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_344>
 	<_345>
@@ -3100,8 +3100,8 @@
 		<num_copies value="0" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="ADD" />
-		<HiPo_choice_2 value="DGE" />
-		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[2, 2, 1, 1, 2, 2, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_345>
 </id>
