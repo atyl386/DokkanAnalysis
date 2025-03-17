@@ -1329,5 +1329,5 @@ HIPO_SPECIAL_EQUIPS = {
 }
 
 FIXED_SLOT_UNITS = {
-    #332: "DF TEQ Pefect Cell", # Slot 1 so can get the orbs the model thinks he can
+    19: "DF PHY Kid Goku", # Slot 3 so can get special per orb buffs
 }
