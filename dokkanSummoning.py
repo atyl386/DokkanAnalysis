@@ -135,6 +135,9 @@ class Banner:
 
 
 SummonRatings()
+KidGoku = Banner([345, 344, 218, 233, 100, 18, 19], "red", threePlus1=True)
+print(KidGoku.summonRatings)
+print(KidGoku.summonScore)
 SS3VegetaDaima = Banner([343, 321, 320, 260, 161, 160, 341, 342, 171, 9], "red", gFeaturedEvery3=True)
 print(SS3VegetaDaima.summonRatings)
 print(SS3VegetaDaima.summonScore)
