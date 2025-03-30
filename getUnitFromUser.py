@@ -2319,7 +2319,7 @@ class Domain(SingleTurnAbility):
                                 self.duration,
                                 params,
                             ),
-                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, self.duration, params),
                         ]
                     )
                 case "Alternate Dimensional Space":
@@ -2379,8 +2379,8 @@ class Domain(SingleTurnAbility):
                                 self.duration,
                                 params,
                             ),
-                            TurnDependent(state.form, 1, False, "P3 ATK", 0.2, 1, params),
-                            TurnDependent(state.form, 1, False, "P3 DEF", 0.2, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.2, self.duration, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.2, self.duration, params),
                             TurnDependent(
                                 state.form,
                                 1,
@@ -2390,7 +2390,7 @@ class Domain(SingleTurnAbility):
                                 self.duration,
                                 params,
                             ),
-                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, self.duration, params),
                         ]
                     )
                 case "City (Future) (Rift in Time)":
@@ -2448,8 +2448,8 @@ class Domain(SingleTurnAbility):
                                 self.duration,
                                 params,
                             ),
-                            TurnDependent(state.form, 1, False, "P3 ATK", 0.2, 1, params),
-                            TurnDependent(state.form, 1, False, "P3 DEF", 0.2, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.2, self.duration, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.2, self.duration, params),
                         ]
                     )
                 case "Shining World of Void":
@@ -2509,9 +2509,9 @@ class Domain(SingleTurnAbility):
                                 self.duration,
                                 params,
                             ),
-                            TurnDependent(state.form, 1, False, "P3 ATK", 0.3, 1, params),
-                            TurnDependent(state.form, 1, False, "P3 DEF", 0.15, 1, params),
-                            TurnDependent(state.form, 1, False, "Disable Evasion Cancel", 1, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.3, self.duration, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.15, self.duration, params),
+                            TurnDependent(state.form, 1, False, "Disable Evasion Cancel", 1, self.duration, params),
                         ]
                     )
                 case "Molten Lava of Natade Village":
@@ -2568,8 +2568,8 @@ class Domain(SingleTurnAbility):
                                 self.duration,
                                 params,
                             ),
-                            TurnDependent(state.form, 1, False, "P3 ATK", 0.15 + MovieHeroesDebuff, 1, params),
-                            TurnDependent(state.form, 1, False, "P3 DEF", 0.15, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.15 + MovieHeroesDebuff, self.duration, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.15, self.duration, params),
                             TurnDependent(
                                 state.form,
                                 1,
@@ -2579,7 +2579,7 @@ class Domain(SingleTurnAbility):
                                 self.duration,
                                 params,
                             ),
-                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, self.duration, params),
                         ]
                     )
                 case "Earth Shrouded in Clouds":
@@ -2635,8 +2635,8 @@ class Domain(SingleTurnAbility):
                                 self.duration,
                                 params,
                             ),
-                            TurnDependent(state.form, 1, False, "P3 ATK", 0.15 + EarthBredFightersDebuff, 1, params),
-                            TurnDependent(state.form, 1, False, "P3 DEF", 0.15, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.15 + EarthBredFightersDebuff, self.duration, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.15, self.duration, params),
                             TurnDependent(
                                 state.form,
                                 1,
@@ -2646,7 +2646,7 @@ class Domain(SingleTurnAbility):
                                 self.duration,
                                 params,
                             ),
-                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 ATK", self.effectiveBuff, self.duration, params),
                         ]
                     )
                 case "Inside Majin Buu":
@@ -2690,8 +2690,53 @@ class Domain(SingleTurnAbility):
                                 self.duration,
                                 params,
                             ),
-                            TurnDependent(state.form, 1, False, "P3 ATK", 0.3, 1, params),
-                            TurnDependent(state.form, 1, False, "P3 DEF", 0.3, 1, params),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.3, self.duration, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.3, self.duration, params),
+                        ]
+                    )
+                case "Cell Games Arena":
+                    AndroidsOrAndroidsCellSagaBuff = 0.15 * aprioriProbMod(
+                        0.5
+                        * math.factorial(NUM_CATEGORIES - 2)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 2)
+                        ),
+                        True,
+                    )  # 1.0 comes from every ally being on either Androids or Androids/CellSaga. The other part comes from calculating the probability an average enemy is not on either category.
+                    TournamentParticipantsBuff = 0.15 * aprioriProbMod(
+                        1/3
+                        * math.factorial(NUM_CATEGORIES - 1)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 1)
+                        ),
+                        True,
+                    )  # 1/3 comes from 1/3 of allies being on Tournament Particiapants. The other part comes from calculating the probability an average enemy is not on either category.
+                    state.form.abilities["Start of Turn"].extend(
+                        [
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                (AndroidsOrAndroidsCellSagaBuff + TournamentParticipantsBuff) * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "DEF Support",
+                                (AndroidsOrAndroidsCellSagaBuff + TournamentParticipantsBuff) * DEF_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.3, self.duration, params),
+                            TurnDependent(state.form, 1, False, "P3 DEF", 0.3, self.duration, params),
                         ]
                     )
                 case _:
@@ -4050,4 +4095,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(350, "BU_PHY_Android_18", 5, "DEF", "ADD", "DGE", [3, 3, 3, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(351, "DF_STR_Cell_Perfect_Form", 5, "DEF", "ADD", "DGE", [2, 3, 3, 3, 3, 3, 3, 3, 3, 3], "True")

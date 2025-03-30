@@ -110,6 +110,7 @@ DOMAIN_TYPES = [
     "Molten Lava of Natade Village",
     "Earth Shrouded in Clouds",
     "Inside Majin Buu",
+    "Cell Games Arena",
 ]
 
 # Turns
