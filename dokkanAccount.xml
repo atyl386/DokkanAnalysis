@@ -407,10 +407,10 @@
 	<_46>
 		<common_name value="DF_AGL_Transforming_Cell" />
 		<num_copies value="3" />
-		<BRZ_equip value="DGE" />
-		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 2, 2, 2, 2, 3, 2, 2, 2, 2]" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_46>
 	<_47>
