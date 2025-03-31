@@ -3158,4 +3158,13 @@
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_351>
+	<_352>
+		<common_name value="F2P_PHY_Para_Para_Bros" />
+		<num_copies value="5" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[3, 3, 3, 3, 3, 3, 3, 3, 3, 3]" />
+		<eval value="True" />
+	</_352>
 </id>
