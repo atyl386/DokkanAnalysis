@@ -135,6 +135,9 @@ class Banner:
 
 
 SummonRatings()
+Cell = Banner([351, 350, 282, 97, 15, 28, 7, 39, 46, 283], "red", gFeaturedEvery3=True)
+print(Cell.summonRatings)
+print(Cell.summonScore)
 KidGoku = Banner([345, 344, 218, 233, 100, 18, 19], "red", threePlus1=True)
 print(KidGoku.summonRatings)
 print(KidGoku.summonScore)

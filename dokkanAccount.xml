@@ -2903,7 +2903,7 @@
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[3, 2, 3, 3, 2, 3, 3, 3, 2, 2]" />
+		<slots value="[3, 2, 3, 3, 2, 2, 3, 2, 2, 2]" />
 		<eval value="True" />
 	</_323>
 	<_324>
@@ -3143,7 +3143,7 @@
 	<_350>
 		<common_name value="BU_PHY_Android_18" />
 		<num_copies value="0" />
-		<BRZ_equip value="DEF" />
+		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
@@ -3153,15 +3153,15 @@
 		<common_name value="DF_STR_Cell_Perfect_Form" />
 		<num_copies value="0" />
 		<BRZ_equip value="DEF" />
-		<HiPo_choice_1 value="ADD" />
-		<HiPo_choice_2 value="DGE" />
+		<HiPo_choice_1 value="CRT" />
+		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_351>
 	<_352>
 		<common_name value="F2P_PHY_Para_Para_Bros" />
 		<num_copies value="5" />
-		<BRZ_equip value="DEF" />
+		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[3, 3, 3, 3, 3, 3, 3, 3, 3, 3]" />
