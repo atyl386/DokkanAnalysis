@@ -17,14 +17,27 @@ Leader Skill: 4.0
 SBR: 0.75 
 HP: 26735.0 
 Useability: 1.4761904761904763 
-Healing: 0.07476946622478893 
+Healing: 0.05937575259027357 
 Support: 0.0 
-DPT: 2320170.533249065 
-Normal Defence: -2.3674053768339087 
-Super Attack Defence: -0.33561908286631204 
-Slot Bonus: 1.0 
+DPT: 1673876.9951520767 
+Normal Defence: -0.9361190726717286 
+Super Attack Defence: -0.12908426264088924 
+Slot Bonus: 0.5 
 
-Form # 2 / State # 3 / Turn # 5 
+Form # 1 / State # 3 / Turn # 5 
+ 
+Leader Skill: 4.0 
+SBR: 0.75 
+HP: 26735.0 
+Useability: 1.4761904761904763 
+Healing: 0.034926913288396214 
+Support: 0.0 
+DPT: 1622699.0060409824 
+Normal Defence: -0.9361190726717286 
+Super Attack Defence: -0.12908426264088924 
+Slot Bonus: 0.5 
+
+Form # 2 / State # 4 / Turn # 7 
  
 Leader Skill: 4.0 
 SBR: 0.75 
@@ -33,21 +46,8 @@ Useability: 1.8136904761904764
 Healing: 0.18287500603106369 
 Support: 3.025 
 DPT: 0.0 
-Normal Defence: -0.3284299027101067 
-Super Attack Defence: -0.08261392809016911 
-Slot Bonus: 0.5 
-
-Form # 3 / State # 4 / Turn # 7 
- 
-Leader Skill: 4.0 
-SBR: 0.75 
-HP: 26735.0 
-Useability: 1.4761904761904763 
-Healing: 0.8020282963244756 
-Support: 0.0 
-DPT: 12382488.294922128 
-Normal Defence: -0.7600852138442984 
-Super Attack Defence: -0.10326741011271137 
+Normal Defence: -0.37718839786705544 
+Super Attack Defence: -0.06609114247213528 
 Slot Bonus: 0.3333333333333333 
 
 Form # 3 / State # 5 / Turn # 10 
@@ -56,7 +56,7 @@ Leader Skill: 4.0
 SBR: 0.75 
 HP: 26735.0 
 Useability: 1.4761904761904763 
-Healing: 0.07369687463692605 
+Healing: 0.03202829632447553 
 Support: 0.0 
 DPT: 12382488.294922128 
 Normal Defence: -0.9361190726717286 
@@ -82,7 +82,7 @@ Leader Skill: 4.0
 SBR: 0.75 
 HP: 26735.0 
 Useability: 1.4761904761904763 
-Healing: 0.04163665233724636 
+Healing: 0.07369687463692605 
 Support: 0.0 
 DPT: 12382488.294922128 
 Normal Defence: -0.760822644005401 
@@ -95,7 +95,7 @@ Leader Skill: 4.0
 SBR: 0.75 
 HP: 26735.0 
 Useability: 1.4761904761904763 
-Healing: 0.07369687463692605 
+Healing: 0.04163665233724636 
 Support: 0.0 
 DPT: 12382488.294922128 
 Normal Defence: -0.760822644005401 
@@ -108,7 +108,7 @@ Leader Skill: 4.0
 SBR: 0.75 
 HP: 26735.0 
 Useability: 1.4761904761904763 
-Healing: 0.051655471805896254 
+Healing: 0.09143018509643638 
 Support: 0.0 
 DPT: 12382488.294922128 
 Normal Defence: -2.3674053768339087 
