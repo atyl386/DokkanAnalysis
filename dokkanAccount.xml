@@ -362,11 +362,11 @@
 	<_41>
 		<common_name value="DF_TEQ_Fat_Janemba" />
 		<num_copies value="3" />
-		<BRZ_equip value="DGE" />
+		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="CRT" />
-		<slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="False" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[1, 1, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
 	</_41>
 	<_42>
 		<common_name value="DF_STR_SS3_DragonFist_Goku" />
@@ -427,8 +427,8 @@
 		<num_copies value="4" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="CRT" />
-		<slots value="[3, 3, 1, 2, 2, 2, 2, 2, 2, 1]" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[3, 3, 1, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_48>
 	<_49>
