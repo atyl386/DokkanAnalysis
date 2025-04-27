@@ -1383,6 +1383,7 @@ class State:
         self.activeSkillAttackActivated = False
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
         self.randomKi = self.getRandomKi()
+        self.canAttack = form.canAttack
 
     def setState(self):
         self.updateStackedStats()
@@ -1828,7 +1829,7 @@ class State:
 
     def setDPT(self):
         """Returns the DPT of a unit in a turn"""
-        if self.form.canAttack:
+        if self.canAttack:
             # Number of additional attacks from passive in each turn
             self.nAA = len(self.aaPSuper)
             i = -1  # iteration counter
@@ -2992,6 +2993,8 @@ class Buff(PassiveAbility):
                         state.numAttacksEvadedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * pEvade
                         state.numAttacksReceived = state.numAttacksDirected * (1 - pEvade)
                         state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * (1 - pEvade)
+                    case "Stunned":
+                        state.canAttack = False
                     case _:
                         raise Exception(f"{self.effect} Buff Effect not implemented!")
             state.randomKi = state.getRandomKi()
@@ -4096,4 +4099,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(356, "BU_AGL_Piccolo", 5, "DEF", "ADD", "DGE", [1, 1, 1, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(357, "BU_PHY_Magetta", 5, "DEF", "ADD", "DGE", [1, 1, 1, 3, 3, 3, 3, 3, 3, 3], "True")
