@@ -1331,4 +1331,5 @@ HIPO_SPECIAL_EQUIPS = {
 
 FIXED_SLOT_UNITS = {
     19: "DF PHY Kid Goku", # Slot 3 so can get special per orb buffs
+    356: "BU AGL Piccolo", # Slot 3 Only after turn 5 as is also a turn dependent buff
 }

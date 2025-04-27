@@ -1912,6 +1912,7 @@ class State:
                     )
                 )
             self.DPT += (counterDmgPreSuper + counterDmgPostSuper)
+        self.DPT = max(self.DPT, 0.0)
 
     def branchDamageTaken(
         self,
@@ -4095,4 +4096,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(355, "LR_PHY_Paikuhan", 5, "DEF", "ADD", "DGE", [2, 3, 3, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(356, "BU_AGL_Piccolo", 5, "DEF", "ADD", "DGE", [1, 1, 1, 3, 3, 3, 3, 3, 3, 3], "True")
