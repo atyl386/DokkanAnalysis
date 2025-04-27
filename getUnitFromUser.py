@@ -3217,6 +3217,8 @@ class PerAttackReceivedOrEvaded(PerEvent):
                 state.defBuffStatuses[("DEF", "ReceiveOrEvade")] += cappedBuffPerAttack
             case "Dmg Red":
                 state.defBuffStatuses[("DmgRed", "ReceiveOrEvade")] += cappedBuffPerAttack
+            case "Evasion":
+                state.defBuffStatuses[("Evasion", "ReceiveOrEvade")] += cappedBuffPerAttack
             case _:
                 raise Exception(f"{self.effect} Per Attack Received Or Evaded Buff Effect not implemented!")
         if not (self.withinTheSameTurn):
@@ -4099,4 +4101,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(357, "BU_PHY_Magetta", 5, "DEF", "ADD", "DGE", [1, 1, 1, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(358, "DF_INT_Hit", 5, "DEF", "ADD", "DGE", [1, 1, 1, 3, 3, 3, 3, 3, 3, 3], "True")
