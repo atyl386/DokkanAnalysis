@@ -3221,4 +3221,13 @@
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_358>
+	<_359>
+		<common_name value="DF_TEQ_SSGSS_Kaioken_Goku" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 2, 1, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_359>
 </id>
