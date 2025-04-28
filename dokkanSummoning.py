@@ -135,6 +135,12 @@ class Banner:
 
 
 SummonRatings()
+Hit = Banner([358, 357, 320, 161, 35, 36, 20], "red", threePlus1=True)
+print(Hit.summonRatings)
+print(Hit.summonScore)
+SSGSSKGoku = Banner([359, 356, 321, 160, 42, 43, 360], "red", threePlus1=True)
+print(SSGSSKGoku.summonRatings)
+print(SSGSSKGoku.summonScore)
 Cell = Banner([351, 350, 282, 97, 15, 28, 7, 39, 46, 283], "red", gFeaturedEvery3=True)
 print(Cell.summonRatings)
 print(Cell.summonScore)
