@@ -98,9 +98,9 @@
 									<input prompt="How many turns does it last for?" response="4" />
 								</ultra_super_attack_variation_1_effect_2>
 								<ultra_super_attack_variation_1_effect_3>
-									<input prompt="What type of effect does the unit get on super?" response="Heal" />
+									<input prompt="What type of effect does the unit get on super?" response="Sacrifice HP" />
 									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
-									<input prompt="What is the value of the buff?" response="-0.04" />
+									<input prompt="What is the value of the buff?" response="0.04" />
 									<input prompt="How many turns does it last for?" response="1" />
 								</ultra_super_attack_variation_1_effect_3>
 							</ultra_super_attack_variation_1_effects>

@@ -1517,7 +1517,7 @@ class State:
             self.buff["Heal"],
             self.support,
             self.DPT,
-            self.normalDamageTaken,
+            self.normalDamageTaken - self.form.superAttacks["18 Ki"].effects["Sacrifice HP"].buff * self.pUSA - self.form.superAttacks["12 Ki"].effects["Sacrifice HP"].buff * self.pSA - self.form.superAttacks["AS"].effects["Sacrifice HP"].buff * self.aaSA,
             self.saDamageTaken,
             self.slotFactor,
         ]

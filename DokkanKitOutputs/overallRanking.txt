@@ -8,8 +8,8 @@ CLR_TEQ_SS3_Gotenks
 CLR_PHY_SS2_Gohan 
 DF_AGL_Kid_Goku 
 DFLR_TEQ_UI_Goku 
-DFLR_TEQ_Super_Gogeta 
 DF_AGL_Transforming_Cell 
+DFLR_TEQ_Super_Gogeta 
 CLR_TEQ_Broly 
 CLR_INT_Goku_Frieza 
 CLR_AGL_Jiren 
@@ -47,7 +47,6 @@ LR_PHY_SS2_Angel_Vegeta
 LR_INT_SS2_Gohan 
 DF_STR_SS3_DragonFist_Goku 
 DF_TEQ_Buuhan 
-DF_AGL_SSGSS_Kaioken_Goku 
 DFLR_PHY_Buutenks 
 DF_INT_Buuhan 
 DF_PHY_SS_Goku_GT 
@@ -56,6 +55,7 @@ DF_PHY_SS_Goten_Trunks
 DF_AGL_Super_Vegito 
 F2PLR_AGL_SS_Bardock 
 DF_INT_SS_Vegeta_GT 
+DF_AGL_SSGSS_Kaioken_Goku 
 DFLR_PHY_Goku_Gohan_Trunks 
 DF_INT_Hirudegarn 
 CLR_INT_Gammas 
@@ -65,11 +65,11 @@ DF_STR_Lord_Slug
 DF_INT_Ultimate_Gohan 
 DF_INT_SS3_Angel_Goku 
 LR_TEQ_Gohan_Piccolo_Exchange 
-LR_STR_Kaioken_Goku 
 BU_AGL_Beerus 
 BU_TEQ_Caulifla 
 DFLR_AGL_DBS_SS_Broly 
 DF_TEQ_Majin_Vegeta 
+LR_STR_Kaioken_Goku 
 LR_TEQ_Full_Power_Jiren 
 LR_STR_UI_Goku 
 F2PLR_AGL_Demon_King_Piccolo 
@@ -80,7 +80,6 @@ DF_AGL_SS3_Goku_Angel
 DF_STR_Super_Gogeta 
 LR_PHY_Android17_Frieza 
 DF_TEQ_SS3_Gotenks 
-BU_PHY_SS_Kaioken_Goku 
 BU_INT_Vados 
 DF_TEQ_Future_Androids 
 BU_INT_Xeno_Pan 
@@ -89,6 +88,7 @@ BU_INT_Cheelai
 LR_STR_Bulma_Youth 
 CLR_STR_SS_Future_Gohan 
 BU_STR_Paikuhan 
+BU_PHY_SS_Kaioken_Goku 
 LR_STR_Team_Turles 
 BU_INT_Chichi 
 BU_PHY_Android_18 
@@ -134,8 +134,8 @@ BU_STR_Dyspo
 BU_INT_Android_16 
 LR_AGL_SS2_Caulifla_Kale 
 BU_INT_Aeos 
-DF_TEQ_Super_Trunks 
 DF_PHY_God_Goku 
+DF_TEQ_Super_Trunks 
 F2P_TEQ_SS3_Goku_Angel 
 F2P_STR_Hell_Fighter_17 
 F2P_STR_Towa 
@@ -162,8 +162,8 @@ LR_INT_God_Goku
 F2PLR_PHY_Babidi_Buu 
 BU_PHY_Giant_Ribrianne 
 BU_TEQ_Videl 
-DFLR_TEQ_Orange_Piccolo 
 BU_INT_Kid_Gohan_Namek 
+DFLR_TEQ_Orange_Piccolo 
 F2P_INT_Krillin 
 F2P_STR_Goku_Black 
 DF_STR_Piccolo_Gohan_Exchange 
@@ -183,16 +183,16 @@ BU_STR_SS_Namek_Goku
 LR_INT_Ginyu_Force 
 F2P_AGL_Grandpa_Gohan 
 DF_AGL_SS3_DragonFist_Goku 
-CLR_INT_SS_Trio 
 F2P_PHY_Chiaotzu 
+CLR_INT_SS_Trio 
 F2P_PHY_Mighty_Mask 
 F2PLR_TEQ_SS_Goku 
 DF_PHY_Kid_Buu 
 DFLR_PHY_Buu_Goku_Vegeta 
 LR_AGL_Super_Baby_2 
 F2P_STR_Videl 
-LR_PHY_Android_Trio 
 LR_STR_Goku_Hit 
+LR_PHY_Android_Trio 
 F2P_INT_Android_18 
 F2P_TEQ_Mr_Buu 
 LR_STR_Beerus_Whis 
