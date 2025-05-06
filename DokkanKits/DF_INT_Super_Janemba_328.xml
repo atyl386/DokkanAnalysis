@@ -237,6 +237,7 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.5" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_1>
 			</per_attack_received_or_evaded>
 			<per_attack_guarded>

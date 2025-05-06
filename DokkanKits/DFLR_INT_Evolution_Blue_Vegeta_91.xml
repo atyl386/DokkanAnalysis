@@ -294,6 +294,7 @@
 					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_1>
 			</per_attack_received_or_evaded>
 			<per_attack_guarded>
@@ -323,6 +324,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.3" />
 					<input prompt="Requires super attack?" response="N" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What is the maximum buff?" response="10.0" />
@@ -331,6 +333,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="3.0" />
 					<input prompt="Requires super attack?" response="N" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_2>
 				<ability_3>
 					<input prompt="What is the maximum buff?" response="1.2" />
@@ -339,6 +342,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.3" />
 					<input prompt="Requires super attack?" response="N" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_3>
 			</per_attack_super_performed>
 			<nullification>

@@ -853,9 +853,9 @@ class Form:
                 self,
                 "How many different buffs does the form get on attacks received or evaded?",
                 PerAttackReceivedOrEvaded,
-                ["What is the maximum buff?", "Within the same turn?"],
-                [None, clc.Choice(YES_NO)],
-                [1.0, "N"],
+                ["What is the maximum buff?", "Within the same turn?", "What slots are required?"],
+                [None, clc.Choice(YES_NO), None],
+                [1.0, "N", "[1, 2, 3]"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_guarded")
@@ -948,9 +948,9 @@ class Form:
                 self,
                 "How many different buffs does the form get per attack / super performed?",
                 PerAttackPerformed,
-                ["What is the maximum buff?", "Requires super attack?", "Within the same turn?"],
-                [None, clc.Choice(YES_NO, case_sensitive=False), clc.Choice(YES_NO, case_sensitive=False)],
-                [1.0, "N", "N"],
+                ["What is the maximum buff?", "Requires super attack?", "Within the same turn?", "What slots are required?"],
+                [None, clc.Choice(YES_NO, case_sensitive=False), clc.Choice(YES_NO, case_sensitive=False), None],
+                [1.0, "N", "N", "[1, 2, 3]"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "nullification")
@@ -3115,42 +3115,44 @@ class PerAttackPerformed(PerEvent):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
         self.requiresSuperAttack = yesNo2Bool[args[1]]
         self.withinTheSameTurn = yesNo2Bool[args[2]]
+        self.slots = literal_eval(str(args[3]))
 
     def applyToState(self, state):
-        cumBuffPerAttack = self.effectiveBuff * (np.arange(len(state.aaPSuper) + 1) + 1)
-        if self.requiresSuperAttack:
-            turnBuff = self.effectiveBuff * state.superAttacksPerformed
-        else:
-            turnBuff = self.effectiveBuff * state.attacksPerformed
-        buffToGo = self.max - self.applied
-        cappedTurnBuff = min(buffToGo, turnBuff)
-        cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
-        cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
-        if not (self.requiresSuperAttack) and self.effect in ["ATK", "Crit"]:
+        if state.slot in self.slots:
+            cumBuffPerAttack = self.effectiveBuff * (np.arange(len(state.aaPSuper) + 1) + 1)
+            if self.requiresSuperAttack:
+                turnBuff = self.effectiveBuff * state.superAttacksPerformed
+            else:
+                turnBuff = self.effectiveBuff * state.attacksPerformed
+            buffToGo = self.max - self.applied
+            cappedTurnBuff = min(buffToGo, turnBuff)
+            cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
+            cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
+            if not (self.requiresSuperAttack) and self.effect in ["ATK", "Crit"]:
+                match self.effect:
+                    case "ATK":
+                        state.atkPerAttackPerformed = cappedCumBuffPerAttack
+                    case "Crit":
+                        state.critPerAttackPerformed = cappedBuffPerAttack
             match self.effect:
+                case "Ki":
+                    pass  # Handled by carryOverBuffs
                 case "ATK":
-                    state.atkPerAttackPerformed = cappedCumBuffPerAttack
+                    state.atkPerSuperPerformed = cappedCumBuffPerAttack
+                case "DEF":
+                    state.p2DefB += cappedTurnBuff
                 case "Crit":
-                    state.critPerAttackPerformed = cappedBuffPerAttack
-        match self.effect:
-            case "Ki":
-                pass  # Handled by carryOverBuffs
-            case "ATK":
-                state.atkPerSuperPerformed = cappedCumBuffPerAttack
-            case "DEF":
-                state.p2DefB += cappedTurnBuff
-            case "Crit":
-                state.critPerSuperPerformed = cappedBuffPerAttack
-            case "Dmg Red":
-                state.dmgRedSuperB += cappedTurnBuff
-                state.dmgRedNormalB += cappedTurnBuff
-            case "Evasion":
-                state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, self.effect, state)
-            case _:
-                raise Exception(f"{self.effect} Per Attack Performed Buff Effect not implemented!")
-        if not (self.withinTheSameTurn):
-            state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
-            self.applied += cappedTurnBuff
+                    state.critPerSuperPerformed = cappedBuffPerAttack
+                case "Dmg Red":
+                    state.dmgRedSuperB += cappedTurnBuff
+                    state.dmgRedNormalB += cappedTurnBuff
+                case "Evasion":
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, self.effect, state)
+                case _:
+                    raise Exception(f"{self.effect} Per Attack Performed Buff Effect not implemented!")
+            if not (self.withinTheSameTurn):
+                state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
+                self.applied += cappedTurnBuff
 
 
 class PerAttackReceived(PerEvent):
@@ -3197,33 +3199,35 @@ class PerAttackReceivedOrEvaded(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
         self.withinTheSameTurn = yesNo2Bool[args[1]]
+        self.slots = literal_eval(str(args[2]))
 
     def applyToState(self, state):
-        cumBuffPerAttack = self.effectiveBuff * (np.arange(NUM_ATTACKS_PER_TURN) + 1)
-        numAttacksDirected = round(state.numAttacksDirected)
-        turnBuff = self.effectiveBuff * numAttacksDirected
-        buffToGo = self.max - self.applied
-        cappedTurnBuff = min(buffToGo, turnBuff)
-        cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
-        cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
-        match self.effect:
-            case "ATK":
-                preAtkBuff = min(self.effectiveBuff * state.numAttacksDirectedBeforeAttacking, buffToGo)
-                state.p2Buff["ATK"] += preAtkBuff
-                state.p2ATKBuffPostAtttack += min(
-                    self.effectiveBuff * (state.numAttacksDirected - state.numAttacksDirectedBeforeAttacking), buffToGo - preAtkBuff, key=abs
-                )
-            case "DEF":
-                state.defBuffStatuses[("DEF", "ReceiveOrEvade")] += cappedBuffPerAttack
-            case "Dmg Red":
-                state.defBuffStatuses[("DmgRed", "ReceiveOrEvade")] += cappedBuffPerAttack
-            case "Evasion":
-                state.defBuffStatuses[("Evasion", "ReceiveOrEvade")] += cappedBuffPerAttack
-            case _:
-                raise Exception(f"{self.effect} Per Attack Received Or Evaded Buff Effect not implemented!")
-        if not (self.withinTheSameTurn):
-            state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
-            self.applied += cappedTurnBuff
+        if state.slot in self.slots:
+            cumBuffPerAttack = self.effectiveBuff * (np.arange(NUM_ATTACKS_PER_TURN) + 1)
+            numAttacksDirected = round(state.numAttacksDirected)
+            turnBuff = self.effectiveBuff * numAttacksDirected
+            buffToGo = self.max - self.applied
+            cappedTurnBuff = min(buffToGo, turnBuff)
+            cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
+            cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
+            match self.effect:
+                case "ATK":
+                    preAtkBuff = min(self.effectiveBuff * state.numAttacksDirectedBeforeAttacking, buffToGo)
+                    state.p2Buff["ATK"] += preAtkBuff
+                    state.p2ATKBuffPostAtttack += min(
+                        self.effectiveBuff * (state.numAttacksDirected - state.numAttacksDirectedBeforeAttacking), buffToGo - preAtkBuff, key=abs
+                    )
+                case "DEF":
+                    state.defBuffStatuses[("DEF", "ReceiveOrEvade")] += cappedBuffPerAttack
+                case "Dmg Red":
+                    state.defBuffStatuses[("DmgRed", "ReceiveOrEvade")] += cappedBuffPerAttack
+                case "Evasion":
+                    state.defBuffStatuses[("Evasion", "ReceiveOrEvade")] += cappedBuffPerAttack
+                case _:
+                    raise Exception(f"{self.effect} Per Attack Received Or Evaded Buff Effect not implemented!")
+            if not (self.withinTheSameTurn):
+                state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
+                self.applied += cappedTurnBuff
 
 
 class PerAttackGuarded(PerEvent):
@@ -4101,4 +4105,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(358, "DF_INT_Hit", 5, "DEF", "ADD", "DGE", [1, 1, 1, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(114, "LR_STR_Goku_Hit", 5, "DEF", "ADD", "DGE", [1, 1, 1, 3, 3, 3, 3, 3, 3, 3], "True")
