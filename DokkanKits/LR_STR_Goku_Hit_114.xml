@@ -209,7 +209,7 @@
 				</ability_8>
 				<ability_9>
 					<input prompt="Which slot is required?" response="[3]" />
-					<input prompt="What type of buff does the unit get?" response="Disable Action" />
+					<input prompt="What type of buff does the unit get?" response="Disable Action B" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_9>
