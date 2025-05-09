@@ -3239,4 +3239,13 @@
 		<slots value="[3, 3, 3, 3, 3, 3, 3, 3, 3, 3]" />
 		<eval value="True" />
 	</_360>
+	<_361>
+		<common_name value="F2P_STR_Tien" />
+		<num_copies value="5" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_361>
 </id>
