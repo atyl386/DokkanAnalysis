@@ -3242,11 +3242,11 @@
 	<_361>
 		<common_name value="F2P_STR_Tien" />
 		<num_copies value="5" />
-		<BRZ_equip value="DEF" />
+		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<slots value="[3, 3, 3, 3, 3, 3, 3, 2, 2, 2]" />
+		<eval value="False" />
 	</_361>
 	<_362>
 		<common_name value="F2PLR_STR_Mercenary_Tao" />
@@ -3254,7 +3254,7 @@
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<slots value="[2, 2, 3, 2, 3, 3, 3, 3, 2, 2]" />
 		<eval value="True" />
 	</_362>
 	<_363>
@@ -3272,16 +3272,16 @@
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<slots value="[2, 2, 3, 3, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_364>
 	<_365>
 		<common_name value="F2P_TEQ_Mecha_Frieza" />
 		<num_copies value="5" />
-		<BRZ_equip value="DEF" />
+		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<slots value="[3, 3, 3, 3, 3, 3, 3, 2, 2, 2]" />
+		<eval value="False" />
 	</_365>
 </id>
