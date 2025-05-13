@@ -268,6 +268,9 @@
 					<input prompt="What is the value of the buff?" response="0.35" />
 				</ability_1>
 			</until_recieve_attack>
+			<first_targeted_attack>
+				<input prompt="How many different buffs does the form get for the first targeted attack?" response="0" />
+			</first_targeted_attack>
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>
@@ -566,6 +569,9 @@
 					<input prompt="What is the value of the buff?" response="0.4" />
 				</ability_1>
 			</until_recieve_attack>
+			<first_targeted_attack>
+				<input prompt="How many different buffs does the form get for the first targeted attack?" response="0" />
+			</first_targeted_attack>
 			<per_attack_received>
 				<input prompt="How many different buffs does the form get on attacks received?" response="0" />
 			</per_attack_received>

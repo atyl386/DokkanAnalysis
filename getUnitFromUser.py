@@ -298,7 +298,7 @@ class Unit:
             HiPoSlv = HIPO_SPECIAL_EQUIPS[self.id]["SLV"]
             HiPoGld = HIPO_SPECIAL_EQUIPS[self.id]["GLD"]
         else:
-            if self.brz in STACK_EFFECTS:
+            if self.brz in ATK_DEF:
                 HiPoBrz = HIPO_BRZ[self.brz]
             else:
                 HiPoBrz = HIPO_BRZ[(self.HiPo1, self.HiPo2)]
@@ -413,7 +413,7 @@ class Unit:
     def getStates(self):
         self.forms = []
         self.states = []
-        self.stacks = dict(zip(STACK_EFFECTS, [[], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
+        self.stacks = dict(zip(STACK_EFFECTS, [[], [], [], []]))  # Dict mapping STACK_EFFECTS to list of Stack objects
         self.inputHelper.parent = self.inputHelper.getChildElement(self.inputHelper.tree.getroot(), "forms")
         self.formsElement = self.inputHelper.parent
         self.numForms = self.inputHelper.getAndSaveUserInput("How many forms does the unit have?", default=1)
@@ -832,6 +832,14 @@ class Form:
                 self,
                 "How many different buffs does the form get until recieving an attack?",
                 UntilAttackRecieved,
+            )
+        )
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "first_targeted_attack")
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get for the first targeted attack?",
+                ForFirstTargtedAttack,
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_received")
@@ -1324,7 +1332,7 @@ class State:
         self.p1Buff = {}
         self.p2Buff = {}
         self.p3Buff = {}
-        for effect in STACK_EFFECTS:
+        for effect in ATK_DEF:
             if form.giantRageMode:
                 self.p1Buff[effect] = 0
             else:
@@ -1358,12 +1366,15 @@ class State:
         self.aaPGuarantee = form.carryOverBuffs["aaPGuarantee"].get()
         self.orbCollection = OrbCollection()
         self.firstAttackBuff = 0
+        self.firstAttackCritBuff = 0
         self.p2DefB = 0
         self.p2DefSuper = 0
         self.evadeSuper = 0
         self.preAttackNormal = 0
         self.postAttackNormal = 0
         self.p2ATKBuffPostAtttack = 0
+        self.evadeFirstNormalChance = 0
+        self.evadeFirstSuperChance = 0
         self.support = form.carryOverBuffs["ATK Support"].get()  # Support score
         self.dmgRedNormalA = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedNormalB = form.carryOverBuffs["Dmg Red"].get()
@@ -1397,6 +1408,10 @@ class State:
         for ability in self.form.abilities["Collect Ki"]:
             ability.applyToState(self)
         avgDefStartOfTurn = self.getDefStat(self.form.carryOverBuffs["DEF"].get())
+        #self.multiChanceBuff["Crit"].updateChance(
+            #"Super Attack Effect", self.stackedStats["Crit"], "Crit", self)
+        #self.multiChanceBuff["EvasionA"].updateChance(
+            #"Super Attack Effect", self.stackedStats["Evasion"], "EvasionA", self)
         for ability in self.form.abilities["Receive Attacks"]:
             ability.applyToState(self)
         self.setNoCritAtkMod()
@@ -1433,6 +1448,8 @@ class State:
                     )
                 )
                 self.support += supportFactor * numSupers
+            #self.multiChanceBuff["EvasionB"].updateChance(
+                #"Super Attack Effect", numSupers * self.form.superAttacks[superAttackType].effects["Evasion"].buff, "EvasionB", self)
             self.disableAction(pSuper = min(numSupers, 1) * self.form.superAttacks[superAttackType].effects["Disable Action"].buff)
         self.setNormal()
         self.SA = self.getSA(
@@ -1468,6 +1485,7 @@ class State:
             MAX_NORMAL_DAM_PER_TURN[self.turn - 1],
             ENEMY_NORMAL_CRIT_CHANCE,
             ENEMY_NORMAL_AVG_CRIT_DEF_DEBUFF,
+            self.evadeFirstNormalChance,
         )
         self.saDamageTaken = self.branchDamageTaken(
             1,
@@ -1487,7 +1505,8 @@ class State:
             self.defBuffStatuses,
             MAX_SA_DAM_PER_TURN[self.turn - 1],
             ENEMY_SUPER_CRIT_CHANCE,
-            ENEMY_SUPER_AVG_CRIT_DEF_DEBUFF
+            ENEMY_SUPER_AVG_CRIT_DEF_DEBUFF,
+            self.evadeFirstSuperChance,
         )
         self.buff["Heal"] += (
             self.form.linkEffects["Heal"]
@@ -1851,9 +1870,15 @@ class State:
             counterDmgPostSuper = self.numAttacksDirectedAfterAttacking * self.atk2Dmg(self.form.normalCounterMult * self.postAttackNormal, crit.prob) + NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.postAttackNormal, crit.prob)
             crit.updateChance("On Super", self.critPerAttackPerformed[0], "Crit")
             critN = copy.deepcopy(crit)
+            crit1stN = copy.deepcopy(critN)
+            if self.firstAttackCritBuff > 0:
+                crit1stN.updateChance("On Super", self.firstAttackCritBuff, "Crit")
             crit.updateChance("On Super", self.critPerSuperPerformed[0] - self.critPerAttackPerformed[0], "Crit")
             crit.updateChance("Super Attack Effect", self.form.superAttacks["12 Ki"].effects["Crit"].buff, "Crit")
             critSA = copy.deepcopy(crit)
+            crit1stSA = copy.deepcopy(critSA)
+            if self.firstAttackCritBuff > 0:
+                crit1stSA.updateChance("On Super", self.firstAttackCritBuff, "Crit")
             crit.updateChance(
                 "Super Attack Effect",
                 self.form.superAttacks["18 Ki"].effects["Crit"].buff
@@ -1861,9 +1886,12 @@ class State:
                 "Crit",
             )
             critUSA = copy.deepcopy(crit)
+            crit1stUSA = copy.deepcopy(critUSA)
+            if self.firstAttackCritBuff > 0:
+                crit1stUSA.updateChance("On Super", self.firstAttackCritBuff, "Crit")
             if self.pN > 0:
                 self.DPT += self.pN * (self.atk2Dmg(
-                    self.normal * (1 + self.firstAttackBuff), critN.prob)
+                    self.normal * (1 + self.firstAttackBuff), crit1stN.prob)
                     + self.branchDPT(
                         i,
                         m12,
@@ -1880,7 +1908,7 @@ class State:
                 )
             if self.pSA > 0:
                 self.DPT += self.pSA * (self.atk2Dmg(
-                    self.SA * (1 + self.firstAttackBuff), critSA.prob)
+                    self.SA * (1 + self.firstAttackBuff), crit1stSA.prob)
                     + self.branchDPT(
                         i,
                         m12 + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
@@ -1897,7 +1925,7 @@ class State:
                 )
             if self.form.unit.rarity == "LR":  # If  is a LR
                 self.DPT += self.pUSA * (self.atk2Dmg(
-                    self.USA * (1 + self.firstAttackBuff), critUSA.prob)
+                    self.USA * (1 + self.firstAttackBuff), crit1stUSA.prob)
                     + self.branchDPT(
                         i,
                         m12 + self.form.superAttacks["18 Ki"].effects["ATK"].buff,
@@ -1935,6 +1963,7 @@ class State:
         maxDamage,
         enemyCritChance,
         enemyCritDefDebuff,
+        evadeAttackChance,
     ):
         if pBranch == 0:
             return 0
@@ -1946,7 +1975,9 @@ class State:
         )
         dmgRedB = self.dmgRedNormalB - self.dmgRedNormalA
         evasion.updateChance("Start of Turn", pEvadeExtra, "")
-        pE_N = (1 - DODGE_CANCEL_FACTOR * (1 - self.buff["Disable Evasion Cancel"])) * evasion.prob
+        evasion1stAttack = copy.deepcopy(evasion)
+        evasion1stAttack.updateChance("Start of Turn", evadeAttackChance, "")
+        pE_N = (1 - DODGE_CANCEL_FACTOR * (1 - self.buff["Disable Evasion Cancel"])) * evasion1stAttack.prob
         pE = pE_N * (1 - pNullify) + pNullify
         pG = (1 - pE) * pGuard
         pR = 1 - pE - pG
@@ -2011,6 +2042,7 @@ class State:
                     maxDamage,
                     enemyCritChance,
                     enemyCritDefDebuff,
+                    0
                 )
                 + self.branchDamageTaken(
                     pG,
@@ -2067,6 +2099,7 @@ class State:
                     maxDamage,
                     enemyCritChance,
                     enemyCritDefDebuff,
+                    0
                 )
                 + self.branchDamageTaken(
                     pR,
@@ -2106,6 +2139,7 @@ class State:
                     maxDamage,
                     enemyCritChance,
                     enemyCritDefDebuff,
+                    0
                 )
             )
         elif iA < nAA - 1 or iB < nAB - 1:
@@ -2158,6 +2192,7 @@ class State:
                     maxDamage,
                     enemyCritChance,
                     enemyCritDefDebuff,
+                    0
                 )
                 + self.branchDamageTaken(
                     pG,
@@ -2194,6 +2229,7 @@ class State:
                     maxDamage,
                     enemyCritChance,
                     enemyCritDefDebuff,
+                    0
                 )
                 + self.branchDamageTaken(
                     pR,
@@ -2225,6 +2261,7 @@ class State:
                     maxDamage,
                     enemyCritChance,
                     enemyCritDefDebuff,
+                    0
                 )
             )
         else:
@@ -3614,6 +3651,8 @@ class AfterAttackEvaded(AfterEvent):
                     state.setNoCritAtkMod()
                 case "Evasion":
                     state.defBuffStatuses[("Evasion", "Evade")] += cappedBuffPerAttack
+                case "Dmg Red":
+                    state.defBuffStatuses[("DmgRed", "Evade")] += cappedBuffPerAttack
                 case _:
                     raise Exception(f"{self.effect} After Attack Evaded Buff Effect not implemented!")
 
@@ -3775,6 +3814,18 @@ class UntilAttackRecieved(UntilEvent):
                     raise Exception(f"{self.effect} Until Attack Evaded Buff Effect not implemented!")
 
 
+class ForFirstTargtedAttack(PassiveAbility):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
+        super().__init__(form, activationProbability, knownApriori, effect, buff)
+
+    def applyToState(self, state):
+        match self.effect:
+            case "Evasion":
+                state.evadeFirstNormalChance = self.effectiveBuff * (state.numNormalAttacksDirectedBeforeAttacking + state.numNormalAttacksDirectedAfterAttacking) / state.numAttacksDirected
+                state.evadeFirstSuperChance = self.effectiveBuff * (state.numSuperAttacksDirectedBeforeAttacking + state.numSuperAttacksDirectedAfterAttacking) / state.numAttacksDirected
+            case _:
+                raise Exception(f"{self.effect} Until Attack Evaded Buff Effect not implemented!")
+
 class EveryTimeXEventsInBattle(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
@@ -3868,6 +3919,12 @@ class PerformingSuperAttackOffence(PassiveAbility):
                     state.firstAttackBuff += self.effectiveBuff
                 else:
                     state.p2Buff["ATK"] += self.effectiveBuff
+            case "Crit":
+                if self.firstAttackOnly:
+                    state.firstAttackCritBuff += self.effectiveBuff
+                else:
+                    state.multiChanceBuff["Crit"].updateChance("On Super", self.effectiveBuff, "Crit", state)
+                    state.setNoCritAtkMod()
             case _:
                 raise Exception(f"{self.effect} Super Attack Offense Buff Effect not implemented!")
 
@@ -4105,4 +4162,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(365, "F2P_TEQ_Mecha_Frieza", 5, "DEF", "ADD", "DGE", [1, 1, 1, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(366, "CLR_PHY_SS2_Caulifla_Kale", 5, "DEF", "ADD", "DGE", [1, 1, 1, 3, 3, 3, 3, 3, 3, 3], "True")

@@ -547,7 +547,8 @@ EFFECTS = [
 ]
 EFFECTS.extend(SUPPORT_EFFECTS)
 EFFECTS.extend(SUPER_ATTACK_NULLIFICATION_TYPES)
-STACK_EFFECTS = ["ATK", "DEF"]
+ATK_DEF = ["ATK", "DEF"]
+STACK_EFFECTS = ["ATK", "DEF", "Crit", "Evasion"]
 P3_EFFECTS_SUFFIX = ["ATK", "DEF", "Crit", "Evasion", "Disable Action", "ATK Support", "DEF Support"]
 SUPPORT_SUPER_ATTACK_EFFECTS = ["Raise Allies ATK", "Raise Allies DEF", "Raise Allies Crit"]
 ATK_SUPPORT_100_FACTOR = 2  # 100% atk increase support == 2 support points
@@ -637,7 +638,7 @@ SUPPORT_FACTORS = [
 MULTI_CHANCE_EFFECTS = ["Crit", "EvasionA", "EvasionB", "Nullify"]
 MULTI_CHANCE_EFFECTS_NO_NULLIFY = [effect for effect in MULTI_CHANCE_EFFECTS if effect != "Nullify"]
 CRIT_CHANCES = ["HiPo", "Start of Turn", "Links", "On Super", "Active Skill", "Super Attack Effect"]
-EVASION_CHANCES = ["HiPo", "Start of Turn", "Links", "Active Skill"]
+EVASION_CHANCES = ["HiPo", "Start of Turn", "Links", "Active Skill", "Super Attack Effect"]
 NULLIFY_CHANCES = ["SA Counter", "Nullification"]
 
 # Conditions
