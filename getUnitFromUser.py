@@ -1408,8 +1408,8 @@ class State:
         for ability in self.form.abilities["Collect Ki"]:
             ability.applyToState(self)
         avgDefStartOfTurn = self.getDefStat(self.form.carryOverBuffs["DEF"].get())
-        #self.multiChanceBuff["Crit"].updateChance(
-            #"Super Attack Effect", self.stackedStats["Crit"], "Crit", self)
+        self.multiChanceBuff["Crit"].updateChance(
+            "Super Attack Effect", self.stackedStats["Crit"], "Crit", self)
         #self.multiChanceBuff["EvasionA"].updateChance(
             #"Super Attack Effect", self.stackedStats["Evasion"], "EvasionA", self)
         for ability in self.form.abilities["Receive Attacks"]:
