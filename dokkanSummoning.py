@@ -135,6 +135,9 @@ class Banner:
 
 
 SummonRatings()
+KaleAndCaulifla = Banner([366, 313, 230, 114, 216, 210, 141, 136, 136, 136], "cyan", SSR_rate=0.2)
+print(KaleAndCaulifla.summonRatings)
+print(KaleAndCaulifla.summonScore)
 Hit = Banner([358, 357, 320, 161, 35, 36, 20], "red", threePlus1=True)
 print(Hit.summonRatings)
 print(Hit.summonScore)
