@@ -3977,9 +3977,12 @@ class KiSphereDependent(PerEvent):
         if self.required == 0:  # If buff per orb
             effectFactor = sum(state.orbCollection.getNumCategoryOrbs(self.orbType))
         else:  # If fixed buff if obtain X orbs
-            effectFactor = 1 - np.prod(
-                [poisson.cdf(self.required - 1, state.orbCollection.getNumCategoryOrbs(self.orbType))]
-            )
+            if state.orbCollection.getNumCategoryOrbs(self.orbType)[0] == 23: # If complete orb change then no uncertainty about meeting requirement
+                effectFactor = 1
+            else:
+                effectFactor = 1 - np.prod(
+                    [poisson.cdf(self.required - 1, state.orbCollection.getNumCategoryOrbs(self.orbType))]
+                )
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, self.effectiveBuff)
         buffFromOrbs = cappedTurnBuff * effectFactor
