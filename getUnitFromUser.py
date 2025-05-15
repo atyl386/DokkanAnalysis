@@ -155,15 +155,19 @@ def getCondition(inputHelper):
 
 # Overwrite this class function as has additional
 def updateAttacksReceivedAndEvaded(self, state):
+    if state.evadeFirstNormalChance > 0:
+        evadeFirstAttack = 1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"])
+    else:
+        evadeFirstAttack = 0
     pEvade = self.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
-    state.numAttacksReceived = state.numAttacksDirected * (1 - pEvade)
+    state.numAttacksReceived = max(state.numAttacksDirected - evadeFirstAttack, 0) * (1 - pEvade)
     if state.numAttacksDirected == NUM_ATTACKS_PER_TURN:
         numAttacksDirectedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
     else:
         numAttacksDirectedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1]
-    state.numAttacksReceivedBeforeAttacking = numAttacksDirectedBeforeAttacking * (1 - pEvade)
-    state.numAttacksEvadedBeforeAttacking = numAttacksDirectedBeforeAttacking * pEvade
-    state.numAttacksEvaded = state.numAttacksDirected * pEvade
+    state.numAttacksReceivedBeforeAttacking = max(numAttacksDirectedBeforeAttacking - evadeFirstAttack, 0) * (1 - pEvade)
+    state.numAttacksEvadedBeforeAttacking = max(numAttacksDirectedBeforeAttacking - evadeFirstAttack, 0) * pEvade + evadeFirstAttack
+    state.numAttacksEvaded = (state.numAttacksDirected - evadeFirstAttack) * pEvade + evadeFirstAttack
 
 
 MultiChanceBuff.updateAttacksReceivedAndEvaded = updateAttacksReceivedAndEvaded
@@ -776,6 +780,14 @@ class Form:
             )
         )
         ############################################## Receive Attacks ##################################################
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "first_targeted_attack")
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get for the first targeted attack?",
+                ForFirstTargtedAttack,
+            )
+        )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_receive_attack")
         self.abilities["Receive Attacks"].extend(
             abilityQuestionaire(
@@ -836,14 +848,6 @@ class Form:
                 self,
                 "How many different buffs does the form get until recieving an attack?",
                 UntilAttackRecieved,
-            )
-        )
-        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "first_targeted_attack")
-        self.abilities["Receive Attacks"].extend(
-            abilityQuestionaire(
-                self,
-                "How many different buffs does the form get for the first targeted attack?",
-                ForFirstTargtedAttack,
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_received")
@@ -1344,6 +1348,8 @@ class State:
             self.p2Buff[effect] = form.carryOverBuffs[effect].get()
             self.p3Buff[effect] = 0
         self.p2Buff["ATK"] += form.linkEffects["On Super ATK"]
+        self.evadeFirstNormalChance = 0
+        self.evadeFirstSuperChance = 0
         self.multiChanceBuff = {}
         self.numAttacksDirected = NUM_ATTACKS_DIRECTED[self.slot - 1]
         self.numNormalAttacksDirectedBeforeAttacking = NUM_NORMAL_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
@@ -1377,8 +1383,6 @@ class State:
         self.preAttackNormal = 0
         self.postAttackNormal = 0
         self.p2ATKBuffPostAtttack = 0
-        self.evadeFirstNormalChance = 0
-        self.evadeFirstSuperChance = 0
         self.support = form.carryOverBuffs["ATK Support"].get()  # Support score
         self.dmgRedNormalA = form.carryOverBuffs["Dmg Red"].get()
         self.dmgRedNormalB = form.carryOverBuffs["Dmg Red"].get()
@@ -3827,6 +3831,7 @@ class ForFirstTargtedAttack(PassiveAbility):
             case "Evasion":
                 state.evadeFirstNormalChance = self.effectiveBuff * (state.numNormalAttacksDirectedBeforeAttacking + state.numNormalAttacksDirectedAfterAttacking) / state.numAttacksDirected
                 state.evadeFirstSuperChance = self.effectiveBuff * (state.numSuperAttacksDirectedBeforeAttacking + state.numSuperAttacksDirectedAfterAttacking) / state.numAttacksDirected
+                state.multiChanceBuff["EvasionA"].updateAttacksReceivedAndEvaded(state)
             case _:
                 raise Exception(f"{self.effect} Until Attack Evaded Buff Effect not implemented!")
 
@@ -4166,4 +4171,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(81, "DFLR STR Beast Gohan", 5, "DEF", "ADD", "CRT", [2, 2, 1, 3, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(366, "CLR_PHY_SS2_Caulifla_Kale", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
