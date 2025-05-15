@@ -157,9 +157,13 @@ def getCondition(inputHelper):
 def updateAttacksReceivedAndEvaded(self, state):
     pEvade = self.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
     state.numAttacksReceived = state.numAttacksDirected * (1 - pEvade)
-    state.numAttacksReceivedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * (1 - pEvade)
+    if state.numAttacksDirected == NUM_ATTACKS_PER_TURN:
+        numAttacksDirectedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
+    else:
+        numAttacksDirectedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1]
+    state.numAttacksReceivedBeforeAttacking = numAttacksDirectedBeforeAttacking * (1 - pEvade)
+    state.numAttacksEvadedBeforeAttacking = numAttacksDirectedBeforeAttacking * pEvade
     state.numAttacksEvaded = state.numAttacksDirected * pEvade
-    state.numAttacksEvadedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1] * pEvade
 
 
 MultiChanceBuff.updateAttacksReceivedAndEvaded = updateAttacksReceivedAndEvaded
@@ -1410,8 +1414,8 @@ class State:
         avgDefStartOfTurn = self.getDefStat(self.form.carryOverBuffs["DEF"].get())
         self.multiChanceBuff["Crit"].updateChance(
             "Super Attack Effect", self.stackedStats["Crit"], "Crit", self)
-        #self.multiChanceBuff["EvasionA"].updateChance(
-            #"Super Attack Effect", self.stackedStats["Evasion"], "EvasionA", self)
+        self.multiChanceBuff["EvasionA"].updateChance(
+            "Super Attack Effect", self.stackedStats["Evasion"], "EvasionA", self)
         for ability in self.form.abilities["Receive Attacks"]:
             ability.applyToState(self)
         self.setNoCritAtkMod()
@@ -1448,8 +1452,8 @@ class State:
                     )
                 )
                 self.support += supportFactor * numSupers
-            #self.multiChanceBuff["EvasionB"].updateChance(
-                #"Super Attack Effect", numSupers * self.form.superAttacks[superAttackType].effects["Evasion"].buff, "EvasionB", self)
+            self.multiChanceBuff["EvasionB"].updateChance(
+                "Super Attack Effect", numSupers * self.form.superAttacks[superAttackType].effects["Evasion"].buff, "EvasionB", self)
             self.disableAction(pSuper = min(numSupers, 1) * self.form.superAttacks[superAttackType].effects["Disable Action"].buff)
         self.setNormal()
         self.SA = self.getSA(
@@ -4162,4 +4166,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(366, "CLR_PHY_SS2_Caulifla_Kale", 5, "DEF", "ADD", "DGE", [1, 1, 1, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(81, "DFLR STR Beast Gohan", 5, "DEF", "ADD", "CRT", [2, 2, 1, 3, 1, 1, 1, 1, 1, 2], "True")
