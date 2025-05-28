@@ -3293,4 +3293,13 @@
 		<slots value="[1, 3, 2, 2, 2, 2, 2, 2, 2, 1]" />
 		<eval value="True" />
 	</_366>
+	<_367>
+		<common_name value="BU_TEQ_General_Blue" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="CRT" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_367>
 </id>

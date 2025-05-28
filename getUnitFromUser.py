@@ -4174,4 +4174,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(20, "DF_TEQ_Fusing_Kefla", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(367, "BU_TEQ_General_Blue", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
