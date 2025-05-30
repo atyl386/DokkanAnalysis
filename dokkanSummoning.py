@@ -94,6 +94,7 @@ class Banner:
         gFeatured=False,
         gFeaturedEvery3=False,
         anniversaryFormat=False,
+        summonPoints=False,
     ):
         df = pd.read_excel("SummonRating.xlsx", index_col="ID")
         summonRatingData = [(df.at[unit, "common_name"], round(df.at[unit, "Summon Rating"], 2)) for unit in units]
@@ -124,8 +125,12 @@ class Banner:
         if anniversaryFormat:
             self.anniBonus = (6 + (1 + 9 * SSR_rate * featuredSSR_rate) / (10 * 0.1 * 0.5)) / ((30 + 40 + 50 + 0 + 40 + 45 + 50)/50)
         else:
-            self.anniBonus = 1 
-        self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus
+            self.anniBonus = 1
+        if summonPoints:
+            self.summonPoints = 15 * 30 / 300 # avg 15 summon rating per ticket, 30 points per multi, 300 per ticket
+        else:
+            self.summonPoints = 0
+        self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus + summonPoints
 
     def shouldSummmon(self):
         if self.summonScore > 12.5:  # Will need to be tuned. Could be as high as 15
@@ -135,6 +140,9 @@ class Banner:
 
 
 SummonRatings()
+Tao = Banner([368, 367, 84, 110, 134, 150, 162, 33, 307, 32], "red", gFeaturedEvery3=True, summonPoints=True)
+print(Tao.summonRatings)
+print(Tao.summonScore)
 KaleAndCaulifla = Banner([366, 313, 230, 114, 216, 210, 141, 136, 136, 136], "cyan", SSR_rate=0.2)
 print(KaleAndCaulifla.summonRatings)
 print(KaleAndCaulifla.summonScore)
