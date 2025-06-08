@@ -2326,9 +2326,7 @@ class Revive(SingleTurnAbility):
 
     def applyToState(self, state):
         # Usually want to revive the turn before fight peak
-        if self.form.checkCondition(self.condition, self.activated, True) and abs(
-            PEAK_TURN - RETURN_PERIOD_PER_SLOT[0] - state.turn
-        ) < abs(state.turn + RETURN_PERIOD_PER_SLOT[state.slot - 1] - PEAK_TURN + RETURN_PERIOD_PER_SLOT[0]):
+        if self.form.checkCondition(self.condition, self.activated, True):
             self.activated = True
             state.buff["Heal"] = min(state.buff["Heal"] + self.hpRegen, 1)
             if self.isThisCharacterOnly:

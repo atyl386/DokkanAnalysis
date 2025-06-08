@@ -165,35 +165,35 @@
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_3>
 				<ability_4>
-					<input prompt="What turn does the buff start from?" response="7" />
+					<input prompt="What turn does the buff start from?" response="6" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
 					<input prompt="What type of buff does the unit get?" response="Guard" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_4>
 				<ability_5>
-					<input prompt="What turn does the buff start from?" response="7" />
+					<input prompt="What turn does the buff start from?" response="6" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.7" />
 				</ability_5>
 				<ability_6>
-					<input prompt="What turn does the buff start from?" response="7" />
+					<input prompt="What turn does the buff start from?" response="6" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_6>
 				<ability_7>
-					<input prompt="What turn does the buff start from?" response="7" />
+					<input prompt="What turn does the buff start from?" response="6" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.2" />
 				</ability_7>
 				<ability_8>
-					<input prompt="What turn does the buff start from?" response="7" />
+					<input prompt="What turn does the buff start from?" response="6" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
@@ -554,8 +554,8 @@
 			<revive>
 				<input prompt="How many revive skills does the form have?" response="1" />
 				<ability_1>
-					<input prompt="How much HP is revived with?" response="0.7" />
-					<input prompt="Does the revive only apply to this unit?" response="N" />
+					<input prompt="How much HP is revived with?" response="0" />
+					<input prompt="Does the revive only apply to this unit?" response="Y" />
 					<input prompt="How many conditions have to be met?" response="0" />
 				</ability_1>
 				<input prompt="How many additional constant buffs does this revive have?" response="0" />
@@ -565,11 +565,7 @@
 				<ability_1>
 					<input prompt="What is the attack multiplier?" response="Super-Intense" />
 					<input prompt="What is the attack buff when finish is activated?" response="1.59" />
-					<input prompt="How many conditions have to be met?" response="1" />
-					<condition_1>
-						<input prompt="What type of condition is # 1?" response="Finish Skill Activation" />
-						<input prompt="What is the required charge condition?" response="1" />
-					</condition_1>
+					<input prompt="How many conditions have to be met?" response="0" />
 				</ability_1>
 			</revival_counter>
 			<sa_counter>
