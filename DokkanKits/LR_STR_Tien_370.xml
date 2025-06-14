@@ -103,7 +103,7 @@
 									<input prompt="What type of effect does the unit get on super?" response="ATK" />
 									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
 									<input prompt="What is the value of the buff?" response="0.5" />
-									<input prompt="How many turns does it last for?" response="1" />
+									<input prompt="How many turns does it last for?" response="99" />
 								</ultra_super_attack_variation_1_effect_1>
 								<ultra_super_attack_variation_1_effect_2>
 									<input prompt="What type of effect does the unit get on super?" response="Lowers ATK" />
@@ -218,7 +218,7 @@
 				</ability_2>
 				<ability_3>
 					<input prompt="Which slot is required?" response="[2, 3]" />
-					<input prompt="What type of buff does the unit get?" response="Evasion" />
+					<input prompt="What type of buff does the unit get?" response="EvasionB" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.7" />
 				</ability_3>
