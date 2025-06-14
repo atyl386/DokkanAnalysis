@@ -798,9 +798,10 @@ class Form:
                     "How many turns does the buff last?",
                     "How many attacks received are required?",
                     "Does the buff start from the next attacking turn?",
+                    "What slots are required?",
                 ],
-                [None, None, clc.Choice(YES_NO)],
-                [1, 0, "N"],
+                [None, None, clc.Choice(YES_NO), None],
+                [1, 0, "N", "[1, 2, 3]"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_guard_attack")
@@ -3472,6 +3473,7 @@ class AfterAttackReceived(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
         self.nextAttackingTurn = yesNo2Bool[args[2]]
+        self.slots = literal_eval(str(args[3]))
 
     def setTurnBuff(self, state):
         # geometric cdf
@@ -3524,31 +3526,32 @@ class AfterAttackReceived(AfterEvent):
                     self.eventFactor = 0
 
     def applyToState(self, state):
-        self.increment = state.numAttacksReceived
-        # Check if ability will be active next turn
-        if self.threshold > 1:
-            if not (self.isNextTurnBuff) and self.nextAttackingTurn:
-                self.required = 99
-            else:
-                self.required = max(self.threshold - state.form.numAttacksReceived, 0)
-        if self.nextAttackingTurn:
-            if np.any(self.applied) and self.turnsLeft < RETURN_PERIOD_PER_SLOT[state.slot - 1]:
-                self.isNextTurnBuff = False
+        if state.slot in self.slots:
+            self.increment = state.numAttacksReceived
+            # Check if ability will be active next turn
+            if self.threshold > 1:
+                if not (self.isNextTurnBuff) and self.nextAttackingTurn:
+                    self.required = 99
+                else:
+                    self.required = max(self.threshold - state.form.numAttacksReceived, 0)
+            if self.nextAttackingTurn:
+                if np.any(self.applied) and self.turnsLeft < RETURN_PERIOD_PER_SLOT[state.slot - 1]:
+                    self.isNextTurnBuff = False
+                    self.resetAppliedBuffs(state)
+                else:
+                    self.isNextTurnBuff = True
+                    self.effectiveBuff = self.maxEffectiveBuff * (1 - poisson.cdf(self.required - 1, self.increment))
+            self.updateBuffToGo()
+            if np.any(self.applied):
                 self.resetAppliedBuffs(state)
             else:
-                self.isNextTurnBuff = True
-                self.effectiveBuff = self.maxEffectiveBuff * (1 - poisson.cdf(self.required - 1, self.increment))
-        self.updateBuffToGo()
-        if np.any(self.applied):
-            self.resetAppliedBuffs(state)
-        else:
-            self.setEventFactor(state)
-            if not (self.nextAttackingTurn):
-                self.setTurnBuff(state)
-            if self.effect not in REGULAR_SUPPORT_EFFECTS:
-                self.nextTurnUpdate(state)
-        if np.any(self.applied):
-            self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
+                self.setEventFactor(state)
+                if not (self.nextAttackingTurn):
+                    self.setTurnBuff(state)
+                if self.effect not in REGULAR_SUPPORT_EFFECTS:
+                    self.nextTurnUpdate(state)
+            if np.any(self.applied):
+                self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 
 class AfterGuardActivated(AfterEvent):
@@ -4172,4 +4175,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(33, "DF_AGL_Captain_Ginyu", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(370, "LR_STR_Tien", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")

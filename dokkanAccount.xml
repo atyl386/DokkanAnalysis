@@ -3320,4 +3320,13 @@
 		<slots value="[1, 1, 1, 2, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_369>
+	<_370>
+		<common_name value="LR_STR_Tien" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="CRT" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[1, 2, 1, 2, 1, 2, 1, 2, 1, 2]" />
+		<eval value="True" />
+	</_370>
 </id>
