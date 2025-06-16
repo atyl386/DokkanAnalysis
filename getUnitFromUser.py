@@ -1378,6 +1378,7 @@ class State:
         self.orbCollection = OrbCollection()
         self.firstAttackBuff = 0
         self.firstAttackCritBuff = 0
+        self.p2DefA = 0
         self.p2DefB = 0
         self.p2DefSuper = 0
         self.evadeSuper = 0
@@ -3985,7 +3986,7 @@ class KiSphereDependent(PerEvent):
                     [poisson.cdf(self.required - 1, state.orbCollection.getNumCategoryOrbs(self.orbType))]
                 )
         buffToGo = self.max - self.applied
-        cappedTurnBuff = min(buffToGo, self.effectiveBuff)
+        cappedTurnBuff = min(buffToGo, self.effectiveBuff, key=abs)
         buffFromOrbs = cappedTurnBuff * effectFactor
         if self.effect in REGULAR_SUPPORT_EFFECTS:
             state.support += (
@@ -4175,4 +4176,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(370, "LR_STR_Tien", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(32, "DF_INT_Yamcha", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
