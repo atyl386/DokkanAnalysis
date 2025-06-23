@@ -3329,4 +3329,13 @@
 		<slots value="[1, 2, 1, 2, 1, 2, 1, 2, 1, 2]" />
 		<eval value="True" />
 	</_370>
+	<_371>
+		<common_name value="F2P_INT_Chiaotzu" />
+		<num_copies value="5" />
+		<BRZ_equip value="DGE" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_371>
 </id>
