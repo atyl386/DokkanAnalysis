@@ -140,6 +140,9 @@ class Banner:
 
 
 SummonRatings()
+RadiantSummer = Banner([218, 246, 253, 343, 282, 260, 100], "red")
+print(RadiantSummer.summonRatings)
+print(RadiantSummer.summonScore)
 Tao = Banner([368, 367, 84, 110, 134, 150, 162, 33, 307, 32], "red", gFeaturedEvery3=True, summonPoints=True)
 print(Tao.summonRatings)
 print(Tao.summonScore)
