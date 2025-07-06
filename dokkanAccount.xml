@@ -3190,7 +3190,7 @@
 		<num_copies value="0" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
-		<HiPo_choice_2 value="DGE" />
+		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_355>
@@ -3347,4 +3347,13 @@
 		<slots value="[2, 2, 3, 2, 3, 2, 3, 3, 2, 2]" />
 		<eval value="True" />
 	</_372>
+	<_373>
+		<common_name value="F2PLR_STR_Goku_Black" />
+		<num_copies value="5" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[3, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_373>
 </id>
