@@ -3374,4 +3374,13 @@
 		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_375>
+	<_376>
+		<common_name value="BU_AGL_Champa" />
+		<num_copies value="0" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_376>
 </id>
