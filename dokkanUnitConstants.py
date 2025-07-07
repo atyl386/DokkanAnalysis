@@ -1328,6 +1328,18 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 400, 0.08, 0, 0],
         "GLD": [0, 0, 0.10, 0.06, 0]
     },
+    # DFLR STR SSGSS Goku & Vegeta
+    "374" : {
+        "BRZ": [0, 900, 0, 0, 0],
+        "SLV": [0, 1200, 0, 0, 0.06],
+        "GLD": [900, 0, 0.12, 0, 0]
+    },
+    # CLR STR Goku Black & Zamasu
+    "375" : {
+        "BRZ": [0, 900, 0, 0, 0],
+        "SLV": [0, 1200, 0, 0, 0.06],
+        "GLD": [900, 0, 0.12, 0, 0]
+    },
 }
 
 FIXED_SLOT_UNITS = {
