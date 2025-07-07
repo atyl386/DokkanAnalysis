@@ -721,7 +721,7 @@
 	</_80>
 	<_81>
 		<common_name value="DFLR_STR_Beast_Gohan" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -757,7 +757,7 @@
 	</_84>
 	<_85>
 		<common_name value="DFLR_INT_Vegeta_Trunks" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -793,7 +793,7 @@
 	</_88>
 	<_89>
 		<common_name value="BU_PHY_Zamasu" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -1666,7 +1666,7 @@
 	</_185>
 	<_186>
 		<common_name value="BU_AGL_SS2_Future_Trunks" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2206,7 +2206,7 @@
 	</_245>
 	<_246>
 		<common_name value="DFLR_PHY_Goku_Gohan_Trunks" />
-		<num_copies value="1" />
+		<num_copies value="3" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -2764,7 +2764,7 @@
 	</_307>
 	<_308>
 		<common_name value="BU_STR_Grand_Supreme_Kai" />
-		<num_copies value="3" />
+		<num_copies value="5" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2917,7 +2917,7 @@
 	</_324>
 	<_325>
 		<common_name value="CLR_STR_Evolution_Blue_Vegeta" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="CRT" />
 		<HiPo_choice_2 value="DGE" />
@@ -3007,7 +3007,7 @@
 	</_334>
 	<_335>
 		<common_name value="CLR_INT_Goku_Frieza" />
-		<num_copies value="0" />
+		<num_copies value="2" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3358,7 +3358,7 @@
 	</_373>
 	<_374>
 		<common_name value="DFLR_STR_SSGSS_Goku_Vegeta" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="CRT" />
 		<HiPo_choice_2 value="ADD" />
@@ -3367,7 +3367,7 @@
 	</_374>
 	<_375>
 		<common_name value="CLR_STR_Goku_Black_Zamasu" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
@@ -3439,7 +3439,7 @@
 	</_382>
 	<_383>
 		<common_name value="DF_AGL_SSR_Goku_Black" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />

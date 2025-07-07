@@ -141,10 +141,10 @@ class Banner:
 
 
 SummonRatings()
-BlueGokuVegeta = Banner([374, 376, 337, 246, 81, 63, 58, 85, 382, 383], "red", threePlus1=True, summonPoints=True, summonPointsPerMulti=10)
+BlueGokuVegeta = Banner([374, 376, 337, 246, 81, 63, 58, 85, 382, 383], "red", threePlus1=True, summonPoints=False)
 print(BlueGokuVegeta.summonRatings)
 print(BlueGokuVegeta.summonScore)
-GokuBlackZamasu = Banner([375, 335, 325, 245, 67, 64, 105, 89, 185, 152], "cyan", threePlus1=True, summonPoints=True, summonPointsPerMulti=10)
+GokuBlackZamasu = Banner([375, 335, 325, 245, 67, 64, 105, 89, 185, 152], "cyan", threePlus1=True, summonPoints=False)
 print(GokuBlackZamasu.summonRatings)
 print(GokuBlackZamasu.summonScore)
 RadiantSummer = Banner([218, 246, 253, 343, 282, 260, 100], "red")
