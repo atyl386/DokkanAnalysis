@@ -94,6 +94,7 @@ class Banner:
         gFeatured=False,
         gFeaturedEvery3=False,
         anniversaryFormat=False,
+        summonPointsPerMulti=30,
         summonPoints=False,
     ):
         df = pd.read_excel("SummonRating.xlsx", index_col="ID")
@@ -127,7 +128,7 @@ class Banner:
         else:
             self.anniBonus = 1
         if summonPoints:
-            self.summonPoints = 15 * 30 / 300 # avg 15 summon rating per ticket, 30 points per multi, 300 per ticket
+            self.summonPoints = 15 * summonPointsPerMulti / 300 # avg 15 summon rating per ticket, 300 per ticket
         else:
             self.summonPoints = 0
         self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus + summonPoints
@@ -140,6 +141,12 @@ class Banner:
 
 
 SummonRatings()
+BlueGokuVegeta = Banner([374, 376, 337, 246, 81, 63, 58, 85, 382, 383], "red", threePlus1=True, summonPoints=True, summonPointsPerMulti=10)
+print(BlueGokuVegeta.summonRatings)
+print(BlueGokuVegeta.summonScore)
+GokuBlackZamasu = Banner([375, 335, 325, 245, 67, 64, 105, 89, 185, 152], "cyan", threePlus1=True, summonPoints=True, summonPointsPerMulti=10)
+print(GokuBlackZamasu.summonRatings)
+print(GokuBlackZamasu.summonScore)
 RadiantSummer = Banner([218, 246, 253, 343, 282, 260, 100], "red")
 print(RadiantSummer.summonRatings)
 print(RadiantSummer.summonScore)
