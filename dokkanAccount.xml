@@ -938,9 +938,9 @@
 	<_105>
 		<common_name value="LR_INT_Fusion_Zamasu" />
 		<num_copies value="3" />
-		<BRZ_equip value="DGE" />
+		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="CRT" />
+		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 3, 3, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_105>
