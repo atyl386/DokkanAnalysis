@@ -923,6 +923,19 @@ class Form:
                 [5, 1.0, "Y"],
             )
         )
+        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
+            self.formElement, "after_x_attacks_received_evaded_in_battle"
+        )
+        self.abilities["Receive Attacks"].extend(
+            abilityQuestionaire(
+                self,
+                "How many different buffs does the form get after receiving or evading X attacks in battle?",
+                EveryTimeXAttacksReceivedOrEvadedInBattle,
+                ["How many attacks are required?", "What is the maximum buff?", "Within the same turn?"],
+                [None, None, clc.Choice(YES_NO)],
+                [5, 1.0, "Y"],
+            )
+        )
         ############################################## Attack Enemy ##################################################
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_perform_attack")
         self.abilities["Attack Enemy"].extend(
@@ -3256,6 +3269,8 @@ class PerAttackReceivedOrEvaded(PerEvent):
             cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
             cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
             match self.effect:
+                case "Ki":
+                    state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksDirectedBeforeAttacking, buffToGo, key=abs)
                 case "ATK":
                     preAtkBuff = min(self.effectiveBuff * state.numAttacksDirectedBeforeAttacking, buffToGo)
                     state.p2Buff["ATK"] += preAtkBuff
@@ -3917,6 +3932,13 @@ class EveryTimeXAttacksEvadedInBattle(EveryTimeXEventsInBattle):
         self.increment = state.numAttacksEvaded
         self.applyBuff(state)
 
+class EveryTimeXAttacksReceivedOrEvadedInBattle(EveryTimeXEventsInBattle):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args)
+
+    def applyToState(self, state):
+        self.increment = state.numAttacksReceived + state.numAttacksEvaded
+        self.applyBuff(state)
 
 class PerformingSuperAttackOffence(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
@@ -4176,4 +4198,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(383, "DF_AGL_SSR_Goku_Black", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(105, "LR_INT_Fusion_Zamasu", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")

@@ -942,7 +942,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 3, 3, 2, 2, 2, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_105>
 	<_106>
 		<common_name value="LR_INT_SSR_Goku_Black" />
