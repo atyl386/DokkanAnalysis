@@ -111,6 +111,7 @@ DOMAIN_TYPES = [
     "Earth Shrouded in Clouds",
     "Inside Majin Buu",
     "Cell Games Arena",
+    "Earth Shrouded in Minus Energy",
 ]
 
 # Turns

@@ -2764,7 +2764,7 @@ class Domain(SingleTurnAbility):
                             * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 2)
                         ),
                         True,
-                    )  # 1.0 comes from every ally being on either Androids or Androids/CellSaga. The other part comes from calculating the probability an average enemy is not on either category.
+                    )  # 0.5 comes from every ally being on either Androids or Androids/CellSaga. The other part comes from calculating the probability an average enemy is not on either category.
                     TournamentParticipantsBuff = 0.15 * aprioriProbMod(
                         1/3
                         * math.factorial(NUM_CATEGORIES - 1)
@@ -2797,6 +2797,41 @@ class Domain(SingleTurnAbility):
                             ),
                             TurnDependent(state.form, 1, False, "P3 ATK", 0.3, self.duration, params),
                             TurnDependent(state.form, 1, False, "P3 DEF", 0.3, self.duration, params),
+                        ]
+                    )
+                case "Earth Shrouded in Minus Energy":
+                    InhumanDeedsOrPowerAbsorptionOrGTBossesBuff = 0.25 * aprioriProbMod(
+                        1.0
+                        * math.factorial(NUM_CATEGORIES - 3)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 3)
+                        ),
+                        True,
+                    )  # 0.5 comes from every ally being on either Androids or Androids/CellSaga. The other part comes from calculating the probability an average enemy is not on either category.
+                    EarthProtectingHeroesFusedFightersGTHeroesDeBuff = 0.1 * aprioriProbMod(
+                        3
+                        - math.factorial(NUM_CATEGORIES - 3)
+                        * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT)
+                        / (
+                            math.factorial(NUM_CATEGORIES)
+                            * math.factorial(NUM_CATEGORIES - AVG_NUM_CATEGORIES_PER_UNIT - 3)
+                        ),
+                        True,
+                    )  # The other part comes from calculating the probability an average enemy is on the Earth Protecting heroes, fused fighters or GT heroes categories.
+                    state.form.abilities["Start of Turn"].extend(
+                        [
+                            TurnDependent(
+                                state.form,
+                                1,
+                                False,
+                                "ATK Support",
+                                (InhumanDeedsOrPowerAbsorptionOrGTBossesBuff + 0.2 * self.prop + EarthProtectingHeroesFusedFightersGTHeroesDeBuff) * ATK_SUPPORT_100_FACTOR,
+                                self.duration,
+                                params,
+                            ),
+                            TurnDependent(state.form, 1, False, "P3 ATK", 0.25 * self.prop * 0.2 + EarthProtectingHeroesFusedFightersGTHeroesDeBuff, self.duration, params),
                         ]
                     )
                 case _:
@@ -4198,4 +4233,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(105, "LR_INT_Fusion_Zamasu", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(387, "CLR_AGL_SS4_Gogeta", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
