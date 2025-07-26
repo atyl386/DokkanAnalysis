@@ -141,6 +141,15 @@ class Banner:
 
 
 SummonRatings()
+SS4GogetaOne = Banner([387], "cyan", threePlus1=True, featuredSSR_rate=0.44, summonPoints=False)
+print(SS4GogetaOne.summonRatings)
+print(SS4GogetaOne.summonScore/5)
+OmegaShenron = Banner([386, 385, 327, 253, 66, 4, 61, 259, 340, 323], "red", threePlus1=True, summonPoints=False)
+print(OmegaShenron.summonRatings)
+print(OmegaShenron.summonScore)
+SS4Gogeta = Banner([387, 336, 326, 254, 83, 53, 12, 11, 11, 11], "cyan", threePlus1=True, summonPoints=False)
+print(SS4Gogeta.summonRatings)
+print(SS4Gogeta.summonScore)
 BlueGokuVegeta = Banner([374, 376, 337, 246, 81, 63, 58, 85, 382, 383], "red", threePlus1=True, summonPoints=False)
 print(BlueGokuVegeta.summonRatings)
 print(BlueGokuVegeta.summonScore)
