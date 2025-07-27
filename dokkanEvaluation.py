@@ -9,11 +9,11 @@ import tqdm
 HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 
 reCalc = True
-analyseHiPo = False
+analyseHiPo = True
 optimiseslots = False
 accountRanking = True
 useMultiprocessing = True
-updateEvaluationUnits = False
+updateEvaluationUnits = True
 onlyEvaluationUnits = True
 
 
