@@ -12,7 +12,7 @@
 		<input prompt="How would you rate the unit's leader skill on a scale of 1-10?" response="&lt;200%" />
 		<input prompt="How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account." response="2" />
 		<input prompt="What is the unit's 12 ki attck modifer?" response="1.35" />
-		<input prompt="How many turns does the unit's giant/rage mode last for?" response="1.0" />
+		<input prompt="How many turns does the unit's giant/rage mode last for?" response="2.5"/>
 		<input prompt="What # form can turn giant/rage mode?" response="1" />
 	</constants>
 	<SBR>
