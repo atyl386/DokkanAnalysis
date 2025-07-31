@@ -4,9 +4,8 @@
 		<input prompt="What is the unit's name?" response="Super Saiyan God SS Vegeta &amp; Super Saiyan Trunks (Future)" />
 		<input prompt="What is the unit's class?" response="S" />
 		<input prompt="What is the unit's type?" response="INT" />
-		<input prompt="Has the unit EZA'd?" response="N" />
-		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="6/22" />
-		<input prompt="When did the unit release on the Global version of Dokkan? (MM/YY)" response="11/22" />
+		<input prompt="Has the unit EZA'd?" response="Y" />
+		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="8/25" />
 		<input prompt="What is the unit's Max Level HP stat?" response="17750" />
 		<input prompt="What is the unit's Max Level ATK stat?" response="15910" />
 		<input prompt="What is the unit's Max Level DEF stat?" response="8488" />

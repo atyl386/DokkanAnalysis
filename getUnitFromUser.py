@@ -3312,6 +3312,14 @@ class PerAttackReceivedOrEvaded(PerEvent):
                     state.p2ATKBuffPostAtttack += min(
                         self.effectiveBuff * (state.numAttacksDirected - state.numAttacksDirectedBeforeAttacking), buffToGo - preAtkBuff, key=abs
                     )
+                case "Crit":
+                    state.multiChanceBuff["Crit"].updateChance(
+                        "On Super",
+                        min(self.effectiveBuff * state.numAttacksDirectedBeforeAttacking, buffToGo, key=abs),
+                        "Crit",
+                        state,
+                    )
+                    state.setNoCritAtkMod()
                 case "DEF":
                     state.defBuffStatuses[("DEF", "ReceiveOrEvade")] += cappedBuffPerAttack
                 case "Dmg Red":
@@ -4233,4 +4241,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(397, "F2PLR_INT_Shadow_Dragons", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(398, "DF_INT_SS4_Gogeta", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
