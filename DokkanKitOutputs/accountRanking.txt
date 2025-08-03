@@ -16,16 +16,16 @@ DFLR_STR_Beast_Gohan
 DF_TEQ_Fusing_Kefla 
 LR_PHY_Super_Janemba 
 CLR_STR_Goku_Black_Zamasu 
+DF_AGL_Transforming_Cell 
 DF_AGL_Captain_Ginyu 
 DFLR_TEQ_UI_Goku 
-DF_AGL_Transforming_Cell 
 DF_AGL_Paikuhan 
 DF_STR_Kid_Buu 
 CLR_PHY_SS2_Gohan 
 DF_PHY_SS2_Goku 
+DFLR_INT_Vegeta_Trunks 
 CLR_PHY_Gogeta_Blue 
 DFLR_AGL_Full_Power_Frieza 
-DFLR_INT_Vegeta_Trunks 
 CLR_AGL_Jiren 
 DF_TEQ_SSGSS_Kaioken_Goku 
 CLR_AGL_SS4_Goku 
@@ -45,6 +45,7 @@ LR_PHY_Broly_Cheelai_Lemo
 DFLR_PHY_Buutenks 
 DF_TEQ_Fat_Janemba 
 LR_PHY_Paikuhan 
+DF_STR_Omega_Shenron 
 DFLR_INT_LSS_Broly 
 BU_INT_Burter_Jeice 
 DF_PHY_Kid_Goku 
@@ -52,7 +53,6 @@ DF_TEQ_Beerus
 DF_INT_Yamcha 
 DFLR_INT_Super_Saiyan_Goku 
 LR_PHY_SS2_Angel_Vegeta 
-DF_STR_Omega_Shenron 
 DF_INT_SS3_Angel_Goku 
 DF_PHY_Glorio 
 BU_STR_Hercule 
@@ -105,8 +105,8 @@ DF_INT_Hirudegarn
 BU_TEQ_ToP_Android_18 
 DFLR_STR_SS_Vegito 
 BU_AGL_SS2_Future_Trunks 
-BU_INT_Cheelai 
 F2PLR_STR_Nuova_Shenron 
+BU_INT_Cheelai 
 DF_INT_Fat_Buu 
 BU_TEQ_SS_Goten 
 F2P_PHY_Goku_Black_Clone 
@@ -144,10 +144,10 @@ LR_STR_Team_Turles
 BU_INT_SS_Goten 
 BU_STR_Whis 
 F2P_AGL_Kid_Pan 
-BU_STR_Recoome_Guldo 
 DFLR_PHY_Blue_Goku_Vegeta 
-BU_AGL_Krillin_Android18 
+BU_STR_Recoome_Guldo 
 BU_TEQ_Bulla 
+BU_AGL_Krillin_Android18 
 DF_STR_Costume_Videl 
 BU_INT_Whis 
 BU_AGL_Piccolo 
@@ -166,8 +166,8 @@ DF_AGL_SS3_Goku_Angel
 DF_TEQ_Super_Trunks 
 BU_TEQ_Kyawei 
 LR_INT_God_Goku 
-F2P_INT_SS_Future_Gohan 
 LR_AGL_SS2_Caulifla_Kale 
+F2P_INT_SS_Future_Gohan 
 DF_TEQ_23_WT_Goku 
 BU_TEQ_Videl 
 BU_PHY_Robelu 
