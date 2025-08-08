@@ -1437,11 +1437,16 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 400, 0.04, 0, 0],
         "GLD": [0, 0, 0.08, 0.08, 0]
     },
+    # LR AGL Goten & Trunks
+    "399" : {
+        "BRZ": [0, 800, 0, 0, 0],
+        "SLV": [0, 400, 0, 0, 0.04],
+        "GLD": [0, 0, 0, 0.04, 0.05],
+    },
 }
 
 FIXED_SLOT_UNITS = {
     19: "DF PHY Kid Goku", # Slot 3 so can get special per orb buffs
     356: "BU AGL Piccolo", # Slot 3 Only after turn 5 as is also a turn dependent buff
     370: "LR STR Tien", # Alternating Slot 1 & 2 to maintain all turn buffs
-    400: "BU PHY Spopovich", # Optimiser will be dumb and put in slot 1 immediately
 }
