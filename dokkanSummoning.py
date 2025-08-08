@@ -141,6 +141,9 @@ class Banner:
 
 
 SummonRatings()
+SSHyrbids = Banner([401, 400, 343, 160, 161, 233, 28, 257, 164, 155], "red", gFeaturedEvery3=True, summonPoints=True)
+print(SSHyrbids.summonRatings)
+print(SSHyrbids.summonScore)
 SS4GogetaOne = Banner([387], "cyan", threePlus1=True, featuredSSR_rate=0.44, summonPoints=False)
 print(SS4GogetaOne.summonRatings)
 print(SS4GogetaOne.summonScore/5)
