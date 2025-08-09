@@ -1473,7 +1473,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_164>
 	<_165>
 		<common_name value="LR_AGL_Ultimate_Gohan" />
@@ -1482,7 +1482,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 2, 3, 3, 2, 3, 3, 3, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_165>
 	<_166>
 		<common_name value="BU_INT_Hercule" />
@@ -2229,7 +2229,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_248>
 	<_249>
 		<common_name value="LR_TEQ_SS_Broly" />

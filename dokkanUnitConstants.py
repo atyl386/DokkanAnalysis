@@ -287,9 +287,9 @@ ENEMY_DMG_THRESHOLD_CHANCE = 0.5 # 10th Anniv Final Red Zone Stages
 ENEMY_DODGE_CHANCE = 0.05
 AVG_DAM_VARIANCE = 1.015
 MAX_T1_NORMAL_DAM = 1687500  # Goku Black & Zamasu (1250000 * (1 + 0.5) * (1 + 0.5)) * 0.6 (Whis)
-MAX_NORMAL_DAM = 3375000  # # Goku Black & Zamasu (1250000 * (1 + 0.5) * (1 + (0.3 - 0.1) * 10))) * 0.6 (Whis)
+MAX_NORMAL_DAM = 4200000  # Player's Choice (1400000 * (1 + 0.5) * (1 + 1))
 MAX_T1_SA_DAM = 4500000  # Goku Black & Zamasu 1250000 * (3.5 + 0.5) * (1 + 0.5) * 0.6 (Whis)
-MAX_SA_DAM = 9000000  # Goku Black & Zamasu 1250000 * (3.5 + 0.5) * (1 + (0.3 - 0.1) * 10))) * 0.6 (Whis)
+MAX_SA_DAM = 12600000  # Player's Choice (1400000 * (4 + 0.5) * (1 + 1))
 MAX_NORMAL_DAM_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * AVG_DAM_VARIANCE
