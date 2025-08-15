@@ -1393,6 +1393,7 @@ class State:
         self.firstAttackCritBuff = 0
         self.p2DefA = 0
         self.p2DefB = 0
+        self.p2DefNormal = 0
         self.p2DefSuper = 0
         self.evadeSuper = 0
         self.preAttackNormal = 0
@@ -1495,8 +1496,7 @@ class State:
             -1,
             self.numNormalAttacksDirectedBeforeAttacking,
             self.numNormalAttacksDirectedAfterAttacking,
-            self.p2Buff["DEF"],
-            0,
+            self.p2Buff["DEF"] + self.p2DefNormal,
             self.multiChanceBuff["EvasionA"],
             0,
             self.guard,
@@ -1516,8 +1516,7 @@ class State:
             -1,
             self.numSuperAttacksDirectedBeforeAttacking,
             self.numSuperAttacksDirectedAfterAttacking,
-            self.p2Buff["DEF"],
-            self.p2DefSuper,
+            self.p2Buff["DEF"] + self.p2DefSuper,
             self.multiChanceBuff["EvasionA"],
             self.evadeSuper,
             self.guard,
@@ -1974,7 +1973,6 @@ class State:
         nAA,
         nAB,
         p2Def,
-        p2DefSuper,
         evasion,
         pEvadeExtra,
         pGuard,
@@ -2037,9 +2035,7 @@ class State:
                     nAB,
                     p2Def
                     + self.p2DefB
-                    + p2DefSuper
                     + (defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA),
-                    p2DefSuper,
                     evasionPostEvadeB,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "ReceiveOrEvade")] * (nAA - iA),
@@ -2053,7 +2049,6 @@ class State:
                         1
                         + p2Def
                         + self.p2DefB
-                        + p2DefSuper
                         + (defBuffStatuses0[("DEF", "Evade")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")])
                         * (nAA - iA)
                     )
@@ -2075,14 +2070,12 @@ class State:
                     nAB,
                     p2Def
                     + self.p2DefB
-                    + p2DefSuper
                     + (
                         defBuffStatuses0[("DEF", "Guard")]
                         + defBuffStatuses0[("DEF", "Receive")]
                         + defBuffStatuses0[("DEF", "ReceiveOrEvade")]
                     )
                     * (nAA - iA),
-                    p2DefSuper,
                     evasionPostHitB,
                     0,
                     pGuard
@@ -2106,7 +2099,6 @@ class State:
                         1
                         + p2Def
                         + self.p2DefB
-                        + p2DefSuper
                         + (
                             defBuffStatuses0[("DEF", "Guard")]
                             + defBuffStatuses0[("DEF", "Receive")]
@@ -2132,9 +2124,7 @@ class State:
                     nAB,
                     p2Def
                     + self.p2DefB
-                    + p2DefSuper
                     + (defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")]) * (nAA - iA),
-                    p2DefSuper,
                     evasionPostHitB,
                     0,
                     pGuard
@@ -2150,7 +2140,6 @@ class State:
                         1
                         + p2Def
                         + self.p2DefB
-                        + p2DefSuper
                         + (defBuffStatuses0[("DEF", "Receive")] + defBuffStatuses0[("DEF", "ReceiveOrEvade")])
                         * (nAA - iA)
                     )
@@ -2192,10 +2181,8 @@ class State:
                     nAA,
                     nAB,
                     p2Def
-                    + p2DefSuper
                     + defBuffStatuses0[("DEF", "Evade")]
                     + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
-                    p2DefSuper,
                     evasionPostEvade,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
@@ -2205,7 +2192,6 @@ class State:
                     * (
                         1
                         + p2Def
-                        + p2DefSuper
                         + defBuffStatuses0[("DEF", "Evade")]
                         + defBuffStatuses0[("DEF", "ReceiveOrEvade")]
                     )
@@ -2224,11 +2210,9 @@ class State:
                     nAA,
                     nAB,
                     p2Def
-                    + p2DefSuper
                     + defBuffStatuses0[("DEF", "Guard")]
                     + defBuffStatuses0[("DEF", "Receive")]
                     + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
-                    p2DefSuper,
                     evasionPostHit,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
@@ -2241,7 +2225,6 @@ class State:
                     * (
                         1
                         + p2Def
-                        + p2DefSuper
                         + defBuffStatuses0[("DEF", "Guard")]
                         + defBuffStatuses0[("DEF", "Receive")]
                         + defBuffStatuses0[("DEF", "ReceiveOrEvade")]
@@ -2261,10 +2244,8 @@ class State:
                     nAA,
                     nAB,
                     p2Def
-                    + p2DefSuper
                     + defBuffStatuses0[("DEF", "Receive")]
                     + defBuffStatuses0[("DEF", "ReceiveOrEvade")],
-                    p2DefSuper,
                     evasionPostHit,
                     0,
                     pGuard + defBuffStatuses0[("Guard", "Receive")] + defBuffStatuses0[("Guard", "ReceiveOrEvade")],
@@ -2274,7 +2255,6 @@ class State:
                     * (
                         1
                         + p2Def
-                        + p2DefSuper
                         + defBuffStatuses0[("DEF", "Receive")]
                         + defBuffStatuses0[("DEF", "ReceiveOrEvade")]
                     )
@@ -3043,6 +3023,8 @@ class Buff(PassiveAbility):
                         state.p2Buff["DEF"] += effectiveBuff
                     case "P2 DEF B":
                         state.p2DefB += effectiveBuff
+                    case "P2 DEF against Normals":
+                        state.p2DefNormal += effectiveBuff
                     case "P2 DEF against Supers":
                         state.p2DefSuper += effectiveBuff
                     case "P3 ATK":
@@ -4241,4 +4223,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(402, "LR_TEQ_SS2_Gohan", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(172, "BU_INT_Cheelai", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")

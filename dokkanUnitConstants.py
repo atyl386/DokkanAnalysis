@@ -510,6 +510,7 @@ EFFECTS = [
     "DEF",
     "P2 DEF",
     "P2 DEF B",
+    "P2 DEF against Normals",
     "P2 DEF against Supers",
     "P3 DEF",
     "Ki",
