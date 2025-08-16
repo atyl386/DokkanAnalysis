@@ -42,15 +42,15 @@ Form # 3 / State # 4 / Turn # 8
 Leader Skill: 10.0 
 SBR: 0.0 
 HP: 18688.0 
-Useability: 3.016592911592912 
+Useability: 3.185823680823681 
 Healing: 0.13108593519325734 
-Support: 8.611036036036037 
+Support: 9.611036036036037 
 DPT: 67999182.70937718 
 Normal Defence: 0.0 
-Super Attack Defence: -0.2370096189432334 
-Slot Bonus: 1.0 
+Super Attack Defence: 0.0 
+Slot Bonus: 0.3333333333333333 
 
-Form # 3 / State # 5 / Turn # 10 
+Form # 3 / State # 5 / Turn # 11 
  
 Leader Skill: 10.0 
 SBR: 0.0 
@@ -60,10 +60,10 @@ Healing: 0.11190262760400019
 Support: 0.7083333333333333 
 DPT: 43048173.981724635 
 Normal Defence: 0.0 
-Super Attack Defence: -0.4308441586119366 
-Slot Bonus: 1.0 
+Super Attack Defence: -0.16152878305725263 
+Slot Bonus: 0.5 
 
-Form # 4 / State # 6 / Turn # 12 
+Form # 4 / State # 6 / Turn # 13 
  
 Leader Skill: 10.0 
 SBR: 0.0 
@@ -76,7 +76,7 @@ Normal Defence: -0.9719786437160425
 Super Attack Defence: -0.13779413705898094 
 Slot Bonus: 1.0 
 
-Form # 4 / State # 7 / Turn # 14 
+Form # 4 / State # 7 / Turn # 15 
  
 Leader Skill: 10.0 
 SBR: 0.0 
@@ -89,7 +89,7 @@ Normal Defence: -0.8632116372075438
 Super Attack Defence: -0.13779413705898094 
 Slot Bonus: 1.0 
 
-Form # 4 / State # 8 / Turn # 16 
+Form # 4 / State # 8 / Turn # 17 
  
 Leader Skill: 10.0 
 SBR: 0.0 
@@ -102,7 +102,7 @@ Normal Defence: -0.4818907952293334
 Super Attack Defence: -0.13779413705898094 
 Slot Bonus: 1.0 
 
-Form # 4 / State # 9 / Turn # 18 
+Form # 4 / State # 9 / Turn # 19 
  
 Leader Skill: 10.0 
 SBR: 0.0 
@@ -112,19 +112,6 @@ Healing: 0.16850712912787788
 Support: 0.2583333333333333 
 DPT: 5755028.913906804 
 Normal Defence: -0.10021187565214214 
-Super Attack Defence: -0.13779413705898094 
-Slot Bonus: 1.0 
-
-Form # 4 / State # 10 / Turn # 20 
- 
-Leader Skill: 10.0 
-SBR: 0.0 
-HP: 18688.0 
-Useability: 1.6151465201465203 
-Healing: 0.1966949100487262 
-Support: 0.2583333333333333 
-DPT: 5755028.913906804 
-Normal Defence: 0.0 
 Super Attack Defence: -0.13779413705898094 
 Slot Bonus: 1.0 
 
