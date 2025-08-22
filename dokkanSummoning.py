@@ -141,6 +141,9 @@ class Banner:
 
 
 SummonRatings()
+PeppyGals = Banner([405, 404, 403, 172, 240, 241, 141], "blue", discount=1/0.6, gFeatured=True, summonPoints=True)
+print(PeppyGals.summonRatings)
+print(PeppyGals.summonScore)
 SSHyrbids = Banner([401, 400, 343, 160, 161, 233, 28, 257, 164, 155], "red", gFeaturedEvery3=True, summonPoints=True)
 print(SSHyrbids.summonRatings)
 print(SSHyrbids.summonScore)
