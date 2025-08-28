@@ -1448,6 +1448,7 @@ HIPO_SPECIAL_EQUIPS = {
 
 FIXED_SLOT_UNITS = {
     19: "DF PHY Kid Goku", # Slot 3 so can get special per orb buffs
+    121: "LR AGL Golden Frieza", # Slot 2 & 3 special buffs
     356: "BU AGL Piccolo", # Slot 3 Only after turn 5 as is also a turn dependent buff
     370: "LR STR Tien", # Alternating Slot 1 & 2 to maintain all turn buffs
 }
