@@ -273,8 +273,8 @@ MAX_ENEMY_DEF_PER_TURN = (
         axis=0,
     )
 )
-MAX_T1_ENEMY_DMG_THRESHOLD = 10000000 # Seriously Serious Battle
-MAX_ENEMY_DMG_THRESHOLD = 10000000 # Seriously Serious Battle
+MAX_T1_ENEMY_DMG_THRESHOLD = 7000000 # Seriously Serious Battle
+MAX_ENEMY_DMG_THRESHOLD = 10000000 # Goku & Frieza
 MAX_ENEMY_DMG_THRESHOLD_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * np.append(
