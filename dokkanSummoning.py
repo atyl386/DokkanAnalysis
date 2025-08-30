@@ -141,7 +141,7 @@ class Banner:
 
 
 SummonRatings()
-GoldenFriezeGogeta = Banner([409, 408, 359, 358, 320, 321, 97], "red", threePlus1=True, summonPoints=True)
+GoldenFriezeGogeta = Banner([409, 408, 359, 358, 320, 321, 97], "red", threePlus1=True)
 print(GoldenFriezeGogeta.summonRatings)
 print(GoldenFriezeGogeta.summonScore)
 PeppyGals = Banner([405, 404, 403, 172, 240, 241, 141], "blue", discount=1/0.6, gFeatured=True, summonPoints=True)

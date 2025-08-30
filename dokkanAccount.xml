@@ -64,7 +64,7 @@
 	</_7>
 	<_8>
 		<common_name value="DF_INT_Majin_Vegeta" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -793,7 +793,7 @@
 	</_88>
 	<_89>
 		<common_name value="BU_PHY_Zamasu" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -865,7 +865,7 @@
 	</_96>
 	<_97>
 		<common_name value="DF_AGL_1st_Form_Frieza" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2881,7 +2881,7 @@
 	</_320>
 	<_321>
 		<common_name value="DF_PHY_Glorio" />
-		<num_copies value="1" />
+		<num_copies value="3" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="CRT" />
 		<HiPo_choice_2 value="ADD" />
@@ -2908,7 +2908,7 @@
 	</_323>
 	<_324>
 		<common_name value="BU_STR_Hercule" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3214,7 +3214,7 @@
 	</_357>
 	<_358>
 		<common_name value="DF_INT_Hit" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="CRT" />
@@ -3223,7 +3223,7 @@
 	</_358>
 	<_359>
 		<common_name value="DF_TEQ_SSGSS_Kaioken_Goku" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
@@ -3664,7 +3664,7 @@
 	</_407>
 	<_408>
 		<common_name value="BU_INT_DBS_Broly_Vegeta" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3673,7 +3673,7 @@
 	</_408>
 	<_409>
 		<common_name value="DFLR_TEQ_Golden_Frieza_Gogeta" />
-		<num_copies value="0" />
+		<num_copies value="3" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="CRT" />
