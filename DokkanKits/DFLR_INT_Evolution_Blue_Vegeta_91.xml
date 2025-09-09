@@ -314,6 +314,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
 					<input prompt="What slots are required?" response="[1, 2, 3]" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_1>
 			</per_attack_received_or_evaded>
 			<per_attack_guarded>

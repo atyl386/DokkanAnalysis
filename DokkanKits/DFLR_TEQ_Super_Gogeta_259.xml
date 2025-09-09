@@ -628,6 +628,7 @@
 					<input prompt="What type of buff does the unit get?" response="Nullify Melee" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What is the additional P2 ATK buff when performing the counter?" response="0.0" />
 				</ability_1>
 			</nullification>
 			<revive>
