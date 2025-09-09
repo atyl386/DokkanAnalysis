@@ -3659,7 +3659,7 @@
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<slots value="[3, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_407>
 	<_408>
@@ -3668,7 +3668,7 @@
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
-		<slots value="[3, 1, 2, 2, 2, 2, 2, 3, 1, 2]" />
+		<slots value="[3, 1, 2, 2, 1, 1, 1, 1, 1, 2]" />
 		<eval value="True" />
 	</_408>
 	<_409>
@@ -3683,10 +3683,10 @@
 	<_410>
 		<common_name value="CLR_TEQ_Wrathful_Broly" />
 		<num_copies value="0" />
-		<BRZ_equip value="DEF" />
-		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="ADD" />
-		<slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[1, 1, 2, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_410>
 </id>
