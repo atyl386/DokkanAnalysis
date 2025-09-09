@@ -23,7 +23,6 @@
 			<input prompt="Can this form attack?" response="Y" />
 			<input prompt="Should a 12 Ki be targetted for this form?" response="N" />
 			<input prompt="What is the unit's normal counter multiplier?" response="NA" />
-			<input prompt="What is the unit's super attack counter multiplier?" response="NA" />
 			<links>
 				<link_1>
 					<input prompt="What is the form's link # 1" response="Saiyan Warrior Race" />
@@ -394,6 +393,7 @@
 			<form_1_change_condition>
 				<input prompt="How many conditions have to be met?" response="-1" />
 			</form_1_change_condition>
+			<input prompt="What is the unit's super attack counter multiplier?" response="Tremendous" />
 		</form_1>
 	</forms>
 </inputTree>
