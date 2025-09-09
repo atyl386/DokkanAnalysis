@@ -3281,13 +3281,13 @@ class PerAttackReceivedOrEvaded(PerEvent):
     def applyToState(self, state):
         if state.slot in self.slots:
             if (self.requiresSuperAttack):
-                numAttacksDirected = state.numSuperAttacksDirectedBeforeAttacking + state.numNormalAttacksDirectedBeforeAttacking
+                numAttacksDirected = state.numSuperAttacksDirectedBeforeAttacking + state.numSuperAttacksDirectedAfterAttacking
                 numAttacksDirectedBeforeAttacking = state.numSuperAttacksDirectedBeforeAttacking
             else:
                 numAttacksDirected = state.numAttacksDirected
                 numAttacksDirectedBeforeAttacking = state.numAttacksDirectedBeforeAttacking
             cumBuffPerAttack = self.effectiveBuff * (np.arange(NUM_ATTACKS_PER_TURN) + 1)
-            turnBuff = self.effectiveBuff * round(numAttacksDirected)
+            turnBuff = self.effectiveBuff * numAttacksDirected
             buffToGo = self.max - self.applied
             cappedTurnBuff = min(buffToGo, turnBuff)
             cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
@@ -4105,7 +4105,7 @@ class Nullification(PassiveAbility):
         state.buff["Heal"] += self.healthFrac * pNullify / NUM_SLOTS * AVG_SA_DAM / AVG_HEALTH
         if yesNo2Bool[self.hasCounter]:
             state.multiChanceBuff["Nullify"].updateChance("SA Counter", pNullify, "Nullify")
-            state.p2AtkBuffOnCounter += self.p2AttackBuff * pNullify
+            state.p2AtkBuffOnCounter += self.p2AttackBuff
         else:
             state.multiChanceBuff["Nullify"].updateChance("Nullification", pNullify, "Nullify")
 
