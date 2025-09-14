@@ -141,6 +141,9 @@ class Banner:
 
 
 SummonRatings()
+WrathfulBroly = Banner([410, 366, 156, 121, 389, 388, 334, 65, 99, 136], "cyan", SSR_rate=0.2, threePlus1=True)
+print(WrathfulBroly.summonRatings)
+print(WrathfulBroly.summonScore)
 GoldenFriezeGogeta = Banner([409, 408, 359, 358, 320, 321, 97], "red", threePlus1=True)
 print(GoldenFriezeGogeta.summonRatings)
 print(GoldenFriezeGogeta.summonScore)
