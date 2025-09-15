@@ -3689,4 +3689,22 @@
 		<slots value="[1, 1, 2, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_410>
+	<_411>
+		<common_name value="BU_STR_DBS_Broly" />
+		<num_copies value="5" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_411>
+	<_412>
+		<common_name value="LR_STR_LSS_Broly" />
+		<num_copies value="4" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_412>
 </id>
