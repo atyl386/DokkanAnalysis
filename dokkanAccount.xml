@@ -2661,7 +2661,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 3, 3, 3, 3, 3, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_296>
 	<_297>
 		<common_name value="BU_STR_SSGSS_Goku_Universe_Tree" />
@@ -2742,7 +2742,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 3, 3, 3, 3, 3, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_305>
 	<_306>
 		<common_name value="BU_AGL_Skinny_Buu" />
