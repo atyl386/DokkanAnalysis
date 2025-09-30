@@ -3707,4 +3707,22 @@
 		<slots value="[1, 1, 3, 3, 3, 3, 3, 2, 2, 2]" />
 		<eval value="True" />
 	</_412>
+	<_413>
+		<common_name value="BU_AGL_Baby_Possessed_Trunks" />
+		<num_copies value="0" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_413>
+	<_414>
+		<common_name value="DF_STR_Super_Baby" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_414>
 </id>
