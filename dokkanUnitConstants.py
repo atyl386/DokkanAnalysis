@@ -1462,6 +1462,12 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 400, 0, 0, 0.04],
         "GLD": [0, 0, 0.1, 0, 0.02],
     },
+    # LR INT Baby Possessed Bros
+    "416" : {
+        "BRZ": [0, 800, 0, 0, 0],
+        "SLV": [0, 400, 0, 0.04, 0],
+        "GLD": [0, 0, 0.04, 0.1, 0],
+    },
 }
 
 FIXED_SLOT_UNITS = {
