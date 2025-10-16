@@ -141,6 +141,9 @@ class Banner:
 
 
 SummonRatings()
+PossessedBros = Banner([416, 266, 415, 417, 396, 119, 415, 415, 186, 159], "yellow", gFeaturedEvery3=True, summonPoints=True)
+print(PossessedBros.summonRatings)
+print(PossessedBros.summonScore)
 Baby = Banner([414, 413, 351, 307, 282, 260, 84, 162, 7, 332], "red", gFeaturedEvery3=True)
 print(Baby.summonRatings)
 print(Baby.summonScore)
