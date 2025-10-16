@@ -2845,7 +2845,7 @@
 	</_316>
 	<_317>
 		<common_name value="F2P_STR_Hell_Fighter_17" />
-		<num_copies value="4" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -3734,4 +3734,58 @@
 		<slots value="[1, 1, 2, 3, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_415>
+	<_416>
+		<common_name value="LR_INT_Baby_Possessed_Bros" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="CRT" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+		<eval value="True" />
+	</_416>
+	<_417>
+		<common_name value="LR_AGL_Majin_Vegeta" />
+		<num_copies value="3" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_417>
+	<_418>
+		<common_name value="F2P_TEQ_Baby_Possessed_Gohan" />
+		<num_copies value="5" />
+		<BRZ_equip value="DGE" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[3, 3, 3, 3, 3, 3, 3, 3, 3, 3]" />
+		<eval value="True" />
+	</_418>
+	<_419>
+		<common_name value="F2P_PHY_Baby_Possessed_Goten" />
+		<num_copies value="5" />
+		<BRZ_equip value="DGE" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[3, 3, 3, 3, 3, 3, 3, 3, 3, 3]" />
+		<eval value="True" />
+	</_419>
+	<_420>
+		<common_name value="F2P_INT_Baby_Possessed_Trunks" />
+		<num_copies value="5" />
+		<BRZ_equip value="DGE" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[3, 3, 3, 3, 3, 3, 3, 3, 3, 3]" />
+		<eval value="True" />
+	</_420>
+	<_421>
+		<common_name value="F2PLR_STR_Chi_Chi" />
+		<num_copies value="0" />
+		<BRZ_equip value="DGE" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_421>
 </id>
