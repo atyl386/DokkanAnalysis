@@ -209,7 +209,7 @@
 				</ability_1>
 				<ability_2>
 					<input prompt="What type of buff does the unit get?" response="ATK" />
-					<input prompt="What is the value of the buff?" response="2.091" />
+					<input prompt="What is the value of the buff?" response="1.091" />
 					<input prompt="How many turns does it last?" response="1" />
 					<input prompt="How many times can it be activated?" response="1" />
 					<input prompt="How many conditions have to be met?" response="0" />
