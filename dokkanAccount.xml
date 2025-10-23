@@ -3788,4 +3788,13 @@
 		<slots value="[3, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_421>
+	<_422>
+		<common_name value="F2P_INT_Goten_Icarus" />
+		<num_copies value="5" />
+		<BRZ_equip value="DGE" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_422>
 </id>
