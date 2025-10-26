@@ -3797,4 +3797,22 @@
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_422>
+	<_422>
+		<common_name value="F2P_INT_Goten_Icarus" />
+		<num_copies value="5" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_422>
+	<_423>
+		<common_name value="BU_PHY_Piccolo_Mini_Daima" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[2, 3, 3, 3, 3, 3, 3, 3, 3, 3]" />
+		<eval value="True" />
+	</_423>
 </id>
