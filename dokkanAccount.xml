@@ -3794,7 +3794,7 @@
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_422>
 	<_422>
@@ -3810,8 +3810,8 @@
 		<common_name value="BU_PHY_Piccolo_Mini_Daima" />
 		<num_copies value="0" />
 		<BRZ_equip value="ATK" />
-		<HiPo_choice_1 value="ADD" />
-		<HiPo_choice_2 value="CRT" />
+		<HiPo_choice_1 value="CRT" />
+		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 3, 3, 3, 3, 3, 3, 3, 3, 3]" />
 		<eval value="True" />
 	</_423>
@@ -3819,9 +3819,9 @@
 		<common_name value="DF_TEQ_SS4_Goku_Mini_Daima" />
 		<num_copies value="0" />
 		<BRZ_equip value="ATK" />
-		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[1, 1, 3, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_424>
 </id>
