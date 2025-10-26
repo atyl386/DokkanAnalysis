@@ -138,15 +138,17 @@
 				</ability_11>
 				<ability_12>
 					<input prompt="What type of buff does the unit get?" response="P2 ATK Support" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the probability this ability activates?" response="0.25" />
 					<input prompt="What is the value of the buff?" response="0.4" />
 					<input prompt="How many turns does the effect last for?" response="2" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
 				</ability_12>
 				<ability_13>
 					<input prompt="What type of buff does the unit get?" response="P2 DEF Support" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the probability this ability activates?" response="0.25" />
 					<input prompt="What is the value of the buff?" response="0.2" />
 					<input prompt="How many turns does the effect last for?" response="2" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
 				</ability_13>
 			</default>
 			<turn_dpendent>
