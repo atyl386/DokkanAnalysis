@@ -1468,6 +1468,12 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 400, 0, 0.04, 0],
         "GLD": [0, 0, 0.04, 0.1, 0],
     },
+    # DF TEQ SS4 Daima Mini Goku
+    "424" : {
+        "BRZ": [800, 0, 0, 0, 0],
+        "SLV": [0, 0, 0.1, 0, 0],
+        "GLD": [0, 0, 0.1, 0, 0.02],
+    },
 }
 
 FIXED_SLOT_UNITS = {
