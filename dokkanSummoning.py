@@ -141,6 +141,9 @@ class Banner:
 
 
 SummonRatings()
+SS4DaimaGokuMini = Banner([424, 423, 345, 343, 233, 100, 110, 28, 11, 104], "red", gFeaturedEvery3=True, summonPoints=True)
+print(SS4DaimaGokuMini.summonRatings)
+print(SS4DaimaGokuMini.summonScore)
 PossessedBros = Banner([416, 266, 415, 417, 396, 119, 415, 415, 186, 159], "yellow", gFeaturedEvery3=True, summonPoints=True)
 print(PossessedBros.summonRatings)
 print(PossessedBros.summonScore)
