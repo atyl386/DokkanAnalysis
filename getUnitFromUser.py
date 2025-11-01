@@ -1263,12 +1263,12 @@ class Link:
         self.name = name
         i = LINK_NAMES.index(self.name) + 1
         self.effects = {}
-        for j in range(len(LINK_EFFECT_NAMES) - 1):
-            self.effects[LINK_EFFECT_NAMES[j]] = float(LINK_DATA[i, 10 + j])
         if commonality == -1:
             self.effects[LINK_EFFECT_NAMES[-1]] = float(LINK_DATA[i, 9])
         else:
             self.effects[LINK_EFFECT_NAMES[-1]] = float(commonality)
+        for j in range(len(LINK_EFFECT_NAMES) - 1):
+            self.effects[LINK_EFFECT_NAMES[j]] = float(LINK_DATA[i, j + 1]) * self.effects[LINK_EFFECT_NAMES[-1]]
 
 
 class SuperAttack:
@@ -4231,4 +4231,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(425, "DF_TEQ_SS4_Goku_Mini_Daima", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(424, "DF_TEQ_SS4_Goku_Mini_Daima", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
