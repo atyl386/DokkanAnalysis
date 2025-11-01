@@ -191,8 +191,8 @@
 					<input prompt="What is the value of the buff?" response="0.2" />
 				</ability_1>
 				<ability_2>
-					<input prompt="What turn does the buff start from?" response="3" />
-					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
+					<input prompt="What turn does the buff start from?" response="5" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="6" />
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.3" />
