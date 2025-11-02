@@ -287,6 +287,7 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.2" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What is the maximum buff?" response="-0.5" />
@@ -294,6 +295,7 @@
 					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="-0.05" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_2>
 			</per_attack_received>
 			<after_x_attacks_received_in_battle>

@@ -154,20 +154,31 @@ def getCondition(inputHelper):
 
 
 # Overwrite this class function as has additional
-def updateAttacksReceivedAndEvaded(self, state):
+def updateAttacksReceivedAndEvaded(self, state, effect):
     if state.evadeFirstNormalChance > 0:
         evadeFirstAttack = 1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"])
     else:
         evadeFirstAttack = 0
     pEvade = self.prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
-    state.numAttacksReceived = max(state.numAttacksDirected - evadeFirstAttack, 0) * (1 - pEvade)
     if state.numAttacksDirected == NUM_ATTACKS_PER_TURN:
         numAttacksDirectedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
     else:
         numAttacksDirectedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[state.slot - 1]
-    state.numAttacksReceivedBeforeAttacking = max(numAttacksDirectedBeforeAttacking - evadeFirstAttack, 0) * (1 - pEvade)
-    state.numAttacksEvadedBeforeAttacking = max(numAttacksDirectedBeforeAttacking - evadeFirstAttack, 0) * pEvade + evadeFirstAttack
-    state.numAttacksEvaded = (state.numAttacksDirected - evadeFirstAttack) * pEvade + evadeFirstAttack
+    numAttacksDirectedAfterAttacking = state.numAttacksDirected - numAttacksDirectedBeforeAttacking
+    if effect == "EvasionA" or effect == "Nullify":
+        state.numAttacksReceivedBeforeAttacking = max(numAttacksDirectedBeforeAttacking - evadeFirstAttack, 0) * (1 - pEvade)
+        state.numAttacksEvadedBeforeAttacking = max(numAttacksDirectedBeforeAttacking - evadeFirstAttack, 0) * pEvade + evadeFirstAttack
+        state.numSuperAttacksReceivedBeforeAttacking = state.numSuperAttacksDirectedBeforeAttacking * (1 - pEvade) * (1 - state.multiChanceBuff["Nullify"].prob)
+    elif effect == "EvasionB" or effect == "Nullify":
+        state.numAttacksReceivedAfterAttacking = numAttacksDirectedAfterAttacking * (1 - pEvade)
+        state.numAttacksEvadedAfterAttacking = numAttacksDirectedAfterAttacking * pEvade
+        state.numSuperAttacksReceivedAfterAttacking = state.numSuperAttacksDirectedAfterAttacking * (1 - pEvade) * (1 - state.multiChanceBuff["Nullify"].prob)
+    else:
+        raise Exception(f"{effect} effect update attacks received not implemented!")
+
+    state.numAttacksReceived = state.numAttacksReceivedBeforeAttacking + state.numAttacksReceivedAfterAttacking
+    state.numAttacksEvaded = state.numAttacksEvadedBeforeAttacking + state.numAttacksEvadedAfterAttacking
+    state.numSuperAttacksReceived = state.numSuperAttacksReceivedBeforeAttacking + state.numSuperAttacksReceivedAfterAttacking
 
 
 MultiChanceBuff.updateAttacksReceivedAndEvaded = updateAttacksReceivedAndEvaded
@@ -485,6 +496,7 @@ class Unit:
                 form.numAttacksGuarded += state.guard * state.numAttacksReceived
                 form.numAttacksEvaded += state.numAttacksEvaded
                 form.numAttacksReceived += state.numAttacksReceived
+                form.numSuperAttacksReceived += state.numSuperAttacksReceived
                 self.nextForm = form.checkCondition(
                     form.formChangeCondition,
                     form.transformed,
@@ -544,6 +556,7 @@ class Form:
         self.numAttacksReceived = 0  # Number of attacks received so far in this form.
         self.numAttacksGuarded = 0
         self.numAttacksEvaded = 0
+        self.numSuperAttacksReceived = 0
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
         self.charge = 0
@@ -857,9 +870,9 @@ class Form:
                 self,
                 "How many different buffs does the form get on attacks received?",
                 PerAttackReceived,
-                ["What is the maximum buff?", "Within the same turn?"],
-                [None, clc.Choice(YES_NO)],
-                [1.0, "N"],
+                ["What is the maximum buff?", "Within the same turn?", "Requires super attack?"],
+                [None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
+                [1.0, "N", "N"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
@@ -1372,8 +1385,12 @@ class State:
         self.numSuperAttacksDirectedAfterAttacking = NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
         self.numAttacksDirectedBeforeAttacking = NUM_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1]
         self.numAttacksDirectedAfterAttacking = NUM_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
+        self.numAttacksReceivedAfterAttacking = NUM_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
+        self.numAttacksEvadedAfterAttacking = 0
+        self.numSuperAttacksReceivedAfterAttacking = NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1]
         for effect in MULTI_CHANCE_EFFECTS:
             self.multiChanceBuff[effect] = MultiChanceBuff(effect)
+        for effect in MULTI_CHANCE_EFFECTS:
             if effect in MULTI_CHANCE_EFFECTS_NO_NULLIFY:
                 inputEffect = "Evasion" if "Evasion" in effect else effect
                 self.multiChanceBuff[effect].updateChance("HiPo", form.unit.pHiPo[inputEffect], effect, self)
@@ -2991,12 +3008,12 @@ class Buff(PassiveAbility):
                         state.dmgRedSuperB += effectiveBuff
                         state.dmgRedNormalB += effectiveBuff
                     case "Evasion":
-                        state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
-                        state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
+                        state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "EvasionA", state)
+                        state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", effectiveBuff, "EvasionB", state)
                     case "EvasionA":
-                        state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
+                        state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", effectiveBuff, "EvasionA", state)
                     case "EvasionB":
-                        state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", effectiveBuff, "Evasion", state)
+                        state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", effectiveBuff, "EvasionB", state)
                     case "Evasion against Supers":
                         state.evadeSuper += effectiveBuff
                     case "Disable Action B":
@@ -3036,8 +3053,8 @@ class Buff(PassiveAbility):
                         state.multiChanceBuff["Crit"].updateChance("Active Skill", effectiveBuff, "Crit", state)
                         state.setNoCritAtkMod()
                     case "P3 Evasion":
-                        state.multiChanceBuff["EvasionA"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
-                        state.multiChanceBuff["EvasionB"].updateChance("Active Skill", effectiveBuff, "Evasion", state)
+                        state.multiChanceBuff["EvasionA"].updateChance("Active Skill", effectiveBuff, "EvasionA", state)
+                        state.multiChanceBuff["EvasionB"].updateChance("Active Skill", effectiveBuff, "EvasionB", state)
                     case "P3 Disable Action":
                         state.numSuperAttacksDirectedBeforeAttacking -= disableActionActiveDisableSuper[state.slot] * (
                             1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * state.buff["Attacks Guaranteed to Hit"]
@@ -3056,19 +3073,24 @@ class Buff(PassiveAbility):
                         state.numAttacksReceived = 0
                         state.numAttacksDirected = 0
                         state.numAttacksReceivedBeforeAttacking = 0
+                        state.numAttacksReceivedAfterAttacking = 0
                         state.numAttacksEvaded = 0
                         state.numAttacksEvadedBeforeAttacking = 0
+                        state.numSuperAttacksReceivedBeforeAttacking = 0
+                        state.numSuperAttacksReceived = 0
                     case "Intercept":
                         pEvade = state.multiChanceBuff["EvasionA"].prob * (1 - DODGE_CANCEL_FACTOR * (1 - state.buff["Disable Evasion Cancel"]))
                         state.support += supportFactorConversion[self.effect] * supportBuff
                         state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * (1 - pEvade)
+                        state.numAttacksReceivedAfterAttacking = (NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]) * (1 - pEvade)
                         state.numAttacksDirected = NUM_ATTACKS_PER_TURN
                         state.numAttacksDirectedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
                         state.numAttacksDirectedAfterAttacking = NUM_ATTACKS_PER_TURN - NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1]
                         state.numAttacksEvaded = NUM_ATTACKS_PER_TURN * pEvade
                         state.numAttacksEvadedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * pEvade
                         state.numAttacksReceived = state.numAttacksDirected * (1 - pEvade)
-                        state.numAttacksReceivedBeforeAttacking = NUM_CUMULATIVE_ATTACKS_BEFORE_ATTACKING[state.slot - 1] * (1 - pEvade)
+                        state.numSuperAttacksReceivedBeforeAttacking = state.numAttacksReceivedBeforeAttacking * (1 - FRAC_NORMAL)
+                        state.numSuperAttacksReceived = state.numAttacksReceived * (1 - FRAC_NORMAL)
                     case "Stunned":
                         state.canAttack = False
                     case _:
@@ -3179,8 +3201,8 @@ class PerTurn(PerEvent):
                     state.dmgRedNormalA += cappedTurnBuff
                     state.dmgRedNormalB += cappedTurnBuff
                 case "Evasion":
-                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
-                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "EvasionA", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "EvasionB", state)
                 case _:
                     raise Exception(f"{self.effect} Per Turn Buff Effect not implemented!")
         self.applied += cappedTurnBuff
@@ -3223,7 +3245,7 @@ class PerAttackPerformed(PerEvent):
                     state.dmgRedSuperB += cappedTurnBuff
                     state.dmgRedNormalB += cappedTurnBuff
                 case "Evasion":
-                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, self.effect, state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "EvasionB", state)
                 case _:
                     raise Exception(f"{self.effect} Per Attack Performed Buff Effect not implemented!")
             if not (self.withinTheSameTurn):
@@ -3235,22 +3257,29 @@ class PerAttackReceived(PerEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0])
         self.withinTheSameTurn = yesNo2Bool[args[1]]
+        self.requiresSuperAttack = yesNo2Bool[args[2]]
 
     def applyToState(self, state):
+        if (self.requiresSuperAttack):
+            numAttacksReceived = state.numSuperAttacksReceived
+            numAttacksReceivedBeforeAttacking = state.numSuperAttacksReceivedBeforeAttacking
+        else:
+            numAttacksReceived = state.numAttacksReceived
+            numAttacksReceivedBeforeAttacking = state.numAttacksReceivedBeforeAttacking
         cumBuffPerAttack = self.effectiveBuff * (np.arange(NUM_ATTACKS_PER_TURN) + 1)
-        turnBuff = self.effectiveBuff * state.numAttacksReceived
+        turnBuff = self.effectiveBuff * numAttacksReceived
         buffToGo = self.max - self.applied
         cappedTurnBuff = min(buffToGo, turnBuff, key=abs)
         cappedCumBuffPerAttack = np.sign(buffToGo) * np.minimum(abs(cumBuffPerAttack), abs(buffToGo))
         cappedBuffPerAttack = np.insert(np.diff(cappedCumBuffPerAttack), 0, cappedCumBuffPerAttack[0])
         match self.effect:
             case "Ki":
-                state.buff["Ki"] += min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs)
+                state.buff["Ki"] += min(self.effectiveBuff * numAttacksReceivedBeforeAttacking, buffToGo, key=abs)
             case "ATK":
-                preAtkBuff = min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo)
+                preAtkBuff = min(self.effectiveBuff * numAttacksReceivedBeforeAttacking, buffToGo)
                 state.p2Buff["ATK"] += preAtkBuff
                 state.p2ATKBuffPostAtttack += min(
-                    self.effectiveBuff * (state.numAttacksReceived - state.numAttacksReceivedBeforeAttacking), buffToGo - preAtkBuff, key=abs
+                    self.effectiveBuff * (numAttacksReceived - numAttacksReceivedBeforeAttacking), buffToGo - preAtkBuff, key=abs
                 )
             case "DEF":
                 state.defBuffStatuses[("DEF", "Receive")] += cappedBuffPerAttack
@@ -3259,7 +3288,7 @@ class PerAttackReceived(PerEvent):
             case "Crit":
                 state.multiChanceBuff["Crit"].updateChance(
                     "On Super",
-                    min(self.effectiveBuff * state.numAttacksReceivedBeforeAttacking, buffToGo, key=abs),
+                    min(self.effectiveBuff * numAttacksReceivedBeforeAttacking, buffToGo, key=abs),
                     "Crit",
                     state,
                 )
@@ -3464,8 +3493,8 @@ class AfterEvent(PassiveAbility):
                     state.dmgRedNormalA += cappedTurnBuff
                     state.dmgRedNormalB += cappedTurnBuff
                 case "Evasion":
-                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
-                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "EvasionA", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "EvasionB", state)
                 case _:
                     raise Exception(f"{self.effect} After Event Buff Effect not implemented!")
 
@@ -3849,10 +3878,10 @@ class UntilAttackRecieved(UntilEvent):
                     state.defBuffStatuses[("DEF", "Receive")][0] -= self.effectiveBuff
                 case "Evasion":
                     state.multiChanceBuff["EvasionA"].updateChance(
-                        "Start of Turn", self.effectiveBuff, "Evasion", state
+                        "Start of Turn", self.effectiveBuff, "EvasionA", state
                     )
                     state.multiChanceBuff["EvasionB"].updateChance(
-                        "Start of Turn", self.effectiveBuff, "Evasion", state
+                        "Start of Turn", self.effectiveBuff, "EvasionB", state
                     )
                     state.defBuffStatuses[("Evasion", "Receive")][0] -= self.effectiveBuff
                 case "P2 DEF B":
@@ -3880,7 +3909,7 @@ class ForFirstTargtedAttack(PassiveAbility):
             case "Evasion":
                 state.evadeFirstNormalChance = self.effectiveBuff * (state.numNormalAttacksDirectedBeforeAttacking + state.numNormalAttacksDirectedAfterAttacking) / state.numAttacksDirected
                 state.evadeFirstSuperChance = self.effectiveBuff * (state.numSuperAttacksDirectedBeforeAttacking + state.numSuperAttacksDirectedAfterAttacking) / state.numAttacksDirected
-                state.multiChanceBuff["EvasionA"].updateAttacksReceivedAndEvaded(state)
+                state.multiChanceBuff["EvasionA"].updateAttacksReceivedAndEvaded(state, "EvasionA")
             case _:
                 raise Exception(f"{self.effect} Until Attack Evaded Buff Effect not implemented!")
 
@@ -3914,8 +3943,8 @@ class EveryTimeXEventsInBattle(PassiveAbility):
                     state.dmgRedNormalA += cappedTurnBuff
                     state.dmgRedNormalB += cappedTurnBuff
                 case "Evasion":
-                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
-                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "Evasion", state)
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "EvasionA", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "EvasionB", state)
                 case "Heal":
                     state.buff["Heal"] += cappedTurnBuff
                 case "Crit":
@@ -4014,11 +4043,11 @@ class PerformingSuperAttackDefence(PassiveAbility):
                     state.dmgRedSuperA += self.effectiveBuff
                     state.dmgRedNormalA += self.effectiveBuff
             case "Evasion":
-                state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", self.effectiveBuff, "Evasion", state)
+                state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", self.effectiveBuff, "EvasionA", state)
                 # If have activated active skill attack this turn
                 if state.superAttacksPerformed > 0:
                     state.multiChanceBuff["EvasionB"].updateChance(
-                        "Start of Turn", self.effectiveBuff, "Evasion", state
+                        "Start of Turn", self.effectiveBuff, "EvasionB", state
                     )
             case _:
                 raise Exception(f"{self.effect} Super Attack Defence Buff Effect not implemented!")
@@ -4055,8 +4084,8 @@ class KiSphereDependent(PerEvent):
         else:
             match self.effect:
                 case "Evasion":
-                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", buffFromOrbs, "Evasion", state)
-                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", buffFromOrbs, "Evasion", state)
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", buffFromOrbs, "EvasionA", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", buffFromOrbs, "EvasionB", state)
                 case "Dmg Red against Normals":
                     state.dmgRedNormalA += buffFromOrbs
                     state.dmgRedNormalB += buffFromOrbs
@@ -4104,10 +4133,10 @@ class Nullification(PassiveAbility):
         pNullify = self.activationProbability * aprioriProbMod(saFracConversion[self.effect], True)
         state.buff["Heal"] += self.healthFrac * pNullify / NUM_SLOTS * AVG_SA_DAM / AVG_HEALTH
         if yesNo2Bool[self.hasCounter]:
-            state.multiChanceBuff["Nullify"].updateChance("SA Counter", pNullify, "Nullify")
+            state.multiChanceBuff["Nullify"].updateChance("SA Counter", pNullify, "Nullify", state)
             state.p2AtkBuffOnCounter += self.p2AttackBuff
         else:
-            state.multiChanceBuff["Nullify"].updateChance("Nullification", pNullify, "Nullify")
+            state.multiChanceBuff["Nullify"].updateChance("Nullification", pNullify, "Nullify", state)
 
 
 class Condition:
@@ -4231,4 +4260,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(424, "DF_TEQ_SS4_Goku_Mini_Daima", 5, "ATK", "CRT", "ADD", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(434, "BU_AGL_Fat_Buu", 5, "DGE", "DGE", "CRT", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")

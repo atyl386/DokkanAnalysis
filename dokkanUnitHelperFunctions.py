@@ -182,14 +182,14 @@ class MultiChanceBuff:
     def calcProb(self):
         return 1 - np.prod([max(1 - p, 0) for p in self.chances.values()])
 
-    def updateAttacksReceivedAndEvaded(self, state):
+    def updateAttacksReceivedAndEvaded(self, state, effect):
         pass
 
     def updateChance(self, chanceKey, increment, effect, state=None):
         self.chances[chanceKey] += increment
         self.prob = self.calcProb()
         if "Evasion" in effect:
-            self.updateAttacksReceivedAndEvaded(state)
+            self.updateAttacksReceivedAndEvaded(state, effect)
 
 
 def processDefBuffStatuses(defBuffStatuses, lastAttackFactor=1):

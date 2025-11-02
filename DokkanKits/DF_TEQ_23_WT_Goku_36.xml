@@ -258,6 +258,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
 					<input prompt="Within the same turn?" response="N" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What is the maximum buff?" response="1.0" />
@@ -265,6 +266,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
 					<input prompt="Within the same turn?" response="N" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_2>
 			</per_attack_received>
 			<after_x_attacks_received_in_battle>
