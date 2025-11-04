@@ -92,11 +92,11 @@
 	<_11>
 		<common_name value="DF_AGL_Kid_Gohan" />
 		<num_copies value="5" />
-		<BRZ_equip value="DGE" />
+		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="CRT" />
-		<slots value="[3, 3, 3, 3, 3, 3, 3, 2, 2, 1]" />
-		<eval value="False" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[1, 1, 2, 1, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
 	</_11>
 	<_12>
 		<common_name value="CLR_AGL_Omega_Shenron" />
