@@ -96,6 +96,7 @@ class Banner:
         anniversaryFormat=False,
         summonPointsPerMulti=30,
         summonPoints=False,
+        fourthiethAnniversary=False,
     ):
         df = pd.read_excel("SummonRating.xlsx", index_col="ID")
         summonRatingData = [(df.at[unit, "common_name"], round(df.at[unit, "Summon Rating"], 2)) for unit in units]
@@ -131,7 +132,12 @@ class Banner:
             self.summonPoints = 15 * summonPointsPerMulti / 300 # avg 15 summon rating per ticket, 300 per ticket
         else:
             self.summonPoints = 0
-        self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus + summonPoints
+        if fourthiethAnniversary:
+            self.featuredRate = (3 + 7 * 0.2) / (10 * 0.1 * 0.5)
+            coins = 0.25 * max(list(self.summonRatings.values()))
+        else:
+            coins = 0
+        self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus + summonPoints + coins
 
     def shouldSummmon(self):
         if self.summonScore > 12.5:  # Will need to be tuned. Could be as high as 15
@@ -141,6 +147,9 @@ class Banner:
 
 
 SummonRatings()
+fourthiethAnniversary = Banner([434, 433, 432, 431, 430], "blue", fourthiethAnniversary=True, discount=5/3)
+print(fourthiethAnniversary.summonRatings)
+print(fourthiethAnniversary.summonScore)
 SS4DaimaGokuMini = Banner([424, 423, 345, 343, 233, 100, 110, 28, 11, 104], "red", gFeaturedEvery3=True, summonPoints=True)
 print(SS4DaimaGokuMini.summonRatings)
 print(SS4DaimaGokuMini.summonScore)

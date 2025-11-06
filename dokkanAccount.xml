@@ -3871,7 +3871,7 @@
 	</_429>
 	<_430>
 		<common_name value="BU_PHY_Manga_Piccolo_Jr" />
-		<num_copies value="0" />
+		<num_copies value="2" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3880,16 +3880,16 @@
 	</_430>
 	<_431>
 		<common_name value="BU_STR_Manga_Vegeta" />
-		<num_copies value="0" />
+		<num_copies value="5" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_431>
 	<_432>
 		<common_name value="BU_TEQ_Manga_SS2_Gohan" />
-		<num_copies value="0" />
+		<num_copies value="5" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
@@ -3898,7 +3898,7 @@
 	</_432>
 	<_433>
 		<common_name value="BU_INT_Manga_Final_Form_Frieza" />
-		<num_copies value="0" />
+		<num_copies value="5" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3907,7 +3907,7 @@
 	</_433>
 	<_434>
 		<common_name value="BU_AGL_Manga_Majin_Buu" />
-		<num_copies value="0" />
+		<num_copies value="5" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
