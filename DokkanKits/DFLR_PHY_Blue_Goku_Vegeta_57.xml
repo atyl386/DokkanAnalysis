@@ -327,7 +327,7 @@
 				</ability_1>
 				<ability_2>
 					<input prompt="What is the required ki?" response="18" />
-					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
+					<input prompt="What type of buff does the unit get?" response="P2 DEF B" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.7" />
 				</ability_2>
