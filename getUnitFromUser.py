@@ -3178,34 +3178,32 @@ class PerTurn(PerEvent):
             isActive = 0
         else:
             isActive = 1
-        turnBuff = self.effectiveBuff * isActive
-        buffToGo = self.max - self.applied
-        cappedTurnBuff = min(buffToGo, turnBuff, key=abs)
-        state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
+        self.applied += self.effectiveBuff * isActive
+        self.applied = min(self.max, self.applied, key=abs)
+
         if self.effect in REGULAR_SUPPORT_EFFECTS:
             state.support += supportFactorConversion[self.effect] * self.supportBuff[state.slot - 1] * isActive
         else:
             match self.effect:
                 case "Ki":
-                    state.buff["Ki"] += cappedTurnBuff
+                    state.buff["Ki"] += self.applied
                 case "ATK":
-                    state.p1Buff["ATK"] += cappedTurnBuff
+                    state.p1Buff["ATK"] += self.applied
                 case "DEF":
-                    state.p1Buff["DEF"] += cappedTurnBuff
+                    state.p1Buff["DEF"] += self.applied
                 case "Crit":
-                    state.multiChanceBuff["Crit"].updateChance("On Super", cappedTurnBuff, "Crit", state)
+                    state.multiChanceBuff["Crit"].updateChance("On Super", self.applied, "Crit", state)
                     state.setNoCritAtkMod()
                 case "Dmg Red":
-                    state.dmgRedSuperA += cappedTurnBuff
-                    state.dmgRedSuperB += cappedTurnBuff
-                    state.dmgRedNormalA += cappedTurnBuff
-                    state.dmgRedNormalB += cappedTurnBuff
+                    state.dmgRedSuperA += self.applied
+                    state.dmgRedSuperB += self.applied
+                    state.dmgRedNormalA += self.applied
+                    state.dmgRedNormalB += self.applied
                 case "Evasion":
-                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "EvasionA", state)
-                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "EvasionB", state)
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", self.applied, "EvasionA", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", self.applied, "EvasionB", state)
                 case _:
                     raise Exception(f"{self.effect} Per Turn Buff Effect not implemented!")
-        self.applied += cappedTurnBuff
 
 
 class PerAttackPerformed(PerEvent):
