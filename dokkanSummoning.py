@@ -147,6 +147,9 @@ class Banner:
 
 
 SummonRatings()
+Gomah = Banner([435, 370, 355, 356, 303, 247, 281, 353, 263, 264], "yellow", gFeaturedEvery3=True, summonPoints=True)
+print(Gomah.summonRatings)
+print(Gomah.summonScore)
 fourthiethAnniversary = Banner([434, 433, 432, 431, 430], "blue", fourthiethAnniversary=True, discount=5/3)
 print(fourthiethAnniversary.summonRatings)
 print(fourthiethAnniversary.summonScore)
