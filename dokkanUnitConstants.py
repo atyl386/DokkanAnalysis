@@ -1510,6 +1510,12 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 600, 0, 0, 0.05],
         "GLD": [0, 1200, 0, 0, 0.06],
     },
+    # LR AGL Third Eye Gomah 
+    "435" : {
+        "BRZ": [800, 0, 0, 0, 0],
+        "SLV": [0, 0, 0, 0.1, 0],
+        "GLD": [0, 0, 0.04, 0.1, 0],
+    },
 }
 
 FIXED_SLOT_UNITS = {
