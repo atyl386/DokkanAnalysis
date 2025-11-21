@@ -147,6 +147,12 @@ class Banner:
 
 
 SummonRatings()
+BlackFridayDF = Banner([374, 386, 327, 337, 246, 253, 85, 398, 388, 389], "red", threePlus1=True)
+print(BlackFridayDF.summonRatings)
+print(BlackFridayDF.summonScore)
+BlackFridayCarnival = Banner([375, 387, 326, 325, 336, 335, 245, 254, 105, 402], "cyan", threePlus1=True)
+print(BlackFridayCarnival.summonRatings)
+print(BlackFridayCarnival.summonScore)
 Gomah = Banner([435, 370, 355, 356, 303, 247, 281, 353, 263, 264], "yellow", gFeaturedEvery3=True, summonPoints=True)
 print(Gomah.summonRatings)
 print(Gomah.summonScore)
