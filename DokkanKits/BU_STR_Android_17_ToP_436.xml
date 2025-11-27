@@ -170,8 +170,8 @@
 			<turn_dpendent>
 				<input prompt="How many turn dependent buffs does the form have?" response="1" />
 				<ability_1>
-					<input prompt="What turn does the buff start from?" response="7" />
-					<input prompt="What turn does the buff end on (last turn active)?" response="8" />
+					<input prompt="What turn does the buff start from?" response="1" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="2" />
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
