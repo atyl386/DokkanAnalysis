@@ -1524,5 +1524,4 @@ FIXED_SLOT_UNITS = {
     356: "BU AGL Piccolo", # Slot 3 Only after turn 5 as is also a turn dependent buff
     370: "LR STR Tien", # Alternating Slot 1 & 2 to maintain all turn buffs
     423: "BU PHY Piccolo Mini Daima", # Slot 3 only after turn 3 to get evasion buff
-    436: "BU STR Android 17", # No Slot 1 before slot 7 as triggers dodge buff
 }
