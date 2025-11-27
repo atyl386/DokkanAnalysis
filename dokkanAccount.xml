@@ -3932,4 +3932,13 @@
 		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_436>
+	<_437>
+		<common_name value="DF_AGL_Android_16" />
+		<num_copies value="0" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+		<eval value="True" />
+	</_437>
 </id>
