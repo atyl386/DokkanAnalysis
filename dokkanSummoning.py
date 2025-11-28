@@ -147,6 +147,9 @@ class Banner:
 
 
 SummonRatings()
+Android16 = Banner([437, 436, 368, 17, 15, 140, 10, 5, 39, 46], "red", gFeaturedEvery3=True, summonPoints=True)
+print(Android16.summonRatings)
+print(Android16.summonScore)
 BlackFridayDF = Banner([374, 386, 327, 337, 246, 253, 85, 398, 388, 389], "red", threePlus1=True)
 print(BlackFridayDF.summonRatings)
 print(BlackFridayDF.summonScore)
