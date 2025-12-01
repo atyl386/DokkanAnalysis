@@ -237,6 +237,7 @@ if __name__ == "__main__":
     top100AttributeDict = copy.copy(attributeDict)
     top100AttributeDict["Leader Skill"] = 0
     top100AttributeDict["SBR"] = 0
+    top100AttributeDict["Useability"] = 0
 
     overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
     top100Evaluator = Evaluator(overallTurnWeights, top100AttributeDict.values())
