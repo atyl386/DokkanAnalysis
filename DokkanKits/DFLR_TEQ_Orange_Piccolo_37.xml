@@ -459,6 +459,7 @@
 					<input prompt="How many attacks received are required?" response="1" />
 					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 					<input prompt="What slots are required?" response="[1, 2, 3]" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many turns does the buff last?" response="1" />
@@ -469,6 +470,7 @@
 					<input prompt="How many attacks received are required?" response="1" />
 					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 					<input prompt="What slots are required?" response="[1, 2, 3]" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_2>
 			</after_receive_attack>
 			<after_guard_attack>

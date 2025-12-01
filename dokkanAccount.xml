@@ -1253,10 +1253,10 @@
 	<_140>
 		<common_name value="DF_TEQ_Future_Androids" />
 		<num_copies value="4" />
-		<BRZ_equip value="DGE" />
-		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="CRT" />
-		<slots value="[3, 3, 1, 2, 2, 2, 2, 2, 2, 2]" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="CRT" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 2, 2, 1, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_140>
 	<_141>
@@ -3731,7 +3731,7 @@
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="DGE" />
-		<slots value="[1, 2, 2, 2, 3, 2, 2, 2, 2, 2]" />
+		<slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_415>
 	<_416>
@@ -3950,4 +3950,13 @@
 		<slots value="[2, 2, 2, 2, 3, 3, 3, 3, 2, 2]" />
 		<eval value="True" />
 	</_438>
+	<_439>
+		<common_name value="BU_INT_Androids_19_20" />
+		<num_copies value="4" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_439>
 </id>

@@ -264,6 +264,7 @@
 					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="-0.4" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many turns does the buff last?" response="99" />
@@ -273,6 +274,7 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="2.0" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_2>
 				<ability_3>
 					<input prompt="How many turns does the buff last?" response="99" />
@@ -282,6 +284,7 @@
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.4" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_3>
 				<ability_4>
 					<input prompt="How many turns does the buff last?" response="99" />
@@ -292,6 +295,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="How many turns does the effect last for?" response="1" />
+					<input prompt="Requires super attack?" response="N" />
 				</ability_4>
 			</after_receive_attack>
 			<after_guard_attack>

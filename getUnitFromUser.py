@@ -812,9 +812,10 @@ class Form:
                     "How many attacks received are required?",
                     "Does the buff start from the next attacking turn?",
                     "What slots are required?",
+                    "Requires super attack?",
                 ],
-                [None, None, clc.Choice(YES_NO), None],
-                [1, 0, "N", "[1, 2, 3]"],
+                [None, None, clc.Choice(YES_NO), None, clc.Choice(YES_NO)],
+                [1, 0, "N", "[1, 2, 3]", "N"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "after_guard_attack")
@@ -3549,6 +3550,7 @@ class AfterAttackReceived(AfterEvent):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
         self.nextAttackingTurn = yesNo2Bool[args[2]]
         self.slots = literal_eval(str(args[3]))
+        self.requiresSuperAttack = yesNo2Bool[args[4]]
 
     def setTurnBuff(self, state):
         # geometric cdf
@@ -3589,11 +3591,15 @@ class AfterAttackReceived(AfterEvent):
 
     def setEventFactor(self, state):
         # If buff is a defensive one
-        if self.effect in ["DEF", "Dmg Red", "Evasion", "Guard"]:
+        if self.effect in ["DEF", "Dmg Red", "Evasion", "Guard", "P2 ATK Support", "P2 DEF Support"]:
             self.eventFactor = 1
         else:
             if self.threshold == 1:
-                self.eventFactor = min(state.numAttacksReceivedBeforeAttacking, 1)
+                if (self.requiresSuperAttack):
+                    numAttacksReceivedBeforeAttacking = state.numSuperAttacksReceivedBeforeAttacking
+                else:
+                    numAttacksReceivedBeforeAttacking = state.numAttacksReceivedBeforeAttacking
+                self.eventFactor = min(numAttacksReceivedBeforeAttacking, 1)
             else:
                 if self.required == 0:
                     self.eventFactor = 1
