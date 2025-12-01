@@ -225,7 +225,7 @@ if __name__ == "__main__":
         "Leader Skill": 2,
         "SBR": 1,
         "HP": 1.5,
-        "Useability": 5,
+        "Useability": 6,
         "Healing": 2,
         "Support": 5,
         "APT": 12,
