@@ -347,7 +347,7 @@
 					<input prompt="Does the revive only apply to this unit?" response="N" />
 					<input prompt="How many conditions have to be met?" response="1" />
 					<condition_1>
-						<input prompt="What type of condition is # 1?" response="Transformation Turn" />
+						<input prompt="What type of condition is # 1?" response="Turn" />
 						<input prompt="What is the ability turn condition?" response="3" />
 					</condition_1>
 					<input prompt="How many additional constant buffs does this revive have?" response="0" />
@@ -362,8 +362,8 @@
 			<form_1_change_condition>
 				<input prompt="How many conditions have to be met?" response="1" />
 				<condition_1>
-					<input prompt="What type of condition is # 1?" response="Turn" />
-					<input prompt="What is the ability turn condition?" response="5" />
+					<input prompt="What type of condition is # 1?" response="TransformationTurn" />
+					<input prompt="What is the transformation turn condition (relative to the form's starting turn)?" response="5" />
 				</condition_1>
 			</form_1_change_condition>
 		</form_1>
@@ -536,7 +536,7 @@
 			<turn_dpendent>
 				<input prompt="How many turn dependent buffs does the form have?" response="1" />
 				<ability_1>
-					<input prompt="What turn does the buff start from?" response="17" />
+					<input prompt="What turn does the buff start from?" response="19" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
 					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />

@@ -3986,4 +3986,13 @@
 		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_442>
+	<_443>
+		<common_name value="CLR_INT_Future_Gohan_Trunks" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[1, 2, 2, 1, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_443>
 </id>
