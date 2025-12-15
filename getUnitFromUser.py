@@ -3586,6 +3586,8 @@ class AfterAttackReceived(AfterEvent):
                     state.defBuffStatuses[("DmgRed", "Receive")] += cappedBuffPerAttack
                 case "Evasion":
                     state.defBuffStatuses[("Evasion", "Receive")] += cappedBuffPerAttack
+                case "Heal":
+                    state.buff["Heal"] += cappedTurnBuff
                 case _:
                     raise Exception(f"{self.effect} After Attack Received Buff Effect not implemented!")
 
