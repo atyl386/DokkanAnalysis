@@ -119,11 +119,11 @@
 	<_14>
 		<common_name value="LR_AGL_Future_Gohan_Trunks" />
 		<num_copies value="2" />
-		<BRZ_equip value="DGE" />
+		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="CRT" />
-		<slots value="[3, 3, 3, 2, 2, 2, 2, 3, 1, 1]" />
-		<eval value="False" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
 	</_14>
 	<_15>
 		<common_name value="DF_INT_ToP_Androids" />

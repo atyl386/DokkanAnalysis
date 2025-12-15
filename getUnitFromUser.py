@@ -4266,4 +4266,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(443, "CLR_INT_Future_Gohan_Trunks", 5, "DGE", "DGE", "CRT", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(14, "LR_AGL_Future_Gohan_Trunks", 5, "DGE", "DGE", "CRT", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
