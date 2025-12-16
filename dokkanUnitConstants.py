@@ -1522,6 +1522,12 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 0, 0.1, 0, 0],
         "GLD": [0, 0, 0.1, 0, 0.02],
     },
+    # CLR INT Future Gohan Trunks
+    "443" : {
+        "BRZ": [800, 0, 0, 0, 0],
+        "SLV": [0, 0, 0.1, 0, 0],
+        "GLD": [0, 0, 0.1, 0.04, 0],
+    },
 }
 
 FIXED_SLOT_UNITS = {
