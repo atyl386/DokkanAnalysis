@@ -147,6 +147,9 @@ class Banner:
 
 
 SummonRatings()
+FutureGohanTrunks = Banner([443, 313, 14, 12, 438, 440, 154, 439, 434, 433], "cyan", SSR_rate=0.2)
+print(FutureGohanTrunks.summonRatings)
+print(FutureGohanTrunks.summonScore)
 Android16 = Banner([437, 436, 368, 17, 15, 140, 10, 5, 39, 46], "red", gFeaturedEvery3=True, summonPoints=True)
 print(Android16.summonRatings)
 print(Android16.summonScore)

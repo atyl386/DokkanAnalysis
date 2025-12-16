@@ -118,7 +118,7 @@
 	</_13>
 	<_14>
 		<common_name value="LR_AGL_Future_Gohan_Trunks" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -226,7 +226,7 @@
 	</_25>
 	<_26>
 		<common_name value="LR_AGL_SS2_Caulifla_Kale" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -235,7 +235,7 @@
 	</_26>
 	<_27>
 		<common_name value="BU_TEQ_Frost_Final_Form" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -1540,7 +1540,7 @@
 	</_171>
 	<_172>
 		<common_name value="BU_INT_Cheelai" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -1702,7 +1702,7 @@
 	</_189>
 	<_190>
 		<common_name value="BU_INT_Amond_Rasin" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -1873,7 +1873,7 @@
 	</_208>
 	<_209>
 		<common_name value="BU_STR_Fat_Buu" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2260,7 +2260,7 @@
 	</_251>
 	<_252>
 		<common_name value="BU_TEQ_Videl" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2494,7 +2494,7 @@
 	</_277>
 	<_278>
 		<common_name value="LR_AGL_Krillin_Gohan_Namek" />
-		<num_copies value="3" />
+		<num_copies value="5" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -2809,7 +2809,7 @@
 	</_312>
 	<_313>
 		<common_name value="CLR_TEQ_SS3_Gotenks" />
-		<num_copies value="1" />
+		<num_copies value="3" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3052,7 +3052,7 @@
 	</_339>
 	<_340>
 		<common_name value="LR_STR_Kaioken_Goku" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3205,7 +3205,7 @@
 	</_356>
 	<_357>
 		<common_name value="BU_PHY_Magetta" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3313,7 +3313,7 @@
 	</_368>
 	<_369>
 		<common_name value="BU_INT_Burter_Jeice" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3610,7 +3610,7 @@
 	</_401>
 	<_402>
 		<common_name value="LR_TEQ_SS2_Gohan" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3637,7 +3637,7 @@
 	</_404>
 	<_405>
 		<common_name value="BU_AGL_Videl" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3952,7 +3952,7 @@
 	</_438>
 	<_439>
 		<common_name value="BU_INT_Androids_19_20" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3988,7 +3988,7 @@
 	</_442>
 	<_443>
 		<common_name value="CLR_INT_Future_Gohan_Trunks" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="CRT" />
