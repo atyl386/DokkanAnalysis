@@ -1,6 +1,8 @@
 import pandas as pd
 import datetime as dt
 from dateutil.relativedelta import relativedelta
+from collections import defaultdict
+from itertools import chain
 import numpy as np
 from dokkanUnitConstants import NUM_COPIES_MAX, DOKKAN_ACCOUNT_XML_FILE_PATH
 from dokkanEvaluation import parseDokkanAccountXML, Unit, os
@@ -100,8 +102,10 @@ class Banner:
     ):
         df = pd.read_excel("SummonRating.xlsx", index_col="ID")
         summonRatingData = [(df.at[unit, "common_name"], round(df.at[unit, "Summon Rating"], 2)) for unit in units]
-        self.summonRatings = dict([(key, val) for key, val in summonRatingData])
-        self.units = np.mean(list(self.summonRatings.values()))
+        self.summonRatings = defaultdict(list)
+        for key, val in summonRatingData:
+            self.summonRatings[key].append(val)
+        self.units = np.mean(list(chain(*self.summonRatings.values())))
         if coin == "red" or coin == "cyan":
             self.coin = 1
         elif coin == "limited" or coin == "yellow":
