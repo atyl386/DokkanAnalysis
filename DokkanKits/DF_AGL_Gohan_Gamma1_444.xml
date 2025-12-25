@@ -143,7 +143,7 @@
 				</ability_12>
 			</default>
 			<turn_dpendent>
-				<input prompt="How many turn dependent buffs does the form have?" response="7" />
+				<input prompt="How many turn dependent buffs does the form have?" response="3" />
 				<ability_1>
 					<input prompt="What turn does the buff start from?" response="1" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="5" />
@@ -165,35 +165,6 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.58" />
 				</ability_3>
-				<ability_4>
-					<input prompt="What turn does the buff start from?" response="5" />
-					<input prompt="What turn does the buff end on (last turn active)?" response="6" />
-					<input prompt="What type of buff does the unit get?" response="Heal" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.58" />
-				</ability_4>
-				<ability_5>
-					<input prompt="What turn does the buff start from?" response="5" />
-					<input prompt="What turn does the buff end on (last turn active)?" response="6" />
-					<input prompt="What type of buff does the unit get?" response="Remove Status Effects" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="1.0" />
-					<input prompt="How many turns does the effect last for?" response="1" />
-				</ability_5>
-				<ability_6>
-					<input prompt="What turn does the buff start from?" response="5" />
-					<input prompt="What turn does the buff end on (last turn active)?" response="6" />
-					<input prompt="What type of buff does the unit get?" response="Ki" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="12.0" />
-				</ability_6>
-				<ability_7>
-					<input prompt="What turn does the buff start from?" response="5" />
-					<input prompt="What turn does the buff end on (last turn active)?" response="6" />
-					<input prompt="What type of buff does the unit get?" response="P3 ATK" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="1.58" />
-				</ability_7>
 			</turn_dpendent>
 			<slot_dependent>
 				<input prompt="How many slot specific buffs does the form have?" response="0" />
@@ -597,7 +568,51 @@
 				<input prompt="How many Domain skills does the form have?" response="0" />
 			</domain>
 			<active_skill_buffs>
-				<input prompt="How many active skill buffs does the form have?" response="0" />
+				<input prompt="How many active skill buffs does the form have?" response="4" />
+				<ability_1>
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+					<input prompt="How many turns does it last?" response="3" />
+					<input prompt="How many times can it be activated?" response="1" />
+					<input prompt="How many conditions have to be met?" response="1" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="Turn" />
+						<input prompt="What is the ability turn condition?" response="4" />
+					</condition_1>
+				</ability_1>
+				<ability_2>
+					<input prompt="What type of buff does the unit get?" response="DEF" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+					<input prompt="How many turns does it last?" response="3" />
+					<input prompt="How many times can it be activated?" response="1" />
+					<input prompt="How many conditions have to be met?" response="1" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="Turn" />
+						<input prompt="What is the ability turn condition?" response="4" />
+					</condition_1>
+				</ability_2>
+				<ability_3>
+					<input prompt="What type of buff does the unit get?" response="ATK Support" />
+					<input prompt="What is the value of the buff?" response="0.04375" />
+					<input prompt="How many turns does it last?" response="3" />
+					<input prompt="How many times can it be activated?" response="1" />
+					<input prompt="How many conditions have to be met?" response="1" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="Turn" />
+						<input prompt="What is the ability turn condition?" response="4" />
+					</condition_1>
+				</ability_3>
+				<ability_4>
+					<input prompt="What type of buff does the unit get?" response="DEF Support" />
+					<input prompt="What is the value of the buff?" response="0.04375" />
+					<input prompt="How many turns does it last?" response="3" />
+					<input prompt="How many times can it be activated?" response="1" />
+					<input prompt="How many conditions have to be met?" response="1" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="Turn" />
+						<input prompt="What is the ability turn condition?" response="4" />
+					</condition_1>
+				</ability_4>
 			</active_skill_buffs>
 			<offensive_on_super>
 				<input prompt="How many different offensive buffs does the form get when performing a super attack / attacking?" response="1" />
@@ -609,7 +624,18 @@
 				</ability_1>
 			</offensive_on_super>
 			<active_skill_attack>
-				<input prompt="How many active skill attacks does the form have?" response="0" />
+				<input prompt="How many active skill attacks does the form have?" response="1" />
+				<ability_1>
+					<input prompt="What is the attack multiplier?" response="Ultimate" />
+					<input prompt="What is the additional attack buff when performing the attack?" response="1.0" />
+					<input prompt="What is the additional P2 ATK buff when performing the attack?" response="0.0" />
+					<input prompt="Does this active skill trigger a transformation?" response="N" />
+					<input prompt="How many conditions have to be met?" response="1" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="Turn" />
+						<input prompt="What is the ability turn condition?" response="4" />
+					</condition_1>
+				</ability_1>
 			</active_skill_attack>
 			<standby_finish_attack>
 				<input prompt="How many Non-Counterattack Standby Finish Skills does the form have?" response="0" />
