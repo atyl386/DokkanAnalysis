@@ -4004,4 +4004,13 @@
 		<slots value="[1, 1, 1, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_444>
+	<_445>
+		<common_name value="DF_STR_Gamma2_Piccolo" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_445>
 </id>
