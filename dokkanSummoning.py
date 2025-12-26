@@ -138,7 +138,7 @@ class Banner:
             self.summonPoints = 0
         if fourthiethAnniversary:
             self.featuredRate = (3 + 7 * 0.2) / (10 * 0.1 * 0.5)
-            coins = 0.25 * max(list(self.summonRatings.values()))
+            coins = 0.25 * max(list(chain(*self.summonRatings.values())))
         else:
             coins = 0
         self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus + summonPoints + coins
@@ -151,6 +151,12 @@ class Banner:
 
 
 SummonRatings()
+GohanGamma1 = Banner([444, 358, 161, 150, 37, 321, 42], "red", summonPoints=True)
+print(GohanGamma1.summonRatings)
+print(GohanGamma1.summonScore)
+Gamma2Piccolo = Banner([445, 359, 160, 134, 44, 320, 35], "red", summonPoints=True)
+print(Gamma2Piccolo.summonRatings)
+print(Gamma2Piccolo.summonScore)
 FutureGohanTrunks = Banner([443, 313, 14, 12, 438, 440, 154, 439, 434, 433], "cyan", SSR_rate=0.2)
 print(FutureGohanTrunks.summonRatings)
 print(FutureGohanTrunks.summonScore)
