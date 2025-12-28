@@ -3,7 +3,7 @@ import pandas as pd
 from scipy.stats import truncnorm
 import shutil
 import pickle
-import multiprocessing
+from multiprocessing import Pool
 import tqdm
 
 HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
@@ -99,7 +99,7 @@ def writeNCopySummary(units, attributeValues, evaluations, nCopies):
 
 def writeSummary(units, attributeValues, evaluations, useMultiprocessing):   
     if False: # Computer RAM limitiations prevent multiprocessing
-        with multiprocessing.Pool() as pool:
+        with Pool() as pool:
             pool.starmap(
                 writeNCopySummary,
                 tqdm.tqdm([(units, attributeValues, evaluations, nCopies) for nCopies in range(1, NUM_COPIES_MAX + 1)], total=NUM_COPIES_MAX),
@@ -215,6 +215,12 @@ def optimiseHiPo(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot
         unit.find(equip).set("value", HIPO_BUILDS[best_HiPo][i])
     dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
 
+def processRainbowUnitWrapper(args):
+    return processRainbowUnit(*args)
+
+def processOtherUnitWrapper(args):
+    return processOtherUnit(*args)
+
 if __name__ == "__main__":
     User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
     if onlyEvaluationUnits:
@@ -263,20 +269,21 @@ if __name__ == "__main__":
         evaluations = np.zeros((nUnits, NUM_COPIES_MAX))
         reverseOrderIDs = np.flip(evalUnitIDs)
         print("Processing Rainbow Units")
+        rainbowUnitArgsIter = (
+            (ID, User, NUM_COPIES_MAX)
+            for ID in reverseOrderIDs
+        )
         if useMultiprocessing:
-            with multiprocessing.Pool() as pool:
-                output = np.asarray(
-                    pool.starmap(
-                        processRainbowUnit,
-                        tqdm.tqdm([(ID, User, NUM_COPIES_MAX) for ID in reverseOrderIDs], total=nUnits),
+            with Pool() as pool:
+                output = list(
+                    tqdm.tqdm(
+                        pool.imap(processRainbowUnitWrapper, rainbowUnitArgsIter),
+                        total=nUnits
                     ),
-                    dtype="object",
                 )
         else:
-            output = []
-            for ID in reverseOrderIDs:
-                output.insert(len(output), processRainbowUnit(ID, User, NUM_COPIES_MAX))
-            output = np.asarray(output, dtype=object)
+            output = [processRainbowUnit(*args) for args in tqdm.tqdm(rainbowUnitArgsIter, total=nUnits)]
+        output = np.asarray(output, dtype=object)
         units[-1] = np.array(list(output[:, 0]))
         attributeValues[:, :, :, -1] = list(output[:, 1])
         [rainbowMeans, rainbowStds] = summaryStats(attributeValues[:, :, :, -1])
@@ -288,7 +295,7 @@ if __name__ == "__main__":
         if optimiseslots:
             print("Optimising Slots")
             if False: # multiprocessing is not working
-                with multiprocessing.Pool() as pool:
+                with Pool() as pool:
                     pool.starmap(
                         optimiseSlots,
                         tqdm.tqdm([(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds) for ID in reverseOrderIDs], total=nUnits),
@@ -299,7 +306,7 @@ if __name__ == "__main__":
         if analyseHiPo:
             print("Optimising Hidden Potential")
             if False: # multiprocessing is not working
-                with multiprocessing.Pool() as pool:
+                with Pool() as pool:
                     pool.starmap(
                         optimiseHiPo,
                         tqdm.tqdm([(ID, User, overallEvaluator, dokkanAccountXML, dokkanAccountRoot, rainbowMeans, rainbowStds) for ID in reverseOrderIDs], total=nUnits),
@@ -319,28 +326,21 @@ if __name__ == "__main__":
             dokkanAccountXML.write(DOKKAN_ACCOUNT_XML_FILE_PATH, encoding="utf-8")
             exit()
         print("Processing Other Units")
+        otherUnitArgsIter = (
+            (ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX)
+            for ID in reverseOrderIDs
+        )
         if useMultiprocessing:
-            with multiprocessing.Pool() as pool:
-                output = np.asarray(
-                    pool.starmap(
-                        processOtherUnit,
-                        tqdm.tqdm(
-                            [
-                                (ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX)
-                                for ID in reverseOrderIDs
-                            ],
-                            total=nUnits,
-                        ),
-                    ),
-                    dtype="object",
+            with Pool() as pool:
+                output = list(
+                    tqdm.tqdm(
+                        pool.imap(processOtherUnitWrapper, otherUnitArgsIter),
+                        total=nUnits,
+                    )
                 )
         else:
-            output = []
-            for ID in reverseOrderIDs:
-                output.insert(
-                    len(output), processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_COPIES_MAX)
-                )
-            output = np.asarray(output, dtype=object)
+            output = [processOtherUnit(*args) for args in tqdm.tqdm(otherUnitArgsIter, total=nUnits)]
+        output = np.asarray(output, dtype=object)
         units[:-1] = np.array(list(output[:, 0])).T
         attributeValues[:, :, :, :-1] = list(output[:, 1])
         evaluations[:, :-1] = list(output[:, 2])
