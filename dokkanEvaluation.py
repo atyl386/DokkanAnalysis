@@ -73,33 +73,40 @@ def normalizeUnit(unit, means, stds):
     )
     return unit
 
-
-def writeSummary(units, attributeValues, evaluations):
-    # Create Attribute data frame for each turn
-    for nCopies in range(1, NUM_COPIES_MAX + 1):
-        df1 = pd.DataFrame(
-            data=[
-                [
-                    units[nCopies - 1][i].id,
-                    units[nCopies - 1][i].commonName,
-                    evaluations[i, nCopies - 1],
-                ]
-                for i in range(nUnits)
-            ],
-            columns=["ID", "common_name", "Evaluation"],
-        )
-        weightedSums = np.zeros((nUnits, NUM_ATTRIBUTES))
+def writeNCopySummary(units, attributeValues, evaluations, nCopies):   
+    df1 = pd.DataFrame(
+        data=[
+            [
+                units[nCopies - 1][i].id,
+                units[nCopies - 1][i].commonName,
+                evaluations[i, nCopies - 1],
+            ]
+            for i in range(nUnits)
+        ],
+        columns=["ID", "common_name", "Evaluation"],
+    )
+    weightedSums = np.zeros((nUnits, NUM_ATTRIBUTES))
+    for turn in range(NUM_EVAL_TURNS):
+        weightedSums = np.add(weightedSums, overallTurnWeights[turn] * attributeValues[:, turn, :, nCopies - 1])
+    with pd.ExcelWriter("DokkanUnits/" + HIPO_DUPES[nCopies - 1] + "/unitSummary.xlsx") as writer:
+        df = df1.join(pd.DataFrame(data=weightedSums, columns=ATTTRIBUTE_NAMES)).set_index("ID")
+        df.to_excel(writer, sheet_name="Overall")
         for turn in range(NUM_EVAL_TURNS):
-            weightedSums = np.add(weightedSums, overallTurnWeights[turn] * attributeValues[:, turn, :, nCopies - 1])
-        with pd.ExcelWriter("DokkanUnits/" + HIPO_DUPES[nCopies - 1] + "/unitSummary.xlsx") as writer:
-            df = df1.join(pd.DataFrame(data=weightedSums, columns=ATTTRIBUTE_NAMES)).set_index("ID")
-            df.to_excel(writer, sheet_name="Overall")
-            for turn in range(NUM_EVAL_TURNS):
-                df = df1.join(
-                    pd.DataFrame(data=attributeValues[:, turn, :, nCopies - 1], columns=ATTTRIBUTE_NAMES)
-                ).set_index("ID")
-                df.to_excel(writer, sheet_name="turn " + str(turn + 1))
+            df = df1.join(
+                pd.DataFrame(data=attributeValues[:, turn, :, nCopies - 1], columns=ATTTRIBUTE_NAMES)
+            ).set_index("ID")
+            df.to_excel(writer, sheet_name="turn " + str(turn + 1))
 
+def writeSummary(units, attributeValues, evaluations, useMultiprocessing):   
+    if False: # Computer RAM limitiations prevent multiprocessing
+        with multiprocessing.Pool() as pool:
+            pool.starmap(
+                writeNCopySummary,
+                tqdm.tqdm([(units, attributeValues, evaluations, nCopies) for nCopies in range(1, NUM_COPIES_MAX + 1)], total=NUM_COPIES_MAX),
+            )
+    else:
+        for nCopies in range(1, NUM_COPIES_MAX + 1):
+            writeNCopySummary(units, attributeValues, evaluations, nCopies)
 
 class Evaluator:
     def __init__(self, turnWeights, attributeWeights):
@@ -341,7 +348,7 @@ if __name__ == "__main__":
         print("Computing Ranking Scores")
         evaluations = logisticMap(evaluations, maxEvaluation)
         print("Writing results to files")
-        writeSummary(units, attributeValues, evaluations)
+        writeSummary(units, attributeValues, evaluations, useMultiprocessing)
 
     # Calculate Overall Rankings
     scores = [0.0] * nUnits
