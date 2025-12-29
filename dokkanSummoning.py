@@ -151,10 +151,10 @@ class Banner:
 
 
 SummonRatings()
-GohanGamma1 = Banner([444, 358, 161, 150, 37, 321, 42], "red", summonPoints=True)
+GohanGamma1 = Banner([444, 358, 161, 150, 37, 35, 40], "red", summonPoints=True, threePlus1=True)
 print(GohanGamma1.summonRatings)
 print(GohanGamma1.summonScore)
-Gamma2Piccolo = Banner([445, 359, 160, 134, 44, 320, 35], "red", summonPoints=True)
+Gamma2Piccolo = Banner([445, 359, 160, 134, 44, 47, 42], "red", summonPoints=True, threePlus1=True)
 print(Gamma2Piccolo.summonRatings)
 print(Gamma2Piccolo.summonScore)
 FutureGohanTrunks = Banner([443, 313, 14, 12, 438, 440, 154, 439, 434, 433], "cyan", SSR_rate=0.2)

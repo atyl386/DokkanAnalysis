@@ -15,7 +15,7 @@ accountRanking = True
 useMultiprocessing = True
 updateEvaluationUnits = False
 onlyEvaluationUnits = True
-writeSummaryFiles = False
+writeSummaryFiles = True
 
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
@@ -92,7 +92,7 @@ def writeNCopySummary(units, attributeValues, evaluations, nCopies):
 
     outputPath = f"DokkanUnits/{HIPO_DUPES[idx]}/unitSummary.xlsx"
 
-    with pd.ExcelWriter(outputPath, engine="xlsxwriter") as writer:
+    with pd.ExcelWriter(outputPath) as writer:
         dfOverall = pd.concat(
             [dfBase, pd.DataFrame(weightedSums, columns=ATTTRIBUTE_NAMES, index=dfBase.index)],
             axis=1,
