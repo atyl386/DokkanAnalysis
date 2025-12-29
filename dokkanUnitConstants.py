@@ -263,7 +263,7 @@ PROBABILITY_KILL_ENEMY_PER_ATTACK = (
 # Enemy
 LOOK_AHEAD_FACTOR = 1.2  # Want to know which units will be good in the future when enemies are even stronger
 AVG_ENEMY_DMG_RED = 0.7
-MAX_T1_ENEMY_DEF = 1100000  # Goku (Youth) (Giant Ape) Red DB Red Zone
+MAX_T1_ENEMY_DEF = 1500000  # Seriously Serious Cell Max Fight
 MAX_ENEMY_DEF = 2000000 # Goku & Frieza SMB
 MAX_ENEMY_DEF_PER_TURN = (
     LOOK_AHEAD_FACTOR
@@ -286,7 +286,7 @@ MAX_ENEMY_DMG_THRESHOLD_PER_TURN = (
 ENEMY_DMG_THRESHOLD_CHANCE = 0.5 # 10th Anniv Final Red Zone Stages
 ENEMY_DODGE_CHANCE = 0.05
 AVG_DAM_VARIANCE = 1.015
-MAX_T1_NORMAL_DAM = 1687500  # Goku Black & Zamasu (1250000 * (1 + 0.5) * (1 + 0.5)) * 0.6 (Whis)
+MAX_T1_NORMAL_DAM = 1760000  # Seriously Serious Cell Max (880000 * (1 + 1))
 MAX_NORMAL_DAM = 6300000  # Pure Saiyans Red Zone Broly 1.2M * 1.5 * (1 + 1.5 + 1)
 MAX_T1_SA_DAM = 4500000  # Goku Black & Zamasu 1250000 * (3.5 + 0.5) * (1 + 0.5) * 0.6 (Whis)
 MAX_SA_DAM = 16800000  # Pure Saiyans Red Zone Broly 1.2M * (3.5 + 0.5) * (1 + 1.5 + 1)
