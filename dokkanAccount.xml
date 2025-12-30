@@ -370,7 +370,7 @@
 	</_41>
 	<_42>
 		<common_name value="DF_STR_SS3_DragonFist_Goku" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -388,7 +388,7 @@
 	</_43>
 	<_44>
 		<common_name value="DFLR_PHY_Beast_Gohan" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -1198,7 +1198,7 @@
 	</_133>
 	<_134>
 		<common_name value="DF_STR_Gamma_1" />
-		<num_copies value="3" />
+		<num_copies value="5" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3223,7 +3223,7 @@
 	</_358>
 	<_359>
 		<common_name value="DF_TEQ_SSGSS_Kaioken_Goku" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3664,7 +3664,7 @@
 	</_407>
 	<_408>
 		<common_name value="BU_INT_DBS_Broly_Vegeta" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -4006,7 +4006,7 @@
 	</_444>
 	<_445>
 		<common_name value="DF_STR_Gamma2_Piccolo" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="ADD" />
 		<HiPo_choice_2 value="CRT" />
