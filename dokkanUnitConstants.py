@@ -264,7 +264,7 @@ PROBABILITY_KILL_ENEMY_PER_ATTACK = (
 LOOK_AHEAD_FACTOR = 1.2  # Want to know which units will be good in the future when enemies are even stronger
 AVG_ENEMY_DMG_RED = 0.7
 MAX_T1_ENEMY_DEF = 1500000  # Seriously Serious Cell Max Fight
-MAX_ENEMY_DEF = 2000000 # Goku & Frieza SMB
+MAX_ENEMY_DEF = 2300000 # Baby Artificial life forms Red Zone
 MAX_ENEMY_DEF_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * np.append(
@@ -288,8 +288,8 @@ ENEMY_DODGE_CHANCE = 0.05
 AVG_DAM_VARIANCE = 1.015
 MAX_T1_NORMAL_DAM = 1760000  # Seriously Serious Cell Max (880000 * (1 + 1))
 MAX_NORMAL_DAM = 6300000  # Pure Saiyans Red Zone Broly 1.2M * 1.5 * (1 + 1.5 + 1)
-MAX_T1_SA_DAM = 4500000  # Goku Black & Zamasu 1250000 * (3.5 + 0.5) * (1 + 0.5) * 0.6 (Whis)
-MAX_SA_DAM = 16800000  # Pure Saiyans Red Zone Broly 1.2M * (3.5 + 0.5) * (1 + 1.5 + 1)
+MAX_T1_SA_DAM = 4500000  # TEQ Gogeta 450000 * (3.5 + 0.5) * (1 + 1.5)
+MAX_SA_DAM = 15840000  # SMB Gohan, Goten & Trunks 2 (1100000 * (3.3 + 0.3) * (1 + 3))
 MAX_NORMAL_DAM_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * AVG_DAM_VARIANCE
