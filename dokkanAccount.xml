@@ -208,7 +208,7 @@
 	</_23>
 	<_24>
 		<common_name value="LR_TEQ_Universe_2" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -1018,7 +1018,7 @@
 	</_113>
 	<_114>
 		<common_name value="LR_STR_Goku_Hit" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="CRT" />
 		<HiPo_choice_2 value="ADD" />
@@ -1477,7 +1477,7 @@
 	</_164>
 	<_165>
 		<common_name value="LR_AGL_Ultimate_Gohan" />
-		<num_copies value="1" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -2062,7 +2062,7 @@
 	</_229>
 	<_230>
 		<common_name value="CLR_AGL_Jiren" />
-		<num_copies value="1" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3052,7 +3052,7 @@
 	</_339>
 	<_340>
 		<common_name value="LR_STR_Kaioken_Goku" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3088,7 +3088,7 @@
 	</_343>
 	<_344>
 		<common_name value="BU_INT_Chichi" />
-		<num_copies value="1" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3187,7 +3187,7 @@
 	</_354>
 	<_355>
 		<common_name value="LR_PHY_Paikuhan" />
-		<num_copies value="1" />
+		<num_copies value="3" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3205,7 +3205,7 @@
 	</_356>
 	<_357>
 		<common_name value="BU_PHY_Magetta" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3295,7 +3295,7 @@
 	</_366>
 	<_367>
 		<common_name value="BU_TEQ_General_Blue" />
-		<num_copies value="0" />
+		<num_copies value="2" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -3322,7 +3322,7 @@
 	</_369>
 	<_370>
 		<common_name value="LR_STR_Tien" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -3376,7 +3376,7 @@
 	</_375>
 	<_376>
 		<common_name value="BU_AGL_Champa" />
-		<num_copies value="0" />
+		<num_copies value="3" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3457,7 +3457,7 @@
 	</_384>
 	<_385>
 		<common_name value="BU_STR_Pan_GT" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3664,7 +3664,7 @@
 	</_407>
 	<_408>
 		<common_name value="BU_INT_DBS_Broly_Vegeta" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
@@ -3682,7 +3682,7 @@
 	</_409>
 	<_410>
 		<common_name value="CLR_TEQ_Wrathful_Broly" />
-		<num_copies value="0" />
+		<num_copies value="3" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
