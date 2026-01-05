@@ -1003,9 +1003,9 @@ class Form:
                 self,
                 "How many different nullification abilities does the form have?",
                 Nullification,
-                ["Does this nullification have counter?", "How much health is restored if nullified?", "What is the additional P2 ATK buff when performing the counter?"],
-                [clc.Choice(YES_NO), None, None],
-                ["N", 0.0, 0.0],
+                ["Does this nullification have counter?", "How much health is restored if nullified?", "What is the additional P2 ATK buff when performing the counter?", "What turn does the buff start from?", "What turn does the buff end on (last turn active)?"],
+                [clc.Choice(YES_NO), None, None, None, None],
+                ["N", 0.0, 0.0, self.initialTurn, MAX_TURN],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "revive")
@@ -4133,16 +4133,17 @@ class KiSphereDependent(PerEvent):
 class Nullification(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
-        self.hasCounter, self.healthFrac, self.p2AttackBuff = args
+        self.hasCounter, self.healthFrac, self.p2AttackBuff, self.startTurn, self.endTurn = args
 
     def applyToState(self, state):
-        pNullify = self.activationProbability * aprioriProbMod(saFracConversion[self.effect], True)
-        state.buff["Heal"] += self.healthFrac * pNullify / NUM_SLOTS * AVG_SA_DAM / AVG_HEALTH
-        if yesNo2Bool[self.hasCounter]:
-            state.multiChanceBuff["Nullify"].updateChance("SA Counter", pNullify, "Nullify", state)
-            state.p2AtkBuffOnCounter += self.p2AttackBuff
-        else:
-            state.multiChanceBuff["Nullify"].updateChance("Nullification", pNullify, "Nullify", state)
+        if state.turn >= self.startTurn and state.turn <= self.endTurn:
+            pNullify = self.activationProbability * aprioriProbMod(saFracConversion[self.effect], True)
+            state.buff["Heal"] += self.healthFrac * pNullify / NUM_SLOTS * AVG_SA_DAM / AVG_HEALTH
+            if yesNo2Bool[self.hasCounter]:
+                state.multiChanceBuff["Nullify"].updateChance("SA Counter", pNullify, "Nullify", state)
+                state.p2AtkBuffOnCounter += self.p2AttackBuff
+            else:
+                state.multiChanceBuff["Nullify"].updateChance("Nullification", pNullify, "Nullify", state)
 
 
 class Condition:
@@ -4266,4 +4267,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(445, "DF_STR_Gamma2_Piccolo", 5, "DGE", "DGE", "CRT", [1, 1, 1, 1, 1, 1, 1, 1, 1, 2], "True")
+    unit = Unit(102, "DFLR_INT_SFPS4_Goku", 1, "DGE", "DGE", "ADD", [1, 2, 2, 3, 3, 3, 3, 3, 1, 1], "True")

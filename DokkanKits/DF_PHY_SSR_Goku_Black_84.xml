@@ -323,6 +323,8 @@
 					<input prompt="Is the status of this ability known beforehand?" response="N" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="What is the additional P2 ATK buff when performing the counter?" response="0.0" />
+					<input prompt="What turn does the buff start from?" response="1" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
 				</ability_1>
 			</nullification>
 			<revive>
