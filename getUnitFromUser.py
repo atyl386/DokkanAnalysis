@@ -7,7 +7,6 @@ import glob
 
 # TODO:
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
-# - Make nullification a regular Buff so can do per turn like STR Kid Buu
 # - Make better way to integrate the no eval unit finding into normal evaluation run
 # - Simplify getEventFactor code
 # - Implement dodging counters, i.e. TEQ UI Goku

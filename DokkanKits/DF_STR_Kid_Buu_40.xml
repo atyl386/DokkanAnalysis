@@ -303,8 +303,19 @@
 				</ability_2>
 			</per_attack_super_performed>
 			<nullification>
-				<input prompt="How many different nullification abilities does the form have?" response="1" />
+				<input prompt="How many different nullification abilities does the form have?" response="2" />
 				<ability_1>
+					<input prompt="Does this nullification have counter?" response="N" />
+					<input prompt="How much health is restored if nullified?" response="0.0" />
+					<input prompt="What type of buff does the unit get?" response="Nullify Melee" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="Is the status of this ability known beforehand?" response="N" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What is the additional P2 ATK buff when performing the counter?" response="0.0" />
+					<input prompt="What turn does the buff start from?" response="1" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="3" />
+				</ability_1>
+				<ability_2>
 					<input prompt="Does this nullification have counter?" response="N" />
 					<input prompt="How much health is restored if nullified?" response="0.0" />
 					<input prompt="What type of buff does the unit get?" response="Nullify Melee" />
@@ -312,9 +323,9 @@
 					<input prompt="Is the status of this ability known beforehand?" response="N" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="What is the additional P2 ATK buff when performing the counter?" response="0.0" />
-					<input prompt="What turn does the buff start from?" response="1" />
+					<input prompt="What turn does the buff start from?" response="4" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
-				</ability_1>
+				</ability_2>
 			</nullification>
 			<revive>
 				<input prompt="How many revive skills does the form have?" response="0" />
