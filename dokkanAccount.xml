@@ -2553,7 +2553,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[3, 2, 3, 3, 3, 3, 3, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_284>
 	<_285>
 		<common_name value="BU_TEQ_God_Trunks" />
@@ -3831,7 +3831,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 3, 3, 3, 3, 3, 3, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_425>
 	<_426>
 		<common_name value="F2P_INT_Vegeta_Mini_Daima" />

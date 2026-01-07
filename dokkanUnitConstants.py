@@ -263,8 +263,8 @@ PROBABILITY_KILL_ENEMY_PER_ATTACK = (
 # Enemy
 LOOK_AHEAD_FACTOR = 1.2  # Want to know which units will be good in the future when enemies are even stronger
 AVG_ENEMY_DMG_RED = 0.7
-MAX_T1_ENEMY_DEF = 1500000  # Seriously Serious Cell Max Fight
-MAX_ENEMY_DEF = 2300000 # Baby Artificial life forms Red Zone
+MAX_T1_ENEMY_DEF = 2000000  # Artificial Life Forms Red Zone Bio Broly
+MAX_ENEMY_DEF = 4000000 # Artificial Life Forms Red Zone Metal Cooler
 MAX_ENEMY_DEF_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * np.append(
@@ -286,10 +286,10 @@ MAX_ENEMY_DMG_THRESHOLD_PER_TURN = (
 ENEMY_DMG_THRESHOLD_CHANCE = 0.5 # 10th Anniv Final Red Zone Stages
 ENEMY_DODGE_CHANCE = 0.05
 AVG_DAM_VARIANCE = 1.015
-MAX_T1_NORMAL_DAM = 1760000  # Seriously Serious Cell Max (880000 * (1 + 1))
-MAX_NORMAL_DAM = 6300000  # Pure Saiyans Red Zone Broly 1.2M * 1.5 * (1 + 1.5 + 1)
-MAX_T1_SA_DAM = 4500000  # TEQ Gogeta 450000 * (3.5 + 0.5) * (1 + 1.5)
-MAX_SA_DAM = 15840000  # SMB Gohan, Goten & Trunks 2 (1100000 * (3.3 + 0.3) * (1 + 3))
+MAX_T1_NORMAL_DAM = 3375000  # Artificial Life Forms Red Zone Bio Broly 2.25 * (2.5 * 0.2 + 1) = 3.375M
+MAX_NORMAL_DAM = 6750000  # Artificial Life Forms Red Zone Bio Broly 2.25 * (2 + 1) = 6.75M
+MAX_T1_SA_DAM = 11812500  # Artificial Life Forms Red Zone Bio Broly 7.875 * (2.5 * 0.2 + 1) = 11.8125M
+MAX_SA_DAM = 23625000  # Artificial Life Forms Red Zone Bio Broly 7.875 * (2 + 1) = 23.625M
 MAX_NORMAL_DAM_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * AVG_DAM_VARIANCE
