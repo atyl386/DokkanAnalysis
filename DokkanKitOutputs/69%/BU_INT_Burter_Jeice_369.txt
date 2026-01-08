@@ -3,13 +3,13 @@ Form # 1 / State # 1 / Turn # 1
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 21184.0 
-Useability: 0.6708115827475951 
+Useability: 0.6914495084623373 
 Healing: 0.026651791384615382 
-Support: 2.5910005483035587 
+Support: 2.8465177238194146 
 DPT: 810641.1592464119 
-Normal Defence: -0.35627735500846747 
-Super Attack Defence: -0.036141179127595034 
-Slot Bonus: 0.5 
+Normal Defence: -0.9502371642878437 
+Super Attack Defence: -0.09470885627990623 
+Slot Bonus: 1.0 
 
 Form # 1 / State # 2 / Turn # 3 
  
@@ -17,9 +17,9 @@ Leader Skill: 0.0
 SBR: 0.0 
 HP: 21184.0 
 Useability: 0.6914495084623373 
-Healing: 0.05015257954781538 
+Healing: 0.05425238654252308 
 Support: 2.8465177238194146 
-DPT: 1588724.3030561921 
+DPT: 1753233.306206653 
 Normal Defence: -0.9502371642878437 
 Super Attack Defence: -0.09470885627990623 
 Slot Bonus: 1.0 
@@ -30,27 +30,14 @@ Leader Skill: 0.0
 SBR: 0.0 
 HP: 21184.0 
 Useability: 0.6914495084623373 
-Healing: 0.07775317470572306 
+Healing: 0.07995537415384615 
 Support: 2.8465177238194146 
-DPT: 2323974.2840006966 
+DPT: 2374454.60484753 
 Normal Defence: -0.9502371642878437 
 Super Attack Defence: -0.09470885627990623 
 Slot Bonus: 1.0 
 
 Form # 1 / State # 4 / Turn # 7 
- 
-Leader Skill: 0.0 
-SBR: 0.0 
-HP: 21184.0 
-Useability: 0.6914495084623373 
-Healing: 0.07995537415384615 
-Support: 2.8465177238194146 
-DPT: 2203732.3966702344 
-Normal Defence: -0.9502371642878437 
-Super Attack Defence: -0.09470885627990623 
-Slot Bonus: 1.0 
-
-Form # 1 / State # 5 / Turn # 9 
  
 Leader Skill: 0.0 
 SBR: 0.0 
@@ -62,6 +49,19 @@ DPT: 2203732.3966702344
 Normal Defence: -0.35627735500846747 
 Super Attack Defence: -0.036141179127595034 
 Slot Bonus: 0.5 
+
+Form # 1 / State # 5 / Turn # 9 
+ 
+Leader Skill: 0.0 
+SBR: 0.0 
+HP: 21184.0 
+Useability: 0.6914495084623373 
+Healing: 0.07995537415384615 
+Support: 2.8465177238194146 
+DPT: 2203732.3966702344 
+Normal Defence: -0.9502371642878437 
+Super Attack Defence: -0.09470885627990623 
+Slot Bonus: 1.0 
 
 Form # 1 / State # 6 / Turn # 11 
  
