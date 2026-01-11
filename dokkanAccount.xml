@@ -4017,9 +4017,9 @@
 		<common_name value="F2PLR_STR_Login_Goku" />
 		<num_copies value="0" />
 		<BRZ_equip value="ATK" />
-		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_446>
 </id>
