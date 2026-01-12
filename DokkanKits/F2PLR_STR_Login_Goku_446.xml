@@ -278,10 +278,10 @@
 				</ability_2>
 				<ability_3>
 					<input prompt="What is the required ki?" response="24" />
-					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
-					<input prompt="What is the probability this ability activates?" response="0.5" />
-					<input prompt="Is the status of this ability known beforehand?" response="N" />
+					<input prompt="What type of buff does the unit get?" response="AAChance" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What is the chance for this to become a super?" response="0.5" />
 				</ability_3>
 			</ki_dependent>
 			<per_ki>
