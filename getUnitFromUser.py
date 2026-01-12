@@ -269,7 +269,7 @@ class Unit:
         ]
         self.date = dt.datetime.strptime(
             self.inputHelper.getAndSaveUserInput(
-                "When did the unit release on the Japanse version of Dokkan? (MM/YY)", default="01/25"
+                "When did the unit release on the Japanse version of Dokkan? (MM/YY)", default="01/26"
             ),
             "%m/%y",
         )
@@ -4267,4 +4267,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(446, "F2PLR_STR_Login_Goku", 1, "DGE", "DGE", "ADD", [1, 2, 2, 3, 3, 3, 3, 3, 1, 1], "True")
+    unit = Unit(37, "DFLR_TEQ_Orange_Piccolo", 1, "DGE", "DGE", "ADD", [1, 2, 2, 3, 3, 3, 3, 3, 1, 1], "True")
