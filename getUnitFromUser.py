@@ -6,6 +6,7 @@ import click as clc
 import glob
 
 # TODO:
+# - Respec Orange Piccolo's HiPo abilities
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
 # - Make better way to integrate the no eval unit finding into normal evaluation run
