@@ -1024,17 +1024,17 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 1200, 0, 0, 0.06],
         "GLD": [0, 0, 0.12, 0.12, 0]
     },
-    # TEQ Orange Piccolo (sub-optimal)
+    # TEQ Orange Piccolo
     "37" : {
         "BRZ": [0, 800, 0, 0, 0],
-        "SLV": [0, 400, 0.08, 0.08, 0],
-        "GLD": [0, 0, 0.08, 0.10, 0]
+        "SLV": [0, 400, 0.08, 0, 0],
+        "GLD": [0, 0, 0.04, 0, 0.05]
     },
-    # PHY Beast Gohan (sub-optimal)
+    # PHY Beast Gohan
     "44" : {
         "BRZ": [0, 800, 0, 0, 0],
-        "SLV": [0, 400, 0.08, 0.08, 0],
-        "GLD": [0, 600, 0.12, 0, 0]
+        "SLV": [0, 400, 0.08, 0, 0],
+        "GLD": [0, 0, 0.1, 0, 0.02]
     },
     # LR Broly Cheelai & Lemo
     "49" : {
@@ -1112,7 +1112,7 @@ HIPO_SPECIAL_EQUIPS = {
     "85" : {
         "BRZ": [0, 800, 0, 0, 0],
         "SLV": [0, 400, 0, 0, 0.04],
-        "GLD": [0, 0, 0.04, 0, 0.1]
+        "GLD": [0, 0, 0.04, 0, 0.05]
     },
     # AGL UI (sub-optimal)
     "90" : {
