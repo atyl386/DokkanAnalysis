@@ -263,8 +263,8 @@ PROBABILITY_KILL_ENEMY_PER_ATTACK = (
 # Enemy
 LOOK_AHEAD_FACTOR = 1.2  # Want to know which units will be good in the future when enemies are even stronger
 AVG_ENEMY_DMG_RED = 0.7
-MAX_T1_ENEMY_DEF = 2000000  # Artificial Life Forms Red Zone Bio Broly
-MAX_ENEMY_DEF = 4000000 # Artificial Life Forms Red Zone Metal Cooler
+MAX_T1_ENEMY_DEF = 4000000  # Artificial Life Forms Red Zone Cell Max
+MAX_ENEMY_DEF = 4000000 # Artificial Life Forms Red Zone Cell Max
 MAX_ENEMY_DEF_PER_TURN = (
     LOOK_AHEAD_FACTOR
     * np.append(
