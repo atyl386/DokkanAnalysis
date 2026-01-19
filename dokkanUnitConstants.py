@@ -130,9 +130,12 @@ ATTTRIBUTE_NAMES = [
     "Useability",
     "Healing",
     "Support",
-    "DPT",
-    "Normal Defence",
-    "Super Attack Defence",
+    "DPT No Look Ahead",
+    "DPT Look Ahead",
+    "Normal Defence No Look Ahead",
+    "Normal Defence Look Ahead",
+    "Super Attack Defence No Look Ahead",
+    "Super Attack Defence Look Ahead",
     "Slot Bonus",
 ]
 NUM_ATTRIBUTES = len(ATTTRIBUTE_NAMES)
@@ -266,23 +269,23 @@ AVG_ENEMY_DMG_RED = 0.7
 MAX_T1_ENEMY_DEF = 4000000  # Artificial Life Forms Red Zone Cell Max
 MAX_ENEMY_DEF = 4000000 # Artificial Life Forms Red Zone Cell Max
 MAX_ENEMY_DEF_PER_TURN = (
-    LOOK_AHEAD_FACTOR
-    * np.append(
+    np.append(
         np.linspace(MAX_T1_ENEMY_DEF, MAX_ENEMY_DEF, PEAK_TURN),
         [MAX_ENEMY_DEF] * (MAX_TURN - PEAK_TURN),
         axis=0,
     )
 )
+MAX_ENEMY_DEF_PER_TURN_LOOK_AHEAD = LOOK_AHEAD_FACTOR * MAX_ENEMY_DEF_PER_TURN
 MAX_T1_ENEMY_DMG_THRESHOLD = 7000000 # Seriously Serious Battle
 MAX_ENEMY_DMG_THRESHOLD = 10000000 # Goku & Frieza
 MAX_ENEMY_DMG_THRESHOLD_PER_TURN = (
-    LOOK_AHEAD_FACTOR
-    * np.append(
+    np.append(
         np.linspace(MAX_T1_ENEMY_DMG_THRESHOLD, MAX_ENEMY_DMG_THRESHOLD, PEAK_TURN),
         [MAX_ENEMY_DMG_THRESHOLD] * (MAX_TURN - PEAK_TURN),
         axis=0
     )
-) 
+)
+MAX_ENEMY_DMG_THRESHOLD_PER_TURN_LOOK_AHEAD = LOOK_AHEAD_FACTOR * MAX_ENEMY_DMG_THRESHOLD_PER_TURN
 ENEMY_DMG_THRESHOLD_CHANCE = 0.5 # 10th Anniv Final Red Zone Stages
 ENEMY_DODGE_CHANCE = 0.05
 AVG_DAM_VARIANCE = 1.015
@@ -291,25 +294,24 @@ MAX_NORMAL_DAM = 6750000  # Artificial Life Forms Red Zone Bio Broly 2.25 * (2 +
 MAX_T1_SA_DAM = 11812500  # Artificial Life Forms Red Zone Bio Broly 7.875 * (2.5 * 0.2 + 1) = 11.8125M
 MAX_SA_DAM = 23625000  # Artificial Life Forms Red Zone Bio Broly 7.875 * (2 + 1) = 23.625M
 MAX_NORMAL_DAM_PER_TURN = (
-    LOOK_AHEAD_FACTOR
-    * AVG_DAM_VARIANCE
+    AVG_DAM_VARIANCE
     * np.append(
         np.linspace(MAX_T1_NORMAL_DAM, MAX_NORMAL_DAM, PEAK_TURN),
         [MAX_NORMAL_DAM] * (MAX_TURN - PEAK_TURN),
         axis=0,
     )
 )
+MAX_NORMAL_DAM_PER_TURN_LOOK_AHEAD = LOOK_AHEAD_FACTOR * MAX_NORMAL_DAM_PER_TURN
 MAX_SA_DAM_PER_TURN = (
-    LOOK_AHEAD_FACTOR
-    * AVG_DAM_VARIANCE
+    AVG_DAM_VARIANCE
     * np.append(
         np.linspace(MAX_T1_SA_DAM, MAX_SA_DAM, PEAK_TURN),
         [MAX_SA_DAM] * (MAX_TURN - PEAK_TURN),
         axis=0,
     )
 )
-AVG_SA_DAM = MAX_SA_DAM_PER_TURN[PEAK_TURN - 1] / LOOK_AHEAD_FACTOR
-# maxDefence = LOOK_AHEAD_FACTOR* np.append(np.linspace(100000,110000,PEAK_TURN),[110000]*(MAX_TURN-PEAK_TURN),axis=0)
+MAX_SA_DAM_PER_TURN_LOOK_AHEAD = LOOK_AHEAD_FACTOR * MAX_SA_DAM_PER_TURN
+AVG_SA_DAM = MAX_SA_DAM_PER_TURN[PEAK_TURN - 1] / LOOK_AHEAD_FACTOR / 2  # Average super attack damage at peak turn
 
 # Links
 MAX_NUM_LINKS = 7
