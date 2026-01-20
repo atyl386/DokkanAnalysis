@@ -484,8 +484,8 @@ class Unit:
                     applyTransformationAttackDPT = True
                     self.nextForm = -1
                 if applyTransformationAttackDPT:
-                    #state.attributes["DPT No Look Ahead"] += self.transformationAttackDPTNoLookAhead
-                    state.attributes["DPT"] += self.transformationAttackDPTLookAhead
+                    state.attributes["DPT No Look Ahead"] += self.transformationAttackDPTNoLookAhead
+                    state.attributes["DPT Look Ahead"] += self.transformationAttackDPTLookAhead
                     turn = nextTurn
                     self.transformationAttackDPTNoLookAhead = 0
                     self.transformationAttackDPTLookAhead = 0
@@ -1625,8 +1625,11 @@ class State:
             self.useability,  # Requires user input, should make a version that loads from file
             self.buff["Heal"],
             self.support,
+            self.DPTNoLookAhead,
             self.DPTLookAhead,
+            self.normalDamageTakenNoLookAhead - sacrifcedHP,
             self.normalDamageTakenLookAhead - sacrifcedHP,
+            self.saDamageTakenNoLookAhead,
             self.saDamageTakenLookAhead,
             self.slotFactor,
         ]
