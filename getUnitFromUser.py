@@ -443,6 +443,7 @@ class Unit:
         self.transformationTriggered = False
         self.fightPeak = False
         # Only non-zero in between activating the stanby finish skill attack and applying to subsequent state
+        # Merge requests diffs appear super attack defense related and giant form / active skill related
         self.transformationAttackDPTNoLookAhead = 0
         self.transformationAttackDPTLookAhead = 0
         self.nextForm = 1
@@ -1513,8 +1514,8 @@ class State:
         )
         self.setUSA()
         self.postAttackCounterAtk = self.getPostAttackCounter()
-        self.DPTLookAhead = self.setDPT(lookAhead=True)
-        self.DPTNoLookAhead = self.setDPT(lookAhead=False)
+        self.DPTLookAhead += self.setDPT(lookAhead=True)
+        self.DPTNoLookAhead += self.setDPT(lookAhead=False)
         self.setAvgDefMult()
         self.normalDamageTakenNoLookAhead = self.branchDamageTaken(
             1,
@@ -1605,7 +1606,7 @@ class State:
                 (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[self.form.unit.nCopies - 1])
                 * avgDefStartOfTurn
                 * self.orbCollection.orbCollects["Same"].getNumOrbs()
-                + self.buff["Damage Dealt Heal"] * self.DPTNoLookAhead
+                + self.buff["Damage Dealt Heal"] * self.DPTLookAhead
             )
             / AVG_HEALTH
         )
