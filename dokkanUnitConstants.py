@@ -130,12 +130,9 @@ ATTTRIBUTE_NAMES = [
     "Useability",
     "Healing",
     "Support",
-    "DPT No Look Ahead",
-    "DPT Look Ahead",
-    "Normal Defence No Look Ahead",
-    "Normal Defence Look Ahead",
-    "Super Attack Defence No Look Ahead",
-    "Super Attack Defence Look Ahead",
+    "DPT",
+    "Normal Defence",
+    "Super Attack Defence",
     "Slot Bonus",
 ]
 NUM_ATTRIBUTES = len(ATTTRIBUTE_NAMES)
