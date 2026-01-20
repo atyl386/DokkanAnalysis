@@ -8,7 +8,7 @@ import tqdm
 
 HIPO_DUPES = ["55%", "69%", "79%", "90%", "100%"]
 
-reCalc = False
+reCalc = True
 analyseHiPo = False
 optimiseslots = False
 accountRanking = True
@@ -387,6 +387,7 @@ if __name__ == "__main__":
         units[i] = pickle.load(pkl)
         pkl.close()
         scores[i] = overallEvaluator.evaluate(units[i])
+    # THE SCORES ARE DIFFERENT TO DEVELOP! WHY???
     ranking = np.flip(np.argsort(scores))
     rankingFilePath = os.path.join(CWD, "DokkanKitOutputs", "overallRanking.txt")
     rankingFile = open(rankingFilePath, "w")
