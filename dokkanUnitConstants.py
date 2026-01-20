@@ -308,7 +308,7 @@ MAX_SA_DAM_PER_TURN = (
     )
 )
 MAX_SA_DAM_PER_TURN_LOOK_AHEAD = LOOK_AHEAD_FACTOR * MAX_SA_DAM_PER_TURN
-AVG_SA_DAM = MAX_SA_DAM_PER_TURN[PEAK_TURN - 1] / LOOK_AHEAD_FACTOR  # Average super attack damage at peak turn
+AVG_SA_DAM = MAX_SA_DAM_PER_TURN[PEAK_TURN - 1]  # Average super attack damage at peak turn
 
 # Links
 MAX_NUM_LINKS = 7
