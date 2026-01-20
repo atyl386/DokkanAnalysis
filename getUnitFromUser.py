@@ -539,7 +539,7 @@ class Unit:
             for i, state in enumerate(self.uninterpolatedStates):
                 outputFile.write(f"Form # {state.form.formIdx} / State # {i + 1} / Turn # {state.turn} \n \n")
                 for j, attributeName in enumerate(ATTTRIBUTE_NAMES):
-                    outputFile.write(f"{attributeName}: {self.uninterpolatedAttributes[i, j]} \n")
+                    outputFile.write(f"{attributeName}: {round(self.uninterpolatedAttributes[i, j], 6)} \n")
                 outputFile.write("\n")
 
 

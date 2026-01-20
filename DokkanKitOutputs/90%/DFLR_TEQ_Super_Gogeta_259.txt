@@ -3,12 +3,12 @@ Form # 1 / State # 1 / Turn # 1
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20598.0 
-Useability: 1.0653846153846154 
-Healing: 0.043669167618461534 
+Useability: 1.065385 
+Healing: 0.043669 
 Support: 0.5 
-DPT: 4048544.4227531743 
-Normal Defence: -1.0028829378739668 
-Super Attack Defence: -0.1460954759295121 
+DPT: 4048544.422753 
+Normal Defence: -1.002883 
+Super Attack Defence: -0.146095 
 Slot Bonus: 0.5 
 
 Form # 1 / State # 2 / Turn # 3 
@@ -16,12 +16,12 @@ Form # 1 / State # 2 / Turn # 3
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20598.0 
-Useability: 1.0653846153846154 
-Healing: 0.04182842026825366 
+Useability: 1.065385 
+Healing: 0.041828 
 Support: 0.5 
-DPT: 4350299.312407364 
-Normal Defence: -1.0594843914408218 
-Super Attack Defence: -0.1460954759295121 
+DPT: 4350299.312407 
+Normal Defence: -1.059484 
+Super Attack Defence: -0.146095 
 Slot Bonus: 0.5 
 
 Form # 2 / State # 3 / Turn # 5 
@@ -29,12 +29,12 @@ Form # 2 / State # 3 / Turn # 5
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20598.0 
-Useability: 1.4346153846153846 
-Healing: 0.3423045061303846 
+Useability: 1.434615 
+Healing: 0.342305 
 Support: 2.5 
-DPT: 21434589.807501364 
-Normal Defence: -0.011970404721842316 
-Super Attack Defence: -0.0544062435097617 
+DPT: 21434589.807501 
+Normal Defence: -0.01197 
+Super Attack Defence: -0.054406 
 Slot Bonus: 0.5 
 
 Form # 2 / State # 4 / Turn # 7 
@@ -42,12 +42,12 @@ Form # 2 / State # 4 / Turn # 7
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20598.0 
-Useability: 1.4346153846153846 
-Healing: 0.06345571939701074 
+Useability: 1.434615 
+Healing: 0.063456 
 Support: 2.5 
-DPT: 21611774.26122753 
-Normal Defence: -0.012593900171932518 
-Super Attack Defence: -0.0544062435097617 
+DPT: 21611774.261228 
+Normal Defence: -0.012594 
+Super Attack Defence: -0.054406 
 Slot Bonus: 0.5 
 
 Form # 2 / State # 5 / Turn # 9 
@@ -55,25 +55,25 @@ Form # 2 / State # 5 / Turn # 9
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20598.0 
-Useability: 1.5961538461538463 
-Healing: 0.06345571939701074 
+Useability: 1.596154 
+Healing: 0.063456 
 Support: 3.5 
-DPT: 21611774.26122753 
-Normal Defence: -0.015742375214915647 
-Super Attack Defence: -0.04352499480780936 
-Slot Bonus: 0.3333333333333333 
+DPT: 21611774.261228 
+Normal Defence: -0.015742 
+Super Attack Defence: -0.043525 
+Slot Bonus: 0.333333 
 
 Form # 2 / State # 6 / Turn # 12 
  
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20598.0 
-Useability: 1.1115384615384614 
-Healing: 0.04230450613038461 
+Useability: 1.111538 
+Healing: 0.042305 
 Support: 0.5 
-DPT: 20394707.72823098 
-Normal Defence: -1.0594843914408218 
-Super Attack Defence: -0.0544062435097617 
+DPT: 20394707.728231 
+Normal Defence: -1.059484 
+Super Attack Defence: -0.054406 
 Slot Bonus: 0.5 
 
 Form # 2 / State # 7 / Turn # 14 
@@ -81,12 +81,12 @@ Form # 2 / State # 7 / Turn # 14
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20598.0 
-Useability: 1.1115384615384614 
-Healing: 0.06345571939701074 
+Useability: 1.111538 
+Healing: 0.063456 
 Support: 0.5 
-DPT: 21611774.26122753 
-Normal Defence: -1.0594843914408218 
-Super Attack Defence: -0.0544062435097617 
+DPT: 21611774.261228 
+Normal Defence: -1.059484 
+Super Attack Defence: -0.054406 
 Slot Bonus: 0.5 
 
 Form # 2 / State # 8 / Turn # 16 
@@ -94,12 +94,12 @@ Form # 2 / State # 8 / Turn # 16
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20598.0 
-Useability: 1.1115384615384614 
-Healing: 0.06345571939701074 
+Useability: 1.111538 
+Healing: 0.063456 
 Support: 0.5 
-DPT: 21611774.26122753 
-Normal Defence: -1.0594843914408218 
-Super Attack Defence: -0.0544062435097617 
+DPT: 21611774.261228 
+Normal Defence: -1.059484 
+Super Attack Defence: -0.054406 
 Slot Bonus: 0.5 
 
 Form # 2 / State # 9 / Turn # 18 
@@ -107,12 +107,12 @@ Form # 2 / State # 9 / Turn # 18
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20598.0 
-Useability: 1.1115384615384614 
-Healing: 0.06345571939701074 
+Useability: 1.111538 
+Healing: 0.063456 
 Support: 0.5 
-DPT: 21611774.26122753 
-Normal Defence: -1.0594843914408218 
-Super Attack Defence: -0.0544062435097617 
+DPT: 21611774.261228 
+Normal Defence: -1.059484 
+Super Attack Defence: -0.054406 
 Slot Bonus: 0.5 
 
 Form # 2 / State # 10 / Turn # 20 
@@ -120,11 +120,11 @@ Form # 2 / State # 10 / Turn # 20
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20598.0 
-Useability: 1.1115384615384614 
-Healing: 0.06345571939701074 
+Useability: 1.111538 
+Healing: 0.063456 
 Support: 0.5 
-DPT: 21611774.26122753 
-Normal Defence: -1.0594843914408218 
-Super Attack Defence: -0.0544062435097617 
+DPT: 21611774.261228 
+Normal Defence: -1.059484 
+Super Attack Defence: -0.054406 
 Slot Bonus: 0.5 
 
