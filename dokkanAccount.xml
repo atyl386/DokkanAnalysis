@@ -110,11 +110,11 @@
 	<_13>
 		<common_name value="CLR_STR_SS_Goku_Hatchiyak" />
 		<num_copies value="3" />
-		<BRZ_equip value="DGE" />
+		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="CRT" />
-		<slots value="[2, 2, 3, 3, 3, 3, 3, 2, 2, 2]" />
-		<eval value="False" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[1, 1, 2, 3, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
 	</_13>
 	<_14>
 		<common_name value="LR_AGL_Future_Gohan_Trunks" />
