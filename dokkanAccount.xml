@@ -910,7 +910,7 @@
 	</_101>
 	<_102>
 		<common_name value="DFLR_INT_SFPS4_Goku" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3079,7 +3079,7 @@
 	</_342>
 	<_343>
 		<common_name value="DF_PHY_SS3_Vegeta_Daima" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<BRZ_equip value="DGE" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
@@ -3916,7 +3916,7 @@
 	</_434>
 	<_435>
 		<common_name value="LR_AGL_Third_Eye_Gomah" />
-		<num_copies value="0" />
+		<num_copies value="2" />
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
