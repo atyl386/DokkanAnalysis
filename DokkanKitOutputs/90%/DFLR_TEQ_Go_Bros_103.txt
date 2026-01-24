@@ -3,12 +3,15 @@ Form # 1 / State # 1 / Turn # 1
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20810.0 
-Useability: 0.8053571428571428 
-Healing: 0.0315281632768112 
+Useability: 0.743407 
+Healing: 0.191508 
 Support: 0.0 
-DPT: 6368663.011344759 
-Normal Defence: -1.1104624999999997 
-Super Attack Defence: -0.15312499999999996 
+DPT No Look Ahead: 29698259.80316 
+DPT Look Ahead: 29698259.80316 
+Normal Defence No Look Ahead: -0.026103 
+Normal Defence Look Ahead: -0.555715 
+Super Attack Defence No Look Ahead: -0.155374 
+Super Attack Defence Look Ahead: -0.155374 
 Slot Bonus: 0.5 
 
 Form # 1 / State # 2 / Turn # 3 
@@ -16,12 +19,15 @@ Form # 1 / State # 2 / Turn # 3
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20810.0 
-Useability: 0.8053571428571428 
-Healing: 0.040812531758333305 
+Useability: 0.743407 
+Healing: 0.244768 
 Support: 0.0 
-DPT: 7993872.617678355 
-Normal Defence: -1.1104624999999997 
-Super Attack Defence: -0.15312499999999996 
+DPT No Look Ahead: 40751757.97607 
+DPT Look Ahead: 40751757.97607 
+Normal Defence No Look Ahead: -0.026103 
+Normal Defence Look Ahead: -1.126775 
+Super Attack Defence No Look Ahead: -0.155374 
+Super Attack Defence Look Ahead: -0.155374 
 Slot Bonus: 0.5 
 
 Form # 1 / State # 3 / Turn # 5 
@@ -29,76 +35,94 @@ Form # 1 / State # 3 / Turn # 5
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20810.0 
-Useability: 0.8053571428571428 
-Healing: 0.05009690023985541 
+Useability: 0.743407 
+Healing: 0.298027 
 Support: 0.0 
-DPT: 9994824.880081598 
-Normal Defence: -0.9025187499999997 
-Super Attack Defence: -0.12249999999999997 
-Slot Bonus: 0.3333333333333333 
+DPT No Look Ahead: 49091271.984842 
+DPT Look Ahead: 49091271.984842 
+Normal Defence No Look Ahead: -0.587857 
+Normal Defence Look Ahead: -0.915776 
+Super Attack Defence No Look Ahead: -0.124299 
+Super Attack Defence Look Ahead: -0.124299 
+Slot Bonus: 0.333333 
 
 Form # 1 / State # 4 / Turn # 8 
  
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20810.0 
-Useability: 0.8053571428571428 
-Healing: 0.0577341473913304 
+Useability: 0.743407 
+Healing: 0.341852 
 Support: 0.0 
-DPT: 19013754.144937888 
-Normal Defence: -0.9025187499999997 
-Super Attack Defence: -0.12249999999999997 
-Slot Bonus: 0.3333333333333333 
+DPT No Look Ahead: 83772997.935394 
+DPT Look Ahead: 83772997.935394 
+Normal Defence No Look Ahead: -0.915776 
+Normal Defence Look Ahead: -0.915776 
+Super Attack Defence No Look Ahead: -0.124299 
+Super Attack Defence Look Ahead: -0.124299 
+Slot Bonus: 0.333333 
 
 Form # 1 / State # 5 / Turn # 11 
  
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20810.0 
-Useability: 0.8053571428571428 
-Healing: 0.0630563265536224 
+Useability: 0.743407 
+Healing: 0.383016 
 Support: 0.0 
-DPT: 10825908.48898525 
-Normal Defence: -0.9025187499999997 
-Super Attack Defence: -0.12249999999999997 
-Slot Bonus: 0.3333333333333333 
+DPT No Look Ahead: 56035930.965112 
+DPT Look Ahead: 56035930.965112 
+Normal Defence No Look Ahead: -0.915776 
+Normal Defence Look Ahead: -0.915776 
+Super Attack Defence No Look Ahead: -0.124299 
+Super Attack Defence Look Ahead: -0.124299 
+Slot Bonus: 0.333333 
 
 Form # 1 / State # 6 / Turn # 14 
  
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20810.0 
-Useability: 0.8053571428571428 
-Healing: 0.0630563265536224 
+Useability: 0.743407 
+Healing: 0.383016 
 Support: 0.0 
-DPT: 10825908.48898525 
-Normal Defence: -0.9025187499999997 
-Super Attack Defence: -0.12249999999999997 
-Slot Bonus: 0.3333333333333333 
+DPT No Look Ahead: 56035930.965112 
+DPT Look Ahead: 56035930.965112 
+Normal Defence No Look Ahead: -0.915776 
+Normal Defence Look Ahead: -0.915776 
+Super Attack Defence No Look Ahead: -0.124299 
+Super Attack Defence Look Ahead: -0.124299 
+Slot Bonus: 0.333333 
 
 Form # 1 / State # 7 / Turn # 17 
  
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20810.0 
-Useability: 0.8053571428571428 
-Healing: 0.0630563265536224 
+Useability: 0.743407 
+Healing: 0.383016 
 Support: 0.0 
-DPT: 10825908.48898525 
-Normal Defence: -0.9025187499999997 
-Super Attack Defence: -0.12249999999999997 
-Slot Bonus: 0.3333333333333333 
+DPT No Look Ahead: 56035930.965112 
+DPT Look Ahead: 56035930.965112 
+Normal Defence No Look Ahead: -0.915776 
+Normal Defence Look Ahead: -0.915776 
+Super Attack Defence No Look Ahead: -0.124299 
+Super Attack Defence Look Ahead: -0.124299 
+Slot Bonus: 0.333333 
 
 Form # 1 / State # 8 / Turn # 20 
  
 Leader Skill: 0.0 
 SBR: 0.0 
 HP: 20810.0 
-Useability: 0.8053571428571428 
-Healing: 0.0630563265536224 
+Useability: 0.743407 
+Healing: 0.383016 
 Support: 0.0 
-DPT: 10825908.48898525 
-Normal Defence: -0.9025187499999997 
-Super Attack Defence: -0.12249999999999997 
-Slot Bonus: 0.3333333333333333 
+DPT No Look Ahead: 56035930.965112 
+DPT Look Ahead: 56035930.965112 
+Normal Defence No Look Ahead: -0.915776 
+Normal Defence Look Ahead: -0.915776 
+Super Attack Defence No Look Ahead: -0.124299 
+Super Attack Defence Look Ahead: -0.124299 
+Slot Bonus: 0.333333 
 
