@@ -1134,8 +1134,7 @@ class Form:
                             default="N",
                         )]
                         if isExSuperAttack:
-                            avgSuperAttack.isExSuperAttack = True
-                            exSuperCondition = getCondition(self.unit.inputHelper)
+                            avgSuperAttack.exSuperCondition = getCondition(self.unit.inputHelper)
                     avgSuperAttack.multiplier += multiplier / numSuperAttacks  # Average multiplier if multiple effects
                     if numSuperAttacks > 1:
                         superFrac = self.unit.inputHelper.getAndSaveUserInput(
@@ -1314,7 +1313,7 @@ class SuperAttack:
     def __init__(self, superAttackType):
         self.superAttackType = superAttackType
         self.multiplier = 0.0
-        self.isExSuperAttack = False
+        self.exSuperCondition = None
         self.effects = dict(
             zip(SUPER_ATTACK_EFFECTS, [SuperAttackEffectParams() for i in range(len(SUPER_ATTACK_EFFECTS))])
         )
@@ -1526,11 +1525,13 @@ class State:
             self.form.superAttacks["12 Ki"].multiplier,
             self.form.superAttacks["12 Ki"].effects["ATK"].duration,
             self.form.superAttacks["12 Ki"].effects["ATK"].buff,
+            self.form.superAttacks["12 Ki"].exSuperCondition,
         )
         self.addSA = self.getSA(
             self.form.superAttacks["AS"].multiplier,
             self.form.superAttacks["AS"].effects["ATK"].duration,
             self.form.superAttacks["AS"].effects["ATK"].buff,
+            self.form.superAttacks["AS"].exSuperCondition,
         )
         self.setUSA()
         self.postAttackCounterAtk = self.getPostAttackCounter()
@@ -1794,7 +1795,7 @@ class State:
             stackingPenalty = saAtk
         return baseMultiplier + SA_BOOST_INC * HIPO_SA_BOOST[self.form.unit.nCopies - 1] - stackingPenalty
 
-    def getSA(self, baseMultiplier, nStacks, saAtk):
+    def getSA(self, baseMultiplier, nStacks, saAtk, exSuperCondition):
         """Returns the ATK stat of a super-attack"""
         kiMultiplier = self.form.unit.kiMod12
         saMultiplier = self.SAMultiplier(baseMultiplier, nStacks, saAtk)
@@ -1809,6 +1810,7 @@ class State:
             self.form.superAttacks["18 Ki"].multiplier,
             self.form.superAttacks["18 Ki"].effects["ATK"].duration,
             self.form.superAttacks["18 Ki"].effects["ATK"].buff,
+            self.form.superAttacks["18 Ki"].exSuperCondition,
         )
         self.USA = self.getAtkStat(
             self.p1Buff["ATK"],
