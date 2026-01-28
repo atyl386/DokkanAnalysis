@@ -1098,19 +1098,20 @@ class Form:
                 superAttacksElement, f"{superAttackNameConversion[superAttackType]}"
             )
             if superAttackType == "12 Ki" or (self.unit.rarity == "LR" and not (self.intentional12Ki)):
-                multiplier = superAttackConversion[
-                    self.unit.inputHelper.getAndSaveUserInput(
-                        f"What is the form's {superAttackType} super attack multiplier?",
-                        type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
-                        default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
-                    )
-                ][superAttackLevelConversion[self.unit.rarity][self.unit.EZA]]
-                avgSuperAttack = SuperAttack(superAttackType, multiplier)
+                avgSuperAttack = SuperAttack(superAttackType)
                 defaultSuperAttack = copy.deepcopy(avgSuperAttack)
                 numSuperAttacks = self.unit.inputHelper.getAndSaveUserInput(
                     f"How many different {superAttackType} super attacks does this form have?",
                     default=1,
                 )
+                if numSuperAttacks == 1:
+                    multiplier = superAttackConversion[
+                    self.unit.inputHelper.getAndSaveUserInput(
+                        f"What is the form's {superAttackType} super attack multiplier?",
+                        type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
+                        default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
+                    )
+                    ][superAttackLevelConversion[self.unit.rarity][self.unit.EZA]]
                 superFracTotal = 0
                 superAttackVariationsElement = self.unit.inputHelper.getChildElement(
                     self.unit.inputHelper.parent, f"{superAttackNameConversion[superAttackType]}_variations"
@@ -1119,6 +1120,23 @@ class Form:
                     self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
                         superAttackVariationsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}"
                     )
+                    if numSuperAttacks > 1:
+                        multiplier = superAttackConversion[
+                        self.unit.inputHelper.getAndSaveUserInput(
+                            f"What is this {superAttackType} super attack variant's multiplier?",
+                            type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
+                            default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
+                        )
+                        ][superAttackLevelConversion[self.unit.rarity][self.unit.EZA]]
+                        isExSuperAttack = yesNo2Bool[self.unit.inputHelper.getAndSaveUserInput(
+                            f"Is this {superAttackType} super attack variant an EX Super Attack?",
+                            type=clc.Choice(YES_NO, case_sensitive=False),
+                            default="N",
+                        )]
+                        if isExSuperAttack:
+                            avgSuperAttack.isExSuperAttack = True
+                            exSuperCondition = getCondition(self.unit.inputHelper)
+                    avgSuperAttack.multiplier += multiplier / numSuperAttacks  # Average multiplier if multiple effects
                     if numSuperAttacks > 1:
                         superFrac = self.unit.inputHelper.getAndSaveUserInput(
                             f"What is the probability of this {superAttackType} super attack variant from occuring?",
@@ -1154,6 +1172,7 @@ class Form:
                         )
                         avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
                         if i == 0:
+                            defaultSuperAttack.multiplier = multiplier
                             defaultSuperAttack.addEffect(effectType, activationProbability, buff, duration, 1)
                     superFracTotal += superFrac
                     self.unit.inputHelper.parent = superAttackVariationsElement
@@ -1292,9 +1311,10 @@ class Link:
 
 
 class SuperAttack:
-    def __init__(self, superAttackType, multiplier):
+    def __init__(self, superAttackType):
         self.superAttackType = superAttackType
-        self.multiplier = multiplier
+        self.multiplier = 0.0
+        self.isExSuperAttack = False
         self.effects = dict(
             zip(SUPER_ATTACK_EFFECTS, [SuperAttackEffectParams() for i in range(len(SUPER_ATTACK_EFFECTS))])
         )
@@ -4340,4 +4360,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(318, "LR_PHY_SS2_Angel_Vegeta", 1, "DGE", "DGE", "ADD", [1, 2, 2, 3, 3, 3, 3, 3, 1, 1], "True")
+    unit = Unit(447, "F2P_AGL_Anni_Goku", 5, "DGE", "DGE", "ADD", [1, 2, 2, 3, 3, 3, 3, 3, 1, 1], "True")

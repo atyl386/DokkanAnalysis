@@ -63,7 +63,6 @@
 			</links>
 			<super_attack>
 				<regular_super_attack>
-					<input prompt="What is the form's 12 Ki super attack multiplier?" response="Immense" />
 					<input prompt="How many different 12 Ki super attacks does this form have?" response="2" />
 					<regular_super_attack_variations>
 						<regular_super_attack_variation_1>
@@ -83,6 +82,8 @@
 									<input prompt="How many turns does it last for?" response="1" />
 								</regular_super_attack_variation_1_effect_2>
 							</regular_super_attack_variation_1_effects>
+							<input prompt="What is this 12 Ki super attack variant's multiplier?" response="Immense" />
+							<input prompt="Is this 12 Ki super attack variant an EX Super Attack?" response="N" />
 						</regular_super_attack_variation_1>
 						<regular_super_attack_variation_2>
 							<input prompt="What is the probability of this 12 Ki super attack variant from occuring?" response="0.5" />
@@ -101,6 +102,8 @@
 									<input prompt="How many turns does it last for?" response="99" />
 								</regular_super_attack_variation_2_effect_2>
 							</regular_super_attack_variation_2_effects>
+							<input prompt="What is this 12 Ki super attack variant's multiplier?" response="Immense" />
+							<input prompt="Is this 12 Ki super attack variant an EX Super Attack?" response="N" />
 						</regular_super_attack_variation_2>
 					</regular_super_attack_variations>
 				</regular_super_attack>
