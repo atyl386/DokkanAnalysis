@@ -1571,5 +1571,4 @@ FIXED_SLOT_UNITS = {
     370: "LR STR Tien", # Alternating Slot 1 & 2 to maintain all turn buffs
     423: "BU PHY Piccolo Mini Daima", # Slot 3 only after turn 3 to get evasion buff
     444: "DF AGL Gohan Gamma 1", # Slot 1 only as gamma 2 units need to be in slot 2
-    448: "BU TEQ Majin Duu", # Slot 2 first turn to not trigger slot bonus twice
 }
