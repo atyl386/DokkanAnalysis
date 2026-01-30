@@ -72,7 +72,9 @@ SUPER_ATTACK_MULTIPLIER_NAMES = [
     "Supreme",
     "Immense",
     "Colossal",
+    "Mega-Colossal EX Super",
     "Mega-Colossal",
+    "Ultimate",
 ]
 SUPER_ATTACK_CATEGORIES = ["12 Ki", "18 Ki"]
 SUPER_ATTACK_NAMES = ["regular_super_attack", "ultra_super_attack"]
@@ -84,7 +86,9 @@ DESTRUCTIVE_MULTIPLIERS = [2.9, 3.4, 4.3, 4.7]
 SUPREME_MULTIPLIERS = [4.3, 5.3, 6.3, 0]
 IMMENSE_MULTIPLIERS = [5.05, 6.3, 0, 0]
 COLOSSAL_MULTIPLIERS = [0, 0, 4.25, 4.5]
+MEGA_COLOSSAL_EX_SUPER_MULTIPLIERS = [0, 0, 5.3, None]
 MEGA_COLOSSAL_MULTIPLIERS = [0, 0, 5.7, 6.2]
+ULTIMATE_MULTIPLIERS = [5.29, None, 8.0, None]
 
 # Counters
 COUNTER_ATTACK_MULTIPLIER_NAMES = ["NA", "Tremendous", "Furocious"]
@@ -922,7 +926,9 @@ superAttackMultiplerConversion = [
     dict(zip(SUPER_ATTACK_LEVELS, SUPREME_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, IMMENSE_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, COLOSSAL_MULTIPLIERS)),
+    dict(zip(SUPER_ATTACK_LEVELS, MEGA_COLOSSAL_EX_SUPER_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, MEGA_COLOSSAL_MULTIPLIERS)),
+    dict(zip(SUPER_ATTACK_LEVELS, ULTIMATE_MULTIPLIERS)),
 ]
 superAttackLevelConversion = dict(zip(UNIQUE_RARITIES, superAttackEZALevels))
 superAttackConversion = dict(zip(SUPER_ATTACK_MULTIPLIER_NAMES, superAttackMultiplerConversion))

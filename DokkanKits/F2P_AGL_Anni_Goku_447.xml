@@ -4,7 +4,7 @@
 		<input prompt="What is the unit's name?" response="Goku" />
 		<input prompt="What is the unit's class?" response="S" />
 		<input prompt="What is the unit's type?" response="AGL" />
-		<input prompt="Has the unit EZA'd?" response="Y" />
+		<input prompt="Has the unit EZA'd?" response="N" />
 		<input prompt="When did the unit release on the Japanse version of Dokkan? (MM/YY)" response="01/26" />
 		<input prompt="What is the unit's Max Level HP stat?" response="16318" />
 		<input prompt="What is the unit's Max Level ATK stat?" response="8595" />
