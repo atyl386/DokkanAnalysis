@@ -6,6 +6,7 @@ import click as clc
 import glob
 
 # TODO:
+# - Allow for stacking supper supers like anni goku
 # - Respec Orange Piccolo's HiPo abilities
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
@@ -144,6 +145,8 @@ def getCondition(inputHelper):
                 condition[i] = FinalBlowCondition()
             case "Revive":
                 condition[i] = ReviveCondition()
+            case "Crit":
+                condition[i] = CritCondition()
             case "NA":
                 condition[i] = Condition()
             case _:
@@ -1137,6 +1140,7 @@ class Form:
                         )]
                         if isExSuperAttack:
                             superAttack.exSuperCondition = getCondition(self.unit.inputHelper)
+                        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(superAttackVariationsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}")
                         superFrac = self.unit.inputHelper.getAndSaveUserInput(
                             f"What is the probability of this {superAttackType} super attack variant from occuring?",
                             default=1.0,
@@ -1518,11 +1522,11 @@ class State:
                     assert i == 0, "EX Super Attack Variant must be last in the list!"
                     hasExSuper = True
                     exSuperAttackOldProb = superAttackVariant.prob
-                    exSuperAttackProb = superAttackVariant.exSuperCondition.chanceSatisfied(self)
+                    exSuperAttackProb = superAttackVariant.exSuperCondition.chanceSatisfied(self.multiChanceBuff)
                     superAttackVariant.prob *= exSuperAttackProb
                 else:
                     if hasExSuper:
-                        superAttackVariant.prob = (1.0 - self.form.superAttackVariants[superAttackType][-1].prob) / (1.0 - exSuperAttackOldProb)
+                        superAttackVariant.prob *= (1.0 - self.form.superAttackVariants[superAttackType][-1].prob) / (1.0 - exSuperAttackOldProb)
         
         # Compute average super attack effects
             self.form.superAttacks[superAttackType].averageVariants(self.form.superAttackVariants[superAttackType])
@@ -4282,8 +4286,9 @@ class Condition:
     def isSatisfied(self, form):
         return round(getattr(form, self.formAttr)) >= self.conditionValue
 
-    def chanceSatisfied(self, form):
-        return max(min(getattr(form, self.formAttr) / self.conditionValue, 1.0), 0.0)
+    def chanceSatisfied(self, multiChanceBuff):
+        assert self.formAttr == "Crit", "Only Crit has been thought about"
+        return max(min(multiChanceBuff[self.formAttr].prob / self.conditionValue, 1.0), 0.0)
 
 
 class NextTurnCondition(Condition):
@@ -4375,6 +4380,12 @@ class ReviveCondition(Condition):
     def __init__(self):
         self.formAttr = "revived"
         self.conditionValue = True
+
+
+class CritCondition(Condition):
+    def __init__(self):
+        self.formAttr = "Crit"
+        self.conditionValue = 1.0
 
 
 class CompositeCondition:

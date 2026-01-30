@@ -664,6 +664,7 @@ CONDITIONS = [
     "Finish Skill Activation",
     "Deliver Final Blow",
     "Revive",
+    "Crit",
     "NA",
 ]
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]
