@@ -819,7 +819,7 @@ AEAAT_TAB_INC = 0.01
 DISABLE_GUARD_TAB_INC = 0.01
 DEFAULT_TAB_INC = 0.005
 TDB_INC = 0.02
-BRZ_STAT = 600
+BRZ_STAT = 700
 BRZ_HIPO_1 = 0.02
 BRZ_HIPO_2 = 0.01
 SLV_HIPO = 0.05
@@ -1555,6 +1555,13 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 400, 0.04, 0, 0],
         "GLD": [0, 0, 0.1, 0.02, 0],
     },
+    # F2PLR STR Login Goku
+    "446" : {
+        "BRZ": [0, 0, 0.1, 0.1, 0],
+        "SLV": [0, 1200, 0.12, 0, 0],
+        "GLD": [0, 1800, 0.14, 0, 0],
+    },
+
 }
 
 FIXED_SLOT_UNITS = {
