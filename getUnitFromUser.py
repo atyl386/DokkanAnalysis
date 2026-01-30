@@ -6,7 +6,6 @@ import click as clc
 import glob
 
 # TODO:
-# - Respec Orange Piccolo's HiPo abilities
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
 # - Make better way to integrate the no eval unit finding into normal evaluation run
@@ -4407,4 +4406,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(447, "F2P_AGL_Anni_Goku", 5, "DGE", "DGE", "ADD", [1, 1, 2, 1, 2, 2, 1, 2, 1, 1], "True")
+    unit = Unit(448, "BU_TEQ_Majin_Duu", 5, "DGE", "DGE", "ADD", [1, 1, 2, 1, 2, 2, 1, 2, 1, 1], "True")

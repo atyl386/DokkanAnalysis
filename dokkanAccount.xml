@@ -4031,4 +4031,13 @@
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_447>
+	<_448>
+		<common_name value="BU_TEQ_Majin_Duu" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[2, 3, 1, 3, 3, 3, 3, 3, 3, 3]" />
+		<eval value="True" />
+	</_448>
 </id>
