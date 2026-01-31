@@ -51,18 +51,18 @@ Form # 1 / State # 4 / Turn # 8
 Leader Skill: 4.0 
 SBR: 0.0 
 HP: 24745.0 
-Useability: 0.374551 
+Useability: 0.387474 
 Healing: 0.09597 
-Support: 2.877181 
+Support: 3.157181 
 DPT No Look Ahead: 1416397.001767 
 DPT Look Ahead: 1351446.631074 
-Normal Defence No Look Ahead: -0.750492 
-Normal Defence Look Ahead: -0.750492 
-Super Attack Defence No Look Ahead: -0.101865 
-Super Attack Defence Look Ahead: -0.101865 
-Slot Bonus: 0.333333 
+Normal Defence No Look Ahead: -0.923409 
+Normal Defence Look Ahead: -0.923409 
+Super Attack Defence No Look Ahead: -0.127332 
+Super Attack Defence Look Ahead: -0.127332 
+Slot Bonus: 0.5 
 
-Form # 1 / State # 5 / Turn # 11 
+Form # 1 / State # 5 / Turn # 10 
  
 Leader Skill: 4.0 
 SBR: 0.0 
@@ -78,7 +78,7 @@ Super Attack Defence No Look Ahead: -0.127332
 Super Attack Defence Look Ahead: -0.127332 
 Slot Bonus: 0.5 
 
-Form # 1 / State # 6 / Turn # 13 
+Form # 1 / State # 6 / Turn # 12 
  
 Leader Skill: 4.0 
 SBR: 0.0 
@@ -94,7 +94,7 @@ Super Attack Defence No Look Ahead: -0.127332
 Super Attack Defence Look Ahead: -0.127332 
 Slot Bonus: 0.5 
 
-Form # 1 / State # 7 / Turn # 15 
+Form # 1 / State # 7 / Turn # 14 
  
 Leader Skill: 4.0 
 SBR: 0.0 
@@ -110,7 +110,7 @@ Super Attack Defence No Look Ahead: -0.127332
 Super Attack Defence Look Ahead: -0.127332 
 Slot Bonus: 0.5 
 
-Form # 1 / State # 8 / Turn # 17 
+Form # 1 / State # 8 / Turn # 16 
  
 Leader Skill: 4.0 
 SBR: 0.0 
@@ -126,7 +126,23 @@ Super Attack Defence No Look Ahead: -0.127332
 Super Attack Defence Look Ahead: -0.127332 
 Slot Bonus: 0.5 
 
-Form # 1 / State # 9 / Turn # 19 
+Form # 1 / State # 9 / Turn # 18 
+ 
+Leader Skill: 4.0 
+SBR: 0.0 
+HP: 24745.0 
+Useability: 0.387474 
+Healing: 0.09597 
+Support: 3.157181 
+DPT No Look Ahead: 1416397.001767 
+DPT Look Ahead: 1351446.631074 
+Normal Defence No Look Ahead: -0.923409 
+Normal Defence Look Ahead: -0.923409 
+Super Attack Defence No Look Ahead: -0.127332 
+Super Attack Defence Look Ahead: -0.127332 
+Slot Bonus: 0.5 
+
+Form # 1 / State # 10 / Turn # 20 
  
 Leader Skill: 4.0 
 SBR: 0.0 
