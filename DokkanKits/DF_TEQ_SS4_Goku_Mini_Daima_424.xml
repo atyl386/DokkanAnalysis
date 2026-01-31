@@ -80,7 +80,7 @@
 				<ultra_super_attack />
 			</super_attack>
 			<default>
-				<input prompt="How many unconditional buffs does the form have?" response="16" />
+				<input prompt="How many unconditional buffs does the form have?" response="13" />
 				<ability_1>
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
@@ -150,24 +150,9 @@
 					<input prompt="How many turns does the effect last for?" response="2" />
 					<input prompt="Is the status of this ability known beforehand?" response="N" />
 				</ability_13>
-				<ability_14>
-					<input prompt="What type of buff does the unit get?" response="Guard" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="1.0" />
-				</ability_14>
-				<ability_15>
-					<input prompt="What type of buff does the unit get?" response="Crit" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.5" />
-				</ability_15>
-				<ability_16>
-					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
-					<input prompt="What is the probability this ability activates?" response="1.0" />
-					<input prompt="What is the value of the buff?" response="0.2" />
-				</ability_16>
 			</default>
 			<turn_dpendent>
-				<input prompt="How many turn dependent buffs does the form have?" response="4" />
+				<input prompt="How many turn dependent buffs does the form have?" response="7" />
 				<ability_1>
 					<input prompt="What turn does the buff start from?" response="1" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="5" />
@@ -196,6 +181,27 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_4>
+				<ability_5>
+					<input prompt="What turn does the buff start from?" response="4" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
+					<input prompt="What type of buff does the unit get?" response="Guard" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+				</ability_5>
+				<ability_6>
+					<input prompt="What turn does the buff start from?" response="4" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
+					<input prompt="What type of buff does the unit get?" response="Crit" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+				</ability_6>
+				<ability_7>
+					<input prompt="What turn does the buff start from?" response="4" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
+					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_7>
 			</turn_dpendent>
 			<slot_dependent>
 				<input prompt="How many slot specific buffs does the form have?" response="0" />

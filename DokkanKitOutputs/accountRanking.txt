@@ -50,14 +50,14 @@ CLR_STR_Goku_Black_Zamasu
 F2P_STR_Hell_Fighter_17 
 BU_INT_Cheelai 
 BU_INT_Androids_19_20 
-F2P_STR_Glorio 
 LR_AGL_Goten_Trunks 
 DF_TEQ_SS_Vegeta 
 LR_TEQ_Super_17 
 DF_STR_SS4_Goku 
 F2PLR_INT_Jackie_Chun 
-DF_INT_Yamcha 
 BU_STR_SS3_Goku_GT_GiantApe 
+DF_INT_Yamcha 
+F2P_STR_Glorio 
 BU_TEQ_Manga_SS2_Gohan 
 LR_PHY_Super_Janemba 
 DFLR_AGL_Super_Gogeta 
@@ -70,15 +70,14 @@ DF_PHY_SS_Goten_Trunks
 DFLR_TEQ_Fusion_Zamasu 
 DFLR_PHY_Buutenks 
 DF_INT_SS3_Angel_Goku 
-F2P_INT_Vegeta_Mini_Daima 
 LR_STR_LSS_Broly 
 F2P_AGL_Anni_Goku 
 F2P_INT_Caulifla 
 BU_AGL_Manga_Majin_Buu 
+F2P_INT_Vegeta_Mini_Daima 
 F2P_AGL_Goku_Black_Clone 
 DFLR_STR_Beast_Gohan 
 BU_TEQ_General_Blue 
-F2P_INT_Masked_Majin_Panzy 
 BU_INT_Cui 
 BU_AGL_SS2_Future_Trunks 
 DF_INT_Ultimate_Gohan 
@@ -90,6 +89,7 @@ LR_TEQ_Full_Power_Jiren
 F2P_INT_Annin 
 BU_PHY_Pan_GT 
 DFLR_STR_Gogeta_Blue 
+F2P_INT_Masked_Majin_Panzy 
 DF_STR_Goku_Gohan_Exchange 
 DF_STR_SS3_DragonFist_Goku 
 BU_INT_DBS_Broly_Vegeta 
@@ -176,8 +176,8 @@ F2P_INT_Krillin
 BU_INT_Chichi 
 LR_AGL_SS2_Caulifla_Kale 
 BU_TEQ_Videl 
-BU_PHY_Robelu 
 LR_TEQ_Great_Ape_Vegeta 
+BU_PHY_Robelu 
 DF_INT_Fat_Buu 
 DF_TEQ_Super_Trunks 
 BU_PHY_Gowasu_Zamasu 
@@ -250,7 +250,6 @@ DFLR_AGL_DBS_SS_Broly
 DF_PHY_SSR_Goku_Black 
 DFLR_INT_SFPS4_Goku 
 CLR_PHY_SS_Future_Trunks 
-DF_PHY_SS3_Vegeta_Daima 
 BU_STR_Pan_GT 
 DF_INT_ToP_Androids 
 DFLR_AGL_SS2_Gohan_Youth 
@@ -260,3 +259,4 @@ BU_STR_SSGSS_Goku_Universe_Tree
 DF_STR_Master_Roshi 
 CLR_INT_SS_Trio 
 BU_AGL_Videl 
+DF_PHY_SS3_Vegeta_Daima 
