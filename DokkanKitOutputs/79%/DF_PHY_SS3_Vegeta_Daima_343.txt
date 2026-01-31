@@ -3,15 +3,15 @@ Form # 1 / State # 1 / Turn # 1
 Leader Skill: 10.0 
 SBR: 0.0 
 HP: 17910.0 
-Useability: 1.307209 
+Useability: 1.298946 
 Healing: 0.018364 
-Support: 1.790861 
-DPT No Look Ahead: 8933993.175942 
-DPT Look Ahead: 6094860.774697 
+Support: 1.790733 
+DPT No Look Ahead: 18104941.29355 
+DPT Look Ahead: 9433110.356451 
 Normal Defence No Look Ahead: 0.0 
 Normal Defence Look Ahead: 0.0 
-Super Attack Defence No Look Ahead: -0.268788 
-Super Attack Defence Look Ahead: -0.326493 
+Super Attack Defence No Look Ahead: -0.0565 
+Super Attack Defence Look Ahead: -0.10167 
 Slot Bonus: 1.0 
 
 Form # 1 / State # 2 / Turn # 3 
@@ -19,13 +19,13 @@ Form # 1 / State # 2 / Turn # 3
 Leader Skill: 10.0 
 SBR: 0.0 
 HP: 17910.0 
-Useability: 1.134132 
-Healing: 0.033541 
-Support: 0.790861 
-DPT No Look Ahead: 9084954.262333 
-DPT Look Ahead: 5898527.069716 
-Normal Defence No Look Ahead: -0.807249 
-Normal Defence Look Ahead: -1.7589 
+Useability: 1.125869 
+Healing: 0.033539 
+Support: 0.790733 
+DPT No Look Ahead: 17492823.185632 
+DPT Look Ahead: 9208929.83513 
+Normal Defence No Look Ahead: 0.0 
+Normal Defence Look Ahead: -0.141541 
 Super Attack Defence No Look Ahead: -0.355723 
 Super Attack Defence Look Ahead: -0.355723 
 Slot Bonus: 1.0 
@@ -35,13 +35,13 @@ Form # 1 / State # 3 / Turn # 5
 Leader Skill: 10.0 
 SBR: 0.0 
 HP: 17910.0 
-Useability: 1.025218 
-Healing: 0.033541 
-Support: 0.161575 
-DPT No Look Ahead: 2770076.384402 
-DPT Look Ahead: 2675587.331944 
-Normal Defence No Look Ahead: -0.992194 
-Normal Defence Look Ahead: -0.992194 
+Useability: 1.016966 
+Healing: 0.033539 
+Support: 0.16152 
+DPT No Look Ahead: 4267983.931476 
+DPT Look Ahead: 4204449.376672 
+Normal Defence No Look Ahead: -0.544818 
+Normal Defence Look Ahead: -0.820136 
 Super Attack Defence No Look Ahead: -0.136817 
 Super Attack Defence Look Ahead: -0.136817 
 Slot Bonus: 0.5 
@@ -51,12 +51,12 @@ Form # 1 / State # 4 / Turn # 7
 Leader Skill: 10.0 
 SBR: 0.0 
 HP: 17910.0 
-Useability: 0.997253 
-Healing: 0.025531 
+Useability: 0.989011 
+Healing: 0.025528 
 Support: 0.0 
-DPT No Look Ahead: 4055000.176549 
-DPT Look Ahead: 3804845.009182 
-Normal Defence No Look Ahead: -0.806397 
+DPT No Look Ahead: 6856343.179507 
+DPT Look Ahead: 6730933.601924 
+Normal Defence No Look Ahead: -0.796546 
 Normal Defence Look Ahead: -0.806397 
 Super Attack Defence No Look Ahead: -0.109453 
 Super Attack Defence Look Ahead: -0.109453 
@@ -67,11 +67,11 @@ Form # 1 / State # 5 / Turn # 10
 Leader Skill: 10.0 
 SBR: 0.0 
 HP: 17910.0 
-Useability: 0.997253 
+Useability: 0.989011 
 Healing: 0.018364 
 Support: 0.0 
-DPT No Look Ahead: 1341724.356099 
-DPT Look Ahead: 1205569.188732 
+DPT No Look Ahead: 2524455.347491 
+DPT Look Ahead: 2456399.788317 
 Normal Defence No Look Ahead: -0.806397 
 Normal Defence Look Ahead: -0.806397 
 Super Attack Defence No Look Ahead: -0.109453 
@@ -83,11 +83,11 @@ Form # 1 / State # 6 / Turn # 13
 Leader Skill: 10.0 
 SBR: 0.0 
 HP: 17910.0 
-Useability: 1.025218 
+Useability: 1.016966 
 Healing: 0.018364 
-Support: 0.161575 
-DPT No Look Ahead: 2345961.301483 
-DPT Look Ahead: 2251593.496011 
+Support: 0.16152 
+DPT No Look Ahead: 3659228.659435 
+DPT Look Ahead: 3632275.239104 
 Normal Defence No Look Ahead: -0.992194 
 Normal Defence Look Ahead: -0.992194 
 Super Attack Defence No Look Ahead: -0.136817 
@@ -99,12 +99,12 @@ Form # 1 / State # 7 / Turn # 15
 Leader Skill: 10.0 
 SBR: 0.0 
 HP: 17910.0 
-Useability: 0.997253 
-Healing: 0.025531 
+Useability: 0.989011 
+Healing: 0.025528 
 Support: 0.0 
-DPT No Look Ahead: 1485007.714171 
-DPT Look Ahead: 1348852.546804 
-Normal Defence No Look Ahead: -0.806397 
+DPT No Look Ahead: 2728431.011218 
+DPT Look Ahead: 2660375.452044 
+Normal Defence No Look Ahead: -0.796546 
 Normal Defence Look Ahead: -0.806397 
 Super Attack Defence No Look Ahead: -0.109453 
 Super Attack Defence Look Ahead: -0.109453 
@@ -115,11 +115,11 @@ Form # 1 / State # 8 / Turn # 18
 Leader Skill: 10.0 
 SBR: 0.0 
 HP: 17910.0 
-Useability: 0.997253 
+Useability: 0.989011 
 Healing: 0.018364 
 Support: 0.0 
-DPT No Look Ahead: 1341724.356099 
-DPT Look Ahead: 1205569.188732 
+DPT No Look Ahead: 2524455.347491 
+DPT Look Ahead: 2456399.788317 
 Normal Defence No Look Ahead: -0.806397 
 Normal Defence Look Ahead: -0.806397 
 Super Attack Defence No Look Ahead: -0.109453 

@@ -80,7 +80,7 @@
 				<ultra_super_attack />
 			</super_attack>
 			<default>
-				<input prompt="How many unconditional buffs does the form have?" response="16" />
+				<input prompt="How many unconditional buffs does the form have?" response="19" />
 				<ability_1>
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
@@ -167,6 +167,21 @@
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="What is the chance for this to become a super?" response="0.3" />
 				</ability_16>
+				<ability_17>
+					<input prompt="What type of buff does the unit get?" response="Guard" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+				</ability_17>
+				<ability_18>
+					<input prompt="What type of buff does the unit get?" response="Crit" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+				</ability_18>
+				<ability_19>
+					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_19>
 			</default>
 			<turn_dpendent>
 				<input prompt="How many turn dependent buffs does the form have?" response="0" />
