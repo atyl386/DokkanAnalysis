@@ -6,6 +6,8 @@ import click as clc
 import glob
 
 # TODO:
+# Add extra dmg red, 20% def, guard and crit to daima units (on same 11 categories as ss3 vegeta and ss4 goku)
+# Fix Vegeta's EX Super. Should make a completely new type, other than 12 and 18 ki supers and remove hybrid colossal/mega-colossal multiplier
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
 # - Make better way to integrate the no eval unit finding into normal evaluation run
@@ -1347,7 +1349,7 @@ class SuperAttackEffectParams:
     def updateParams(self, activationProbability, buff, duration):
         # superFrac accounts for unit supers
         self.buff += activationProbability * buff
-        self.duration += duration
+        self.duration += activationProbability * duration
 
 
 class OrbCollect:
@@ -1526,7 +1528,7 @@ class State:
                     if hasExSuper:
                         superAttackVariant.prob *= (1.0 - self.form.superAttackVariants[superAttackType][-1].prob) / (1.0 - exSuperAttackOldProb)
         
-        # Compute average super attack effects
+            # Compute average super attack effects
             self.form.superAttacks[superAttackType].averageVariants(self.form.superAttackVariants[superAttackType])
 
         for ability in self.form.abilities["Attack Enemy"]:
@@ -4406,4 +4408,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(448, "BU_TEQ_Majin_Duu", 5, "DGE", "DGE", "ADD", [1, 1, 2, 1, 2, 2, 1, 2, 1, 1], "True")
+    unit = Unit(449, "CLR_TEQ_SS3_Vegeta_DAIMA", 5, "DGE", "DGE", "ADD", [1, 1, 2, 1, 2, 2, 1, 2, 1, 1], "True")

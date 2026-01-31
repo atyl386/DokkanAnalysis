@@ -4040,4 +4040,13 @@
 		<slots value="[3, 1, 3, 3, 3, 3, 3, 3, 3, 3]" />
 		<eval value="True" />
 	</_448>
+	<_449>
+		<common_name value="CLR_TEQ_SS3_Vegeta_DAIMA" />
+		<num_copies value="0" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
+	</_449>
 </id>
