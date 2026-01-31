@@ -6,6 +6,7 @@ import click as clc
 import glob
 
 # TODO:
+# Add DAIMA Category
 # Add extra dmg red, 20% def, guard and crit to daima units (on same 11 categories as ss3 vegeta and ss4 goku)
 # Fix Vegeta's EX Super. Should make a completely new type, other than 12 and 18 ki supers and remove hybrid colossal/mega-colossal multiplier
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
@@ -971,9 +972,10 @@ class Form:
                     "How many turns does the buff last?",
                     "How many attacks performed are required?",
                     "Requires super attack?",
+                    "What slots are required?",
                 ],
-                [None, None, clc.Choice(YES_NO)],
-                [1, 5, "Y"],
+                [None, None, clc.Choice(YES_NO), None],
+                [1, 5, "Y", "[1, 2, 3]"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
@@ -3649,6 +3651,7 @@ class AfterAttackPerformed(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
         self.requiresSuperAttack = args[2]
+        self.slots = literal_eval(str(args[3]))
 
     def setEventFactor(self):
         if self.required == 0 or (self.required - self.increment <= 0 and self.effect in ["DEF", "Dmg Red", "Guard"]):
@@ -3657,23 +3660,24 @@ class AfterAttackPerformed(AfterEvent):
             self.eventFactor = 0
 
     def applyToState(self, state):
-        self.buffToGo = self.effectiveBuff
-        if yesNo2Bool[self.requiresSuperAttack]:
-            self.increment = state.superAttacksPerformed
-            self.required = max(self.threshold - state.form.superAttacksPerformed, 0)
-        else:
-            self.increment = state.attacksPerformed
-            self.required = max(self.threshold - state.form.attacksPerformed, 0)
-        if not (np.any(self.applied)):
-            self.setEventFactor()
-            self.setTurnBuff(state)
-            if self.effect in ADDITIONAL_ATTACK_EFFECTS:
-                # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
-                state.setAttacksPerformed()
-        if self.effect not in REGULAR_SUPPORT_EFFECTS:
-            self.nextTurnUpdate(state)
-        if np.any(self.applied):
-            self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
+        if state.slot in self.slots:
+            self.buffToGo = self.effectiveBuff
+            if yesNo2Bool[self.requiresSuperAttack]:
+                self.increment = state.superAttacksPerformed
+                self.required = max(self.threshold - state.form.superAttacksPerformed, 0)
+            else:
+                self.increment = state.attacksPerformed
+                self.required = max(self.threshold - state.form.attacksPerformed, 0)
+            if not (np.any(self.applied)):
+                self.setEventFactor()
+                self.setTurnBuff(state)
+                if self.effect in ADDITIONAL_ATTACK_EFFECTS:
+                    # Require this incase AdditionalSuper or AAChance get buffed after they get set in setStates()
+                    state.setAttacksPerformed()
+            if self.effect not in REGULAR_SUPPORT_EFFECTS:
+                self.nextTurnUpdate(state)
+            if np.any(self.applied):
+                self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 
 class AfterAttackReceived(AfterEvent):
@@ -4408,4 +4412,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(449, "CLR_TEQ_SS3_Vegeta_DAIMA", 5, "DGE", "DGE", "ADD", [1, 1, 2, 1, 2, 2, 1, 2, 1, 1], "True")
+    unit = Unit(450, "DFLR_STR_SS4_Goku_DAIMA", 5, "DGE", "DGE", "ADD", [1, 1, 2, 1, 2, 2, 1, 2, 1, 1], "True")

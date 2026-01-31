@@ -384,6 +384,7 @@
 					<input prompt="What type of buff does the unit get?" response="Ki" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="2.0" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many turns does the buff last?" response="99" />
@@ -392,6 +393,7 @@
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.2" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_2>
 				<ability_3>
 					<input prompt="How many turns does the buff last?" response="99" />
@@ -401,6 +403,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="2.0" />
 					<input prompt="How many turns does the effect last for?" response="1" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_3>
 			</after_perform_attack>
 			<after_x_attacks_in_battle>
