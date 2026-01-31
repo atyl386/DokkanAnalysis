@@ -6,7 +6,6 @@ import click as clc
 import glob
 
 # TODO:
-# Add DAIMA Category
 # Add extra dmg red, 20% def, guard and crit to daima units (on same 11 categories as ss3 vegeta and ss4 goku)
 # Fix Vegeta's EX Super. Should make a completely new type, other than 12 and 18 ki supers and remove hybrid colossal/mega-colossal multiplier
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
