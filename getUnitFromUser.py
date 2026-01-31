@@ -1515,11 +1515,12 @@ class State:
         self.preAttackCounterAtk = self.getPreAttackCounter()
 
         # Compute super attack variant probabilities
+        superAttacksVariants = copy.deepcopy(self.form.superAttackVariants)
         for superAttackType in SUPER_ATTACK_CATEGORIES:
             exSuperAttackProb = 0.0
             hasExSuper = False
             exSuperAttackOldProb = 0.0
-            for i, superAttackVariant in enumerate(np.flip(self.form.superAttackVariants[superAttackType])):
+            for i, superAttackVariant in enumerate(np.flip(superAttacksVariants[superAttackType])):
                 if superAttackVariant.exSuperCondition is not None:
                     assert i == 0, "EX Super Attack Variant must be last in the list!"
                     hasExSuper = True
