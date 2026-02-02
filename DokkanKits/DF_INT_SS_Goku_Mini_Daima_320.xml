@@ -156,7 +156,7 @@
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_5>
 				<ability_6>
-					<input prompt="What turn does the buff start from?" response="4" />
+					<input prompt="What turn does the buff start from?" response="3" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
