@@ -4065,19 +4065,12 @@ class EveryTimeXEventsInBattle(PassiveAbility):
         self.isNextTurnBuff = False
 
     def applyBuff(self, state):
-        if self.threshold > 0:
-            if not (self.isNextTurnBuff) and self.nextAttackingTurn:
-                self.required = 99
-            else:
-                self.required -= self.increment
-        if self.nextAttackingTurn:
-            if np.any(self.applied):
-                self.isNextTurnBuff = False
-                self.applied = 0
-                self.required = self.threshold
-            else:
-                self.isNextTurnBuff = True
+        self.required -= self.increment
         if round(self.required) <= 0:
+            if not self.isNextTurnBuff and self.nextAttackingTurn:
+                self.isNextTurnBuff = True
+                return
+            self.isNextTurnBuff = False
             buffToGo = self.max - self.applied
             cappedTurnBuff = min(buffToGo, self.effectiveBuff)
             match self.effect:
