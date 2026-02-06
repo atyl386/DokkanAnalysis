@@ -7,7 +7,6 @@ import glob
 
 # TODO:
 # Make support section of input .xml if not used, uses the default support values
-# Fix Vegeta's EX Super. Should make a completely new type, other than 12 and 18 ki supers and remove hybrid colossal/mega-colossal multiplier
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
 # - Make better way to integrate the no eval unit finding into normal evaluation run
