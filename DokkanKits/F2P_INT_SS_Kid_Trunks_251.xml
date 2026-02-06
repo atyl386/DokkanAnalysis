@@ -329,6 +329,7 @@
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.2" />
+					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_1>
 			</after_x_attacks_evaded_in_battle>
 			<after_x_attacks_received_evaded_in_battle>

@@ -6,6 +6,7 @@ import click as clc
 import glob
 
 # TODO:
+# Make support section of input .xml if not used, uses the default support values
 # Fix Vegeta's EX Super. Should make a completely new type, other than 12 and 18 ki supers and remove hybrid colossal/mega-colossal multiplier
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
@@ -928,9 +929,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after receiving X attacks in battle?",
                 EveryTimeXAttacksReceivedInBattle,
-                ["How many attacks received are required?", "What is the maximum buff?", "Within the same turn?"],
-                [None, None, clc.Choice(YES_NO)],
-                [5, 1.0, "Y"],
+                ["How many attacks received are required?", "What is the maximum buff?", "Within the same turn?", "Does the buff start from the next attacking turn?",],
+                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
+                [5, 1.0, "Y", "N"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
@@ -941,9 +942,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after evading X attacks in battle?",
                 EveryTimeXAttacksEvadedInBattle,
-                ["How many attacks evaded are required?", "What is the maximum buff?", "Within the same turn?"],
-                [None, None, clc.Choice(YES_NO)],
-                [5, 1.0, "Y"],
+                ["How many attacks evaded are required?", "What is the maximum buff?", "Within the same turn?", "Does the buff start from the next attacking turn?",],
+                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
+                [5, 1.0, "Y", "N"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
@@ -954,9 +955,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after receiving or evading X attacks in battle?",
                 EveryTimeXAttacksReceivedOrEvadedInBattle,
-                ["How many attacks are required?", "What is the maximum buff?", "Within the same turn?"],
-                [None, None, clc.Choice(YES_NO)],
-                [5, 1.0, "Y"],
+                ["How many attacks are required?", "What is the maximum buff?", "Within the same turn?", "Does the buff start from the next attacking turn?",],
+                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
+                [5, 1.0, "Y", "N"],
             )
         )
         ############################################## Attack Enemy ##################################################
@@ -988,10 +989,11 @@ class Form:
                     "How many attacks performed are required?",
                     "What is the maximum buff?",
                     "Within the same turn?",
+                    "Does the buff start from the next attacking turn?",
                     "Requires super attack?",
                 ],
-                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
-                [5, 1.0, "Y", "Y"],
+                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO), clc.Choice(YES_NO)],
+                [5, 1.0, "Y", "N", "Y"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
@@ -4056,12 +4058,25 @@ class ForFirstTargtedAttack(PassiveAbility):
 class EveryTimeXEventsInBattle(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
-        self.threshold, self.max, self.withinTheSameTurn = args
+        self.threshold, self.max, self.withinTheSameTurn, self.nextAttackingTurn = args
+        self.nextAttackingTurn = yesNo2Bool[self.nextAttackingTurn]
         self.required = self.threshold
         self.applied = 0
+        self.isNextTurnBuff = False
 
     def applyBuff(self, state):
-        self.required -= self.increment
+        if self.threshold > 0:
+            if not (self.isNextTurnBuff) and self.nextAttackingTurn:
+                self.required = 99
+            else:
+                self.required -= self.increment
+        if self.nextAttackingTurn:
+            if np.any(self.applied):
+                self.isNextTurnBuff = False
+                self.applied = 0
+                self.required = self.threshold
+            else:
+                self.isNextTurnBuff = True
         if round(self.required) <= 0:
             buffToGo = self.max - self.applied
             cappedTurnBuff = min(buffToGo, self.effectiveBuff)
@@ -4105,8 +4120,8 @@ class EveryTimeXEventsInBattle(PassiveAbility):
 
 class EveryTimeXAttacksPerformedInBattle(EveryTimeXEventsInBattle):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, args[:3])
-        self.requiresSuperAttack = args[3]
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[:4])
+        self.requiresSuperAttack = args[4]
 
     def applyToState(self, state):
         if yesNo2Bool[self.requiresSuperAttack]:
@@ -4411,4 +4426,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(450, "DFLR_STR_SS4_Goku_DAIMA", 5, "DGE", "DGE", "ADD", [1, 1, 2, 1, 2, 2, 1, 2, 1, 1], "True")
+    unit = Unit(452, "F2P_TEQ_Majin_Kuu", 5, "DGE", "DGE", "ADD", [1, 1, 2, 1, 2, 2, 1, 2, 1, 1], "True")
