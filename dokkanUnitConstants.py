@@ -72,14 +72,13 @@ SUPER_ATTACK_MULTIPLIER_NAMES = [
     "Supreme",
     "Immense",
     "Colossal",
-    "Colossal Hybrid",
     "Mega-Colossal EX Super",
     "Mega-Colossal",
     "Ultimate",
 ]
-SUPER_ATTACK_CATEGORIES = ["12 Ki", "18 Ki"]
-SUPER_ATTACK_NAMES = ["regular_super_attack", "ultra_super_attack"]
-DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES = {"12 Ki": "Immense", "18 Ki": "Mega-Colossal"}
+SUPER_ATTACK_CATEGORIES = ["12 Ki", "18 Ki", "EX"]
+SUPER_ATTACK_NAMES = ["regular_super_attack", "ultra_super_attack", "ex_super_attack"]
+DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES = {"12 Ki": "Immense", "18 Ki": "Mega-Colossal", "EX": "Ultimate"}
 TUR_SUPER_ATTACK_LEVELS = [10, 15]
 LR_SUPER_ATTACK_LEVELS = [20, 25]
 SUPER_ATTACK_LEVELS = TUR_SUPER_ATTACK_LEVELS + LR_SUPER_ATTACK_LEVELS
