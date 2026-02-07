@@ -569,7 +569,6 @@ class Form:
         self.superAttacksPerformed = 0
         self.charge = 0
         self.superAttacks = {}  # Will be a dict of SuperAttack objects
-        self.superAttackVariants = {}  # Will be a dict of all variant superAttack objects 
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = dict(zip(PHASES, [[] for i in range(len(PHASES))]))
         self.transformed = False
@@ -1102,54 +1101,42 @@ class Form:
             self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
                 superAttacksElement, f"{superAttackNameConversion[superAttackType]}"
             )
-            self.superAttackVariants[superAttackType] = []
-            if superAttackType == "12 Ki" or (self.unit.rarity == "LR" and not (self.intentional12Ki)):
-                defaultSuperAttack = SuperAttack(superAttackType)
-                numSuperAttacks = self.unit.inputHelper.getAndSaveUserInput(
-                    f"How many different {superAttackType} super attacks does this form have?",
-                    default=1,
-                )
-                if numSuperAttacks == 1:
-                    multiplier = superAttackConversion[
+            if not (superAttackType == "18 Ki" and (self.unit.rarity != "LR" or self.intentional12Ki)):
+                multiplier = superAttackConversion[
                     self.unit.inputHelper.getAndSaveUserInput(
                         f"What is the form's {superAttackType} super attack multiplier?",
                         type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
                         default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
                     )
-                    ][superAttackLevelConversion[self.unit.rarity][self.unit.EZA]]
+                ][superAttackLevelConversion[self.unit.rarity][self.unit.EZA]]
+                avgSuperAttack = SuperAttack(superAttackType, multiplier)
+                if superAttackType != "EX":
+                    numSuperAttacks = self.unit.inputHelper.getAndSaveUserInput(
+                        f"How many different {superAttackType} super attacks does this form have?",
+                        default=1,
+                    )
+                else:
+                    exSuperCondition = getCondition(self.unit.inputHelper)
+                    exSuperChance = self.unit.inputHelper.getAndSaveUserInput(
+                        "What is the probability of the EX super attack occuring?", default=1.0
+                    )
+                    avgSuperAttack = EXSuperAttack(avgSuperAttack, exSuperCondition, exSuperChance)
+                    numSuperAttacks = 1
                 superFracTotal = 0
                 superAttackVariationsElement = self.unit.inputHelper.getChildElement(
                     self.unit.inputHelper.parent, f"{superAttackNameConversion[superAttackType]}_variations"
                 )
                 for i in range(numSuperAttacks):
-                    superAttack = SuperAttack(superAttackType)
                     self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
                         superAttackVariationsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}"
                     )
                     if numSuperAttacks > 1:
-                        multiplier = superAttackConversion[
-                        self.unit.inputHelper.getAndSaveUserInput(
-                            f"What is this {superAttackType} super attack variant's multiplier?",
-                            type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
-                            default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
-                        )
-                        ][superAttackLevelConversion[self.unit.rarity][self.unit.EZA]]
-                        isExSuperAttack = yesNo2Bool[self.unit.inputHelper.getAndSaveUserInput(
-                            f"Is this {superAttackType} super attack variant an EX Super Attack?",
-                            type=clc.Choice(YES_NO, case_sensitive=False),
-                            default="N",
-                        )]
-                        if isExSuperAttack:
-                            superAttack.exSuperCondition = getCondition(self.unit.inputHelper)
-                        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(superAttackVariationsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}")
                         superFrac = self.unit.inputHelper.getAndSaveUserInput(
                             f"What is the probability of this {superAttackType} super attack variant from occuring?",
                             default=1.0,
                         )
                     else:
-                        superFrac = 1.0
-                    superAttack.multiplier = multiplier
-                    superAttack.prob = superFrac
+                        superFrac = 1
                     numEffects = self.unit.inputHelper.getAndSaveUserInput(
                         f"How many effects does this form's {superAttackType} super attack have?",
                         default=1,
@@ -1176,18 +1163,12 @@ class Form:
                         duration = self.unit.inputHelper.getAndSaveUserInput(
                             "How many turns does it last for?", default=99
                         )
-                        superAttack.addEffect(effectType, activationProbability, buff, duration)
-                        if i == 0:
-                            defaultSuperAttack.multiplier = multiplier
-                            defaultSuperAttack.addEffect(effectType, activationProbability, buff, duration)
+                        avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
                     superFracTotal += superFrac
                     self.unit.inputHelper.parent = superAttackVariationsElement
-                    self.superAttackVariants[superAttackType].append(superAttack)
                 assert superFracTotal == 1, "Invald super attack variant probabilities entered"
                 self.unit.inputHelper.parent = superAttacksElement
-            self.superAttacks[superAttackType] = SuperAttack(superAttackType)
-            if superAttackType == "12 Ki":
-                self.superAttacks["AS"] = defaultSuperAttack
+            self.superAttacks[superAttackType] = avgSuperAttack       
         self.unit.inputHelper.parent = self.formElement
 
     def checkCondition(self, condition, activated, newForm):
@@ -1318,39 +1299,33 @@ class Link:
 
 
 class SuperAttack:
-    def __init__(self, superAttackType):
+    def __init__(self, superAttackType, multiplier):
         self.superAttackType = superAttackType
-        self.multiplier = 0.0
-        self.exSuperCondition = None
-        self.prob = 1.0
+        self.multiplier = multiplier
         self.effects = dict(
             zip(SUPER_ATTACK_EFFECTS, [SuperAttackEffectParams() for i in range(len(SUPER_ATTACK_EFFECTS))])
         )
 
-    def addEffect(self, effectType, activationProbability, buff, duration):
-        self.effects[effectType].updateParams(activationProbability, buff, duration)
+    def addEffect(self, effectType, activationProbability, buff, duration, superFrac):
+        self.effects[effectType].updateParams(activationProbability, buff, duration, superFrac)
 
-    def averageVariants(self, superAttackVariants):
-        # superFrac accounts for unit and EX supers
-        self.multiplier = 0.0
-        for effectType in SUPER_ATTACK_EFFECTS:
-            self.effects[effectType] = SuperAttackEffectParams()
-        for variant in superAttackVariants:
-            self.multiplier += variant.multiplier * variant.prob
-            for effectType in SUPER_ATTACK_EFFECTS:
-                self.effects[effectType].buff += variant.effects[effectType].buff * variant.prob
-                self.effects[effectType].duration += variant.effects[effectType].duration * variant.prob
-            
+
+class EXSuperAttack(SuperAttack):
+    def __init__(self, superAttack, condition, prob):
+        super().__init__(superAttack.superAttackType, superAttack.multiplier)
+        self.exSuperCondition = condition
+        self.exSuperChance = prob
+
 
 class SuperAttackEffectParams:
     def __init__(self):
         self.buff = 0
         self.duration = 0
 
-    def updateParams(self, activationProbability, buff, duration):
+    def updateParams(self, activationProbability, buff, duration, superFrac):
         # superFrac accounts for unit supers
-        self.buff += activationProbability * buff
-        self.duration += activationProbability * duration
+        self.buff += activationProbability * buff * superFrac
+        self.duration += duration * superFrac
 
 
 class OrbCollect:
@@ -1514,21 +1489,20 @@ class State:
         self.preAttackCounterAtk = self.getPreAttackCounter()
 
         # Compute super attack variant probabilities
-        superAttacksVariants = copy.deepcopy(self.form.superAttackVariants)
-        for superAttackType in SUPER_ATTACK_CATEGORIES:
-            exSuperAttackProb = 0.0
-            hasExSuper = False
-            exSuperAttackOldProb = 0.0
-            for i, superAttackVariant in enumerate(np.flip(superAttacksVariants[superAttackType])):
-                if superAttackVariant.exSuperCondition is not None:
-                    assert i == 0, "EX Super Attack Variant must be last in the list!"
-                    hasExSuper = True
-                    exSuperAttackOldProb = superAttackVariant.prob
-                    exSuperAttackProb = superAttackVariant.exSuperCondition.chanceSatisfied(self.multiChanceBuff)
-                    superAttackVariant.prob *= exSuperAttackProb
-                else:
-                    if hasExSuper:
-                        superAttackVariant.prob *= (1.0 - self.form.superAttackVariants[superAttackType][-1].prob) / (1.0 - exSuperAttackOldProb)
+        superAttacks = copy.deepcopy(self.form.superAttacks)
+        exSuperAttackProb = 0.0
+        hasExSuper = False
+        exSuperAttackOldProb = 0.0
+        for i, superAttackVariant in enumerate(np.flip(superAttacks[superAttackType])):
+            if superAttackVariant.exSuperCondition is not None:
+                assert i == 0, "EX Super Attack Variant must be last in the list!"
+                hasExSuper = True
+                exSuperAttackOldProb = superAttackVariant.prob
+                exSuperAttackProb = superAttackVariant.exSuperCondition.chanceSatisfied(self.multiChanceBuff)
+                superAttackVariant.prob *= exSuperAttackProb
+            else:
+                if hasExSuper:
+                    superAttackVariant.prob *= (1.0 - self.form.superAttackVariants[superAttackType][-1].prob) / (1.0 - exSuperAttackOldProb)
         
             # Compute average super attack effects
             self.form.superAttacks[superAttackType].averageVariants(self.form.superAttackVariants[superAttackType])
@@ -4418,4 +4392,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(452, "F2P_TEQ_Majin_Kuu", 5, "DGE", "DGE", "ADD", [1, 1, 2, 1, 2, 2, 1, 2, 1, 1], "True")
+    unit = Unit(318, "LR_PHY_SS2_Angel_Vegeta", 1, "DGE", "DGE", "ADD", [1, 2, 2, 3, 3, 3, 3, 3, 1, 1], "True")
