@@ -56,54 +56,20 @@
 			</links>
 			<super_attack>
 				<regular_super_attack>
-					<input prompt="How many different 12 Ki super attacks does this form have?" response="2" />
+					<input prompt="How many different 12 Ki super attacks does this form have?" response="1" />
+					<input prompt="What is the form's 12 Ki super attack multiplier?" response="Colossal" />
 					<regular_super_attack_variations>
 						<regular_super_attack_variation_1>
-							<input prompt="What is this 12 Ki super attack variant's multiplier?" response="Colossal Hybrid" />
-							<input prompt="Is this 12 Ki super attack variant an EX Super Attack?" response="N" />
-							<input prompt="What is the probability of this 12 Ki super attack variant from occuring?" response="0.0" />
-							<input prompt="How many effects does this form's 12 Ki super attack have?" response="4" />
+							<input prompt="How many effects does this form's 12 Ki super attack have?" response="1" />
 							<regular_super_attack_variation_1_effects>
 								<regular_super_attack_variation_1_effect_1>
-									<input prompt="What type of effect does the unit get on super?" response="DEF" />
-									<input prompt="What is the probability this effect activates when supering?" response="0.5" />
-									<input prompt="What is the value of the buff?" response="0.3" />
-									<input prompt="How many turns does it last for?" response="1" />
-								</regular_super_attack_variation_1_effect_1>
-								<regular_super_attack_variation_1_effect_2>
-									<input prompt="What type of effect does the unit get on super?" response="ATK" />
-									<input prompt="What is the probability this effect activates when supering?" response="0.5" />
-									<input prompt="What is the value of the buff?" response="0.5" />
-									<input prompt="How many turns does it last for?" response="4" />
-								</regular_super_attack_variation_1_effect_2>
-								<regular_super_attack_variation_1_effect_3>
-									<input prompt="What type of effect does the unit get on super?" response="DEF" />
-									<input prompt="What is the probability this effect activates when supering?" response="0.5" />
-									<input prompt="What is the value of the buff?" response="0.3" />
-									<input prompt="How many turns does it last for?" response="4" />
-								</regular_super_attack_variation_1_effect_3>
-								<regular_super_attack_variation_1_effect_4>
-									<input prompt="What type of effect does the unit get on super?" response="Raise Allies DEF" />
-									<input prompt="What is the probability this effect activates when supering?" response="0.5" />
-									<input prompt="What is the value of the buff?" response="0.1" />
-									<input prompt="How many turns does it last for?" response="3" />
-								</regular_super_attack_variation_1_effect_4>
-							</regular_super_attack_variation_1_effects>
-						</regular_super_attack_variation_1>
-						<regular_super_attack_variation_2>
-							<input prompt="What is this 12 Ki super attack variant's multiplier?" response="Colossal" />
-							<input prompt="Is this 12 Ki super attack variant an EX Super Attack?" response="N" />
-							<input prompt="What is the probability of this 12 Ki super attack variant from occuring?" response="1.0" />
-							<input prompt="How many effects does this form's 12 Ki super attack have?" response="1" />
-							<regular_super_attack_variation_2_effects>
-								<regular_super_attack_variation_2_effect_1>
 									<input prompt="What type of effect does the unit get on super?" response="DEF" />
 									<input prompt="What is the probability this effect activates when supering?" response="1.0" />
 									<input prompt="What is the value of the buff?" response="0.3" />
 									<input prompt="How many turns does it last for?" response="1" />
-								</regular_super_attack_variation_2_effect_1>
-							</regular_super_attack_variation_2_effects>
-						</regular_super_attack_variation_2>
+								</regular_super_attack_variation_1_effect_1>
+							</regular_super_attack_variation_1_effects>
+						</regular_super_attack_variation_1>
 					</regular_super_attack_variations>
 				</regular_super_attack>
 				<ultra_super_attack>
@@ -129,6 +95,44 @@
 						</ultra_super_attack_variation_1>
 					</ultra_super_attack_variations>
 				</ultra_super_attack>
+				<ex_super_attack>
+					<input prompt="What is the form's EX super attack multiplier?" response="Mega-Colossal" />
+					<input prompt="How many conditions have to be met?" response="2" />
+					<input prompt="What is the condition logic?" response="AND" />
+					<condition_1>
+						<input prompt="What type of condition is # 1?" response="EX Chance" />
+						<input prompt="What is the EX Chance condition?" response="0.5" />
+					</condition_1>
+					<condition_2>
+						<input prompt="What type of condition is # 2?" response="EX Num Attacks Performed" />
+						<input prompt="How many performed attacks are required?" response="1" />
+						<ex_super_attack_variations>
+							<ex_super_attack_variation_1>
+								<input prompt="How many effects does this form's EX super attack have?" response="3" />
+								<ex_super_attack_variation_1_effects>
+									<ex_super_attack_variation_1_effect_1>
+										<input prompt="What type of effect does the unit get on super?" response="ATK" />
+										<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+										<input prompt="What is the value of the buff?" response="0.5" />
+										<input prompt="How many turns does it last for?" response="4" />
+									</ex_super_attack_variation_1_effect_1>
+									<ex_super_attack_variation_1_effect_2>
+										<input prompt="What type of effect does the unit get on super?" response="DEF" />
+										<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+										<input prompt="What is the value of the buff?" response="0.3" />
+										<input prompt="How many turns does it last for?" response="4" />
+									</ex_super_attack_variation_1_effect_2>
+									<ex_super_attack_variation_1_effect_3>
+										<input prompt="What type of effect does the unit get on super?" response="Raise Allies DEF" />
+										<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+										<input prompt="What is the value of the buff?" response="0.1" />
+										<input prompt="How many turns does it last for?" response="3" />
+									</ex_super_attack_variation_1_effect_3>
+								</ex_super_attack_variation_1_effects>
+							</ex_super_attack_variation_1>
+						</ex_super_attack_variations>
+					</condition_2>
+				</ex_super_attack>
 			</super_attack>
 			<default>
 				<input prompt="How many unconditional buffs does the form have?" response="14" />
@@ -487,6 +491,7 @@
 			<form_1_change_condition>
 				<input prompt="How many conditions have to be met?" response="-1" />
 			</form_1_change_condition>
+			<input prompt="Does the unit have an EX super attack?" response="Y" />
 		</form_1>
 	</forms>
 </inputTree>

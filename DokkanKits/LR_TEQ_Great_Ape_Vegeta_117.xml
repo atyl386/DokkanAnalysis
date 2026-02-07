@@ -410,6 +410,7 @@
 				<form_2_change_condition>
 					<input prompt="How many conditions have to be met?" response="-1" />
 				</form_2_change_condition>
+				<input prompt="Does the unit have an EX super attack?" response="N" />
 			</giant_rage_mode>
 			<active_skill_attack>
 				<input prompt="How many active skill attacks does the form have?" response="0" />
@@ -530,6 +531,7 @@
 			<form_1_change_condition>
 				<input prompt="How many conditions have to be met?" response="-1" />
 			</form_1_change_condition>
+			<input prompt="Does the unit have an EX super attack?" response="N" />
 		</form_1>
 	</forms>
 </inputTree>

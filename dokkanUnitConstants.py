@@ -668,7 +668,9 @@ CONDITIONS = [
     "Finish Skill Activation",
     "Deliver Final Blow",
     "Revive",
-    "Crit",
+    "EX Chance",
+    "EX Crit",
+    "EX Num Attacks Performed",
     "NA",
 ]
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]
@@ -931,7 +933,6 @@ superAttackMultiplerConversion = [
     dict(zip(SUPER_ATTACK_LEVELS, SUPREME_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, IMMENSE_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, COLOSSAL_MULTIPLIERS)),
-    dict(zip(SUPER_ATTACK_LEVELS, COLOSSAL_MEGA_COLOSSAL_HYPRID_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, MEGA_COLOSSAL_EX_SUPER_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, MEGA_COLOSSAL_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, ULTIMATE_MULTIPLIERS)),

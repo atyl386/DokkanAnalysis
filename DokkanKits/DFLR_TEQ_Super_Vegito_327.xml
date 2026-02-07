@@ -296,6 +296,7 @@
 					<input prompt="What is the transformation turn condition (relative to the form's starting turn)?" response="4" />
 				</condition_1>
 			</form_1_change_condition>
+			<input prompt="Does the unit have an EX super attack?" response="N" />
 		</form_1>
 		<form_2>
 			<input prompt="Can this form attack?" response="Y" />
@@ -567,6 +568,7 @@
 					<input prompt="What is the transformation turn condition (relative to the form's starting turn)?" response="2" />
 				</condition_1>
 			</form_2_change_condition>
+			<input prompt="Does the unit have an EX super attack?" response="N" />
 		</form_2>
 		<form_3>
 			<input prompt="Can this form attack?" response="Y" />
@@ -889,6 +891,7 @@
 					<input prompt="What is the transformation turn condition (relative to the form's starting turn)?" response="5" />
 				</condition_1>
 			</form_3_change_condition>
+			<input prompt="Does the unit have an EX super attack?" response="N" />
 		</form_3>
 		<form_4>
 			<input prompt="Can this form attack?" response="Y" />
@@ -1156,6 +1159,7 @@
 			<form_4_change_condition>
 				<input prompt="How many conditions have to be met?" response="-1" />
 			</form_4_change_condition>
+			<input prompt="Does the unit have an EX super attack?" response="N" />
 		</form_4>
 	</forms>
 </inputTree>

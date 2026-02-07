@@ -363,6 +363,7 @@
 			<form_1_change_condition>
 				<input prompt="How many conditions have to be met?" response="-1" />
 			</form_1_change_condition>
+			<input prompt="Does the unit have an EX super attack?" response="N" />
 		</form_1>
 	</forms>
 </inputTree>
