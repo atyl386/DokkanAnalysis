@@ -671,6 +671,7 @@ CONDITIONS = [
     "EX Chance",
     "EX Crit",
     "EX Num Attacks Performed",
+    "EX Ki",
     "NA",
 ]
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]

@@ -155,6 +155,9 @@ def getCondition(inputHelper):
                     "How many performed attacks are required?", default=0
                 )
                 condition[i] = NumAttacksPerformedEXSuperCondition(numAttacksPerformedCondition)
+            case "EX Ki":
+                kiCondition = inputHelper.getAndSaveUserInput("How much ki is required?", default=12)
+                condition[i] = KiEXSuperCondition(kiCondition)
             case "NA":
                 condition[i] = Condition()
             case _:
@@ -1759,7 +1762,7 @@ class State:
     def setInitialAttackDistribution(self):
         """Returns the probability of normals, super-attacks and ultra-super-attacks and ex-super-attacks"""
         if self.form.hasEXSuper:
-            self.pEXSA = self.form.superAttacks["EX"].exSuperCondition.chanceSatisfied([self.multiChanceBuff["Crit"].prob, 0])
+            self.pEXSA = self.form.superAttacks["EX"].exSuperCondition.chanceSatisfied([self.multiChanceBuff["Crit"].prob, 0, self.buff["Ki"], self.randomKi])
         else:
             self.pEXSA = 0
 
@@ -1776,7 +1779,7 @@ class State:
         """Returns the probability of additional EX Supers on additional supers"""
         if self.form.hasEXSuper:
             # Assume EX Super condition only needs 0 or 1 attacks to have been performed
-            self.pAEXSA = self.form.superAttacks["EX"].exSuperCondition.chanceSatisfied([self.multiChanceBuff["Crit"].prob, 1])
+            self.pAEXSA = self.form.superAttacks["EX"].exSuperCondition.chanceSatisfied([self.multiChanceBuff["Crit"].prob, 1, self.buff["Ki"], self.randomKi])
         else:
             self.pAEXSA = 0
 
@@ -4506,6 +4509,15 @@ class NumAttacksPerformedEXSuperCondition:
         numAttacksPerformed = args[1]
         return 1 if numAttacksPerformed == self.numAttacksPerformedCondition else 0
 
+
+class KiEXSuperCondition:
+    def __init__(self, kiCondition):
+        self.kiCondition = kiCondition
+    
+    def chanceSatisfied(self, args):
+        constantKi, randomKi = args[2], args[3]
+        return ZTP_CDF(max(self.kiCondition - 1 - constantKi, 0), randomKi)
+
 class CompositeCondition:
     def __init__(self, operator, conditions):
         self.operator = operator
@@ -4537,4 +4549,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(448, "BU_TEQ_Majin_Duu", 5, "ATK", "ADD", "CRT", [3, 1, 3, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(455, "F2P_AGL_Tamagami_1", 5, "ATK", "ADD", "CRT", [3, 1, 3, 3, 3, 3, 3, 3, 3, 3], "True")
