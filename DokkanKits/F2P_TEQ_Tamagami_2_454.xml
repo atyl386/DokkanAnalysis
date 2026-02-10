@@ -27,31 +27,31 @@
 			<links>
 				<link_1>
 					<input prompt="What is the form's link # 1" response="Infighter" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
 				</link_1>
 				<link_2>
 					<input prompt="What is the form's link # 2" response="Tough as Nails" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
 				</link_2>
 				<link_3>
 					<input prompt="What is the form's link # 3" response="Gentleman" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
 				</link_3>
 				<link_4>
 					<input prompt="What is the form's link # 4" response="Shocking Speed" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
 				</link_4>
 				<link_5>
 					<input prompt="What is the form's link # 5" response="Loyalty" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
 				</link_5>
 				<link_6>
 					<input prompt="What is the form's link # 6" response="Cold Judgement" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
 				</link_6>
 				<link_7>
 					<input prompt="What is the form's link # 7" response="Shattering the Limit" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="-1" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
 				</link_7>
 			</links>
 			<super_attack>

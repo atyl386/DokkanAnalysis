@@ -1456,10 +1456,10 @@ class State:
         self.postAttackCounterAtk = 0
         self.p2ATKBuffPostAtttack = 0
         self.support = form.carryOverBuffs["ATK Support"].get()  # Support score
-        self.dmgRedNormalA = form.carryOverBuffs["Dmg Red"].get()
-        self.dmgRedNormalB = form.carryOverBuffs["Dmg Red"].get()
-        self.dmgRedSuperA = form.carryOverBuffs["Dmg Red"].get()
-        self.dmgRedSuperB = form.carryOverBuffs["Dmg Red"].get()
+        self.dmgRedNormalA = form.carryOverBuffs["Dmg Red"].get() + form.linkEffects["Dmg Red"]
+        self.dmgRedNormalB = form.carryOverBuffs["Dmg Red"].get() + form.linkEffects["Dmg Red"]
+        self.dmgRedSuperA = form.carryOverBuffs["Dmg Red"].get() + form.linkEffects["Dmg Red"]
+        self.dmgRedSuperB = form.carryOverBuffs["Dmg Red"].get() + form.linkEffects["Dmg Red"]
         self.guard = form.carryOverBuffs["Guard"].get()
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
@@ -4552,4 +4552,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(455, "F2P_AGL_Tamagami_1", 5, "ATK", "ADD", "CRT", [3, 1, 3, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(455, "F2P_AGL_Tamagami_1", 5, "ATK", "ADD", "CRT", [1, 1, 3, 3, 3, 3, 3, 3, 3, 3], "True")
