@@ -1177,9 +1177,9 @@ class Form:
                         duration = self.unit.inputHelper.getAndSaveUserInput(
                             "How many turns does it last for?", default=99
                         )
-                        avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
+                        avgSuperAttack.effects[effectType].append(SuperAttackEffect(buff, duration, activationProbability, superFrac))
                         if i == 0:
-                            defaultSuperAttack.addEffect(effectType, activationProbability, buff, duration, 1)
+                            defaultSuperAttack.effects[effectType].append(SuperAttackEffect(buff, duration, activationProbability, 1))
                     superFracTotal += superFrac
                     self.unit.inputHelper.parent = superAttackVariationsElement
                 assert superFracTotal == 1, "Invald super attack variant probabilities entered"
@@ -1321,11 +1321,14 @@ class SuperAttack:
         self.superAttackType = superAttackType
         self.multiplier = multiplier
         self.effects = dict(
-            zip(SUPER_ATTACK_EFFECTS, [SuperAttackEffectParams() for i in range(len(SUPER_ATTACK_EFFECTS))])
+            zip(SUPER_ATTACK_EFFECTS, [[] for i in range(len(SUPER_ATTACK_EFFECTS))])
         )
-
-    def addEffect(self, effectType, activationProbability, buff, duration, superFrac):
-        self.effects[effectType].updateParams(activationProbability, buff, duration, superFrac)
+    
+    def getTotalBuff(self, effectName):
+        return sum([effect.buff for effect in self.effects[effectName]])
+    
+    def getMaxDuration(self, effectName):
+        return max([effect.duration for effect in self.effects[effectName]], default=0)
 
 
 class EXSuperAttack(SuperAttack):
@@ -1334,15 +1337,10 @@ class EXSuperAttack(SuperAttack):
         self.exSuperCondition = exSuperCondition
 
 
-class SuperAttackEffectParams:
-    def __init__(self):
-        self.buff = 0
-        self.duration = 0
-
-    def updateParams(self, activationProbability, buff, duration, superFrac):
-        # superFrac accounts for unit supers
-        self.buff += activationProbability * buff * superFrac
-        self.duration += activationProbability * duration * superFrac
+class SuperAttackEffect:
+    def __init__(self, buff, duration, activationProbability=1, superFrac=1):
+        self.buff = buff * activationProbability * superFrac
+        self.duration = duration * superFrac
 
 
 class OrbCollect:
@@ -1523,29 +1521,30 @@ class State:
                 case _:
                     raise Exception(f"{superAttackType} Super Attack Type not implemented!")
             for superAttackEFfect in SUPPORT_SUPER_ATTACK_EFFECTS:
-                supportFactor = (
-                    superAttackSupportFactorConversion[superAttackEFfect]
-                    * self.form.superAttacks[superAttackType].effects[superAttackEFfect].buff
-                    * (
-                        self.form.superAttacks[superAttackType].effects[superAttackEFfect].duration
-                        - 1
-                        + (NUM_SLOTS - self.slot) / (NUM_SLOTS - 1)
+                for superAttackBuff in self.form.superAttacks[superAttackType].effects[superAttackEFfect]:
+                    supportFactor = (
+                        superAttackSupportFactorConversion[superAttackEFfect]
+                        * superAttackBuff.buff
+                        * (
+                            superAttackBuff.duration
+                            - 1
+                            + (NUM_SLOTS - self.slot) / (NUM_SLOTS - 1)
+                        )
                     )
-                )
-                self.support += supportFactor * numSupers
+                    self.support += supportFactor * numSupers
             self.multiChanceBuff["EvasionB"].updateChance(
-                "Super Attack Effect", numSupers * self.form.superAttacks[superAttackType].effects["Evasion"].buff, "EvasionB", self)
-            self.disableAction(pSuper = min(numSupers, 1) * self.form.superAttacks[superAttackType].effects["Disable Action"].buff)
+                "Super Attack Effect", numSupers * self.form.superAttacks[superAttackType].getTotalBuff("Evasion"), "EvasionB", self)
+            self.disableAction(pSuper = min(numSupers, 1) * self.form.superAttacks[superAttackType].getTotalBuff("Disable Action"))
         self.setNormal()
         self.SA = self.getSA(
             self.form.superAttacks["12 Ki"].multiplier,
-            self.form.superAttacks["12 Ki"].effects["ATK"].duration,
-            self.form.superAttacks["12 Ki"].effects["ATK"].buff,
+            self.form.superAttacks["12 Ki"].getMaxDuration("ATK"),
+            self.form.superAttacks["12 Ki"].getTotalBuff("ATK"),
         )
         self.addSA = self.getSA(
             self.form.superAttacks["AS"].multiplier,
-            self.form.superAttacks["AS"].effects["ATK"].duration,
-            self.form.superAttacks["AS"].effects["ATK"].buff,
+            self.form.superAttacks["AS"].getMaxDuration("ATK"),
+            self.form.superAttacks["AS"].getTotalBuff("ATK"),
         )
         self.setEXSA()
         self.setUSA()
@@ -1635,9 +1634,9 @@ class State:
         )
         self.buff["Heal"] += (
             self.form.linkEffects["Heal"]
-            + self.form.superAttacks["18 Ki"].effects["Heal"].buff * self.pUSA
-            + self.form.superAttacks["12 Ki"].effects["Heal"].buff * self.pSA
-            + self.form.superAttacks["AS"].effects["Heal"].buff * self.aaSA
+            + self.form.superAttacks["18 Ki"].getTotalBuff("Heal") * self.pUSA
+            + self.form.superAttacks["12 Ki"].getTotalBuff("Heal") * self.pSA
+            + self.form.superAttacks["AS"].getTotalBuff("Heal") * self.aaSA
             + (
                 (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[self.form.unit.nCopies - 1])
                 * avgDefStartOfTurn
@@ -1653,7 +1652,7 @@ class State:
             / NUM_CATEGORIES_PER_UNIT_MAX
             * (1 + USEABILITY_SUPPORT_FACTOR * self.support + self.form.linkEffects["Commonality"])
         )
-        sacrifcedHP = self.form.superAttacks["18 Ki"].effects["Sacrifice HP"].buff * self.pUSA + self.form.superAttacks["12 Ki"].effects["Sacrifice HP"].buff * self.pSA + self.form.superAttacks["AS"].effects["Sacrifice HP"].buff * self.aaSA
+        sacrifcedHP = self.form.superAttacks["18 Ki"].getTotalBuff("Sacrifice HP") * self.pUSA + self.form.superAttacks["12 Ki"].getTotalBuff("Sacrifice HP") * self.pSA + self.form.superAttacks["AS"].getTotalBuff("Sacrifice HP") * self.aaSA
         attributeValues = [
             self.form.unit.leaderSkill,
             self.form.unit.SBR,
@@ -1688,41 +1687,44 @@ class State:
     def addStacks(self):
         for stat in STACK_EFFECTS:
             if self.form.unit.rarity == "LR":
-                # If stack for long enough to last to next turn
-                if self.form.superAttacks["18 Ki"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
+                for superAttackBuff in self.form.superAttacks["18 Ki"].effects[stat]:
+                    # If stack for long enough to last to next turn
+                    if superAttackBuff.duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
+                        self.form.unit.stacks[stat].append(
+                            Stack(
+                                stat,
+                                self.pUSA * superAttackBuff.buff,
+                                superAttackBuff.duration,
+                            )
+                        )
+            for superAttackBuff in self.form.superAttacks["12 Ki"].effects[stat]:
+                if superAttackBuff.duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
                     self.form.unit.stacks[stat].append(
                         Stack(
                             stat,
-                            self.pUSA * self.form.superAttacks["18 Ki"].effects[stat].buff,
-                            self.form.superAttacks["18 Ki"].effects[stat].duration,
+                            self.pSA * superAttackBuff.buff,
+                            superAttackBuff.duration,
                         )
                     )
-            if self.form.superAttacks["12 Ki"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
-                self.form.unit.stacks[stat].append(
-                    Stack(
-                        stat,
-                        self.pSA * self.form.superAttacks["12 Ki"].effects[stat].buff,
-                        self.form.superAttacks["12 Ki"].effects[stat].duration,
-                    )
-                )
             if self.form.hasEXSuper:
-                if self.form.superAttacks["EX"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
+                for superAttackBuff in self.form.superAttacks["EX"].effects[stat]:
+                    if superAttackBuff.duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
+                        self.form.unit.stacks[stat].append(
+                            Stack(
+                                stat,
+                                (self.pEXSA + self.pAEXSA * self.aaSA) * superAttackBuff.buff,
+                                superAttackBuff.duration,
+                            )
+                        )
+            for superAttackBuff in self.form.superAttacks["AS"].effects[stat]:
+                if superAttackBuff.duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
                     self.form.unit.stacks[stat].append(
                         Stack(
                             stat,
-                            (self.pEXSA + self.pAEXSA * self.aaSA) * self.form.superAttacks["EX"].effects[stat].buff,
-                            self.form.superAttacks["EX"].effects[stat].duration,
+                            (1 - self.pAEXSA) * self.aaSA * superAttackBuff.buff,
+                            superAttackBuff.duration,
                         )
                     )
-            
-            if self.form.superAttacks["AS"].effects[stat].duration > RETURN_PERIOD_PER_SLOT[self.slot - 1]:
-                self.form.unit.stacks[stat].append(
-                    Stack(
-                        stat,
-                        (1 - self.pAEXSA) * self.aaSA * self.form.superAttacks["AS"].effects[stat].buff,
-                        self.form.superAttacks["AS"].effects[stat].duration,
-                    )
-                )
 
     def getDefStat(self, p2Def):
         return (
@@ -1736,12 +1738,12 @@ class State:
         )
 
     def setAvgDefMult(self):
-        exSuperDefBuff = self.form.superAttacks["EX"].effects["DEF"].buff if self.form.hasEXSuper else 0
+        exSuperDefBuff = self.form.superAttacks["EX"].getTotalBuff("DEF") if self.form.hasEXSuper else 0
         self.avgDefMult = (
-            self.stackedStats["DEF"] + (self.pSA + (1 - self.pAEXSA) * self.aaSA) * self.form.superAttacks["12 Ki"].effects["DEF"].buff + (self.pEXSA + (self.pAEXSA * self.aaSA)) * exSuperDefBuff
+            self.stackedStats["DEF"] + (self.pSA + (1 - self.pAEXSA) * self.aaSA) * self.form.superAttacks["12 Ki"].getTotalBuff("DEF") + (self.pEXSA + (self.pAEXSA * self.aaSA)) * exSuperDefBuff
         )
         if self.form.unit.rarity == "LR":  # If unit is a LR
-            self.avgDefMult += self.pUSA * self.form.superAttacks["18 Ki"].effects["DEF"].buff
+            self.avgDefMult += self.pUSA * self.form.superAttacks["18 Ki"].getTotalBuff("DEF")
 
     def setNoCritAtkMod(self):
         self.buff["AEAAT"] = min(self.buff["AEAAT"], 1)
@@ -1846,32 +1848,34 @@ class State:
         """Returns the ATK stat of an ex-super-attack"""
         if self.form.hasEXSuper:
             kiMultiplier = self.kiModifier(self.ki)
+            atkBuff = self.form.superAttacks["EX"].getTotalBuff("ATK")
             saMultiplier = self.SAMultiplier(
                 self.form.superAttacks["EX"].multiplier,
-                self.form.superAttacks["EX"].effects["ATK"].duration,
-                self.form.superAttacks["EX"].effects["ATK"].buff,
+                self.form.superAttacks["EX"].getMaxDuration("ATK"),
+                atkBuff,
             )
             self.EXSA = self.getAtkStat(
                 self.p1Buff["ATK"],
                 self.p2Buff["ATK"],
                 kiMultiplier,
-                saMultiplier + self.form.superAttacks["EX"].effects["ATK"].buff + self.stackedStats["ATK"],
+                saMultiplier + atkBuff + self.stackedStats["ATK"],
             )
         return 0
 
     def setUSA(self):
         """Returns the ATK stat of an ultra-super-attack"""
         kiMultiplier = self.kiModifier(max(self.ki, 18))
+        atkBuff = self.form.superAttacks["18 Ki"].getTotalBuff("ATK")
         saMultiplier = self.SAMultiplier(
             self.form.superAttacks["18 Ki"].multiplier,
-            self.form.superAttacks["18 Ki"].effects["ATK"].duration,
-            self.form.superAttacks["18 Ki"].effects["ATK"].buff,
+            self.form.superAttacks["18 Ki"].getMaxDuration("ATK"),
+            atkBuff,
         )
         self.USA = self.getAtkStat(
             self.p1Buff["ATK"],
             self.p2Buff["ATK"],
             kiMultiplier,
-            saMultiplier + self.form.superAttacks["18 Ki"].effects["ATK"].buff + self.stackedStats["ATK"],
+            saMultiplier + atkBuff + self.stackedStats["ATK"],
         )
 
     def getActiveAtk(self, ki, p2Atk, saMultActive):
@@ -1913,13 +1917,13 @@ class State:
         for attack in self.atkPerSuperPerformed:
             if i == 0 and self.form.unit.rarity == "LR":
                 p2Buff += attack
-                multBuff += self.form.superAttacks["18 Ki"].effects["ATK"].buff
+                multBuff += self.form.superAttacks["18 Ki"].getTotalBuff("ATK")
             if attacksToPerform >= 1:
                 p2Buff += attack
-                multBuff += self.form.superAttacks["12 Ki"].effects["ATK"].buff
+                multBuff += self.form.superAttacks["12 Ki"].getTotalBuff("ATK")
             else:
                 p2Buff += attacksToPerform * attack
-                multBuff += attacksToPerform * self.form.superAttacks["12 Ki"].effects["ATK"].buff
+                multBuff += attacksToPerform * self.form.superAttacks["12 Ki"].getTotalBuff("ATK")
                 break
             superAttacksToPerform -= 1
             i += 1
@@ -1979,7 +1983,7 @@ class State:
             crit1 = copy.deepcopy(crit)
             crit.updateChance("On Super", critPerSuperPerformed[0] - critPerAttackPerformed[0], "Crit")
             crit2 = copy.deepcopy(crit)
-            crit2.updateChance("Super Attack Effect", self.form.superAttacks["AS"].effects["Crit"].buff, "Crit")
+            crit2.updateChance("Super Attack Effect", self.form.superAttacks["AS"].getTotalBuff("Crit"), "Crit")
             
             tempDPT0 = self.branchDPT(
                 i,
@@ -2009,11 +2013,11 @@ class State:
                 critPerSuperPerformed,
                 lookAhead,
             )
-            mSA2 = {key: mSA[key] + self.form.superAttacks["AS"].effects["ATK"].buff for key in mSA.keys()}
+            mSA2 = {key: mSA[key] + self.form.superAttacks["AS"].getTotalBuff("ATK") for key in mSA.keys()}
             tempDPT2 = self.branchDPT(
                 i,
                 mSA2,
-                mN + self.form.superAttacks["AS"].effects["ATK"].buff,
+                mN + self.form.superAttacks["AS"].getTotalBuff("ATK"),
                 pAA + self.form.unit.pHiPo["AA"] * (1 - self.form.unit.pHiPo["AA"]) ** nProcs,
                 nProcs + 1,
                 crit2,
@@ -2025,13 +2029,13 @@ class State:
                 lookAhead,
             )
             if self.form.hasEXSuper:
-                crit.updateChance("Super Attack Effect", self.form.superAttacks["EX"].effects["Crit"].buff, "Crit")
+                crit.updateChance("Super Attack Effect", self.form.superAttacks["EX"].getTotalBuff("Crit"), "Crit")
                 crit3 = copy.deepcopy(crit)
-                mSA3 = {key: mSA[key] + self.form.superAttacks["EX"].effects["ATK"].buff for key in mSA.keys()}
+                mSA3 = {key: mSA[key] + self.form.superAttacks["EX"].getTotalBuff("ATK") for key in mSA.keys()}
                 tempDPT3 = self.branchDPT(
                     i,
                     mSA3,
-                    mN + self.form.superAttacks["EX"].effects["ATK"].buff,
+                    mN + self.form.superAttacks["EX"].getTotalBuff("ATK"),
                     pAA + self.form.unit.pHiPo["AA"] * (1 - self.form.unit.pHiPo["AA"]) ** nProcs,
                     nProcs + 1,
                     crit3,
@@ -2068,11 +2072,11 @@ class State:
                     superAttack = self.form.superAttacks["EX"]
                 saMultiplier = self.SAMultiplier(
                     self.form.superAttacks[sa].multiplier,
-                    superAttack.effects["ATK"].duration,
-                    superAttack.effects["ATK"].buff,
+                    superAttack.getMaxDuration("ATK"),
+                    superAttack.getTotalBuff("ATK"),
                 )
                 mSA[sa] = (
-                    saMultiplier + superAttack.effects["ATK"].buff + self.stackedStats["ATK"]
+                    saMultiplier + superAttack.getTotalBuff("ATK") + self.stackedStats["ATK"]
                 )  # multiplier after SA effect
                 
             self.aSA_0["12 Ki"] = self.addSA / mSA["12 Ki"]  # Get SA attack stat without multiplier
@@ -2093,22 +2097,22 @@ class State:
             if self.firstAttackCritBuff > 0:
                 crit1stN.updateChance("On Super", self.firstAttackCritBuff, "Crit")
             crit.updateChance("On Super", self.critPerSuperPerformed[0] - self.critPerAttackPerformed[0], "Crit")
-            crit.updateChance("Super Attack Effect", self.form.superAttacks["12 Ki"].effects["Crit"].buff, "Crit")
+            crit.updateChance("Super Attack Effect", self.form.superAttacks["12 Ki"].getTotalBuff("Crit"), "Crit")
             critSA = copy.deepcopy(crit)
             crit1stSA = copy.deepcopy(critSA)
             if self.firstAttackCritBuff > 0:
                 crit1stSA.updateChance("On Super", self.firstAttackCritBuff, "Crit")
             if self.form.hasEXSuper:
-                crit.updateChance("Super Attack Effect", self.form.superAttacks["EX"].effects["Crit"].buff - self.form.superAttacks["12 Ki"].effects["Crit"].buff, "Crit")
+                crit.updateChance("Super Attack Effect", self.form.superAttacks["EX"].getTotalBuff("Crit") - self.form.superAttacks["12 Ki"].getTotalBuff("Crit"), "Crit")
                 critEXSA = copy.deepcopy(crit)
                 crit1stEXSA = copy.deepcopy(critEXSA)
                 if self.firstAttackCritBuff > 0:
                     crit1stEXSA.updateChance("On Super", self.firstAttackCritBuff, "Crit")
             crit.updateChance(
                 "Super Attack Effect",
-                self.form.superAttacks["18 Ki"].effects["Crit"].buff
-                - self.form.superAttacks["12 Ki"].effects["Crit"].buff
-                - (self.form.superAttacks["EX"].effects["Crit"].buff if self.form.hasEXSuper else 0),
+                self.form.superAttacks["18 Ki"].getTotalBuff("Crit")
+                - self.form.superAttacks["12 Ki"].getTotalBuff("Crit")
+                - (self.form.superAttacks["EX"].getTotalBuff("Crit") if self.form.hasEXSuper else 0),
                 "Crit",
             )
             critUSA = copy.deepcopy(crit)
@@ -2134,13 +2138,14 @@ class State:
                     )
                 )
             if self.pSA > 0:
-                m12Ki = {key: mSA[key] + self.form.superAttacks["12 Ki"].effects["ATK"].buff for key in mSA}
+                atkBuff = self.form.superAttacks["12 Ki"].getTotalBuff("ATK")
+                m12Ki = {key: mSA[key] + atkBuff for key in mSA}
                 dpt += self.pSA * (self.atk2Dmg(
                     self.SA * (1 + self.firstAttackBuff), crit1stSA.prob, lookAhead)
                     + self.branchDPT(
                         i,
                         m12Ki,
-                        baseAtk + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
+                        baseAtk + atkBuff,
                         pAA,
                         nProcs,
                         critSA,
@@ -2153,13 +2158,14 @@ class State:
                     )
                 )
             if self.pEXSA > 0:
-                mEX = {key: mSA[key] + self.form.superAttacks["EX"].effects["ATK"].buff for key in mSA}
+                atkBuff = self.form.superAttacks["EX"].getTotalBuff("ATK")
+                mEX = {key: mSA[key] + atkBuff for key in mSA}
                 dpt += self.pEXSA * (self.atk2Dmg(
                     self.EXSA * (1 + self.firstAttackBuff), crit1stEXSA.prob, lookAhead)
                     + self.branchDPT(
                         i,
                         mEX,
-                        baseAtk + self.form.superAttacks["EX"].effects["ATK"].buff,
+                        baseAtk + atkBuff,
                         pAA,
                         nProcs,
                         critEXSA,
@@ -2172,13 +2178,14 @@ class State:
                     )
                 )
             if self.form.unit.rarity == "LR":  # If  is a LR
-                mUSA = {key: mSA[key] + self.form.superAttacks["18 Ki"].effects["ATK"].buff for key in mSA}
+                atkBuff = self.form.superAttacks["18 Ki"].getTotalBuff("ATK")
+                mUSA = {key: mSA[key] + atkBuff for key in mSA}
                 dpt += self.pUSA * (self.atk2Dmg(
                     self.USA * (1 + self.firstAttackBuff), crit1stUSA.prob, lookAhead)
                     + self.branchDPT(
                         i,
                         mUSA,
-                        baseAtk + self.form.superAttacks["18 Ki"].effects["ATK"].buff,
+                        baseAtk + atkBuff,
                         pAA,
                         nProcs,
                         critUSA,
@@ -4530,4 +4537,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(450, "DFLR_STR_SS4_Goku_DAIMA", 5, "ATK", "CRT", "ADD", [2, 2, 2, 2, 2, 2, 2, 2, 2, 2], "True")
+    unit = Unit(448, "BU_TEQ_Majin_Duu", 5, "ATK", "ADD", "CRT", [3, 1, 3, 3, 3, 3, 3, 3, 3, 3], "True")
