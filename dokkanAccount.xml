@@ -4055,7 +4055,7 @@
 		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[3, 1, 2, 2, 2, 2, 1, 1, 1, 1]" />
+		<slots value="[2, 3, 2, 2, 2, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_450>
 	<_451>
@@ -4079,7 +4079,7 @@
 	<_453>
 		<common_name value="F2P_PHY_Tamagami_3" />
 		<num_copies value="5" />
-		<BRZ_equip value="DEF" />
+		<BRZ_equip value="ATK" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[3, 3, 3, 3, 3, 3, 3, 3, 3, 3]" />
@@ -4089,7 +4089,7 @@
 		<common_name value="F2P_TEQ_Tamagami_2" />
 		<num_copies value="5" />
 		<BRZ_equip value="ATK" />
-		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_1 value="CRT" />
 		<HiPo_choice_2 value="DGE" />
 		<slots value="[2, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
@@ -4097,10 +4097,10 @@
 	<_455>
 		<common_name value="F2P_AGL_Tamagami_1" />
 		<num_copies value="5" />
-		<BRZ_equip value="DGE" />
+		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+		<slots value="[1, 2, 2, 2, 2, 2, 2, 2, 2, 2]" />
 		<eval value="True" />
 	</_455>
 </id>
