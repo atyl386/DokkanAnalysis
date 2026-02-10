@@ -1850,7 +1850,10 @@ class State:
     def setEXSA(self):
         """Returns the ATK stat of an ex-super-attack"""
         if self.form.hasEXSuper:
-            kiMultiplier = self.kiModifier(self.ki)
+            if self.ki > 12 and self.form.superAttacks["EX"].exSuperCondition.chanceSatisfied([1, 1, 24, 24]) == 0: # bad check for if can ex first turn
+                kiMultiplier = self.kiModifier(self.ki)
+            else:
+                kiMultiplier = self.form.unit.kiMod12
             atkBuff = self.form.superAttacks["EX"].getTotalBuff("ATK")
             saMultiplier = self.SAMultiplier(
                 self.form.superAttacks["EX"].multiplier,
@@ -4516,7 +4519,7 @@ class KiEXSuperCondition:
     
     def chanceSatisfied(self, args):
         constantKi, randomKi = args[2], args[3]
-        return ZTP_CDF(max(self.kiCondition - 1 - constantKi, 0), randomKi)
+        return 1 - ZTP_CDF(max(self.kiCondition - 1 - constantKi, 0), randomKi)
 
 class CompositeCondition:
     def __init__(self, operator, conditions):
