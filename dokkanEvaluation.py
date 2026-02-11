@@ -60,7 +60,7 @@ def summaryStats(attributeValues):
 def normalizeUnit(unit, means, stds):
     # Normalise attributes and save unit objects in pkl files
     normalisedAttributes = np.zeros((NUM_EVAL_TURNS, NUM_ATTRIBUTES))
-    attributes = unit.getAttributes()
+    _, attributes = unit.getAttributes()
     for j in range(NUM_ATTRIBUTES):
         normalisedAttributes[:, j] = (attributes[:, j] - means[:, j]) / stds[:, j]
     unit.setAttributes(normalisedAttributes)
@@ -124,19 +124,22 @@ def writeSummary(units, attributeValues, evaluations, useMultiprocessing):
             writeNCopySummary(units, attributeValues, evaluations, nCopies)
 
 class Evaluator:
-    def __init__(self, turnWeights, attributeWeights):
+    def __init__(self, turnWeights, attributes):
         self.turnWeights = turnWeights
-        self.attributeWeights = np.array(list(attributeWeights))
+        self.attributeNames = list(attributes.keys())
+        self.attributeWeights = np.array(list(attributes.values()))
         self.normaliseWeights()
 
     def normaliseWeights(self):
         self.turnWeights = self.turnWeights / np.sqrt((self.turnWeights**2).sum())
         self.attributeWeights = self.attributeWeights / np.sqrt((self.attributeWeights**2).sum())
+        self.attributes = dict(zip(self.attributeNames, self.attributeWeights))
 
     def evaluate(self, unit):
         score = 0.0
-        for i, attribute in enumerate(unit.getAttributes().T):
-            score += self.attributeWeights[i] * np.dot(self.turnWeights, attribute)
+        attributeNames, attributes = unit.getAttributes()
+        for i, attribute in enumerate(attributes.T):
+            score += self.attributes[attributeNames[i]] * np.dot(self.turnWeights, attribute)
         return score
 
 
@@ -150,7 +153,7 @@ def processRainbowUnit(ID, User, NUM_COPIES_MAX):
         User[ID]["HiPo_choice_2"],
         User[ID]["slots"],
     )
-    attributeValues = unit.getAttributes()
+    _, attributeValues = unit.getAttributes()
     return unit, attributeValues
 
 
@@ -168,7 +171,7 @@ def processOtherUnit(ID, rainbowMeans, rainbowStds, overallEvaluator, User, NUM_
             User[ID]["HiPo_choice_2"],
             User[ID]["slots"],
         )
-        attributeValues[:, :, nCopies - 1] = units[nCopies - 1].getAttributes()
+        _, attributeValues[:, :, nCopies - 1] = units[nCopies - 1].getAttributes()
         normalizeUnit(units[nCopies - 1], rainbowMeans, rainbowStds)
         evaluations[nCopies - 1] = overallEvaluator.evaluate(units[nCopies - 1])
     return units, attributeValues, evaluations
@@ -256,9 +259,12 @@ if __name__ == "__main__":
         "Useability": 6,
         "Healing": 2,
         "Support": 5,
-        "APT": 12,
-        "Normal Defence": 12,
-        "Super Attack Defence": 8,
+        "DPT No Look Ahead": 0,
+        "DPT Look Ahead": 12,
+        "Normal Defence No Look Ahead": 0,
+        "Normal Defence Look Ahead": 12,
+        "Super Attack Defence No Look Ahead": 0,
+        "Super Attack Defence Look Ahead": 8,
         "Slot Bonus": 12,
     }
 
@@ -266,9 +272,15 @@ if __name__ == "__main__":
     top100AttributeDict["Leader Skill"] = 0
     top100AttributeDict["SBR"] = 0
     top100AttributeDict["Useability"] = 0
+    top100AttributeDict["DPT No Look Ahead"] = top100AttributeDict["DPT Look Ahead"]
+    top100AttributeDict["Normal Defence No Look Ahead"] = top100AttributeDict["Normal Defence Look Ahead"]
+    top100AttributeDict["Super Attack Defence No Look Ahead"] = top100AttributeDict["Super Attack Defence Look Ahead"]
+    top100AttributeDict["DPT Look Ahead"] = 0
+    top100AttributeDict["Normal Defence Look Ahead"] = 0
+    top100AttributeDict["Super Attack Defence Look Ahead"] = 0
 
-    overallEvaluator = Evaluator(overallTurnWeights, attributeDict.values())
-    top100Evaluator = Evaluator(overallTurnWeights, top100AttributeDict.values())
+    overallEvaluator = Evaluator(overallTurnWeights, attributeDict)
+    top100Evaluator = Evaluator(overallTurnWeights, top100AttributeDict)
 
     if reCalc:
         dokkanUnitsPath = os.path.join(CWD, "dokkanUnits")
@@ -374,6 +386,7 @@ if __name__ == "__main__":
         units[i] = pickle.load(pkl)
         pkl.close()
         scores[i] = overallEvaluator.evaluate(units[i])
+    # THE SCORES ARE DIFFERENT TO DEVELOP! WHY??? IT seems to be the SA damage received and DPT look ahead not matching 
     ranking = np.flip(np.argsort(scores))
     rankingFilePath = os.path.join(CWD, "DokkanKitOutputs", "overallRanking.txt")
     rankingFile = open(rankingFilePath, "w")

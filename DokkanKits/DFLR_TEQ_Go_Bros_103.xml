@@ -104,7 +104,7 @@
 				</ultra_super_attack>
 			</super_attack>
 			<default>
-				<input prompt="How many unconditional buffs does the form have?" response="7" />
+				<input prompt="How many unconditional buffs does the form have?" response="11" />
 				<ability_1>
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
@@ -142,6 +142,26 @@
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="What is the chance for this to become a super?" response="0.5" />
 				</ability_7>
+				<ability_8>
+					<input prompt="What type of buff does the unit get?" response="Ki" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="4.0" />
+				</ability_8>
+				<ability_9>
+					<input prompt="What type of buff does the unit get?" response="ATK" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="5.0" />
+				</ability_9>
+				<ability_10>
+					<input prompt="What type of buff does the unit get?" response="DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="17.0" />
+				</ability_10>
+				<ability_11>
+					<input prompt="What type of buff does the unit get?" response="Crit" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+				</ability_11>
 			</default>
 			<turn_dpendent>
 				<input prompt="How many turn dependent buffs does the form have?" response="0" />
@@ -223,6 +243,9 @@
 			<per_ki>
 				<input prompt="How many per ki buffs does the form have?" response="0" />
 			</per_ki>
+			<first_targeted_attack>
+				<input prompt="How many different buffs does the form get for the first targeted attack?" response="0" />
+			</first_targeted_attack>
 			<after_receive_attack>
 				<input prompt="How many different buffs does the form get after receiving an attack?" response="0" />
 			</after_receive_attack>
@@ -256,6 +279,9 @@
 			<after_x_attacks_evaded_in_battle>
 				<input prompt="How many different buffs does the form get after evading X attacks in battle?" response="0" />
 			</after_x_attacks_evaded_in_battle>
+			<after_x_attacks_received_evaded_in_battle>
+				<input prompt="How many different buffs does the form get after receiving or evading X attacks in battle?" response="0" />
+			</after_x_attacks_received_evaded_in_battle>
 			<after_perform_attack>
 				<input prompt="How many different buffs does the form get after performing an attack?" response="0" />
 			</after_perform_attack>
@@ -271,6 +297,7 @@
 					<input prompt="What type of buff does the unit get?" response="Ki" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What is the maximum buff?" response="1.0" />
@@ -279,6 +306,7 @@
 					<input prompt="What type of buff does the unit get?" response="ATK" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_2>
 				<ability_3>
 					<input prompt="What is the maximum buff?" response="1.0" />
@@ -287,6 +315,7 @@
 					<input prompt="What type of buff does the unit get?" response="DEF" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_3>
 			</per_attack_super_performed>
 			<nullification>

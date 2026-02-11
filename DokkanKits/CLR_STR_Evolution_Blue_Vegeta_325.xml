@@ -79,7 +79,6 @@
 					</regular_super_attack_variations>
 				</regular_super_attack>
 				<ultra_super_attack>
-					<input prompt="What is the form's 18 Ki super attack multiplier?" response="Mega-Colossal" />
 					<input prompt="How many different 18 Ki super attacks does this form have?" response="2" />
 					<ultra_super_attack_variations>
 						<ultra_super_attack_variation_1>
@@ -99,6 +98,8 @@
 									<input prompt="How many turns does it last for?" response="1" />
 								</ultra_super_attack_variation_1_effect_2>
 							</ultra_super_attack_variation_1_effects>
+							<input prompt="What is this 18 Ki super attack variant's multiplier?" response="Mega-Colossal" />
+							<input prompt="Is this 18 Ki super attack variant an EX Super Attack?" response="N" />
 						</ultra_super_attack_variation_1>
 						<ultra_super_attack_variation_2>
 							<input prompt="What is the probability of this 18 Ki super attack variant from occuring?" response="1.0" />
@@ -117,6 +118,8 @@
 									<input prompt="How many turns does it last for?" response="1" />
 								</ultra_super_attack_variation_2_effect_2>
 							</ultra_super_attack_variation_2_effects>
+							<input prompt="What is this 18 Ki super attack variant's multiplier?" response="Mega-Colossal" />
+							<input prompt="Is this 18 Ki super attack variant an EX Super Attack?" response="N" />
 						</ultra_super_attack_variation_2>
 					</ultra_super_attack_variations>
 				</ultra_super_attack>
@@ -305,6 +308,7 @@
 					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.3" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many turns does the buff last?" response="99" />
@@ -313,6 +317,7 @@
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_2>
 			</after_perform_attack>
 			<after_x_attacks_in_battle>

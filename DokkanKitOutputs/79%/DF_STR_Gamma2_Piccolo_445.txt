@@ -6,9 +6,12 @@ HP: 15700.0
 Useability: 0.73978 
 Healing: 0.060377 
 Support: 0.933333 
-DPT: 19346837.756417 
-Normal Defence: -0.009215 
-Super Attack Defence: -0.040581 
+DPT No Look Ahead: 21662962.520085 
+DPT Look Ahead: 19346837.756417 
+Normal Defence No Look Ahead: -0.009215 
+Normal Defence Look Ahead: -0.009215 
+Super Attack Defence No Look Ahead: -0.040581 
+Super Attack Defence Look Ahead: -0.040581 
 Slot Bonus: 0.5 
 
 Form # 1 / State # 2 / Turn # 3 
@@ -19,12 +22,15 @@ HP: 15700.0
 Useability: 0.73978 
 Healing: 0.199218 
 Support: 0.933333 
-DPT: 92877901.838236 
-Normal Defence: -0.008522 
-Super Attack Defence: -0.025325 
-Slot Bonus: 0.333333 
+DPT No Look Ahead: 64186300.873449 
+DPT Look Ahead: 63876077.337605 
+Normal Defence No Look Ahead: -0.006818 
+Normal Defence Look Ahead: -0.006818 
+Super Attack Defence No Look Ahead: -0.031656 
+Super Attack Defence Look Ahead: -0.031656 
+Slot Bonus: 0.5 
 
-Form # 1 / State # 3 / Turn # 6 
+Form # 1 / State # 3 / Turn # 5 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -32,12 +38,15 @@ HP: 15700.0
 Useability: 0.73978 
 Healing: 0.274714 
 Support: 0.933333 
-DPT: 77669178.497406 
-Normal Defence: -0.006648 
-Super Attack Defence: -0.025325 
+DPT No Look Ahead: 96849410.375802 
+DPT Look Ahead: 96790277.995969 
+Normal Defence No Look Ahead: -0.006648 
+Normal Defence Look Ahead: -0.006648 
+Super Attack Defence No Look Ahead: -0.025325 
+Super Attack Defence Look Ahead: -0.025325 
 Slot Bonus: 0.333333 
 
-Form # 1 / State # 4 / Turn # 9 
+Form # 1 / State # 4 / Turn # 8 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -45,12 +54,15 @@ HP: 15700.0
 Useability: 0.73978 
 Healing: 0.274714 
 Support: 0.933333 
-DPT: 82820495.918112 
-Normal Defence: -0.1423 
-Super Attack Defence: -0.033573 
+DPT No Look Ahead: 82928827.849689 
+DPT Look Ahead: 82820495.918112 
+Normal Defence No Look Ahead: -0.008813 
+Normal Defence Look Ahead: -0.1423 
+Super Attack Defence No Look Ahead: -0.033573 
+Super Attack Defence Look Ahead: -0.033573 
 Slot Bonus: 0.333333 
 
-Form # 1 / State # 5 / Turn # 12 
+Form # 1 / State # 5 / Turn # 11 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -58,12 +70,15 @@ HP: 15700.0
 Useability: 0.73978 
 Healing: 0.274714 
 Support: 0.933333 
-DPT: 91069849.096319 
-Normal Defence: -0.1423 
-Super Attack Defence: -0.033573 
+DPT No Look Ahead: 91178181.027896 
+DPT Look Ahead: 91069849.096319 
+Normal Defence No Look Ahead: -0.008813 
+Normal Defence Look Ahead: -0.1423 
+Super Attack Defence No Look Ahead: -0.033573 
+Super Attack Defence Look Ahead: -0.033573 
 Slot Bonus: 0.333333 
 
-Form # 1 / State # 6 / Turn # 15 
+Form # 1 / State # 6 / Turn # 14 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -71,12 +86,15 @@ HP: 15700.0
 Useability: 0.73978 
 Healing: 0.274714 
 Support: 0.933333 
-DPT: 99319202.274526 
-Normal Defence: -0.1423 
-Super Attack Defence: -0.033573 
+DPT No Look Ahead: 99427534.206103 
+DPT Look Ahead: 99319202.274526 
+Normal Defence No Look Ahead: -0.008813 
+Normal Defence Look Ahead: -0.1423 
+Super Attack Defence No Look Ahead: -0.033573 
+Super Attack Defence Look Ahead: -0.033573 
 Slot Bonus: 0.333333 
 
-Form # 1 / State # 7 / Turn # 18 
+Form # 1 / State # 7 / Turn # 17 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -84,8 +102,27 @@ HP: 15700.0
 Useability: 0.73978 
 Healing: 0.274714 
 Support: 0.933333 
-DPT: 107568555.452732 
-Normal Defence: -0.1423 
-Super Attack Defence: -0.033573 
+DPT No Look Ahead: 107676887.38431 
+DPT Look Ahead: 107568555.452732 
+Normal Defence No Look Ahead: -0.008813 
+Normal Defence Look Ahead: -0.1423 
+Super Attack Defence No Look Ahead: -0.033573 
+Super Attack Defence Look Ahead: -0.033573 
 Slot Bonus: 0.333333 
+
+Form # 1 / State # 8 / Turn # 20 
+ 
+Leader Skill: 9.0 
+SBR: 0.0 
+HP: 15700.0 
+Useability: 0.73978 
+Healing: 0.274714 
+Support: 0.933333 
+DPT No Look Ahead: 83178588.882778 
+DPT Look Ahead: 83101387.228355 
+Normal Defence No Look Ahead: -0.128284 
+Normal Defence Look Ahead: -0.304339 
+Super Attack Defence No Look Ahead: -0.041966 
+Super Attack Defence Look Ahead: -0.041966 
+Slot Bonus: 0.5 
 

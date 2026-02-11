@@ -72,7 +72,10 @@ SUPER_ATTACK_MULTIPLIER_NAMES = [
     "Supreme",
     "Immense",
     "Colossal",
+    "Colossal Hybrid",
+    "Mega-Colossal EX Super",
     "Mega-Colossal",
+    "Ultimate",
 ]
 SUPER_ATTACK_CATEGORIES = ["12 Ki", "18 Ki"]
 SUPER_ATTACK_NAMES = ["regular_super_attack", "ultra_super_attack"]
@@ -84,7 +87,10 @@ DESTRUCTIVE_MULTIPLIERS = [2.9, 3.4, 4.3, 4.7]
 SUPREME_MULTIPLIERS = [4.3, 5.3, 6.3, 0]
 IMMENSE_MULTIPLIERS = [5.05, 6.3, 0, 0]
 COLOSSAL_MULTIPLIERS = [0, 0, 4.25, 4.5]
+COLOSSAL_MEGA_COLOSSAL_HYPRID_MULTIPLIERS = [0, 0, 4.825, None]
+MEGA_COLOSSAL_EX_SUPER_MULTIPLIERS = [0, 0, 5.3, None]
 MEGA_COLOSSAL_MULTIPLIERS = [0, 0, 5.7, 6.2]
+ULTIMATE_MULTIPLIERS = [5.29, None, 8.0, None]
 
 # Counters
 COUNTER_ATTACK_MULTIPLIER_NAMES = ["NA", "Tremendous", "Furocious"]
@@ -130,9 +136,12 @@ ATTTRIBUTE_NAMES = [
     "Useability",
     "Healing",
     "Support",
-    "DPT",
-    "Normal Defence",
-    "Super Attack Defence",
+    "DPT No Look Ahead",
+    "DPT Look Ahead",
+    "Normal Defence No Look Ahead",
+    "Normal Defence Look Ahead",
+    "Super Attack Defence No Look Ahead",
+    "Super Attack Defence Look Ahead",
     "Slot Bonus",
 ]
 NUM_ATTRIBUTES = len(ATTTRIBUTE_NAMES)
@@ -266,23 +275,23 @@ AVG_ENEMY_DMG_RED = 0.7
 MAX_T1_ENEMY_DEF = 4000000  # Artificial Life Forms Red Zone Cell Max
 MAX_ENEMY_DEF = 4000000 # Artificial Life Forms Red Zone Cell Max
 MAX_ENEMY_DEF_PER_TURN = (
-    LOOK_AHEAD_FACTOR
-    * np.append(
+    np.append(
         np.linspace(MAX_T1_ENEMY_DEF, MAX_ENEMY_DEF, PEAK_TURN),
         [MAX_ENEMY_DEF] * (MAX_TURN - PEAK_TURN),
         axis=0,
     )
 )
+MAX_ENEMY_DEF_PER_TURN_LOOK_AHEAD = LOOK_AHEAD_FACTOR * MAX_ENEMY_DEF_PER_TURN
 MAX_T1_ENEMY_DMG_THRESHOLD = 7000000 # Seriously Serious Battle
 MAX_ENEMY_DMG_THRESHOLD = 10000000 # Goku & Frieza
 MAX_ENEMY_DMG_THRESHOLD_PER_TURN = (
-    LOOK_AHEAD_FACTOR
-    * np.append(
+    np.append(
         np.linspace(MAX_T1_ENEMY_DMG_THRESHOLD, MAX_ENEMY_DMG_THRESHOLD, PEAK_TURN),
         [MAX_ENEMY_DMG_THRESHOLD] * (MAX_TURN - PEAK_TURN),
         axis=0
     )
-) 
+)
+MAX_ENEMY_DMG_THRESHOLD_PER_TURN_LOOK_AHEAD = LOOK_AHEAD_FACTOR * MAX_ENEMY_DMG_THRESHOLD_PER_TURN
 ENEMY_DMG_THRESHOLD_CHANCE = 0.5 # 10th Anniv Final Red Zone Stages
 ENEMY_DODGE_CHANCE = 0.05
 AVG_DAM_VARIANCE = 1.015
@@ -291,25 +300,24 @@ MAX_NORMAL_DAM = 6750000  # Artificial Life Forms Red Zone Bio Broly 2.25 * (2 +
 MAX_T1_SA_DAM = 11812500  # Artificial Life Forms Red Zone Bio Broly 7.875 * (2.5 * 0.2 + 1) = 11.8125M
 MAX_SA_DAM = 23625000  # Artificial Life Forms Red Zone Bio Broly 7.875 * (2 + 1) = 23.625M
 MAX_NORMAL_DAM_PER_TURN = (
-    LOOK_AHEAD_FACTOR
-    * AVG_DAM_VARIANCE
+    AVG_DAM_VARIANCE
     * np.append(
         np.linspace(MAX_T1_NORMAL_DAM, MAX_NORMAL_DAM, PEAK_TURN),
         [MAX_NORMAL_DAM] * (MAX_TURN - PEAK_TURN),
         axis=0,
     )
 )
+MAX_NORMAL_DAM_PER_TURN_LOOK_AHEAD = LOOK_AHEAD_FACTOR * MAX_NORMAL_DAM_PER_TURN
 MAX_SA_DAM_PER_TURN = (
-    LOOK_AHEAD_FACTOR
-    * AVG_DAM_VARIANCE
+    AVG_DAM_VARIANCE
     * np.append(
         np.linspace(MAX_T1_SA_DAM, MAX_SA_DAM, PEAK_TURN),
         [MAX_SA_DAM] * (MAX_TURN - PEAK_TURN),
         axis=0,
     )
 )
-AVG_SA_DAM = MAX_SA_DAM_PER_TURN[PEAK_TURN - 1] / LOOK_AHEAD_FACTOR
-# maxDefence = LOOK_AHEAD_FACTOR* np.append(np.linspace(100000,110000,PEAK_TURN),[110000]*(MAX_TURN-PEAK_TURN),axis=0)
+MAX_SA_DAM_PER_TURN_LOOK_AHEAD = LOOK_AHEAD_FACTOR * MAX_SA_DAM_PER_TURN
+AVG_SA_DAM = MAX_SA_DAM_PER_TURN[PEAK_TURN - 1]  # Average super attack damage at peak turn
 
 # Links
 MAX_NUM_LINKS = 7
@@ -500,6 +508,7 @@ REGULAR_SUPPORT_EFFECTS = [
     "P3 ATK Support",
     "P3 DEF Support",
     "AEAAT Support",
+    "Guard Support",
 ]
 SUPPORT_EFFECTS = REGULAR_SUPPORT_EFFECTS + ORB_CHANGING_EFFECTS + SPECIAL_SUPPORT_EFFECTS
 EFFECTS = [
@@ -567,12 +576,13 @@ GIANT_RAGE_SUPPORT = (
 )  # Support for nullifying super attacks for a turn, circumvent locking
 GIANT_RAGE_HEAL = 0.2  # allows additional orbs to be collected
 AVG_SA_MULT = 5
+UNITS_WITH_GUARD_FRAC = 0.25 # Guess of fraction of units that have guard, used to estimate support value of guard support
 SUPER_ATTACK_SUPPORT_FACTORS = [
     ATK_SUPPORT_100_FACTOR / AVG_SA_MULT,
     DEF_SUPPORT_100_FACTOR / AVG_SOT_STATS,
     CRIT_SUPPORT_100_FACTOR,
 ]
-OTHER_SUPER_ATTACK_EFFECTS = ["Heal", "Crit", "Disable Action", "Lowers ATK", "Lowers DEF", "Attack All", "Sacrifice HP"]
+OTHER_SUPER_ATTACK_EFFECTS = ["Heal", "Disable Action", "Lowers ATK", "Lowers DEF", "Attack All", "Sacrifice HP"]
 SUPER_ATTACK_EFFECTS = STACK_EFFECTS + SUPPORT_SUPER_ATTACK_EFFECTS + OTHER_SUPER_ATTACK_EFFECTS
 EXTRA_BUFF_EFFECTS = [
     "ATK",
@@ -621,6 +631,7 @@ SUPPORT_FACTORS = [
     ATK_SUPPORT_100_FACTOR,
     DEF_SUPPORT_100_FACTOR,
     ATK_SUPPORT_100_FACTOR * AEAAT_MULTIPLIER / AVG_TYPE_ADVANATGE,
+    DMG_RED_SUPPORT_100_FACTOR * (GUARD_MOD * AVG_GUARD_FACTOR / AVG_ENEMY_DMG_RED) * (1 - UNITS_WITH_GUARD_FRAC),
     0.125,
     0.25,
     0.375,
@@ -658,6 +669,7 @@ CONDITIONS = [
     "Finish Skill Activation",
     "Deliver Final Blow",
     "Revive",
+    "Crit",
     "NA",
 ]
 CONDITION_LOGIC = ["OR", "AND", "AFTER"]
@@ -812,7 +824,7 @@ AEAAT_TAB_INC = 0.01
 DISABLE_GUARD_TAB_INC = 0.01
 DEFAULT_TAB_INC = 0.005
 TDB_INC = 0.02
-BRZ_STAT = 600
+BRZ_STAT = 700
 BRZ_HIPO_1 = 0.02
 BRZ_HIPO_2 = 0.01
 SLV_HIPO = 0.05
@@ -920,7 +932,10 @@ superAttackMultiplerConversion = [
     dict(zip(SUPER_ATTACK_LEVELS, SUPREME_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, IMMENSE_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, COLOSSAL_MULTIPLIERS)),
+    dict(zip(SUPER_ATTACK_LEVELS, COLOSSAL_MEGA_COLOSSAL_HYPRID_MULTIPLIERS)),
+    dict(zip(SUPER_ATTACK_LEVELS, MEGA_COLOSSAL_EX_SUPER_MULTIPLIERS)),
     dict(zip(SUPER_ATTACK_LEVELS, MEGA_COLOSSAL_MULTIPLIERS)),
+    dict(zip(SUPER_ATTACK_LEVELS, ULTIMATE_MULTIPLIERS)),
 ]
 superAttackLevelConversion = dict(zip(UNIQUE_RARITIES, superAttackEZALevels))
 superAttackConversion = dict(zip(SUPER_ATTACK_MULTIPLIER_NAMES, superAttackMultiplerConversion))
@@ -1545,6 +1560,24 @@ HIPO_SPECIAL_EQUIPS = {
         "BRZ": [0, 800, 0, 0, 0],
         "SLV": [0, 400, 0.04, 0, 0],
         "GLD": [0, 0, 0.1, 0.02, 0],
+    },
+    # F2PLR STR Login Goku
+    "446" : {
+        "BRZ": [0, 0, 0.1, 0.1, 0],
+        "SLV": [0, 1200, 0.12, 0, 0],
+        "GLD": [0, 1800, 0.14, 0, 0],
+    },
+    # CLR TEQ SS3 Vegeta DAIMA
+    "449" : {
+        "BRZ": [700, 0, 0, 0, 0],
+        "SLV": [0, 0, 0.1, 0, 0],
+        "GLD": [0, 0, 0.12, 0.12, 0],
+    },
+    # DFLR STR SS4 Goku DAIMA
+    "450" : {
+        "BRZ": [700, 0, 0, 0, 0],
+        "SLV": [0, 1200, 0, 0, 0.06],
+        "GLD": [900, 0, 0.12, 0, 0],
     },
 }
 

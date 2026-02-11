@@ -6,7 +6,7 @@ import click as clc
 import glob
 
 # TODO:
-# - Respec Orange Piccolo's HiPo abilities
+# Make support section of input .xml if not used, uses the default support values
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
 # - Make better way to integrate the no eval unit finding into normal evaluation run
@@ -144,6 +144,8 @@ def getCondition(inputHelper):
                 condition[i] = FinalBlowCondition()
             case "Revive":
                 condition[i] = ReviveCondition()
+            case "Crit":
+                condition[i] = CritCondition()
             case "NA":
                 condition[i] = Condition()
             case _:
@@ -443,7 +445,9 @@ class Unit:
         self.transformationTriggered = False
         self.fightPeak = False
         # Only non-zero in between activating the stanby finish skill attack and applying to subsequent state
-        self.transformationAttackDPT = 0
+        # Merge requests diffs appear super attack defense related and giant form / active skill related
+        self.transformationAttackDPTNoLookAhead = 0
+        self.transformationAttackDPTLookAhead = 0
         self.nextForm = 1
         applyTransformationAttackDPT = False
         self.critMultiplier = CRIT_MULTIPLIER + self.TAB * CRIT_TAB_INC
@@ -482,9 +486,11 @@ class Unit:
                     applyTransformationAttackDPT = True
                     self.nextForm = -1
                 if applyTransformationAttackDPT:
-                    state.attributes["DPT"] += self.transformationAttackDPT
+                    state.attributes["DPT No Look Ahead"] += self.transformationAttackDPTNoLookAhead
+                    state.attributes["DPT Look Ahead"] += self.transformationAttackDPTLookAhead
                     turn = nextTurn
-                    self.transformationAttackDPT = 0
+                    self.transformationAttackDPTNoLookAhead = 0
+                    self.transformationAttackDPTLookAhead = 0
                     state.attacksPerformed += 1
                     state.superAttacksPerformed += 1
                     self.states.append(state)
@@ -507,10 +513,11 @@ class Unit:
                 turn = nextTurn
 
     def getAttributes(self):
-        attributes = [None] * len(self.states)
+        attributeValues = [None] * len(self.states)
+        attributeNames = list(self.states[0].attributes.keys())
         for i, state in enumerate(self.states):
-            attributes[i] = list(state.attributes.values())
-        return np.array(attributes)
+            attributeValues[i] = list(state.attributes.values())
+        return attributeNames, np.array(attributeValues)
 
     def setAttributes(self, attributes):
         for i in range(len(attributes[:, 0])):
@@ -525,7 +532,7 @@ class Unit:
     def interpStates(self):
         stateTurns = [state.turn for state in self.states]
         self.uninterpolatedStates = copy.deepcopy(self.states)
-        self.uninterpolatedAttributes = self.getAttributes()
+        _, self.uninterpolatedAttributes = self.getAttributes()
         interpAttrs = np.array([np.interp(EVAL_TURNS, stateTurns, self.uninterpolatedAttributes[:, i]) for i in range(NUM_ATTRIBUTES)]).T
         self.setAttributes(interpAttrs)
 
@@ -561,7 +568,8 @@ class Form:
         self.attacksPerformed = 0
         self.superAttacksPerformed = 0
         self.charge = 0
-        self.superAttacks = {}  # Will be a list of SuperAttack objects
+        self.superAttacks = {}  # Will be a dict of SuperAttack objects
+        self.superAttackVariants = {}  # Will be a dict of all variant superAttack objects 
         # This will be a list of Ability objects which will be iterated through each state to call applyToState.
         self.abilities = dict(zip(PHASES, [[] for i in range(len(PHASES))]))
         self.transformed = False
@@ -920,9 +928,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after receiving X attacks in battle?",
                 EveryTimeXAttacksReceivedInBattle,
-                ["How many attacks received are required?", "What is the maximum buff?", "Within the same turn?"],
-                [None, None, clc.Choice(YES_NO)],
-                [5, 1.0, "Y"],
+                ["How many attacks received are required?", "What is the maximum buff?", "Within the same turn?", "Does the buff start from the next attacking turn?",],
+                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
+                [5, 1.0, "Y", "N"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
@@ -933,9 +941,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after evading X attacks in battle?",
                 EveryTimeXAttacksEvadedInBattle,
-                ["How many attacks evaded are required?", "What is the maximum buff?", "Within the same turn?"],
-                [None, None, clc.Choice(YES_NO)],
-                [5, 1.0, "Y"],
+                ["How many attacks evaded are required?", "What is the maximum buff?", "Within the same turn?", "Does the buff start from the next attacking turn?",],
+                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
+                [5, 1.0, "Y", "N"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
@@ -946,9 +954,9 @@ class Form:
                 self,
                 "How many different buffs does the form get after receiving or evading X attacks in battle?",
                 EveryTimeXAttacksReceivedOrEvadedInBattle,
-                ["How many attacks are required?", "What is the maximum buff?", "Within the same turn?"],
-                [None, None, clc.Choice(YES_NO)],
-                [5, 1.0, "Y"],
+                ["How many attacks are required?", "What is the maximum buff?", "Within the same turn?", "Does the buff start from the next attacking turn?",],
+                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
+                [5, 1.0, "Y", "N"],
             )
         )
         ############################################## Attack Enemy ##################################################
@@ -962,9 +970,10 @@ class Form:
                     "How many turns does the buff last?",
                     "How many attacks performed are required?",
                     "Requires super attack?",
+                    "What slots are required?",
                 ],
-                [None, None, clc.Choice(YES_NO)],
-                [1, 5, "Y"],
+                [None, None, clc.Choice(YES_NO), None],
+                [1, 5, "Y", "[1, 2, 3]"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
@@ -979,10 +988,11 @@ class Form:
                     "How many attacks performed are required?",
                     "What is the maximum buff?",
                     "Within the same turn?",
+                    "Does the buff start from the next attacking turn?",
                     "Requires super attack?",
                 ],
-                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO)],
-                [5, 1.0, "Y", "Y"],
+                [None, None, clc.Choice(YES_NO), clc.Choice(YES_NO), clc.Choice(YES_NO)],
+                [5, 1.0, "Y", "N", "Y"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
@@ -1092,35 +1102,54 @@ class Form:
             self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
                 superAttacksElement, f"{superAttackNameConversion[superAttackType]}"
             )
+            self.superAttackVariants[superAttackType] = []
             if superAttackType == "12 Ki" or (self.unit.rarity == "LR" and not (self.intentional12Ki)):
-                multiplier = superAttackConversion[
+                defaultSuperAttack = SuperAttack(superAttackType)
+                numSuperAttacks = self.unit.inputHelper.getAndSaveUserInput(
+                    f"How many different {superAttackType} super attacks does this form have?",
+                    default=1,
+                )
+                if numSuperAttacks == 1:
+                    multiplier = superAttackConversion[
                     self.unit.inputHelper.getAndSaveUserInput(
                         f"What is the form's {superAttackType} super attack multiplier?",
                         type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
                         default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
                     )
-                ][superAttackLevelConversion[self.unit.rarity][self.unit.EZA]]
-                avgSuperAttack = SuperAttack(superAttackType, multiplier)
-                defaultSuperAttack = copy.deepcopy(avgSuperAttack)
-                numSuperAttacks = self.unit.inputHelper.getAndSaveUserInput(
-                    f"How many different {superAttackType} super attacks does this form have?",
-                    default=1,
-                )
+                    ][superAttackLevelConversion[self.unit.rarity][self.unit.EZA]]
                 superFracTotal = 0
                 superAttackVariationsElement = self.unit.inputHelper.getChildElement(
                     self.unit.inputHelper.parent, f"{superAttackNameConversion[superAttackType]}_variations"
                 )
                 for i in range(numSuperAttacks):
+                    superAttack = SuperAttack(superAttackType)
                     self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(
                         superAttackVariationsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}"
                     )
                     if numSuperAttacks > 1:
+                        multiplier = superAttackConversion[
+                        self.unit.inputHelper.getAndSaveUserInput(
+                            f"What is this {superAttackType} super attack variant's multiplier?",
+                            type=clc.Choice(SUPER_ATTACK_MULTIPLIER_NAMES, case_sensitive=False),
+                            default=DEFAULT_SUPER_ATTACK_MULTIPLIER_NAMES[superAttackType],
+                        )
+                        ][superAttackLevelConversion[self.unit.rarity][self.unit.EZA]]
+                        isExSuperAttack = yesNo2Bool[self.unit.inputHelper.getAndSaveUserInput(
+                            f"Is this {superAttackType} super attack variant an EX Super Attack?",
+                            type=clc.Choice(YES_NO, case_sensitive=False),
+                            default="N",
+                        )]
+                        if isExSuperAttack:
+                            superAttack.exSuperCondition = getCondition(self.unit.inputHelper)
+                        self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(superAttackVariationsElement, f"{superAttackNameConversion[superAttackType]}_variation_{i + 1}")
                         superFrac = self.unit.inputHelper.getAndSaveUserInput(
                             f"What is the probability of this {superAttackType} super attack variant from occuring?",
                             default=1.0,
                         )
                     else:
-                        superFrac = 1
+                        superFrac = 1.0
+                    superAttack.multiplier = multiplier
+                    superAttack.prob = superFrac
                     numEffects = self.unit.inputHelper.getAndSaveUserInput(
                         f"How many effects does this form's {superAttackType} super attack have?",
                         default=1,
@@ -1147,14 +1176,16 @@ class Form:
                         duration = self.unit.inputHelper.getAndSaveUserInput(
                             "How many turns does it last for?", default=99
                         )
-                        avgSuperAttack.addEffect(effectType, activationProbability, buff, duration, superFrac)
+                        superAttack.addEffect(effectType, activationProbability, buff, duration)
                         if i == 0:
-                            defaultSuperAttack.addEffect(effectType, activationProbability, buff, duration, 1)
+                            defaultSuperAttack.multiplier = multiplier
+                            defaultSuperAttack.addEffect(effectType, activationProbability, buff, duration)
                     superFracTotal += superFrac
                     self.unit.inputHelper.parent = superAttackVariationsElement
+                    self.superAttackVariants[superAttackType].append(superAttack)
                 assert superFracTotal == 1, "Invald super attack variant probabilities entered"
                 self.unit.inputHelper.parent = superAttacksElement
-            self.superAttacks[superAttackType] = avgSuperAttack
+            self.superAttacks[superAttackType] = SuperAttack(superAttackType)
             if superAttackType == "12 Ki":
                 self.superAttacks["AS"] = defaultSuperAttack
         self.unit.inputHelper.parent = self.formElement
@@ -1287,26 +1318,39 @@ class Link:
 
 
 class SuperAttack:
-    def __init__(self, superAttackType, multiplier):
+    def __init__(self, superAttackType):
         self.superAttackType = superAttackType
-        self.multiplier = multiplier
+        self.multiplier = 0.0
+        self.exSuperCondition = None
+        self.prob = 1.0
         self.effects = dict(
             zip(SUPER_ATTACK_EFFECTS, [SuperAttackEffectParams() for i in range(len(SUPER_ATTACK_EFFECTS))])
         )
 
-    def addEffect(self, effectType, activationProbability, buff, duration, superFrac):
-        self.effects[effectType].updateParams(activationProbability, buff, duration, superFrac)
+    def addEffect(self, effectType, activationProbability, buff, duration):
+        self.effects[effectType].updateParams(activationProbability, buff, duration)
 
+    def averageVariants(self, superAttackVariants):
+        # superFrac accounts for unit and EX supers
+        self.multiplier = 0.0
+        for effectType in SUPER_ATTACK_EFFECTS:
+            self.effects[effectType] = SuperAttackEffectParams()
+        for variant in superAttackVariants:
+            self.multiplier += variant.multiplier * variant.prob
+            for effectType in SUPER_ATTACK_EFFECTS:
+                self.effects[effectType].buff += variant.effects[effectType].buff * variant.prob
+                self.effects[effectType].duration += variant.effects[effectType].duration * variant.prob
+            
 
 class SuperAttackEffectParams:
     def __init__(self):
         self.buff = 0
         self.duration = 0
 
-    def updateParams(self, activationProbability, buff, duration, superFrac):
+    def updateParams(self, activationProbability, buff, duration):
         # superFrac accounts for unit supers
-        self.buff += activationProbability * buff * superFrac
-        self.duration += duration * superFrac
+        self.buff += activationProbability * buff
+        self.duration += activationProbability * duration
 
 
 class OrbCollect:
@@ -1433,7 +1477,8 @@ class State:
         self.atkPerSuperPerformed = np.zeros(MAX_TURN)
         self.critPerAttackPerformed = np.zeros(MAX_TURN)
         self.critPerSuperPerformed = np.zeros(MAX_TURN)
-        self.DPT = 0
+        self.DPTNoLookAhead = 0
+        self.DPTLookAhead = 0
         self.activeSkillAttackActivated = False
         self.stackedStats = dict(zip(STACK_EFFECTS, np.zeros(len(STACK_EFFECTS))))
         self.randomKi = self.getRandomKi()
@@ -1467,6 +1512,27 @@ class State:
         self.guard = min(self.guard, 1)
         self.avgDefPreSuper = self.getDefStat(self.p2Buff["DEF"])
         self.preAttackCounterAtk = self.getPreAttackCounter()
+
+        # Compute super attack variant probabilities
+        superAttacksVariants = copy.deepcopy(self.form.superAttackVariants)
+        for superAttackType in SUPER_ATTACK_CATEGORIES:
+            exSuperAttackProb = 0.0
+            hasExSuper = False
+            exSuperAttackOldProb = 0.0
+            for i, superAttackVariant in enumerate(np.flip(superAttacksVariants[superAttackType])):
+                if superAttackVariant.exSuperCondition is not None:
+                    assert i == 0, "EX Super Attack Variant must be last in the list!"
+                    hasExSuper = True
+                    exSuperAttackOldProb = superAttackVariant.prob
+                    exSuperAttackProb = superAttackVariant.exSuperCondition.chanceSatisfied(self.multiChanceBuff)
+                    superAttackVariant.prob *= exSuperAttackProb
+                else:
+                    if hasExSuper:
+                        superAttackVariant.prob *= (1.0 - self.form.superAttackVariants[superAttackType][-1].prob) / (1.0 - exSuperAttackOldProb)
+        
+            # Compute average super attack effects
+            self.form.superAttacks[superAttackType].averageVariants(self.form.superAttackVariants[superAttackType])
+
         for ability in self.form.abilities["Attack Enemy"]:
             ability.applyToState(self)
         self.addStacks()
@@ -1508,9 +1574,10 @@ class State:
         )
         self.setUSA()
         self.postAttackCounterAtk = self.getPostAttackCounter()
-        self.setDPT()
+        self.DPTLookAhead += self.setDPT(lookAhead=True)
+        self.DPTNoLookAhead += self.setDPT(lookAhead=False)
         self.setAvgDefMult()
-        self.normalDamageTaken = self.branchDamageTaken(
+        self.normalDamageTakenNoLookAhead = self.branchDamageTaken(
             1,
             0,
             -1,
@@ -1530,14 +1597,34 @@ class State:
             ENEMY_NORMAL_AVG_CRIT_DEF_DEBUFF,
             self.evadeFirstNormalChance,
         )
-        self.saDamageTaken = self.branchDamageTaken(
+        self.normalDamageTakenLookAhead = self.branchDamageTaken(
+            1,
+            0,
+            -1,
+            self.numNormalAttacksDirectedBeforeAttacking,
+            self.numNormalAttacksDirectedAfterAttacking,
+            self.p2Buff["DEF"] + self.p2DefNormal,
+            self.multiChanceBuff["EvasionA"],
+            0,
+            self.guard,
+            self.dmgRedNormalA,
+            0,
+            self.avgDefPreSuper,
+            self.stackedStats["DEF"],
+            self.defBuffStatuses,
+            MAX_NORMAL_DAM_PER_TURN_LOOK_AHEAD[self.turn - 1],
+            ENEMY_NORMAL_CRIT_CHANCE,
+            ENEMY_NORMAL_AVG_CRIT_DEF_DEBUFF,
+            self.evadeFirstNormalChance,
+        )
+        self.saDamageTakenNoLookAhead = self.branchDamageTaken(
             1,
             0,
             -1,
             self.numSuperAttacksDirectedBeforeAttacking,
             self.numSuperAttacksDirectedAfterAttacking,
             self.p2Buff["DEF"] + self.p2DefSuper,
-            self.multiChanceBuff["EvasionA"],
+            copy.deepcopy(self.multiChanceBuff["EvasionA"]),
             self.evadeSuper,
             self.guard,
             self.dmgRedSuperA,
@@ -1546,6 +1633,26 @@ class State:
             self.stackedStats["DEF"],
             self.defBuffStatuses,
             MAX_SA_DAM_PER_TURN[self.turn - 1],
+            ENEMY_SUPER_CRIT_CHANCE,
+            ENEMY_SUPER_AVG_CRIT_DEF_DEBUFF,
+            self.evadeFirstSuperChance,
+        )
+        self.saDamageTakenLookAhead = self.branchDamageTaken(
+            1,
+            0,
+            -1,
+            self.numSuperAttacksDirectedBeforeAttacking,
+            self.numSuperAttacksDirectedAfterAttacking,
+            self.p2Buff["DEF"] + self.p2DefSuper,
+            copy.deepcopy(self.multiChanceBuff["EvasionA"]),
+            self.evadeSuper,
+            self.guard,
+            self.dmgRedSuperA,
+            self.multiChanceBuff["Nullify"].prob,
+            self.avgDefPreSuper,
+            self.stackedStats["DEF"],
+            self.defBuffStatuses,
+            MAX_SA_DAM_PER_TURN_LOOK_AHEAD[self.turn - 1],
             ENEMY_SUPER_CRIT_CHANCE,
             ENEMY_SUPER_AVG_CRIT_DEF_DEBUFF,
             self.evadeFirstSuperChance,
@@ -1559,7 +1666,7 @@ class State:
                 (0.03 + 0.0015 * HIPO_RECOVERY_BOOST[self.form.unit.nCopies - 1])
                 * avgDefStartOfTurn
                 * self.orbCollection.orbCollects["Same"].getNumOrbs()
-                + self.buff["Damage Dealt Heal"] * self.DPT
+                + self.buff["Damage Dealt Heal"] * self.DPTLookAhead
             )
             / AVG_HEALTH
         )
@@ -1570,6 +1677,7 @@ class State:
             / NUM_CATEGORIES_PER_UNIT_MAX
             * (1 + USEABILITY_SUPPORT_FACTOR * self.support + self.form.linkEffects["Commonality"])
         )
+        sacrifcedHP = self.form.superAttacks["18 Ki"].effects["Sacrifice HP"].buff * self.pUSA + self.form.superAttacks["12 Ki"].effects["Sacrifice HP"].buff * self.pSA + self.form.superAttacks["AS"].effects["Sacrifice HP"].buff * self.aaSA
         attributeValues = [
             self.form.unit.leaderSkill,
             self.form.unit.SBR,
@@ -1577,9 +1685,12 @@ class State:
             self.useability,  # Requires user input, should make a version that loads from file
             self.buff["Heal"],
             self.support,
-            self.DPT,
-            self.normalDamageTaken - self.form.superAttacks["18 Ki"].effects["Sacrifice HP"].buff * self.pUSA - self.form.superAttacks["12 Ki"].effects["Sacrifice HP"].buff * self.pSA - self.form.superAttacks["AS"].effects["Sacrifice HP"].buff * self.aaSA,
-            self.saDamageTaken,
+            self.DPTNoLookAhead,
+            self.DPTLookAhead,
+            self.normalDamageTakenNoLookAhead - sacrifcedHP,
+            self.normalDamageTakenLookAhead - sacrifcedHP,
+            self.saDamageTakenNoLookAhead,
+            self.saDamageTakenLookAhead,
             self.slotFactor,
         ]
         self.attributes = dict(zip(ATTTRIBUTE_NAMES, attributeValues))
@@ -1752,10 +1863,12 @@ class State:
         saMultiplier = saMultActive + SA_BOOST_INC * HIPO_SA_BOOST[self.form.unit.nCopies - 1]
         return self.getAtkStat(self.p1Buff["ATK"], p2Atk, kiMultiplier, saMultiplier * (1 + self.stackedStats["ATK"]))
     
-    def atk2Dmg(self, atk, pCrit):
+    def atk2Dmg(self, atk, pCrit, lookAhead):
         """Returns the damage dealt by an attack"""
-        return (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]) * (dmgThreshold(atk * self.form.unit.critMultiplier * (1 - AVG_ENEMY_DMG_RED), MAX_ENEMY_DMG_THRESHOLD_PER_TURN[self.turn - 1]) * pCrit + dmgThreshold(max(atk * self.noCritAtkModifier - MAX_ENEMY_DEF_PER_TURN[self.turn - 1], 0) * (1 - AVG_ENEMY_DMG_RED), MAX_ENEMY_DMG_THRESHOLD_PER_TURN[self.turn - 1]) * (1 - pCrit))
-    
+        enemyDefArray = MAX_ENEMY_DEF_PER_TURN_LOOK_AHEAD if lookAhead else MAX_ENEMY_DEF_PER_TURN
+        dmgThresholdArray = MAX_ENEMY_DMG_THRESHOLD_PER_TURN_LOOK_AHEAD if lookAhead else MAX_ENEMY_DMG_THRESHOLD_PER_TURN
+        return (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]) * (dmgThreshold(atk * self.form.unit.critMultiplier * (1 - AVG_ENEMY_DMG_RED), dmgThresholdArray[self.turn - 1]) * pCrit + dmgThreshold(max(atk * self.noCritAtkModifier - enemyDefArray[self.turn - 1], 0) * (1 - AVG_ENEMY_DMG_RED), dmgThresholdArray[self.turn - 1]) * (1 - pCrit))
+
     def disableAction(self, pSuper = 1):
         pDisableSuper = min(pSuper * self.numSuperAttacksDirectedAfterAttacking / self.numAttacksDirectedAfterAttacking * (1 - ENEMY_DODGE_CHANCE + ENEMY_DODGE_CHANCE * self.buff["Attacks Guaranteed to Hit"]), self.numSuperAttacksDirectedAfterAttacking)
         self.numSuperAttacksDirectedAfterAttacking -= pDisableSuper
@@ -1828,11 +1941,12 @@ class State:
         critPerAttackPerformed,
         atkPerSuperPerformed,
         critPerSuperPerformed,
+        lookAhead,
     ):
         """Returns the total remaining DPT of a unit in a turn recursively"""
         p2AtkFactor = (1 + self.p2Buff["ATK"] + p2AtkBuff) / (1 + self.p2Buff["ATK"])
-        normal = self.atk2Dmg(mN * self.n_0 * p2AtkFactor, crit.prob)
-        additional12Ki = self.atk2Dmg(m12 * self.a12_0 * p2AtkFactor, crit.prob)
+        normal = self.atk2Dmg(mN * self.n_0 * p2AtkFactor, crit.prob, lookAhead)
+        additional12Ki = self.atk2Dmg(m12 * self.a12_0 * p2AtkFactor, crit.prob, lookAhead)
         if i == self.nAA - 1:  # If no more additional attacks
             return 0.5 * pAA * (additional12Ki + normal)  # Add average hidden-potential attack damage
         else:
@@ -1857,6 +1971,7 @@ class State:
                 critPerAttackPerformed,
                 atkPerSuperPerformed,
                 critPerSuperPerformed,
+                lookAhead,
             )
             tempDPT1 = self.branchDPT(
                 i,
@@ -1870,6 +1985,7 @@ class State:
                 critPerAttackPerformed[1:],
                 atkPerSuperPerformed,
                 critPerSuperPerformed,
+                lookAhead,
             )
             tempDPT2 = self.branchDPT(
                 i,
@@ -1883,13 +1999,15 @@ class State:
                 critPerAttackPerformed,
                 atkPerSuperPerformed[1:],
                 critPerSuperPerformed[1:],
+                lookAhead,
             )
             return self.aaPSuper[i] * (tempDPT2 + additional12Ki) + (1 - self.aaPSuper[i]) * (
                 self.aaPGuarantee[i] * (tempDPT1 + normal) + (1 - self.aaPGuarantee[i]) * (tempDPT0)
             )
 
-    def setDPT(self):
+    def setDPT(self, lookAhead):
         """Returns the DPT of a unit in a turn"""
+        dpt = 0
         if self.canAttack:
             # Number of additional attacks from passive in each turn
             self.nAA = len(self.aaPSuper)
@@ -1908,8 +2026,8 @@ class State:
             self.n_0 = self.normal / baseAtk
             pAA = self.form.unit.pHiPo["AA"]  # Probability of doing an additional attack next
             crit = copy.deepcopy(self.multiChanceBuff["Crit"])
-            counterDmgPreSuper = self.numAttacksDirectedBeforeAttacking * self.atk2Dmg(self.form.normalCounterMult * self.preAttackCounterAtk, crit.prob) + NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.preAttackCounterAtk, crit.prob)
-            counterDmgPostSuper = self.numAttacksDirectedAfterAttacking * self.atk2Dmg(self.form.normalCounterMult * self.postAttackCounterAtk, crit.prob) + NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.postAttackCounterAtk, crit.prob)
+            counterDmgPreSuper = self.numAttacksDirectedBeforeAttacking * self.atk2Dmg(self.form.normalCounterMult * self.preAttackCounterAtk, crit.prob, lookAhead) + NUM_SUPER_ATTACKS_DIRECTED_BEFORE_ATTACKING[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.preAttackCounterAtk, crit.prob, lookAhead)
+            counterDmgPostSuper = self.numAttacksDirectedAfterAttacking * self.atk2Dmg(self.form.normalCounterMult * self.postAttackCounterAtk, crit.prob, lookAhead) + NUM_SUPER_ATTACKS_DIRECTED_AFTER_ATTACKING[self.slot - 1] * self.multiChanceBuff["Nullify"].chances["SA Counter"] * self.atk2Dmg(self.form.saCounterMult * self.postAttackCounterAtk, crit.prob, lookAhead)
             crit.updateChance("On Super", self.critPerAttackPerformed[0], "Crit")
             critN = copy.deepcopy(crit)
             crit1stN = copy.deepcopy(critN)
@@ -1932,8 +2050,8 @@ class State:
             if self.firstAttackCritBuff > 0:
                 crit1stUSA.updateChance("On Super", self.firstAttackCritBuff, "Crit")
             if self.pN > 0:
-                self.DPT += self.pN * (self.atk2Dmg(
-                    self.normal * (1 + self.firstAttackBuff), crit1stN.prob)
+                dpt += self.pN * (self.atk2Dmg(
+                    self.normal * (1 + self.firstAttackBuff), crit1stN.prob, lookAhead)
                     + self.branchDPT(
                         i,
                         m12,
@@ -1946,11 +2064,12 @@ class State:
                         self.critPerAttackPerformed[1:],
                         self.atkPerSuperPerformed,
                         self.critPerSuperPerformed,
+                        lookAhead,
                     )
                 )
             if self.pSA > 0:
-                self.DPT += self.pSA * (self.atk2Dmg(
-                    self.SA * (1 + self.firstAttackBuff), crit1stSA.prob)
+                dpt += self.pSA * (self.atk2Dmg(
+                    self.SA * (1 + self.firstAttackBuff), crit1stSA.prob, lookAhead)
                     + self.branchDPT(
                         i,
                         m12 + self.form.superAttacks["12 Ki"].effects["ATK"].buff,
@@ -1963,11 +2082,12 @@ class State:
                         self.critPerAttackPerformed,
                         self.atkPerSuperPerformed[1:],
                         self.critPerSuperPerformed[1:],
+                        lookAhead,
                     )
                 )
             if self.form.unit.rarity == "LR":  # If  is a LR
-                self.DPT += self.pUSA * (self.atk2Dmg(
-                    self.USA * (1 + self.firstAttackBuff), crit1stUSA.prob)
+                dpt += self.pUSA * (self.atk2Dmg(
+                    self.USA * (1 + self.firstAttackBuff), crit1stUSA.prob, lookAhead)
                     + self.branchDPT(
                         i,
                         m12 + self.form.superAttacks["18 Ki"].effects["ATK"].buff,
@@ -1980,10 +2100,12 @@ class State:
                         self.critPerAttackPerformed,
                         self.atkPerSuperPerformed[1:],
                         self.critPerSuperPerformed[1:],
+                        lookAhead,
                     )
                 )
-            self.DPT += (counterDmgPreSuper + counterDmgPostSuper)
-        self.DPT = max(self.DPT, 0.0)
+            dpt += (counterDmgPreSuper + counterDmgPostSuper)
+        dpt = max(dpt, 0.0)
+        return dpt
 
     def branchDamageTaken(
         self,
@@ -2327,7 +2449,8 @@ class GiantRageMode(SingleTurnAbility):
             giantRageUnit.ATK = self.ATK
             self.giantRageModeState.form.unit = giantRageUnit
             self.giantRageModeState.setState()  # Calculate the DPT of the state
-            state.DPT += self.giantRageModeState.DPT * NUM_SLOTS * giantRageUnit.giantRageDuration
+            state.DPTNoLookAhead += self.giantRageModeState.DPTNoLookAhead * NUM_SLOTS * giantRageUnit.giantRageDuration
+            state.DPTLookAhead += self.giantRageModeState.DPTLookAhead * NUM_SLOTS * giantRageUnit.giantRageDuration
             state.support += GIANT_RAGE_SUPPORT
             state.buff["Heal"] += GIANT_RAGE_HEAL
 
@@ -2877,13 +3000,17 @@ class ActiveSkillAttack(SingleTurnAbility):
                     rarity2MaxKi[state.form.unit.rarity], state.p2Buff["ATK"] + self.p2AttackBuff, self.activeMult
                 )
             )
-            activeDmg = state.atk2Dmg(activeAtk, state.multiChanceBuff["Crit"].prob)
+            activeDmgNoLookAhead = state.atk2Dmg(activeAtk, state.multiChanceBuff["Crit"].prob, False)
+            activeDmgLookAhead = state.atk2Dmg(activeAtk, state.multiChanceBuff["Crit"].prob, True)
             if yesNo2Bool[self.triggersTransformation]:
-                self.form.unit.transformationAttackDPT = activeDmg
+                self.form.unit.transformationAttackDPTNoLookAhead = activeDmgNoLookAhead
+                self.form.unit.transformationAttackDPTLookAhead = activeDmgLookAhead
+
                 self.form.unit.transformationTriggered = True
                 self.form.unit.nextForm = 1
             else:
-                state.DPT += activeDmg
+                state.DPTNoLookAhead += activeDmgNoLookAhead
+                state.DPTLookAhead += activeDmgLookAhead
 
 
 # This skill is to apply to a unit already in it's standby mode.
@@ -2900,11 +3027,16 @@ class StandbyFinishSkill(SingleTurnAbility):
         if state.form.checkCondition(self.condition, self.activated, True):
             self.activated = True
             self.activeMult += self.buffPerCharge * state.form.charge
-            self.form.unit.transformationAttackDPT = state.atk2Dmg(
+            self.form.unit.transformationAttackDPTNoLookAhead = state.atk2Dmg(
                 state.getActiveAtk(
                     rarity2MaxKi[self.form.unit.rarity], state.p2Buff["ATK"], self.activeMult * (1 + self.attackBuff)
                 )
-            , state.multiChanceBuff["Crit"].prob)
+            , state.multiChanceBuff["Crit"].prob, False)
+            self.form.unit.transformationAttackDPTLookAhead = state.atk2Dmg(
+                state.getActiveAtk(
+                    rarity2MaxKi[self.form.unit.rarity], state.p2Buff["ATK"], self.activeMult * (1 + self.attackBuff)
+                )
+            , state.multiChanceBuff["Crit"].prob, True)
             self.form.unit.transformationTriggered = True
             if self.form.unit.numForms > self.form.formIdx:
                 self.form.unit.nextForm = 1
@@ -3519,6 +3651,7 @@ class AfterAttackPerformed(AfterEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff, args[0], args[1])
         self.requiresSuperAttack = args[2]
+        self.slots = literal_eval(str(args[3]))
 
     def setEventFactor(self):
         if self.required == 0 or (self.required - self.increment <= 0 and self.effect in ["DEF", "Dmg Red", "Guard"]):
@@ -3527,23 +3660,24 @@ class AfterAttackPerformed(AfterEvent):
             self.eventFactor = 0
 
     def applyToState(self, state):
-        self.buffToGo = self.effectiveBuff
-        if yesNo2Bool[self.requiresSuperAttack]:
-            self.increment = state.superAttacksPerformed
-            self.required = max(self.threshold - state.form.superAttacksPerformed, 0)
-        else:
-            self.increment = state.attacksPerformed
-            self.required = max(self.threshold - state.form.attacksPerformed, 0)
-        if not (np.any(self.applied)):
-            self.setEventFactor()
-            self.setTurnBuff(state)
-            if self.effect in ADDITIONAL_ATTACK_EFFECTS:
-                # Require this incase AdditionalSiper or AAChance get buffed after they get set in setStates()
-                state.setAttacksPerformed()
-        if self.effect not in REGULAR_SUPPORT_EFFECTS:
-            self.nextTurnUpdate(state)
-        if np.any(self.applied):
-            self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
+        if state.slot in self.slots:
+            self.buffToGo = self.effectiveBuff
+            if yesNo2Bool[self.requiresSuperAttack]:
+                self.increment = state.superAttacksPerformed
+                self.required = max(self.threshold - state.form.superAttacksPerformed, 0)
+            else:
+                self.increment = state.attacksPerformed
+                self.required = max(self.threshold - state.form.attacksPerformed, 0)
+            if not (np.any(self.applied)):
+                self.setEventFactor()
+                self.setTurnBuff(state)
+                if self.effect in ADDITIONAL_ATTACK_EFFECTS:
+                    # Require this incase AdditionalSuper or AAChance get buffed after they get set in setStates()
+                    state.setAttacksPerformed()
+            if self.effect not in REGULAR_SUPPORT_EFFECTS:
+                self.nextTurnUpdate(state)
+            if np.any(self.applied):
+                self.turnsLeft -= RETURN_PERIOD_PER_SLOT[state.slot - 1]
 
 
 class AfterAttackReceived(AfterEvent):
@@ -3923,13 +4057,19 @@ class ForFirstTargtedAttack(PassiveAbility):
 class EveryTimeXEventsInBattle(PassiveAbility):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
-        self.threshold, self.max, self.withinTheSameTurn = args
+        self.threshold, self.max, self.withinTheSameTurn, self.nextAttackingTurn = args
+        self.nextAttackingTurn = yesNo2Bool[self.nextAttackingTurn]
         self.required = self.threshold
         self.applied = 0
+        self.isNextTurnBuff = False
 
     def applyBuff(self, state):
         self.required -= self.increment
         if round(self.required) <= 0:
+            if not self.isNextTurnBuff and self.nextAttackingTurn:
+                self.isNextTurnBuff = True
+                return
+            self.isNextTurnBuff = False
             buffToGo = self.max - self.applied
             cappedTurnBuff = min(buffToGo, self.effectiveBuff)
             match self.effect:
@@ -3972,8 +4112,8 @@ class EveryTimeXEventsInBattle(PassiveAbility):
 
 class EveryTimeXAttacksPerformedInBattle(EveryTimeXEventsInBattle):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args):
-        super().__init__(form, activationProbability, knownApriori, effect, buff, args[:3])
-        self.requiresSuperAttack = args[3]
+        super().__init__(form, activationProbability, knownApriori, effect, buff, args[:4])
+        self.requiresSuperAttack = args[4]
 
     def applyToState(self, state):
         if yesNo2Bool[self.requiresSuperAttack]:
@@ -4156,6 +4296,10 @@ class Condition:
     def isSatisfied(self, form):
         return round(getattr(form, self.formAttr)) >= self.conditionValue
 
+    def chanceSatisfied(self, multiChanceBuff):
+        assert self.formAttr == "Crit", "Only Crit has been thought about"
+        return max(min(multiChanceBuff[self.formAttr].prob / self.conditionValue, 1.0), 0.0)
+
 
 class NextTurnCondition(Condition):
     def __init__(self, turnCondition):
@@ -4248,6 +4392,12 @@ class ReviveCondition(Condition):
         self.conditionValue = True
 
 
+class CritCondition(Condition):
+    def __init__(self):
+        self.formAttr = "Crit"
+        self.conditionValue = 1.0
+
+
 class CompositeCondition:
     def __init__(self, operator, conditions):
         self.operator = operator
@@ -4268,4 +4418,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(44, "DFLR_PHY_Beast_Gohan", 1, "DGE", "DGE", "ADD", [1, 2, 2, 3, 3, 3, 3, 3, 1, 1], "True")
+    unit = Unit(452, "F2P_TEQ_Majin_Kuu", 5, "DGE", "DGE", "ADD", [1, 1, 2, 1, 2, 2, 1, 2, 1, 1], "True")

@@ -267,6 +267,7 @@
 					<input prompt="What type of buff does the unit get?" response="Crit" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.2" />
+					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many attacks received are required?" response="2" />
@@ -275,6 +276,7 @@
 					<input prompt="What type of buff does the unit get?" response="Dmg Red" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.2" />
+					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_2>
 				<ability_3>
 					<input prompt="How many attacks received are required?" response="2" />
@@ -283,6 +285,7 @@
 					<input prompt="What type of buff does the unit get?" response="Heal" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
+					<input prompt="Does the buff start from the next attacking turn?" response="N" />
 				</ability_3>
 			</after_x_attacks_received_in_battle>
 			<after_x_attacks_evaded_in_battle>

@@ -10,7 +10,7 @@
 		<input prompt="What is the unit's Max Level ATK stat?" response="11600" />
 		<input prompt="What is the unit's Max Level DEF stat?" response="6325" />
 		<input prompt="How would you rate the unit's leader skill on a scale of 1-10?" response="200% large" />
-		<input prompt="How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account." response="14" />
+		<input prompt="How many categories is the unit on? If the unit's viability is limited to certain categories, take this into account." response="7" />
 		<input prompt="What is the unit's 12 ki attck modifer?" response="1.5" />
 		<input prompt="How many turns does the unit's giant/rage mode last for?" response="0.0" />
 	</constants>
@@ -119,7 +119,7 @@
 				</ability_6>
 			</default>
 			<turn_dpendent>
-				<input prompt="How many turn dependent buffs does the form have?" response="4" />
+				<input prompt="How many turn dependent buffs does the form have?" response="7" />
 				<ability_1>
 					<input prompt="What turn does the buff start from?" response="1" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="1" />
@@ -148,6 +148,27 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_4>
+				<ability_5>
+					<input prompt="What turn does the buff start from?" response="4" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
+					<input prompt="What type of buff does the unit get?" response="Guard" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="1.0" />
+				</ability_5>
+				<ability_6>
+					<input prompt="What turn does the buff start from?" response="3" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
+					<input prompt="What type of buff does the unit get?" response="Crit" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+				</ability_6>
+				<ability_7>
+					<input prompt="What turn does the buff start from?" response="4" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="20" />
+					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.2" />
+				</ability_7>
 			</turn_dpendent>
 			<slot_dependent>
 				<input prompt="How many slot specific buffs does the form have?" response="4" />

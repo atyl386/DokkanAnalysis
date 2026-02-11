@@ -6,9 +6,12 @@ HP: 15400.0
 Useability: 0.73978 
 Healing: 0.056768 
 Support: 0.933333 
-DPT: 16087238.183921 
-Normal Defence: -0.112316 
-Super Attack Defence: -0.041671 
+DPT No Look Ahead: 18290207.553141 
+DPT Look Ahead: 16087238.183921 
+Normal Defence No Look Ahead: -0.009215 
+Normal Defence Look Ahead: -0.112316 
+Super Attack Defence No Look Ahead: -0.041671 
+Super Attack Defence Look Ahead: -0.041671 
 Slot Bonus: 0.5 
 
 Form # 1 / State # 2 / Turn # 3 
@@ -19,12 +22,15 @@ HP: 15400.0
 Useability: 0.73978 
 Healing: 0.178644 
 Support: 0.933333 
-DPT: 81729704.262405 
-Normal Defence: -0.008751 
-Super Attack Defence: -0.025325 
-Slot Bonus: 0.333333 
+DPT No Look Ahead: 54702527.943692 
+DPT Look Ahead: 54388665.434446 
+Normal Defence No Look Ahead: -0.007001 
+Normal Defence Look Ahead: -0.007001 
+Super Attack Defence No Look Ahead: -0.031656 
+Super Attack Defence Look Ahead: -0.031656 
+Slot Bonus: 0.5 
 
-Form # 1 / State # 3 / Turn # 6 
+Form # 1 / State # 3 / Turn # 5 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -32,12 +38,15 @@ HP: 15400.0
 Useability: 0.73978 
 Healing: 0.258294 
 Support: 0.933333 
-DPT: 69876409.454943 
-Normal Defence: -0.086106 
-Super Attack Defence: -0.025325 
+DPT No Look Ahead: 88524595.635222 
+DPT Look Ahead: 88462391.448482 
+Normal Defence No Look Ahead: -0.006648 
+Normal Defence Look Ahead: -0.006648 
+Super Attack Defence No Look Ahead: -0.025325 
+Super Attack Defence Look Ahead: -0.025325 
 Slot Bonus: 0.333333 
 
-Form # 1 / State # 4 / Turn # 9 
+Form # 1 / State # 4 / Turn # 8 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -45,12 +54,15 @@ HP: 15400.0
 Useability: 0.73978 
 Healing: 0.258294 
 Support: 0.933333 
-DPT: 73934813.605255 
-Normal Defence: -0.247349 
-Super Attack Defence: -0.033573 
+DPT No Look Ahead: 74046458.443328 
+DPT Look Ahead: 73934813.605255 
+Normal Defence No Look Ahead: -0.008813 
+Normal Defence Look Ahead: -0.247349 
+Super Attack Defence No Look Ahead: -0.033573 
+Super Attack Defence Look Ahead: -0.033573 
 Slot Bonus: 0.333333 
 
-Form # 1 / State # 5 / Turn # 12 
+Form # 1 / State # 5 / Turn # 11 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -58,12 +70,15 @@ HP: 15400.0
 Useability: 0.73978 
 Healing: 0.258294 
 Support: 0.933333 
-DPT: 81088279.024902 
-Normal Defence: -0.247349 
-Super Attack Defence: -0.033573 
+DPT No Look Ahead: 81199923.862974 
+DPT Look Ahead: 81088279.024902 
+Normal Defence No Look Ahead: -0.008813 
+Normal Defence Look Ahead: -0.247349 
+Super Attack Defence No Look Ahead: -0.033573 
+Super Attack Defence Look Ahead: -0.033573 
 Slot Bonus: 0.333333 
 
-Form # 1 / State # 6 / Turn # 15 
+Form # 1 / State # 6 / Turn # 14 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -71,12 +86,15 @@ HP: 15400.0
 Useability: 0.73978 
 Healing: 0.258294 
 Support: 0.933333 
-DPT: 88241744.444548 
-Normal Defence: -0.247349 
-Super Attack Defence: -0.033573 
+DPT No Look Ahead: 88353389.282621 
+DPT Look Ahead: 88241744.444548 
+Normal Defence No Look Ahead: -0.008813 
+Normal Defence Look Ahead: -0.247349 
+Super Attack Defence No Look Ahead: -0.033573 
+Super Attack Defence Look Ahead: -0.033573 
 Slot Bonus: 0.333333 
 
-Form # 1 / State # 7 / Turn # 18 
+Form # 1 / State # 7 / Turn # 17 
  
 Leader Skill: 9.0 
 SBR: 0.0 
@@ -84,8 +102,27 @@ HP: 15400.0
 Useability: 0.73978 
 Healing: 0.258294 
 Support: 0.933333 
-DPT: 95395209.864195 
-Normal Defence: -0.247349 
-Super Attack Defence: -0.033573 
+DPT No Look Ahead: 95506854.702267 
+DPT Look Ahead: 95395209.864195 
+Normal Defence No Look Ahead: -0.008813 
+Normal Defence Look Ahead: -0.247349 
+Super Attack Defence No Look Ahead: -0.033573 
+Super Attack Defence Look Ahead: -0.033573 
 Slot Bonus: 0.333333 
+
+Form # 1 / State # 8 / Turn # 20 
+ 
+Leader Skill: 9.0 
+SBR: 0.0 
+HP: 15400.0 
+Useability: 0.73978 
+Healing: 0.258294 
+Support: 0.933333 
+DPT No Look Ahead: 72078627.115027 
+DPT Look Ahead: 72001277.487981 
+Normal Defence No Look Ahead: -0.302952 
+Normal Defence Look Ahead: -0.304339 
+Super Attack Defence No Look Ahead: -0.041966 
+Super Attack Defence Look Ahead: -0.041966 
+Slot Bonus: 0.5 
 

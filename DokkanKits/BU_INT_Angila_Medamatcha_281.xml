@@ -269,6 +269,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="What is the chance for this to become a super?" response="0.7" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_1>
 				<ability_2>
 					<input prompt="How many turns does the buff last?" response="99" />
@@ -278,6 +279,7 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 					<input prompt="What is the chance for this to become a super?" response="0.5" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_2>
 			</after_perform_attack>
 			<after_x_attacks_in_battle>
