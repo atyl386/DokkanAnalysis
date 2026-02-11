@@ -151,6 +151,9 @@ class Banner:
 
 
 SummonRatings()
+FanMeetUp = Banner([336, 325, 23, 22, 451, 417], "Cyan", discount=5/3)
+print(FanMeetUp.summonRatings)
+print(FanMeetUp.summonScore)
 SS4DaimaGokuAdult = Banner([450, 448, 374, 327, 2, 253, 81, 320, 321, 343], "red", threePlus1=True)
 print(SS4DaimaGokuAdult.summonRatings)
 print(SS4DaimaGokuAdult.summonScore)
