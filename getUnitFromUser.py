@@ -6,7 +6,6 @@ import click as clc
 import glob
 
 # TODO:
-# Make sure links are all being added correctly to state
 # Make support section of input .xml if not used, uses the default support values
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
