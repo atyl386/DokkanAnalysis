@@ -2508,7 +2508,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="CRT" />
 		<slots value="[2, 2, 3, 3, 3, 3, 3, 2, 2, 2]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_279>
 	<_280>
 		<common_name value="F2P_TEQ_Oolong_Launch" />
@@ -2967,7 +2967,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[1, 2, 3, 3, 3, 3, 1, 1, 1, 1]" />
-		<eval value="True" />
+		<eval value="False" />
 	</_330>
 	<_331>
 		<common_name value="DFLR_INT_Super_Saiyan_Goku" />

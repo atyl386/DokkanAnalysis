@@ -151,9 +151,12 @@ class Banner:
 
 
 SummonRatings()
-FanMeetUp = Banner([336, 325, 23, 22, 451, 417], "Cyan", discount=5/3)
-print(FanMeetUp.summonRatings)
-print(FanMeetUp.summonScore)
+SS4Duo = Banner([458, 457, 386, 337, 3, 246, 66, 45, 38, 456], "red", threePlus1=True)
+print(SS4Duo.summonRatings)
+print(SS4Duo.summonScore)
+ToPDuo = Banner([459, 387, 326, 254, 67, 64, 313, 376, 334, 141], "cyan", threePlus1=True)
+print(ToPDuo.summonRatings)
+print(ToPDuo.summonScore)
 SS4DaimaGokuAdult = Banner([450, 448, 374, 327, 2, 253, 81, 320, 321, 343], "red", threePlus1=True)
 print(SS4DaimaGokuAdult.summonRatings)
 print(SS4DaimaGokuAdult.summonScore)
