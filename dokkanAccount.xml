@@ -4130,4 +4130,13 @@
 		<slots value="[2, 2, 2, 3, 2, 2, 2, 2, 2, 1]" />
 		<eval value="True" />
 	</_458>
+	<_459>
+		<common_name value="CLR_PHY_UI_Goku_SSGSSE_Vegeta" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+		<eval value="True" />
+	</_459>
 </id>
