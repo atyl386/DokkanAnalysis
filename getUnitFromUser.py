@@ -887,6 +887,9 @@ class Form:
                 self,
                 "How many different buffs does the form get until recieving an attack?",
                 UntilAttackRecieved,
+                ["What slots are required?"],
+                [None],
+                ["[1, 2, 3]"],
             )
         )
         self.unit.inputHelper.parent = self.unit.inputHelper.getChildElement(self.formElement, "per_attack_received")
@@ -4099,45 +4102,47 @@ class AfterAttackReceivedOrEvaded(AfterEvent):
 
 
 class UntilEvent(PassiveAbility):
-    def __init__(self, form, activationProbability, knownApriori, effect, buff):
+    def __init__(self, form, activationProbability, knownApriori, effect, buff, slots):
         super().__init__(form, activationProbability, knownApriori, effect, buff)
         self.eventFactor = 1
+        self.slots = slots  
 
 
 class UntilAttackRecieved(UntilEvent):
     def __init__(self, form, activationProbability, knownApriori, effect, buff, args=[]):
-        super().__init__(form, activationProbability, knownApriori, effect, buff)
+        super().__init__(form, activationProbability, knownApriori, effect, buff, literal_eval(str(args[0])))
 
     def applyToState(self, state):
-        if self.effect in state.buff.keys():
-            state.buff[self.effect] += self.effectiveBuff
-        else:
-            match self.effect:
-                case "DEF":
-                    state.p2Buff["DEF"] += self.effectiveBuff
-                    state.defBuffStatuses[("DEF", "Receive")][0] -= self.effectiveBuff
-                case "Evasion":
-                    state.multiChanceBuff["EvasionA"].updateChance(
-                        "Start of Turn", self.effectiveBuff, "EvasionA", state
-                    )
-                    state.multiChanceBuff["EvasionB"].updateChance(
-                        "Start of Turn", self.effectiveBuff, "EvasionB", state
-                    )
-                    state.defBuffStatuses[("Evasion", "Receive")][0] -= self.effectiveBuff
-                case "P2 DEF B":
-                    state.p2DefB += self.effectiveBuff
-                    state.defBuffStatuses[("DEF", "Receive")][0] -= self.effectiveBuff
-                case "Guard":
-                    state.guard += self.effectiveBuff
-                    state.defBuffStatuses[("Guard", "Receive")][0] -= self.effectiveBuff
-                case "Dmg Red":
-                    state.dmgRedSuperA += self.effectiveBuff
-                    state.dmgRedSuperB += self.effectiveBuff
-                    state.dmgRedNormalA += self.effectiveBuff
-                    state.dmgRedNormalB += self.effectiveBuff
-                    state.defBuffStatuses[("DmgRed", "Receive")][0] -= self.effectiveBuff
-                case _:
-                    raise Exception(f"{self.effect} Until Attack Evaded Buff Effect not implemented!")
+        if state.slot in self.slots:
+            if self.effect in state.buff.keys():
+                state.buff[self.effect] += self.effectiveBuff
+            else:
+                match self.effect:
+                    case "DEF":
+                        state.p2Buff["DEF"] += self.effectiveBuff
+                        state.defBuffStatuses[("DEF", "Receive")][0] -= self.effectiveBuff
+                    case "Evasion":
+                        state.multiChanceBuff["EvasionA"].updateChance(
+                            "Start of Turn", self.effectiveBuff, "EvasionA", state
+                        )
+                        state.multiChanceBuff["EvasionB"].updateChance(
+                            "Start of Turn", self.effectiveBuff, "EvasionB", state
+                        )
+                        state.defBuffStatuses[("Evasion", "Receive")][0] -= self.effectiveBuff
+                    case "P2 DEF B":
+                        state.p2DefB += self.effectiveBuff
+                        state.defBuffStatuses[("DEF", "Receive")][0] -= self.effectiveBuff
+                    case "Guard":
+                        state.guard += self.effectiveBuff
+                        state.defBuffStatuses[("Guard", "Receive")][0] -= self.effectiveBuff
+                    case "Dmg Red":
+                        state.dmgRedSuperA += self.effectiveBuff
+                        state.dmgRedSuperB += self.effectiveBuff
+                        state.dmgRedNormalA += self.effectiveBuff
+                        state.dmgRedNormalB += self.effectiveBuff
+                        state.defBuffStatuses[("DmgRed", "Receive")][0] -= self.effectiveBuff
+                    case _:
+                        raise Exception(f"{self.effect} Until Attack Evaded Buff Effect not implemented!")
 
 
 class ForFirstTargtedAttack(PassiveAbility):
@@ -4551,4 +4556,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(456, "DF_INT_SSGSS_Vegeta", 5, "ATK", "ADD", "CRT", [1, 1, 3, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(45, "DF_TEQ_GT_Pan", 5, "ATK", "ADD", "CRT", [1, 1, 3, 3, 3, 3, 3, 3, 3, 3], "True")

@@ -402,7 +402,7 @@
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
 		<slots value="[2, 2, 3, 3, 3, 3, 3, 3, 1, 1]" />
-		<eval value="False" />
+		<eval value="True" />
 	</_45>
 	<_46>
 		<common_name value="DF_AGL_Transforming_Cell" />

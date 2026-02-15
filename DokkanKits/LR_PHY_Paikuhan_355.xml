@@ -604,11 +604,13 @@
 					<input prompt="What type of buff does the unit get?" response="Ki" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="3.0" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_1>
 				<ability_2>
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
+					<input prompt="What slots are required?" response="[1, 2, 3]" />
 				</ability_2>
 			</until_recieve_attack>
 			<first_targeted_attack>
