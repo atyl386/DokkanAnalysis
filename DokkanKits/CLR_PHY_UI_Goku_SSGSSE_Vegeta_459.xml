@@ -126,7 +126,7 @@
 								<input prompt="How much ki is required?" response="24" />
 								<ex_super_attack_variations>
 									<ex_super_attack_variation_1>
-										<input prompt="How many effects does this form's EX super attack have?" response="2" />
+										<input prompt="How many effects does this form's EX super attack have?" response="3" />
 										<ex_super_attack_variation_1_effects>
 											<ex_super_attack_variation_1_effect_1>
 												<input prompt="What type of effect does the unit get on super?" response="ATK" />
@@ -140,6 +140,12 @@
 												<input prompt="What is the value of the buff?" response="0.5" />
 												<input prompt="How many turns does it last for?" response="3" />
 											</ex_super_attack_variation_1_effect_2>
+											<ex_super_attack_variation_1_effect_3>
+												<input prompt="What type of effect does the unit get on super?" response="Evasion" />
+												<input prompt="What is the probability this effect activates when supering?" response="1.0" />
+												<input prompt="What is the value of the buff?" response="1.0" />
+												<input prompt="How many turns does it last for?" response="1" />
+											</ex_super_attack_variation_1_effect_3>
 										</ex_super_attack_variation_1_effects>
 									</ex_super_attack_variation_1>
 								</ex_super_attack_variations>
