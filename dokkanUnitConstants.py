@@ -1589,6 +1589,18 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 1200, 0, 0, 0.06],
         "GLD": [900, 0, 0.12, 0, 0],
     },
+    # DFLR INT SS4 Vegeta Goku
+    "458" : {
+        "BRZ": [700, 0, 0, 0, 0],
+        "SLV": [0, 1200, 0, 0, 0.06],
+        "GLD": [900, 0, 0.12, 0, 0],
+    },
+    # CLR PHY UI Goku SSGSSE Vegeta
+    "459" : {
+        "BRZ": [700, 0, 0, 0, 0],
+        "SLV": [0, 0, 0, 0.10, 0],
+        "GLD": [900, 0, 0.12, 0, 0],
+    },
 }
 
 FIXED_SLOT_UNITS = {
