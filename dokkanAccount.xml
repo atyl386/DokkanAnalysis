@@ -4124,10 +4124,10 @@
 	<_458>
 		<common_name value="DFLR_INT_SS4_Vegeta_Goku" />
 		<num_copies value="0" />
-		<BRZ_equip value="ATK" />
-		<HiPo_choice_1 value="DGE" />
-		<HiPo_choice_2 value="CRT" />
-		<slots value="[1, 2, 2, 2, 1, 1, 1, 1, 1, 1]" />
+		<BRZ_equip value="DEF" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="DGE" />
+		<slots value="[3, 3, 3, 2, 2, 2, 2, 2, 1, 1]" />
 		<eval value="True" />
 	</_458>
 </id>
