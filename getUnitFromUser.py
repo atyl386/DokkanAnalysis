@@ -4320,42 +4320,41 @@ class KiSphereDependent(PerEvent):
                     [poisson.cdf(self.required - 1, state.orbCollection.getNumCategoryOrbs(self.orbType))]
                 )
         buffToGo = self.max - self.applied
-        cappedTurnBuff = min(buffToGo, self.effectiveBuff, key=abs)
-        buffFromOrbs = cappedTurnBuff * effectFactor
+        cappedTurnBuff = min(buffToGo, self.effectiveBuff * effectFactor, key=abs)
         if self.effect in REGULAR_SUPPORT_EFFECTS:
             state.support += (
-                supportFactorConversion[self.effect] * min(buffToGo, self.supportBuff[state.slot - 1]) * effectFactor
+                supportFactorConversion[self.effect] * min(buffToGo, self.supportBuff[state.slot - 1] * effectFactor) 
             )
         elif self.effect in state.buff.keys():
-            state.buff[self.effect] += buffFromOrbs
+            state.buff[self.effect] += cappedTurnBuff
         elif self.effect in state.p1Buff.keys():
-            state.p1Buff[self.effect] += buffFromOrbs
+            state.p1Buff[self.effect] += cappedTurnBuff
         elif self.effect in MULTI_CHANCE_EFFECTS_NO_NULLIFY:
-            state.multiChanceBuff[self.effect].updateChance("Start of Turn", buffFromOrbs, self.effect, state)
+            state.multiChanceBuff[self.effect].updateChance("Start of Turn", cappedTurnBuff, self.effect, state)
         else:
             match self.effect:
                 case "Evasion":
-                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", buffFromOrbs, "EvasionA", state)
-                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", buffFromOrbs, "EvasionB", state)
+                    state.multiChanceBuff["EvasionA"].updateChance("Start of Turn", cappedTurnBuff, "EvasionA", state)
+                    state.multiChanceBuff["EvasionB"].updateChance("Start of Turn", cappedTurnBuff, "EvasionB", state)
                 case "Dmg Red against Normals":
-                    state.dmgRedNormalA += buffFromOrbs
-                    state.dmgRedNormalB += buffFromOrbs
+                    state.dmgRedNormalA += cappedTurnBuff
+                    state.dmgRedNormalB += cappedTurnBuff
                 case "Dmg Red against Supers":
-                    state.dmgRedSuperA += buffFromOrbs
-                    state.dmgRedSuperB += buffFromOrbs
+                    state.dmgRedSuperA += cappedTurnBuff
+                    state.dmgRedSuperB += cappedTurnBuff
                 case "Guard":
-                    state.guard += buffFromOrbs
+                    state.guard += cappedTurnBuff
                 case "Dmg Red":
-                    state.dmgRedSuperA += buffFromOrbs
-                    state.dmgRedSuperB += buffFromOrbs
-                    state.dmgRedNormalA += buffFromOrbs
-                    state.dmgRedNormalB += buffFromOrbs
+                    state.dmgRedSuperA += cappedTurnBuff
+                    state.dmgRedSuperB += cappedTurnBuff
+                    state.dmgRedNormalA += cappedTurnBuff
+                    state.dmgRedNormalB += cappedTurnBuff
                 case "Dmg Red A":
-                    state.dmgRedSuperA += buffFromOrbs
-                    state.dmgRedNormalA += buffFromOrbs
+                    state.dmgRedSuperA += cappedTurnBuff
+                    state.dmgRedNormalA += cappedTurnBuff
                 case "Dmg Red B":
-                    state.dmgRedSuperB += buffFromOrbs
-                    state.dmgRedNormalB += buffFromOrbs
+                    state.dmgRedSuperB += cappedTurnBuff
+                    state.dmgRedNormalB += cappedTurnBuff
                 case "AdditionalSuper":
                     state.aaPSuper.append(effectFactor)
                     state.aaPGuarantee.append(0)
@@ -4363,16 +4362,16 @@ class KiSphereDependent(PerEvent):
                     state.aaPGuarantee.append(effectFactor)
                     state.aaPSuper.append(effectFactor * self.superChance)
                 case "P2 ATK":
-                    state.p2Buff["ATK"] += buffFromOrbs
+                    state.p2Buff["ATK"] += cappedTurnBuff
                 case "P2 DEF B":
-                    state.p2DefB += buffFromOrbs
+                    state.p2DefB += cappedTurnBuff
                 case "P2 DEF":
-                    state.p2Buff["DEF"] += buffFromOrbs
+                    state.p2Buff["DEF"] += cappedTurnBuff
                 case _:
                     raise Exception(f"{self.effect} Ki Sphere dependent Buff Effect not implemented!")
         if not (yesNo2Bool[self.withinTheSameTurn]):
-            state.form.carryOverBuffs[self.effect].add(buffFromOrbs)
-            self.applied += buffFromOrbs
+            state.form.carryOverBuffs[self.effect].add(cappedTurnBuff)
+            self.applied += cappedTurnBuff
 
 
 class Nullification(PassiveAbility):
@@ -4556,4 +4555,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(38, "DF_INT_RoF_Blues", 5, "ATK", "ADD", "CRT", [1, 1, 3, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(38, "DF_INT_RoF_Blues", 5, "DEF", "DGE", "ADD", [2, 2, 2, 3, 2, 2, 2, 2, 2, 2], "True")
