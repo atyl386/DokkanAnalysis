@@ -4556,4 +4556,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(459, "CLR_PHY_UI_Goku_SSGSSE_Vegeta", 5, "ATK", "ADD", "CRT", [1, 1, 3, 3, 3, 3, 3, 3, 3, 3], "True")
+    unit = Unit(38, "DF_INT_RoF_Blues", 5, "ATK", "ADD", "CRT", [1, 1, 3, 3, 3, 3, 3, 3, 3, 3], "True")

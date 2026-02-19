@@ -335,11 +335,11 @@
 	<_38>
 		<common_name value="DF_INT_RoF_Blues" />
 		<num_copies value="1" />
-		<BRZ_equip value="DGE" />
+		<BRZ_equip value="DEF" />
 		<HiPo_choice_1 value="DGE" />
 		<HiPo_choice_2 value="ADD" />
-		<slots value="[2, 3, 3, 3, 3, 3, 3, 2, 1, 1]" />
-		<eval value="False" />
+		<slots value="[2, 2, 2, 3, 2, 2, 2, 2, 2, 2]" />
+		<eval value="True" />
 	</_38>
 	<_39>
 		<common_name value="DF_STR_Goku_Gohan_Exchange" />
