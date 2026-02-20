@@ -88,13 +88,13 @@ Healing: 0.059234
 Support: 0.258333 
 DPT No Look Ahead: 10461827.33996 
 DPT Look Ahead: 9171114.224508 
-Normal Defence No Look Ahead: -1.032895 
-Normal Defence Look Ahead: -1.032895 
-Super Attack Defence No Look Ahead: -0.116876 
-Super Attack Defence Look Ahead: -0.116876 
-Slot Bonus: 0.333333 
+Normal Defence No Look Ahead: -1.206749 
+Normal Defence Look Ahead: -1.206749 
+Super Attack Defence No Look Ahead: -0.146095 
+Super Attack Defence Look Ahead: -0.146095 
+Slot Bonus: 0.5 
 
-Form # 4 / State # 7 / Turn # 15 
+Form # 4 / State # 7 / Turn # 14 
  
 Leader Skill: 10.0 
 SBR: 0.0 
@@ -104,13 +104,13 @@ Healing: 0.085403
 Support: 0.258333 
 DPT No Look Ahead: 10461827.33996 
 DPT Look Ahead: 9171114.224508 
-Normal Defence No Look Ahead: -1.032895 
-Normal Defence Look Ahead: -1.032895 
-Super Attack Defence No Look Ahead: -0.116876 
-Super Attack Defence Look Ahead: -0.116876 
-Slot Bonus: 0.333333 
+Normal Defence No Look Ahead: -1.206749 
+Normal Defence Look Ahead: -1.206749 
+Super Attack Defence No Look Ahead: -0.146095 
+Super Attack Defence Look Ahead: -0.146095 
+Slot Bonus: 0.5 
 
-Form # 4 / State # 8 / Turn # 18 
+Form # 4 / State # 8 / Turn # 16 
  
 Leader Skill: 10.0 
 SBR: 0.0 
@@ -126,7 +126,7 @@ Super Attack Defence No Look Ahead: -0.379848
 Super Attack Defence Look Ahead: -0.379848 
 Slot Bonus: 1.0 
 
-Form # 4 / State # 9 / Turn # 20 
+Form # 4 / State # 9 / Turn # 18 
  
 Leader Skill: 10.0 
 SBR: 0.0 
@@ -141,4 +141,20 @@ Normal Defence Look Ahead: -0.428685
 Super Attack Defence No Look Ahead: -0.379848 
 Super Attack Defence Look Ahead: -0.379848 
 Slot Bonus: 1.0 
+
+Form # 4 / State # 10 / Turn # 20 
+ 
+Leader Skill: 10.0 
+SBR: 0.0 
+HP: 20598.0 
+Useability: 1.68614 
+Healing: 0.17925 
+Support: 0.258333 
+DPT No Look Ahead: 10461827.33996 
+DPT Look Ahead: 9171114.224508 
+Normal Defence No Look Ahead: -0.309756 
+Normal Defence Look Ahead: -0.969211 
+Super Attack Defence No Look Ahead: -0.146095 
+Super Attack Defence Look Ahead: -0.146095 
+Slot Bonus: 0.5 
 
