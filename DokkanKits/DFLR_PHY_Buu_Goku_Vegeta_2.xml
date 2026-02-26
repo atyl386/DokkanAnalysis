@@ -121,7 +121,7 @@
 				</ability_3>
 			</default>
 			<turn_dpendent>
-				<input prompt="How many turn dependent buffs does the form have?" response="3" />
+				<input prompt="How many turn dependent buffs does the form have?" response="4" />
 				<ability_1>
 					<input prompt="What turn does the buff start from?" response="1" />
 					<input prompt="What turn does the buff end on (last turn active)?" response="2" />
@@ -143,6 +143,13 @@
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_3>
+				<ability_4>
+					<input prompt="What turn does the buff start from?" response="1" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="2" />
+					<input prompt="What type of buff does the unit get?" response="P2 DEF" />
+					<input prompt="What is the probability this ability activates?" response="1.0" />
+					<input prompt="What is the value of the buff?" response="0.5" />
+				</ability_4>
 			</turn_dpendent>
 			<slot_dependent>
 				<input prompt="How many slot specific buffs does the form have?" response="3" />
@@ -238,7 +245,7 @@
 				<ability_1>
 					<input prompt="How many turns does the buff last?" response="99" />
 					<input prompt="How many attacks received are required?" response="0" />
-					<input prompt="Does the buff start from the next attacking turn?" response="N" />
+					<input prompt="Does the buff start from the next attacking turn?" response="Y" />
 					<input prompt="What slots are required?" response="[1, 2, 3]" />
 					<input prompt="Requires super attack?" response="N" />
 					<input prompt="What type of buff does the unit get?" response="DEF" />
