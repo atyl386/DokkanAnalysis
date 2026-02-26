@@ -1033,9 +1033,9 @@ HIPO_SPECIAL_EQUIPS = {
     },
     # STR GT Goku & Vegeta
     "3" : {
-        "BRZ": [0, 900, 0, 0, 0],
+        "BRZ": [700, 0, 0, 0, 0],
         "SLV": [0, 1200, 0, 0, 0.06],
-        "GLD": [0, 0, 0.04, 0, 0.05]
+        "GLD": [0, 0, 0.12, 0.12, 0]
     },
     # INT CLR Kid Gohan
     "22" : {
