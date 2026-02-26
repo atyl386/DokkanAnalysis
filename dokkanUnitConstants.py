@@ -1026,17 +1026,17 @@ HIPO_SPECIAL_EQUIPS = {
         "GLD": [0, 600, 0.12, 0, 0]
     },
     # PHY Buu Goku & Vegeta
-    #"2" : {
-    #    "BRZ": [0, 900, 0, 0, 0],
-    #    "SLV": [0, 1200, 0, 0, 0.06],
-    #    "GLD": [0, 0, 0.12, 0.12, 0]
-    #},
+    "2" : {
+        "BRZ": [0, 900, 0, 0, 0],
+        "SLV": [0, 1200, 0, 0, 0.06],
+        "GLD": [0, 0, 0.04, 0, 0.05]
+    },
     # STR GT Goku & Vegeta
-    #"3" : {
-    #    "BRZ": [0, 900, 0, 0, 0],
-    #    "SLV": [0, 1200, 0, 0, 0.06],
-    #    "GLD": [0, 0, 0.12, 0.12, 0]
-    #},
+    "3" : {
+        "BRZ": [0, 900, 0, 0, 0],
+        "SLV": [0, 1200, 0, 0, 0.06],
+        "GLD": [0, 0, 0.04, 0, 0.05]
+    },
     # INT CLR Kid Gohan
     "22" : {
         "BRZ": [0, 900, 0, 0, 0],
@@ -1604,6 +1604,7 @@ HIPO_SPECIAL_EQUIPS = {
 }
 
 FIXED_SLOT_UNITS = {
+    2: "DFLR STR GT Goku Vegeta", # Need Slot 1 second turn as is slot dependent but modelled as turn dependent
     19: "DF PHY Kid Goku", # Slot 3 so can get special per orb buffs
     121: "LR AGL Golden Frieza", # Slot 2 & 3 special buffs
     356: "BU AGL Piccolo", # Slot 3 Only after turn 5 as is also a turn dependent buff
