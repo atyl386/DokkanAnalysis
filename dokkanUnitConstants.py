@@ -25,8 +25,8 @@ YES_NO = ["Y", "N"]
 
 # Enemy Crit
 
-ENEMY_SUPER_AVG_CRIT_DEF_DEBUFF = 0.3 # Not constant, should update to whatever it is for the strongest boss with crit
-ENEMY_NORMAL_AVG_CRIT_DEF_DEBUFF = 1 # Not constant, should update to whatever it is for the strongest boss with crit
+ENEMY_SUPER_AVG_CRIT_DEF_DEBUFF = 1
+ENEMY_NORMAL_AVG_CRIT_DEF_DEBUFF = 1
 ENEMY_SUPER_CRIT_CHANCE = 0.2 # 10th Anniversary Goku & Vegeta Story Red Zone last 3 stages
 ENEMY_NORMAL_CRIT_CHANCE = 0.05
 
