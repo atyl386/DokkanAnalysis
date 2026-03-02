@@ -25,7 +25,7 @@ Support: 0.25
 DPT No Look Ahead: 47698868.263531 
 DPT Look Ahead: 47523088.471531 
 Normal Defence No Look Ahead: 0.0 
-Normal Defence Look Ahead: 0.0 
+Normal Defence Look Ahead: -0.180323 
 Super Attack Defence No Look Ahead: -0.153451 
 Super Attack Defence Look Ahead: -0.153451 
 Slot Bonus: 1.0 
@@ -41,7 +41,7 @@ Support: 0.25
 DPT No Look Ahead: 47698868.263531 
 DPT Look Ahead: 45659590.311873 
 Normal Defence No Look Ahead: 0.0 
-Normal Defence Look Ahead: 0.0 
+Normal Defence Look Ahead: -0.176656 
 Super Attack Defence No Look Ahead: -0.153451 
 Super Attack Defence Look Ahead: -0.153451 
 Slot Bonus: 1.0 
@@ -57,7 +57,7 @@ Support: 0.25
 DPT No Look Ahead: 99116952.091309 
 DPT Look Ahead: 99116952.091309 
 Normal Defence No Look Ahead: 0.0 
-Normal Defence Look Ahead: 0.0 
+Normal Defence Look Ahead: -0.172989 
 Super Attack Defence No Look Ahead: -0.153451 
 Super Attack Defence Look Ahead: -0.153451 
 Slot Bonus: 1.0 
@@ -72,8 +72,8 @@ Healing: 1.0
 Support: 0.25 
 DPT No Look Ahead: 28767755.457946 
 DPT Look Ahead: 26266023.305724 
-Normal Defence No Look Ahead: -0.089812 
-Normal Defence Look Ahead: -0.649687 
+Normal Defence No Look Ahead: -0.533744 
+Normal Defence Look Ahead: -0.883154 
 Super Attack Defence No Look Ahead: -0.059019 
 Super Attack Defence Look Ahead: -0.059019 
 Slot Bonus: 0.5 
@@ -88,8 +88,8 @@ Healing: 0.71903
 Support: 0.25 
 DPT No Look Ahead: 29620129.522575 
 DPT Look Ahead: 27296512.232776 
-Normal Defence No Look Ahead: -0.257403 
-Normal Defence Look Ahead: -1.04781 
+Normal Defence No Look Ahead: -1.04781 
+Normal Defence Look Ahead: -2.020776 
 Super Attack Defence No Look Ahead: -0.153451 
 Super Attack Defence Look Ahead: -0.153451 
 Slot Bonus: 1.0 
@@ -104,8 +104,8 @@ Healing: 0.776519
 Support: 0.25 
 DPT No Look Ahead: 29620129.522575 
 DPT Look Ahead: 27296512.232776 
-Normal Defence No Look Ahead: 0.0 
-Normal Defence Look Ahead: -0.891194 
+Normal Defence No Look Ahead: -0.738061 
+Normal Defence Look Ahead: -1.205151 
 Super Attack Defence No Look Ahead: -0.153451 
 Super Attack Defence Look Ahead: -0.153451 
 Slot Bonus: 1.0 
@@ -121,7 +121,7 @@ Support: 0.25
 DPT No Look Ahead: 29620129.522575 
 DPT Look Ahead: 27296512.232776 
 Normal Defence No Look Ahead: 0.0 
-Normal Defence Look Ahead: 0.0 
+Normal Defence Look Ahead: -1.04781 
 Super Attack Defence No Look Ahead: -0.153451 
 Super Attack Defence Look Ahead: -0.153451 
 Slot Bonus: 1.0 
@@ -137,7 +137,7 @@ Support: 0.25
 DPT No Look Ahead: 29620129.522575 
 DPT Look Ahead: 27296512.232776 
 Normal Defence No Look Ahead: 0.0 
-Normal Defence Look Ahead: 0.0 
+Normal Defence Look Ahead: -0.321181 
 Super Attack Defence No Look Ahead: -0.153451 
 Super Attack Defence Look Ahead: -0.153451 
 Slot Bonus: 1.0 

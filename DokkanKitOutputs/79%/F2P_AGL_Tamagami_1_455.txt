@@ -25,7 +25,7 @@ Support: 1.0
 DPT No Look Ahead: 6798762.829705 
 DPT Look Ahead: 6748007.432629 
 Normal Defence No Look Ahead: 0.0 
-Normal Defence Look Ahead: 0.0 
+Normal Defence Look Ahead: -0.150154 
 Super Attack Defence No Look Ahead: -0.167891 
 Super Attack Defence Look Ahead: -0.174681 
 Slot Bonus: 1.0 
@@ -40,8 +40,8 @@ Healing: 0.091699
 Support: 1.5 
 DPT No Look Ahead: 26914903.005182 
 DPT Look Ahead: 24199523.27201 
-Normal Defence No Look Ahead: -0.002276 
-Normal Defence Look Ahead: -0.031626 
+Normal Defence No Look Ahead: -0.024016 
+Normal Defence Look Ahead: -0.057714 
 Super Attack Defence No Look Ahead: -0.13991 
 Super Attack Defence Look Ahead: -0.13991 
 Slot Bonus: 0.5 
@@ -56,8 +56,8 @@ Healing: 0.106983
 Support: 1.5 
 DPT No Look Ahead: 26915037.103654 
 DPT Look Ahead: 18246882.056679 
-Normal Defence No Look Ahead: -0.007546 
-Normal Defence Look Ahead: -0.042766 
+Normal Defence No Look Ahead: -0.040157 
+Normal Defence Look Ahead: -0.081899 
 Super Attack Defence No Look Ahead: -0.13991 
 Super Attack Defence Look Ahead: -0.13991 
 Slot Bonus: 0.5 
@@ -72,8 +72,8 @@ Healing: 0.122267
 Support: 1.5 
 DPT No Look Ahead: 26914903.005182 
 DPT Look Ahead: 18246739.753656 
-Normal Defence No Look Ahead: 0.0 
-Normal Defence Look Ahead: -0.018685 
+Normal Defence No Look Ahead: -0.016076 
+Normal Defence Look Ahead: -0.057818 
 Super Attack Defence No Look Ahead: -0.13991 
 Super Attack Defence Look Ahead: -0.13991 
 Slot Bonus: 0.5 
@@ -89,7 +89,7 @@ Support: 1.5
 DPT No Look Ahead: 26914903.005182 
 DPT Look Ahead: 18246739.753656 
 Normal Defence No Look Ahead: 0.0 
-Normal Defence Look Ahead: 0.0 
+Normal Defence Look Ahead: -0.033739 
 Super Attack Defence No Look Ahead: -0.13991 
 Super Attack Defence Look Ahead: -0.13991 
 Slot Bonus: 0.5 
@@ -105,7 +105,7 @@ Support: 1.5
 DPT No Look Ahead: 26914903.005182 
 DPT Look Ahead: 18246739.753656 
 Normal Defence No Look Ahead: 0.0 
-Normal Defence Look Ahead: 0.0 
+Normal Defence Look Ahead: -0.009659 
 Super Attack Defence No Look Ahead: -0.13991 
 Super Attack Defence Look Ahead: -0.13991 
 Slot Bonus: 0.5 

@@ -301,7 +301,7 @@ ENEMY_DMG_THRESHOLD_CHANCE = 0.5 # 10th Anniv Final Red Zone Stages
 ENEMY_DODGE_CHANCE = 0.05
 AVG_DAM_VARIANCE = 1.015
 MAX_T1_NORMAL_DAM = 3375000  # Artificial Life Forms Red Zone Bio Broly 2.25 * (2.5 * 0.2 + 1) = 3.375M
-MAX_NORMAL_DAM = 6750000  # Artificial Life Forms Red Zone Bio Broly 2.25 * (2 + 1) = 6.75M
+MAX_NORMAL_DAM = 8000000  # Supreme Magnificent Battle Re Goku & Frieza = 3.2 * 2.5 = 8M
 MAX_T1_SA_DAM = 11812500  # Artificial Life Forms Red Zone Bio Broly 7.875 * (2.5 * 0.2 + 1) = 11.8125M
 MAX_SA_DAM = 23625000  # Artificial Life Forms Red Zone Bio Broly 7.875 * (2 + 1) = 23.625M
 MAX_NORMAL_DAM_PER_TURN = (
