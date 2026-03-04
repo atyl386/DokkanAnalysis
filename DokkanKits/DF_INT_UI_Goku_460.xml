@@ -281,11 +281,16 @@
 				<input prompt="How many Super Attack Counterattack Finish Skills does the form have?" response="0" />
 			</sa_counter>
 			<form_1_change_condition>
-				<input prompt="How many conditions have to be met?" response="1" />
+				<input prompt="How many conditions have to be met?" response="2" />
+				<input prompt="What is the condition logic?" response="OR" />
 				<condition_1>
 					<input prompt="What type of condition is # 1?" response="Max HP" />
 					<input prompt="What is the maximum HP condition?" response="0.5" />
 				</condition_1>
+				<condition_2>
+					<input prompt="What type of condition is # 2?" response="TransformationTurn" />
+					<input prompt="What is the transformation turn condition (relative to the form's starting turn)?" response="4" />
+				</condition_2>
 			</form_1_change_condition>
 		</form_1>
 		<form_2>
@@ -405,29 +410,29 @@
 			<turn_dpendent>
 				<input prompt="How many turn dependent buffs does the form have?" response="4" />
 				<ability_1>
-					<input prompt="What turn does the buff start from?" response="10" />
-					<input prompt="What turn does the buff end on (last turn active)?" response="11" />
+					<input prompt="What turn does the buff start from?" response="4" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="5" />
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_1>
 				<ability_2>
-					<input prompt="What turn does the buff start from?" response="10" />
-					<input prompt="What turn does the buff end on (last turn active)?" response="11" />
+					<input prompt="What turn does the buff start from?" response="4" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="5" />
 					<input prompt="What type of buff does the unit get?" response="AdditionalSuper" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
 				</ability_2>
 				<ability_3>
-					<input prompt="What turn does the buff start from?" response="10" />
-					<input prompt="What turn does the buff end on (last turn active)?" response="13" />
+					<input prompt="What turn does the buff start from?" response="4" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="7" />
 					<input prompt="What type of buff does the unit get?" response="Evasion" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="0.1" />
 				</ability_3>
 				<ability_4>
-					<input prompt="What turn does the buff start from?" response="10" />
-					<input prompt="What turn does the buff end on (last turn active)?" response="13" />
+					<input prompt="What turn does the buff start from?" response="4" />
+					<input prompt="What turn does the buff end on (last turn active)?" response="7" />
 					<input prompt="What type of buff does the unit get?" response="Scouter" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="1.0" />
@@ -513,7 +518,7 @@
 					<input prompt="What type of buff does the unit get?" response="Ki Support" />
 					<input prompt="What is the probability this ability activates?" response="1.0" />
 					<input prompt="What is the value of the buff?" response="2.0" />
-					<input prompt="How many turns does the effect last for?" response="1" />
+					<input prompt="How many turns does the effect last for?" response="2" />
 				</ability_3>
 			</after_evade_attack>
 			<after_recieve_or_evade_attack>
