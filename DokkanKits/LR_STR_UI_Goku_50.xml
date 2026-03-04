@@ -40,7 +40,7 @@
 				</link_3>
 				<link_4>
 					<input prompt="What is the form's link # 4" response="Over in a Flash" />
-					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="0" />
+					<input prompt="If has an ideal linking partner, what is the chance this link is active?" response="1" />
 				</link_4>
 				<link_5>
 					<input prompt="What is the form's link # 5" response="Tournament of Power" />
