@@ -4115,9 +4115,9 @@
 	<_457>
 		<common_name value="BU_AGL_Ledgic" />
 		<num_copies value="0" />
-		<BRZ_equip value="DEF" />
-		<HiPo_choice_1 value="ADD" />
-		<HiPo_choice_2 value="DGE" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
 		<slots value="[3, 3, 1, 3, 3, 3, 3, 3, 3, 3]" />
 		<eval value="True" />
 	</_457>
@@ -4143,9 +4143,9 @@
 		<common_name value="DF_INT_UI_Goku" />
 		<num_copies value="5" />
 		<BRZ_equip value="ATK" />
-		<HiPo_choice_1 value="ADD" />
-		<HiPo_choice_2 value="CRT" />
-		<slots value="[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
+		<HiPo_choice_1 value="DGE" />
+		<HiPo_choice_2 value="ADD" />
+		<slots value="[1, 2, 2, 3, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_460>
 </id>
