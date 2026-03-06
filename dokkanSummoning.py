@@ -151,6 +151,9 @@ class Banner:
 
 
 SummonRatings()
+Dabura = Banner([462, 461, 424, 409, 460, 351, 282, 110, 311, 312], "red", gFeaturedEvery3=True, summonPoints=True)
+print(Dabura.summonRatings)
+print(Dabura.summonScore)
 SS4Duo = Banner([458, 457, 386, 337, 3, 246, 66, 45, 38, 456], "red", threePlus1=True)
 print(SS4Duo.summonRatings)
 print(SS4Duo.summonScore)
