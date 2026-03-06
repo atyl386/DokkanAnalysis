@@ -6,6 +6,7 @@ import click as clc
 import glob
 
 # TODO:
+# Yakon's guaranteed dodge is when he returns after being in slot 3
 # Make support section of input .xml if not used, uses the default support values
 # - For units that get important buffs next to a unit they will always be next to, should include those buffs in their kit
 # - Fix recievedOREvaded to use recievd and evaded attacks in atk calc
@@ -1655,7 +1656,6 @@ class State:
         self.useability = (
             self.form.unit.teams
             / NUM_CATEGORIES_PER_UNIT_MAX
-            * (1 + USEABILITY_SUPPORT_FACTOR * self.support + self.form.linkEffects["Commonality"])
         )
         sacrifcedHP = self.form.superAttacks["18 Ki"].getTotalBuff("Sacrifice HP") * self.pUSA + self.form.superAttacks["12 Ki"].getTotalBuff("Sacrifice HP") * self.pSA + self.form.superAttacks["AS"].getTotalBuff("Sacrifice HP") * self.aaSA
         attributeValues = [
@@ -4555,4 +4555,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(462, "DF_TEQ_Dabura", 5, "DEF", "DGE", "ADD", [2, 2, 2, 3, 2, 2, 2, 2, 2, 2], "True")
+    unit = Unit(462, "DF_TEQ_Dabura", 5, "DEF", "ADD", "CRT", [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], "True")
