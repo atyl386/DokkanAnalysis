@@ -4381,7 +4381,7 @@ class Nullification(PassiveAbility):
 
     def applyToState(self, state):
         if state.turn >= self.startTurn and state.turn <= self.endTurn:
-            pNullify = self.activationProbability * aprioriProbMod(saFracConversion[self.effect], True)
+            pNullify = self.activationProbability * saFracConversion[self.effect]
             state.buff["Heal"] += self.healthFrac * pNullify / NUM_SLOTS * AVG_SA_DAM / AVG_HEALTH
             if yesNo2Bool[self.hasCounter]:
                 state.multiChanceBuff["Nullify"].updateChance("SA Counter", pNullify, "Nullify", state)
