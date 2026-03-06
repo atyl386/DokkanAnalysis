@@ -4148,4 +4148,13 @@
 		<slots value="[3, 1, 1, 1, 1, 1, 1, 1, 1, 1]" />
 		<eval value="True" />
 	</_460>
+	<_461>
+		<common_name value="BU_STR_Yakon" />
+		<num_copies value="0" />
+		<BRZ_equip value="ATK" />
+		<HiPo_choice_1 value="ADD" />
+		<HiPo_choice_2 value="CRT" />
+		<slots value="[3, 3, 1, 3, 3, 3, 3, 3, 3, 3]" />
+		<eval value="True" />
+	</_461>
 </id>

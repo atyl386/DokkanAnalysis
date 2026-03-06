@@ -4555,4 +4555,4 @@ class CompositeCondition:
 
 
 if __name__ == "__main__":
-    unit = Unit(460, "DF_INT_UI_Goku", 5, "DEF", "DGE", "ADD", [2, 2, 2, 3, 2, 2, 2, 2, 2, 2], "True")
+    unit = Unit(461, "BU_STR_Yakon", 5, "DEF", "DGE", "ADD", [2, 2, 2, 3, 2, 2, 2, 2, 2, 2], "True")
