@@ -477,7 +477,6 @@ MAX_KI = [12, 24]
 # Support
 KI_SUPPORT = 1
 ATK_DEF_SUPPORT = 0.3
-USEABILITY_SUPPORT_FACTOR = 0.3
 KI_SUPPORT_FACTOR = 0.25  # Guess
 AVG_SOT_STATS = 3  # Guess
 AVG_P2_STATS = 2  # Guess
@@ -1601,6 +1600,12 @@ HIPO_SPECIAL_EQUIPS = {
         "SLV": [0, 0, 0, 0.10, 0],
         "GLD": [900, 0, 0.12, 0, 0],
     },
+    # DF TEQ Dabura
+    "462" : {
+        "BRZ": [0, 900, 0, 0, 0],
+        "SLV": [1200, 600, 0, 0, 0],
+        "GLD": [900, 0, 0.12, 0, 0],
+    },
 }
 
 FIXED_SLOT_UNITS = {
@@ -1611,4 +1616,5 @@ FIXED_SLOT_UNITS = {
     370: "LR STR Tien", # Alternating Slot 1 & 2 to maintain all turn buffs
     423: "BU PHY Piccolo Mini Daima", # Slot 3 only after turn 3 to get evasion buff
     444: "DF AGL Gohan Gamma 1", # Slot 1 only as gamma 2 units need to be in slot 2
+    461: "BU STR Yakon", # Slot 3 only after turn 3 to get evasion buff
 }
