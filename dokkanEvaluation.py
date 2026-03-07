@@ -256,7 +256,7 @@ if __name__ == "__main__":
         "Leader Skill": 2,
         "SBR": 1,
         "HP": 1.5,
-        "Useability": 9,
+        "Useability": 10,
         "Healing": 2,
         "Support": 6,
         "DPT No Look Ahead": 0,
