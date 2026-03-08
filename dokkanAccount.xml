@@ -22,2444 +22,2443 @@ EZA / SEZA date is assumed 3 years after initial release / EZA
 		<num_copies value="4" />
 		<release_date value="8/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_1>
 	<_2>
 		<common_name value="DFLR_PHY_Buu_Goku_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="2/26" />
 		<rating value="9" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_2>
 	<_3>
 		<common_name value="DFLR_STR_GT_Goku_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="2/26" />
 		<rating value="9" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_3>
 	<_4>
 		<common_name value="DFLR_TEQ_Fusion_Zamasu" />
 		<num_copies value="2" />
 		<release_date value="7/24" />
 		<rating value="4" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_4>
 	<_5>
 		<common_name value="DF_TEQ_Super_Trunks" />
 		<num_copies value="4" />
 		<release_date value="7/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_5>
 	<_6>
 		<common_name value="BU_STR_SS_Gohan_Youth" />
 		<num_copies value="5" />
 		<release_date value="7/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_6>
 	<_7>
 		<common_name value="DF_STR_Super_17" />
 		<num_copies value="5" />
 		<release_date value="3/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_7>
 	<_8>
 		<common_name value="DF_INT_Majin_Vegeta" />
 		<num_copies value="4" />
 		<release_date value="3/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_8>
 	<_9>
 		<common_name value="DF_STR_Super_Vegeta" />
 		<num_copies value="2" />
 		<release_date value="3/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_9>
 	<_10>
 		<common_name value="DF_AGL_Sword_Trunks" />
 		<num_copies value="2" />
 		<release_date value="12/25" />
 		<rating value="6" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_10>
 	<_11>
 		<common_name value="DF_AGL_Kid_Gohan" />
 		<num_copies value="5" />
 		<release_date value="11/25" />
 		<rating value="6" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_11>
 	<_12>
 		<common_name value="CLR_AGL_Omega_Shenron" />
 		<num_copies value="5" />
 		<release_date value="7/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_12>
 	<_13>
 		<common_name value="CLR_STR_SS_Goku_Hatchiyak" />
 		<num_copies value="5" />
 		<release_date value="1/26" />
 		<rating value="5" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_13>
 	<_14>
 		<common_name value="LR_AGL_Future_Gohan_Trunks" />
 		<num_copies value="3" />
 		<release_date value="12/25" />
 		<rating value="3" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_14>
 	<_15>
 		<common_name value="DF_INT_ToP_Androids" />
 		<num_copies value="1" />
 		<release_date value="10/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_15>
 	<_16>
 		<common_name value="BU_STR_Universe_2" />
 		<num_copies value="5" />
 		<release_date value="10/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_16>
 	<_17>
 		<common_name value="DF_AGL_Berserk_Kale" />
 		<num_copies value="4" />
 		<release_date value="4/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_17>
 	<_18>
 		<common_name value="DF_PHY_God_Goku" />
 		<num_copies value="1" />
 		<release_date value="3/23" />
 		<rating value="2" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_18>
 	<_19>
 		<common_name value="DF_PHY_Kid_Goku" />
 		<num_copies value="4" />
 		<release_date value="3/25" />
 		<rating value="4" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_19>
 	<_20>
 		<common_name value="DF_TEQ_Fusing_Kefla" />
 		<num_copies value="4" />
 		<release_date value="5/25" />
 		<rating value="5" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_20>
 	<_21>
 		<common_name value="DF_STR_Costume_Videl" />
 		<num_copies value="3" />
 		<release_date value="8/24" />
 		<rating value="1" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_21>
 	<_22>
 		<common_name value="CLR_INT_Kid_Gohan" />
 		<num_copies value="3" />
 		<release_date value="2/26" />
 		<rating value="8" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_22>
 	<_23>
 		<common_name value="CLR_AGL_Kai_Goku" />
 		<num_copies value="2" />
 		<release_date value="2/26" />
 		<rating value="9" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_23>
 	<_24>
 		<common_name value="LR_TEQ_Universe_2" />
 		<num_copies value="2" />
 		<release_date value="10/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_24>
 	<_25>
 		<common_name value="LR_STR_Bulma_Youth" />
 		<num_copies value="5" />
 		<release_date value="5/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_25>
 	<_26>
 		<common_name value="LR_AGL_SS2_Caulifla_Kale" />
 		<num_copies value="5" />
 		<release_date value="4/23" />
 		<rating value="3" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_26>
 	<_27>
 		<common_name value="BU_TEQ_Frost_Final_Form" />
 		<num_copies value="4" />
 		<release_date value="4/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_27>
 	<_28>
 		<common_name value="DF_STR_Piccolo_Gohan_Exchange" />
 		<num_copies value="2" />
 		<release_date value="10/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_28>
 	<_29>
 		<common_name value="BU_TEQ_Vegeta_Nappa" />
 		<num_copies value="5" />
 		<release_date value="10/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_29>
 	<_30>
 		<common_name value="DF_PHY_Turles" />
 		<num_copies value="3" />
 		<release_date value="5/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_30>
 	<_31>
 		<common_name value="DF_TEQ_Bardock" />
 		<num_copies value="3" />
 		<release_date value="10/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_31>
 	<_32>
 		<common_name value="DF_INT_Yamcha" />
 		<num_copies value="3" />
 		<release_date value="6/25" />
 		<rating value="5" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_32>
 	<_33>
 		<common_name value="DF_AGL_Captain_Ginyu" />
 		<num_copies value="5" />
 		<release_date value="5/25" />
 		<rating value="1" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_33>
 	<_34>
 		<common_name value="DF_PHY_Raditz" />
 		<num_copies value="4" />
 		<release_date value="4/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_34>
 	<_35>
 		<common_name value="DF_INT_Hirudegarn" />
 		<num_copies value="1" />
 		<release_date value="1/24" />
 		<rating value="4" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_35>
 	<_36>
 		<common_name value="DF_TEQ_23_WT_Goku" />
 		<num_copies value="2" />
 		<release_date value="4/23" />
 		<rating value="2" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_36>
 	<_37>
 		<common_name value="DFLR_TEQ_Orange_Piccolo" />
 		<num_copies value="3" />
 		<release_date value="1/26" />
 		<rating value="6" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_37>
 	<_38>
 		<common_name value="DF_INT_RoF_Blues" />
 		<num_copies value="2" />
 		<release_date value="2/26" />
 		<rating value="9" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_38>
 	<_39>
 		<common_name value="DF_STR_Goku_Gohan_Exchange" />
 		<num_copies value="4" />
 		<release_date value="4/25" />
 		<rating value="2" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_39>
 	<_40>
 		<common_name value="DF_STR_Kid_Buu" />
 		<num_copies value="5" />
 		<release_date value="1/25" />
 		<rating value="3" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_40>
 	<_41>
 		<common_name value="DF_TEQ_Fat_Janemba" />
 		<num_copies value="4" />
 		<release_date value="4/25" />
 		<rating value="1" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_41>
 	<_42>
 		<common_name value="DF_STR_SS3_DragonFist_Goku" />
 		<num_copies value="2" />
 		<release_date value="1/24" />
 		<rating value="5" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_42>
 	<_43>
 		<common_name value="DF_INT_Piccolo_Jr" />
 		<num_copies value="5" />
 		<release_date value="4/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_43>
 	<_44>
 		<common_name value="DFLR_PHY_Beast_Gohan" />
 		<num_copies value="3" />
 		<release_date value="1/26" />
 		<rating value="6" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_44>
 	<_45>
 		<common_name value="DF_TEQ_GT_Pan" />
 		<num_copies value="5" />
 		<release_date value="2/26" />
 		<rating value="7" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_45>
 	<_46>
 		<common_name value="DF_AGL_Transforming_Cell" />
 		<num_copies value="4" />
 		<release_date value="4/25" />
 		<rating value="5" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_46>
 	<_47>
 		<common_name value="DF_PHY_SS2_Goku" />
 		<num_copies value="5" />
 		<release_date value="1/25" />
 		<rating value="3" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_47>
 	<_48>
 		<common_name value="DF_AGL_Paikuhan" />
 		<num_copies value="4" />
 		<release_date value="4/25" />
 		<rating value="6" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_48>
 	<_49>
 		<common_name value="LR_PHY_Broly_Cheelai_Lemo" />
 		<num_copies value="5" />
 		<release_date value="2/24" />
 		<rating value="4" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_49>
 	<_50>
 		<common_name value="LR_STR_UI_Goku" />
 		<num_copies value="5" />
 		<release_date value="1/24" />
 		<rating value="4" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_50>
 	<_51>
 		<common_name value="CLR_PHY_Metal_Cooler" />
 		<num_copies value="4" />
 		<release_date value="9/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_51>
 	<_52>
 		<common_name value="LR_INT_Turles_Goku" />
 		<num_copies value="2" />
 		<release_date value="6/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_52>
 	<_53>
 		<common_name value="CLR_PHY_SS_Future_Trunks" />
 		<num_copies value="5" />
 		<release_date value="9/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_53>
 	<_54>
 		<common_name value="DF_PHY_DBS_SS_Broly" />
 		<num_copies value="5" />
 		<release_date value="1/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_54>
 	<_55>
 		<common_name value="DFLR_TEQ_Vegito_Blue" />
 		<num_copies value="5" />
 		<release_date value="3/23" />
 		<rating value="3" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_55>
 	<_56>
 		<common_name value="DFLR_STR_Gogeta_Blue" />
 		<num_copies value="5" />
 		<release_date value="3/23" />
 		<rating value="3" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_56>
 	<_57>
 		<common_name value="DFLR_PHY_Blue_Goku_Vegeta" />
 		<num_copies value="4" />
 		<release_date value="2/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_57>
 	<_58>
 		<common_name value="DFLR_TEQ_God_Goku_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="3/25" />
 		<rating value="8" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_58>
 	<_59>
 		<common_name value="DFLR_STR_Final_Form_Cooler" />
 		<num_copies value="5" />
 		<release_date value="8/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_59>
 	<_60>
 		<common_name value="DF_AGL_Gogeta_Blue" />
 		<num_copies value="5" />
 		<release_date value="1/23" />
 		<rating value="2" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_60>
 	<_61>
 		<common_name value="DFLR_PHY_SS4_Gogeta" />
 		<num_copies value="5" />
 		<release_date value="3/25" />
 		<rating value="7" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_61>
 	<_62>
 		<common_name value="DFLR_AGL_SS_Goku_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="9/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_62>
 	<_63>
 		<common_name value="DFLR_AGL_Vegito_Blue" />
 		<num_copies value="5" />
 		<release_date value="8/23" />
 		<rating value="1" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_63>
 	<_64>
 		<common_name value="CLR_STR_SS_Future_Gohan" />
 		<num_copies value="3" />
 		<release_date value="9/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_64>
 	<_65>
 		<common_name value="BU_INT_Golden_Frieza" />
 		<num_copies value="5" />
 		<release_date value="2/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_65>
 	<_66>
 		<common_name value="DFLR_AGL_DBS_SS_Broly" />
 		<num_copies value="2" />
 		<release_date value="2/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_66>
 	<_67>
 		<common_name value="CLR_PHY_Gogeta_Blue" />
 		<num_copies value="2" />
 		<release_date value="2/24" />
 		<rating value="6" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_67>
 	<_68>
 		<common_name value="BU_PHY_Gohan_Teen" />
 		<num_copies value="0" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_68>
 	<_69>
 		<common_name value="BU_PHY_Super_Buu" />
 		<num_copies value="0" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_69>
 	<_70>
 		<common_name value="BU_AGL_Pan_GT" />
 		<num_copies value="0" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_70>
 	<_71>
 		<common_name value="BU_AGL_General_Rilldo" />
 		<num_copies value="0" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_71>
 	<_72>
 		<common_name value="BU_STR_SS_Cabba" />
 		<num_copies value="1" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_72>
 	<_73>
 		<common_name value="BU_STR_Hit" />
 		<num_copies value="0" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_73>
 	<_74>
 		<common_name value="BU_TEQ_Tien" />
 		<num_copies value="0" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_74>
 	<_75>
 		<common_name value="BU_TEQ_2nd_Form_Cell" />
 		<num_copies value="0" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_75>
 	<_76>
 		<common_name value="BU_INT_Kid_Gohan_Namek" />
 		<num_copies value="1" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_76>
 	<_77>
 		<common_name value="BU_INT_Namek_Vegeta" />
 		<num_copies value="0" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_77>
 	<_78>
 		<common_name value="LR_TEQ_SS3_DragonFist_Goku" />
 		<num_copies value="5" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_78>
 	<_79>
 		<common_name value="CLR_INT_SS_Trio" />
 		<num_copies value="1" />
 		<release_date value="12/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_79>
 	<_80>
 		<common_name value="LR_PHY_Android_Trio" />
 		<num_copies value="2" />
 		<release_date value="12/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_80>
 	<_81>
 		<common_name value="DFLR_STR_Beast_Gohan" />
 		<num_copies value="5" />
 		<release_date value="2/24" />
 		<rating value="4" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_81>
 	<_82>
 		<common_name value="BU_AGL_Krillin_Android18" />
 		<num_copies value="5" />
 		<release_date value="2/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_82>
 	<_83>
 		<common_name value="CLR_INT_Gammas" />
 		<num_copies value="5" />
 		<release_date value="2/24" />
 		<rating value="1" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_83>
 	<_84>
 		<common_name value="DF_PHY_SSR_Goku_Black" />
 		<num_copies value="2" />
 		<release_date value="6/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_84>
 	<_85>
 		<common_name value="DFLR_INT_Vegeta_Trunks" />
 		<num_copies value="2" />
 		<release_date value="8/25" />
 		<rating value="2" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_85>
 	<_86>
 		<common_name value="DF_INT_Future_Gohan" />
 		<num_copies value="4" />
 		<release_date value="9/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_86>
 	<_87>
 		<common_name value="BU_STR_Future_Mai" />
 		<num_copies value="3" />
 		<release_date value="8/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_87>
 	<_88>
 		<common_name value="BU_PHY_Gowasu_Zamasu" />
 		<num_copies value="5" />
 		<release_date value="9/23" />
 		<rating value="1" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_88>
 	<_89>
 		<common_name value="BU_PHY_Zamasu" />
 		<num_copies value="4" />
 		<release_date value="9/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_89>
 	<_90>
 		<common_name value="DFLR_AGL_MUI_Goku" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="6" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_90>
 	<_91>
 		<common_name value="DFLR_INT_Evolution_Blue_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_91>
 	<_92>
 		<common_name value="BU_INT_Vados" />
 		<num_copies value="5" />
 		<release_date value="4/24" />
 		<rating value="3" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_92>
 	<_93>
 		<common_name value="DF_STR_Transforming_Kelfa" />
 		<num_copies value="3" />
 		<release_date value="4/24" />
 		<rating value="2" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_93>
 	<_94>
 		<common_name value="DFLR_PHY_Buutenks" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="4" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_94>
 	<_95>
 		<common_name value="DFLR_STR_SS_Vegito" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_95>
 	<_96>
 		<common_name value="BU_INT_Dodoria" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_96>
 	<_97>
 		<common_name value="DF_AGL_1st_Form_Frieza" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_97>
 	<_98>
 		<common_name value="DF_AGL_SS_Bardock" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_98>
 	<_99>
 		<common_name value="BU_AGL_King_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_99>
 	<_100>
 		<common_name value="DF_TEQ_SS_Vegeta" />
 		<num_copies value="4" />
 		<release_date value="1/24" />
 		<rating value="4" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_100>
 	<_101>
 		<common_name value="DF_AGL_SS3_DragonFist_Goku" />
 		<num_copies value="3" />
 		<release_date value="3/24" />
 		<rating value="1" />
-		<eza value="True" />
-		<seza value="True" />
+		<eza value="SEZA" />
 	</_101>
 	<_102>
 		<common_name value="DFLR_INT_SFPS4_Goku" />
 		<num_copies value="4" />
 		<release_date value="6/23" />
 		<rating value="1" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_102>
 	<_103>
 		<common_name value="DFLR_TEQ_Go_Bros" />
 		<num_copies value="5" />
 		<release_date value="6/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_103>
 	<_104>
 		<common_name value="DF_PHY_Piccolo" />
 		<num_copies value="5" />
 		<release_date value="5/23" />
 		<rating value="0" />
-			<eza value="True" />
-			<seza value="False" />
+		<eza value="EZA" />
 	</_104>
 	<_105>
 		<common_name value="LR_INT_Fusion_Zamasu" />
 		<num_copies value="3" />
 		<release_date value="7/25" />
 		<rating value="2" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_105>
 	<_106>
 		<common_name value="LR_INT_SSR_Goku_Black" />
 		<num_copies value="5" />
 		<release_date value="10/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_106>
 	<_107>
 		<common_name value="BU_INT_Android_16" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_107>
 	<_108>
 		<common_name value="BU_AGL_Super_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_108>
 	<_109>
 		<common_name value="BU_TEQ_Katoplesa" />
 		<num_copies value="2" />
 		<release_date value="4/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_109>
 	<_110>
 		<common_name value="DF_PHY_God_Toppo" />
 		<num_copies value="2" />
 		<release_date value="4/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_110>
 	<_111>
 		<common_name value="DFLR_INT_Perfect_Cell" />
 		<num_copies value="5" />
 		<release_date value="1/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_111>
 	<_112>
 		<common_name value="LR_INT_God_Goku" />
 		<num_copies value="5" />
 		<release_date value="7/23" />
 		<rating value="1" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_112>
 	<_113>
 		<common_name value="LR_PHY_Super_Janemba" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_113>
 	<_114>
 		<common_name value="LR_STR_Goku_Hit" />
 		<num_copies value="5" />
 		<release_date value="5/25" />
 		<rating value="4" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_114>
 	<_115>
 		<common_name value="LR_STR_Beerus_Whis" />
 		<num_copies value="5" />
 		<release_date value="3/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_115>
 	<_116>
 		<common_name value="LR_INT_Full_Power_Boujack" />
 		<num_copies value="5" />
 		<release_date value="12/22" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_116>
 	<_117>
 		<common_name value="LR_TEQ_Great_Ape_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="2/25" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_117>
 	<_118>
 		<common_name value="LR_AGL_Nappa_Vegeta_Exchange" />
 		<num_copies value="3" />
 		<release_date value="11/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_118>
 	<_119>
 		<common_name value="LR_AGL_Super_Baby_2" />
 		<num_copies value="4" />
 		<release_date value="7/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_119>
 	<_120>
 		<common_name value="LR_AGL_Super_Buu" />
 		<num_copies value="4" />
 		<release_date value="4/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_120>
 	<_121>
 		<common_name value="LR_AGL_Golden_Frieza" />
 		<num_copies value="5" />
 		<release_date value="8/25" />
 		<rating value="4" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_121>
 	<_122>
 		<common_name value="DFLR_AGL_SS2_Gohan_Youth" />
 		<num_copies value="5" />
 		<release_date value="1/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_122>
 	<_123>
 		<common_name value="LR_AGL_SS_SBA_Goku" />
 		<num_copies value="5" />
 		<release_date value="2/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_123>
 	<_124>
 		<common_name value="BU_PHY_SS3R_CMS" />
 		<num_copies value="1" />
 		<release_date value="11/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_124>
 	<_125>
 		<common_name value="BU_PHY_SS4_Vegito_Xeno" />
 		<num_copies value="5" />
 		<release_date value="12/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_125>
 	<_126>
 		<common_name value="DF_PHY_SS_Vegito" />
 		<num_copies value="5" />
 		<release_date value="2/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_126>
 	<_127>
 		<common_name value="DF_PHY_Beerus" />
 		<num_copies value="3" />
 		<release_date value="7/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_127>
 	<_128>
 		<common_name value="DF_PHY_Android_17" />
 		<num_copies value="5" />
 		<release_date value="3/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_128>
 	<_129>
 		<common_name value="DF_PHY_Transforming_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="8/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_129>
 	<_130>
 		<common_name value="BU_STR_Recoome_Guldo" />
 		<num_copies value="5" />
 		<release_date value="6/25" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_130>
 	<_131>
 		<common_name value="DF_STR_Transforming_Cooler" />
 		<num_copies value="5" />
 		<release_date value="1/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_131>
 	<_132>
 		<common_name value="DF_STR_Super_Buu" />
 		<num_copies value="5" />
 		<release_date value="2/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_132>
 	<_133>
 		<common_name value="BU_STR_Nappa" />
 		<num_copies value="5" />
 		<release_date value="4/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_133>
 	<_134>
 		<common_name value="DF_STR_Gamma_1" />
 		<num_copies value="5" />
 		<release_date value="12/25" />
 		<rating value="6" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_134>
 	<_135>
 		<common_name value="DF_STR_SSB_Kaioken_Goku" />
 		<num_copies value="5" />
 		<release_date value="2/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_135>
 	<_136>
 		<common_name value="BU_STR_Kale" />
 		<num_copies value="5" />
 		<release_date value="7/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_136>
 	<_137>
 		<common_name value="BU_STR_Piccolo_Cooler_Movie" />
 		<num_copies value="5" />
 		<release_date value="8/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_137>
 	<_138>
 		<common_name value="BU_STR_23_WT_Krillin" />
 		<num_copies value="5" />
 		<release_date value="4/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_138>
 	<_139>
 		<common_name value="BU_INT_Kid_Pan" />
 		<num_copies value="5" />
 		<release_date value="12/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_139>
 	<_140>
 		<common_name value="DF_TEQ_Future_Androids" />
 		<num_copies value="4" />
 		<release_date value="12/23" />
 		<rating value="6" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_140>
 	<_141>
 		<common_name value="BU_TEQ_Caulifla" />
 		<num_copies value="5" />
 		<release_date value="7/24" />
 		<rating value="4" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_141>
 	<_142>
 		<common_name value="DF_TEQ_SoH_Trunks" />
 		<num_copies value="5" />
 		<release_date value="9/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_142>
 	<_143>
 		<common_name value="BU_TEQ_God_Goku" />
 		<num_copies value="5" />
 		<release_date value="2/22" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_143>
 	<_144>
 		<common_name value="BU_TEQ_SS_Vegeta_BoG" />
 		<num_copies value="5" />
 		<release_date value="3/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_144>
 	<_145>
 		<common_name value="DF_AGL_Fusion_Zamasu" />
 		<num_copies value="5" />
 		<release_date value="9/23" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_145>
 	<_146>
 		<common_name value="DF_AGL_Android_13" />
 		<num_copies value="2" />
 		<release_date value="11/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_146>
 	<_147>
 		<common_name value="BU_AGL_Golden_Frieza" />
 		<num_copies value="5" />
 		<release_date value="4/20" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_147>
 	<_148>
 		<common_name value="BU_AGL_Cell_Jr" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="1" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_148>
 	<_149>
 		<common_name value="BU_AGL_SFPS4LB_Vegito_Xeno" />
 		<num_copies value="2" />
 		<release_date value="11/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_149>
 	<_150>
 		<common_name value="DF_AGL_Gamma_2" />
 		<num_copies value="2" />
 		<release_date value="11/23" />
 		<rating value="6" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_150>
 	<_151>
 		<common_name value="BU_AGL_Android_8" />
 		<num_copies value="4" />
 		<release_date value="8/22" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_151>
 	<_152>
 		<common_name value="BU_PHY_Giant_Ribrianne" />
 		<num_copies value="5" />
 		<release_date value="4/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_152>
 	<_153>
 		<common_name value="BU_INT_Pride_Troopers" />
 		<num_copies value="5" />
 		<release_date value="4/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_153>
 	<_154>
 		<common_name value="BU_AGL_SS_Gotenks" />
 		<num_copies value="5" />
 		<release_date value="4/24" />
 		<rating value="1" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_154>
 	<_155>
 		<common_name value="DF_INT_Transforming_Gotenks" />
 		<num_copies value="5" />
 		<release_date value="4/24" />
 		<rating value="4" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_155>
 	<_156>
 		<common_name value="DF_TEQ_SS3_Gotenks" />
 		<num_copies value="2" />
 		<release_date value="4/24" />
 		<rating value="4" />
-		<eza value="True" />
-		<seza value="True" />
+		<eza value="SEZA" />
 	</_156>
 	<_157>
 		<common_name value="LR_INT_Ginyu_Force" />
 		<num_copies value="2" />
 		<release_date value="4/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_157>
 	<_158>
 		<common_name value="BU_TEQ_Evil_Buu" />
 		<num_copies value="5" />
 		<release_date value="4/24" />
 		<rating value="1" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_158>
 	<_159>
 		<common_name value="BU_PHY_Gotenks" />
 		<num_copies value="5" />
 		<release_date value="4/24" />
 		<rating value="2" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_159>
 	<_160>
 		<common_name value="DF_INT_Fat_Buu" />
 		<num_copies value="1" />
 		<release_date value="4/24" />
 		<rating value="3" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_160>
 	<_161>
 		<common_name value="DF_AGL_SS3_Goku_Angel" />
 		<num_copies value="2" />
 		<release_date value="4/24" />
 		<rating value="1" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_161>
 	<_162>
 		<common_name value="DF_AGL_Android_21_Good" />
 		<num_copies value="3" />
 		<release_date value="11/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_162>
 	<_163>
 		<common_name value="DF_TEQ_Exchange_Buu" />
 		<num_copies value="5" />
 		<release_date value="5/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_163>
 	<_164>
 		<common_name value="DF_TEQ_Ultimate_Gohan" />
 		<num_copies value="5" />
 		<release_date value="5/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_164>
 	<_165>
 		<common_name value="LR_AGL_Ultimate_Gohan" />
 		<num_copies value="3" />
 		<release_date value="5/24" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_165>
 	<_166>
 		<common_name value="BU_INT_Hercule" />
 		<num_copies value="5" />
 		<release_date value="5/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_166>
 	<_167>
 		<common_name value="BU_PHY_Buutenks" />
 		<num_copies value="5" />
 		<release_date value="5/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_167>
 	<_168>
 		<common_name value="BU_INT_SS_Goten" />
 		<num_copies value="5" />
 		<release_date value="5/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_168>
 	<_169>
 		<common_name value="BU_TEQ_SS_Kid_Trunks" />
 		<num_copies value="5" />
 		<release_date value="5/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_169>
 	<_170>
 		<common_name value="DF_PHY_Kid_Buu" />
 		<num_copies value="4" />
 		<release_date value="5/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="True" />
+		<eza value="SEZA" />
 	</_170>
 	<_171>
 		<common_name value="DF_STR_SS3_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="3/25" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="True" />
+		<eza value="SEZA" />
 	</_171>
 	<_172>
 		<common_name value="BU_INT_Cheelai" />
 		<num_copies value="3" />
 		<release_date value="8/25" />
 		<rating value="4" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_172>
 	<_173>
 		<common_name value="BU_PHY_Android_21_Evil" />
 		<num_copies value="3" />
 		<release_date value="9/23" />
 		<rating value="0" />
-		<eza value="False" />
-		<seza value="False" />
+		<eza value="None" />
 	</_173>
 	<_174>
 		<common_name value="F2PLR_PHY_Babidi_Buu" />
 		<num_copies value="5" />
 		<release_date value="5/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="EZA" />
 	</_174>
 	<_175>
 		<common_name value="F2P_PHY_Buyon" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
-		<eza value="True" />
-		<seza value="False" />
+		<eza value="None" />
 	</_175>
 	<_176>
 		<common_name value="F2P_PHY_Gohan_Goku_Exchange" />
 		<num_copies value="5" />
 		<release_date value="8/22" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_176>
 	<_177>
 		<common_name value="F2PLR_INT_Babidi" />
 		<num_copies value="5" />
 		<release_date value="3/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_177>
 	<_178>
 		<common_name value="BU_PHY_Robelu" />
 		<num_copies value="5" />
 		<release_date value="11/22" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_178>
 	<_179>
 		<common_name value="BU_PHY_Whirus" />
 		<num_copies value="5" />
 		<release_date value="11/22" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_179>
 	<_180>
 		<common_name value="F2P_PHY_UI_Goku" />
 		<num_copies value="5" />
 		<release_date value="2/21" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_180>
 	<_181>
 		<common_name value="BU_PHY_Kid_Chichi" />
 		<num_copies value="3" />
 		<release_date value="8/22" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_181>
 	<_182>
 		<common_name value="BU_STR_Pan_GT" />
 		<num_copies value="5" />
 		<release_date value="8/21" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_182>
 	<_183>
 		<common_name value="BU_STR_Whis" />
 		<num_copies value="5" />
 		<release_date value="3/20" />
 		<rating value="1" />
+		<eza value="None" />
 	</_183>
 	<_184>
 		<common_name value="BU_INT_Dark_Masked_King" />
 		<num_copies value="2" />
 		<release_date value="11/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_184>
 	<_185>
 		<common_name value="BU_INT_Zamasu" />
 		<num_copies value="5" />
 		<release_date value="9/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_185>
 	<_186>
 		<common_name value="BU_AGL_SS2_Future_Trunks" />
 		<num_copies value="5" />
 		<release_date value="8/23" />
 		<rating value="2" />
+		<eza value="None" />
 	</_186>
 	<_187>
 		<common_name value="F2PLR_TEQ_SS_Trunks_Broly" />
 		<num_copies value="5" />
 		<release_date value="12/23" />
 		<rating value="0" />
+		<eza value="None" />
 	</_187>
 	<_188>
 		<common_name value="BU_PHY_SS_Bardock" />
 		<num_copies value="5" />
 		<release_date value="11/22" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_188>
 	<_189>
 		<common_name value="BU_PHY_23_WT_Tien" />
 		<num_copies value="5" />
 		<release_date value="4/23" />
 		<rating value="0" />
+		<eza value="None" />
 	</_189>
 	<_190>
 		<common_name value="BU_INT_Amond_Rasin" />
 		<num_copies value="5" />
 		<release_date value="5/23" />
 		<rating value="0" />
+		<eza value="None" />
 	</_190>
 	<_191>
 		<common_name value="F2P_INT_GT_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="7/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_191>
 	<_192>
 		<common_name value="BU_INT_Bota_Magetta" />
 		<num_copies value="5" />
 		<release_date value="10/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_192>
 	<_193>
 		<common_name value="DF_TEQ_Golden_Frieza" />
 		<num_copies value="3" />
 		<release_date value="4/19" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_193>
 	<_194>
 		<common_name value="BU_TEQ_Bulla" />
 		<num_copies value="5" />
 		<release_date value="8/22" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_194>
 	<_195>
 		<common_name value="BU_TEQ_Tapion" />
 		<num_copies value="5" />
 		<release_date value="1/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_195>
 	<_196>
 		<common_name value="F2P_TEQ_Candy_Vegito" />
 		<num_copies value="5" />
 		<release_date value="10/20" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_196>
 	<_197>
 		<common_name value="F2P_TEQ_SS3_Goku_Angel" />
 		<num_copies value="5" />
 		<release_date value="4/24" />
 		<rating value="2" />
+		<eza value="EZA" />
 	</_197>
 	<_198>
 		<common_name value="BU_INT_Whis" />
 		<num_copies value="5" />
 		<release_date value="3/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_198>
 	<_199>
 		<common_name value="F2PLR_TEQ_Dragon_Ball_Trio" />
 		<num_copies value="5" />
 		<release_date value="5/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_199>
 	<_200>
 		<common_name value="BU_INT_Future_Mai" />
 		<num_copies value="5" />
 		<release_date value="9/23" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_200>
 	<_201>
 		<common_name value="F2P_INT_Bulma_Youth" />
 		<num_copies value="5" />
 		<release_date value="4/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_201>
 	<_202>
 		<common_name value="BU_TEQ_SS_Future_Gohan" />
 		<num_copies value="5" />
 		<release_date value="9/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_202>
 	<_203>
 		<common_name value="BU_AGL_Daiz_Cacao" />
 		<num_copies value="4" />
 		<release_date value="5/23" />
 		<rating value="0" />
+		<eza value="None" />
 	</_203>
 	<_204>
 		<common_name value="BU_AGL_Golden_Metal_Cooler" />
 		<num_copies value="3" />
 		<release_date value="11/23" />
 		<rating value="0" />
+		<eza value="None" />
 	</_204>
 	<_205>
 		<common_name value="BU_AGL_Baby_Janemba" />
 		<num_copies value="2" />
 		<release_date value="11/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_205>
 	<_206>
 		<common_name value="F2P_AGL_SS_Gohan_Boujack" />
 		<num_copies value="4" />
 		<release_date value="12/23" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_206>
 	<_207>
 		<common_name value="F2P_AGL_SS_Goku_Fishing" />
 		<num_copies value="5" />
 		<release_date value="4/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_207>
 	<_208>
 		<common_name value="BU_STR_SS_Future_Trunks" />
 		<num_copies value="5" />
 		<release_date value="9/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_208>
 	<_209>
 		<common_name value="BU_STR_Fat_Buu" />
 		<num_copies value="5" />
 		<release_date value="5/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_209>
 	<_210>
 		<common_name value="BU_INT_Hit" />
 		<num_copies value="5" />
 		<release_date value="6/24" />
 		<rating value="2" />
+		<eza value="EZA" />
 	</_210>
 	<_211>
 		<common_name value="DF_PHY_Goku_Black" />
 		<num_copies value="3" />
 		<release_date value="6/24" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_211>
 	<_212>
 		<common_name value="F2PLR_INT_Piccolo" />
 		<num_copies value="5" />
 		<release_date value="2/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_212>
 	<_213>
 		<common_name value="F2PLR_AGL_Tien_Chiaotzu" />
 		<num_copies value="5" />
 		<release_date value="8/23" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_213>
 	<_214>
 		<common_name value="LR_STR_Cell_Max" />
 		<num_copies value="0" />
 		<release_date value="6/24" />
 		<rating value="2" />
+		<eza value="None" />
 	</_214>
 	<_215>
 		<common_name value="F2P_AGL_RoF_Krillin" />
 		<num_copies value="5" />
 		<release_date value="5/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_215>
 	<_216>
 		<common_name value="BU_STR_Dyspo" />
 		<num_copies value="0" />
 		<release_date value="6/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_216>
 	<_217>
 		<common_name value="LR_INT_Universe_7" />
 		<num_copies value="0" />
 		<release_date value="6/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_217>
 	<_218>
 		<common_name value="DFLR_TEQ_UI_Goku" />
 		<num_copies value="1" />
 		<release_date value="6/24" />
 		<rating value="7" />
+		<eza value="None" />
 	</_218>
 	<_219>
 		<common_name value="F2PLR_PHY_Yamcha_Puar" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_219>
 	<_220>
 		<common_name value="F2P_STR_High_School_Gohan" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_220>
 	<_221>
 		<common_name value="F2P_TEQ_Mr_Buu" />
 		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_221>
 	<_222>
 		<common_name value="LR_PHY_Android17_Frieza" />
 		<num_copies value="3" />
 		<release_date value="6/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_222>
 	<_223>
 		<common_name value="BU_STR_Bardock_Gine" />
 		<num_copies value="5" />
 		<release_date value="2/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_223>
 	<_224>
 		<common_name value="BU_INT_Paragus_Broly" />
 		<num_copies value="5" />
 		<release_date value="2/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_224>
 	<_225>
 		<common_name value="F2P_INT_Tien" />
 		<num_copies value="3" />
 		<release_date value="7/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_225>
 	<_226>
 		<common_name value="F2P_PHY_ChiChi" />
 		<num_copies value="5" />
 		<release_date value="7/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_226>
 	<_227>
 		<common_name value="F2P_INT_Gohan_Youth" />
 		<num_copies value="4" />
 		<release_date value="7/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_227>
 	<_228>
 		<common_name value="F2P_INT_Caulifla" />
 		<num_copies value="5" />
 		<release_date value="7/24" />
 		<rating value="3" />
+		<eza value="EZA" />
 	</_228>
 	<_229>
 		<common_name value="F2P_TEQ_Kale" />
 		<num_copies value="5" />
 		<release_date value="7/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_229>
 	<_230>
 		<common_name value="CLR_AGL_Jiren" />
 		<num_copies value="3" />
 		<release_date value="7/24" />
 		<rating value="7" />
+		<eza value="None" />
 	</_230>
 	<_231>
 		<common_name value="LR_TEQ_Full_Power_Jiren" />
 		<num_copies value="5" />
 		<release_date value="7/24" />
 		<rating value="3" />
+		<eza value="EZA" />
 	</_231>
 	<_232>
 		<common_name value="BU_AGL_Bulma_Bunny" />
 		<num_copies value="5" />
 		<release_date value="7/24" />
 		<rating value="2" />
+		<eza value="None" />
 	</_232>
 	<_233>
 		<common_name value="DF_STR_Master_Roshi" />
 		<num_copies value="1" />
 		<release_date value="7/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_233>
 	<_234>
 		<common_name value="F2PLR_PHY_Pajamas_Beerus" />
 		<num_copies value="5" />
 		<release_date value="2/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_234>
 	<_235>
 		<common_name value="F2P_TEQ_Cyborg_Tao" />
 		<num_copies value="4" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_235>
 	<_236>
 		<common_name value="F2P_TEQ_Cell_Perfect" />
 		<num_copies value="5" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_236>
 	<_237>
 		<common_name value="F2P_STR_SS2_Great_Saiyaman" />
 		<num_copies value="5" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_237>
 	<_238>
 		<common_name value="BU_AGL_Margarita" />
 		<num_copies value="5" />
 		<release_date value="8/24" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_238>
 	<_239>
 		<common_name value="BU_TEQ_Kyawei" />
 		<num_copies value="5" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_239>
 	<_240>
 		<common_name value="BU_INT_Cocotte" />
 		<num_copies value="2" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_240>
 	<_241>
 		<common_name value="BU_TEQ_Mai" />
 		<num_copies value="5" />
 		<release_date value="8/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_241>
 	<_242>
 		<common_name value="LR_STR_Team_Turles" />
 		<num_copies value="4" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_242>
 	<_243>
 		<common_name value="F2P_STR_Devilman" />
 		<num_copies value="5" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_243>
 	<_244>
 		<common_name value="F2PLR_AGL_Babidi_Dabura" />
 		<num_copies value="4" />
 		<release_date value="4/24" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_244>
 	<_245>
 		<common_name value="CLR_TEQ_Broly" />
 		<num_copies value="3" />
 		<release_date value="8/24" />
 		<rating value="5" />
+		<eza value="None" />
 	</_245>
 	<_246>
 		<common_name value="DFLR_PHY_Goku_Gohan_Trunks" />
 		<num_copies value="3" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_246>
 	<_247>
 		<common_name value="BU_PHY_Piccolo_Vegeta_Exchange" />
 		<num_copies value="1" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_247>
 	<_248>
 		<common_name value="DF_INT_LSS_Broly" />
 		<num_copies value="3" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_248>
 	<_249>
 		<common_name value="LR_TEQ_SS_Broly" />
 		<num_copies value="5" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_249>
 	<_250>
 		<common_name value="F2P_STR_Videl" />
 		<num_copies value="5" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_250>
 	<_251>
 		<common_name value="F2P_INT_SS_Kid_Trunks" />
 		<num_copies value="5" />
 		<release_date value="8/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_251>
 	<_252>
 		<common_name value="BU_TEQ_Videl" />
 		<num_copies value="5" />
 		<release_date value="9/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_252>
 	<_253>
 		<common_name value="DFLR_INT_LSS_Broly" />
 		<num_copies value="5" />
 		<release_date value="9/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_253>
 	<_254>
 		<common_name value="CLR_STR_Family_Kamehameha" />
 		<num_copies value="5" />
 		<release_date value="9/24" />
 		<rating value="3" />
+		<eza value="None" />
 	</_254>
 	<_255>
 		<common_name value="F2P_TEQ_Bio_Broly" />
 		<num_copies value="5" />
 		<release_date value="9/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_255>
 	<_256>
 		<common_name value="F2PLR_PHY_Bio_Broly" />
 		<num_copies value="5" />
 		<release_date value="9/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_256>
 	<_257>
 		<common_name value="DF_PHY_SS_Goten_Trunks" />
 		<num_copies value="3" />
 		<release_date value="9/24" />
 		<rating value="3" />
+		<eza value="EZA" />
 	</_257>
 	<_258>
 		<common_name value="DF_STR_LSS_Broly" />
 		<num_copies value="2" />
 		<release_date value="9/24" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_258>
 	<_259>
 		<common_name value="DFLR_TEQ_Super_Gogeta" />
 		<num_copies value="4" />
 		<release_date value="10/24" />
 		<rating value="4" />
+		<eza value="EZA" />
 	</_259>
 	<_260>
 		<common_name value="DF_AGL_Dirty_Fireworks_Vegeta" />
 		<num_copies value="3" />
 		<release_date value="10/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_260>
 	<_261>
 		<common_name value="BU_INT_Cui" />
 		<num_copies value="3" />
 		<release_date value="10/24" />
 		<rating value="2" />
+		<eza value="None" />
 	</_261>
 	<_262>
 		<common_name value="DF_PHY_Full_Power_Frieza" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_262>
 	<_263>
 		<common_name value="BU_STR_SS_Namek_Goku" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_263>
 	<_264>
 		<common_name value="BU_AGL_Nail" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_264>
 	<_265>
 		<common_name value="F2PLR_TEQ_SS_Goku" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_265>
 	<_266>
 		<common_name value="LR_TEQ_Gohan_Piccolo_Exchange" />
 		<num_copies value="0" />
 		<release_date value="10/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_266>
 	<_267>
 		<common_name value="F2PLR_TEQ_Demon_King_Piccolo" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_267>
 	<_268>
 		<common_name value="F2P_STR_Hacchan" />
 		<num_copies value="4" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_268>
 	<_269>
 		<common_name value="F2P_PHY_Mighty_Mask" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_269>
 	<_270>
 		<common_name value="F2P_AGL_Hit" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_270>
 	<_271>
 		<common_name value="F2PLR_TEQ_Grandpa_Gohan" />
 		<num_copies value="3" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_271>
 	<_272>
 		<common_name value="F2PLR_PHY_Version_Z_Goku" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_272>
 	<_273>
 		<common_name value="F2P_AGL_Gohan_Piccolo" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_273>
 	<_274>
 		<common_name value="F2P_INT_Krillin" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_274>
 	<_275>
 		<common_name value="F2P_STR_Yamcha" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_275>
 	<_276>
 		<common_name value="F2P_TEQ_Tien" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_276>
 	<_277>
 		<common_name value="F2P_PHY_Chiaotzu" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_277>
 	<_278>
 		<common_name value="LR_AGL_Krillin_Gohan_Namek" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_278>
 	<_279>
 		<common_name value="LR_INT_Vegeta_Goku_Exchange" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_279>
 	<_280>
 		<common_name value="F2P_TEQ_Oolong_Launch" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_280>
 	<_281>
 		<common_name value="BU_INT_Angila_Medamatcha" />
 		<num_copies value="3" />
 		<release_date value="10/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_281>
 	<_282>
 		<common_name value="DF_STR_Lord_Slug" />
 		<num_copies value="0" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_282>
 	<_283>
 		<common_name value="DF_STR_Boujack" />
 		<num_copies value="5" />
 		<release_date value="10/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_283>
 	<_284>
 		<common_name value="BU_AGL_Mechikabura" />
 		<num_copies value="2" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_284>
 	<_285>
 		<common_name value="BU_TEQ_God_Trunks" />
 		<num_copies value="4" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_285>
 	<_286>
 		<common_name value="BU_INT_Xeno_Pan" />
 		<num_copies value="1" />
 		<release_date value="11/24" />
 		<rating value="3" />
+		<eza value="EZA" />
 	</_286>
 	<_287>
 		<common_name value="BU_STR_SS_Vegeks" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_287>
 	<_288>
 		<common_name value="BU_AGL_SS3_Gotenks_Xeno" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_288>
 	<_289>
 		<common_name value="BU_INT_SS3_Gohanks_Xeno" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_289>
 	<_290>
 		<common_name value="BU_PHY_SS_Goku_Xeno" />
 		<num_copies value="3" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_290>
 	<_291>
 		<common_name value="BU_INT_SS_Vegeta_Xeno" />
 		<num_copies value="3" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_291>
 	<_292>
 		<common_name value="F2P_STR_Towa" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_292>
 	<_293>
 		<common_name value="BU_PHY_Warrior_In_Black" />
 		<num_copies value="3" />
 		<release_date value="11/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_293>
 	<_294>
 		<common_name value="BU_TEQ_Dark_King_Demigra" />
 		<num_copies value="3" />
 		<release_date value="11/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_294>
 	<_295>
 		<common_name value="BU_INT_Aeos" />
 		<num_copies value="1" />
 		<release_date value="11/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_295>
 	<_296>
 		<common_name value="BU_AGL_Fu_Dogidogi" />
 		<num_copies value="0" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_296>
 	<_297>
 		<common_name value="BU_STR_SSGSS_Goku_Universe_Tree" />
 		<num_copies value="2" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_297>
 	<_298>
 		<common_name value="DF_TEQ_Beerus" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_298>
 	<_299>
 		<common_name value="F2P_PHY_Frieza_Cooler" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_299>
 	<_300>
 		<common_name value="F2P_PHY_Hit" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="2" />
+		<eza value="None" />
 	</_300>
 	<_301>
 		<common_name value="F2P_TEQ_Saonel_Pirina" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_301>
 	<_302>
 		<common_name value="F2P_STR_Champa" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_302>
 	<_303>
 		<common_name value="BU_INT_Piccolo_ToP" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_303>
 	<_304>
 		<common_name value="BU_TEQ_ToP_Android_17" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_304>
 	<_305>
 		<common_name value="BU_TEQ_ToP_Android_18" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_305>
 	<_306>
 		<common_name value="BU_AGL_Skinny_Buu" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_306>
 	<_307>
 		<common_name value="DF_TEQ_Buuhan" />
 		<num_copies value="3" />
 		<release_date value="11/24" />
 		<rating value="1" />
+		<eza value="None" />
 	</_307>
 	<_308>
 		<common_name value="BU_STR_Grand_Supreme_Kai" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_308>
 	<_309>
 		<common_name value="F2PLR_STR_Anilaza" />
 		<num_copies value="1" />
 		<release_date value="11/24" />
 		<rating value="0" />
+		<eza value="None" />
 	</_309>
 	<_310>
 		<common_name value="DF_INT_Ultimate_Gohan" />
 		<num_copies value="5" />
 		<release_date value="11/24" />
 		<rating value="3" />
+		<eza value="SEZA" />
 	</_310>
 	<_311>
 		<common_name value="DF_INT_SS3_Angel_Goku" />
 		<num_copies value="5" />
 		<release_date value="12/24" />
 		<rating value="4" />
+		<eza value="EZA" />
 	</_311>
 	<_312>
 		<common_name value="DF_TEQ_Majin_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="12/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_312>
 	<_313>
 		<common_name value="CLR_TEQ_SS3_Gotenks" />
 		<num_copies value="3" />
 		<release_date value="12/24" />
 		<rating value="4" />
+		<eza value="None" />
 	</_313>
 	<_314>
 		<common_name value="F2P_AGL_Grandpa_Gohan" />
 		<num_copies value="5" />
 		<release_date value="12/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_314>
 	<_315>
 		<common_name value="F2P_INT_Android_18" />
 		<num_copies value="5" />
 		<release_date value="12/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_315>
 	<_316>
 		<common_name value="F2P_AGL_Kid_Pan" />
 		<num_copies value="5" />
 		<release_date value="12/24" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_316>
 	<_317>
 		<common_name value="F2P_STR_Hell_Fighter_17" />
 		<num_copies value="5" />
 		<release_date value="12/24" />
 		<rating value="3" />
+		<eza value="EZA" />
 	</_317>
 	<_318>
 		<common_name value="LR_PHY_SS2_Angel_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="12/24" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_318>
 	<_319>
 		<common_name value="BU_TEQ_SS_Goten" />
 		<num_copies value="5" />
 		<release_date value="12/24" />
 		<rating value="2" />
+		<eza value="EZA" />
 	</_319>
 	<_320>
 		<common_name value="DF_INT_SS_Goku_Mini_Daima" />
 		<num_copies value="1" />
 		<release_date value="12/24" />
 		<rating value="3" />
+		<eza value="None" />
 	</_320>
 	<_321>
 		<common_name value="DF_PHY_Glorio" />
 		<num_copies value="3" />
 		<release_date value="12/24" />
 		<rating value="3" />
+		<eza value="None" />
 	</_321>
 	<_322>
 		<common_name value="DF_AGL_Super_Vegito" />
 		<num_copies value="3" />
 		<release_date value="1/25" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_322>
 	<_323>
 		<common_name value="DF_INT_Buuhan" />
 		<num_copies value="5" />
 		<release_date value="1/25" />
 		<rating value="2" />
+		<eza value="SEZA" />
 	</_323>
 	<_324>
 		<common_name value="BU_STR_Hercule" />
 		<num_copies value="4" />
 		<release_date value="1/25" />
 		<rating value="2" />
+		<eza value="None" />
 	</_324>
 	<_325>
 		<common_name value="CLR_STR_Evolution_Blue_Vegeta" />
 		<num_copies value="2" />
 		<release_date value="1/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_325>
 	<_326>
 		<common_name value="CLR_AGL_SS4_Goku" />
 		<num_copies value="4" />
 		<release_date value="1/25" />
 		<rating value="3" />
+		<eza value="None" />
 	</_326>
 	<_327>
 		<common_name value="DFLR_TEQ_Super_Vegito" />
 		<num_copies value="2" />
 		<release_date value="1/25" />
 		<rating value="7" />
+		<eza value="None" />
 	</_327>
 	<_328>
 		<common_name value="DF_INT_Super_Janemba" />
 		<num_copies value="5" />
 		<release_date value="2/25" />
 		<rating value="2" />
+		<eza value="SEZA" />
 	</_328>
 	<_329>
 		<common_name value="DF_STR_Super_Gogeta" />
 		<num_copies value="5" />
 		<release_date value="2/25" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_329>
 	<_330>
 		<common_name value="DFLR_AGL_Full_Power_Frieza" />
 		<num_copies value="5" />
 		<release_date value="2/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_330>
 	<_331>
 		<common_name value="DFLR_INT_Super_Saiyan_Goku" />
 		<num_copies value="3" />
 		<release_date value="2/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_331>
 	<_332>
 		<common_name value="DF_TEQ_Perfect_Cell" />
 		<num_copies value="5" />
 		<release_date value="2/25" />
 		<rating value="3" />
+		<eza value="SEZA" />
 	</_332>
 	<_333>
 		<common_name value="LR_INT_SS2_Gohan" />
 		<num_copies value="4" />
 		<release_date value="2/25" />
 		<rating value="2" />
+		<eza value="SEZA" />
 	</_333>
 	<_334>
 		<common_name value="BU_AGL_Beerus" />
 		<num_copies value="5" />
 		<release_date value="2/25" />
 		<rating value="1" />
+		<eza value="None" />
 	</_334>
 	<_335>
 		<common_name value="CLR_INT_Goku_Frieza" />
 		<num_copies value="3" />
 		<release_date value="2/25" />
 		<rating value="5" />
+		<eza value="None" />
 	</_335>
 	<_336>
 		<common_name value="CLR_PHY_SS2_Gohan" />
 		<num_copies value="4" />
 		<release_date value="2/25" />
 		<rating value="3" />
+		<eza value="None" />
 	</_336>
 	<_337>
 		<common_name value="DFLR_AGL_Super_Gogeta" />
 		<num_copies value="1" />
 		<release_date value="2/25" />
 		<rating value="8" />
+		<eza value="None" />
 	</_337>
 	<_338>
 		<common_name value="F2P_PHY_Trunks_Goten" />
 		<num_copies value="5" />
 		<release_date value="2/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_338>
 	<_339>
 		<common_name value="F2PLR_AGL_Demon_King_Piccolo" />
 		<num_copies value="5" />
 		<release_date value="2/25" />
 		<rating value="1" />
+		<eza value="None" />
 	</_339>
 	<_340>
 		<common_name value="LR_STR_Kaioken_Goku" />
 		<num_copies value="5" />
 		<release_date value="2/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_340>
 	<_341>
 		<common_name value="DF_PHY_SS_Goku_GT" />
 		<num_copies value="5" />
 		<release_date value="3/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_341>
 	<_342>
 		<common_name value="DF_INT_SS_Vegeta_GT" />
 		<num_copies value="5" />
 		<release_date value="3/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_342>
 	<_343>
 		<common_name value="DF_PHY_SS3_Vegeta_Daima" />
 		<num_copies value="4" />
 		<release_date value="3/25" />
 		<rating value="2" />
+		<eza value="None" />
 	</_343>
 	<_344>
 		<common_name value="BU_INT_Chichi" />
 		<num_copies value="3" />
 		<release_date value="3/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_344>
 	<_345>
 		<common_name value="DF_AGL_Kid_Goku" />
 		<num_copies value="0" />
 		<release_date value="3/25" />
 		<rating value="4" />
+		<eza value="None" />
 	</_345>
 	<_346>
 		<common_name value="F2P_STR_Goku_Black" />
 		<num_copies value="5" />
 		<release_date value="3/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_346>
 	<_347>
 		<common_name value="F2P_TEQ_Gotenks" />
 		<num_copies value="5" />
 		<release_date value="3/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_347>
 	<_348>
 		<common_name value="F2P_PHY_Jackie_Chun" />
 		<num_copies value="5" />
 		<release_date value="3/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_348>
 	<_349>
 		<common_name value="F2PLR_AGL_SS_Bardock" />
 		<num_copies value="5" />
 		<release_date value="3/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_349>
 	<_350>
 		<common_name value="BU_PHY_Android_18" />
@@ -2467,677 +2466,790 @@ EZA / SEZA date is assumed 3 years after initial release / EZA
 		<BRZ_equip value="DGE" />
 		<release_date value="4/25" />
 		<rating value="2" />
+		<eza value="None" />
 	</_350>
 	<_351>
 		<common_name value="DF_STR_Cell_Perfect_Form" />
 		<num_copies value="2" />
 		<release_date value="4/25" />
 		<rating value="3" />
+		<eza value="None" />
 	</_351>
 	<_352>
 		<common_name value="F2P_PHY_Para_Para_Bros" />
 		<num_copies value="5" />
 		<release_date value="4/25" />
 		<rating value="2" />
+		<eza value="EZA" />
 	</_352>
 	<_353>
 		<common_name value="BU_PHY_SS_Kaioken_Goku" />
 		<num_copies value="5" />
 		<release_date value="4/25" />
 		<rating value="3" />
+		<eza value="EZA" />
 	</_353>
 	<_354>
 		<common_name value="BU_STR_Paikuhan" />
 		<num_copies value="5" />
 		<release_date value="4/25" />
 		<rating value="2" />
+		<eza value="EZA" />
 	</_354>
 	<_355>
 		<common_name value="LR_PHY_Paikuhan" />
 		<num_copies value="3" />
 		<release_date value="4/25" />
 		<rating value="5" />
+		<eza value="None" />
 	</_355>
 	<_356>
 		<common_name value="BU_AGL_Piccolo" />
 		<num_copies value="2" />
 		<release_date value="4/25" />
 		<rating value="1" />
+		<eza value="None" />
 	</_356>
 	<_357>
 		<common_name value="BU_PHY_Magetta" />
 		<num_copies value="3" />
 		<release_date value="4/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_357>
 	<_358>
 		<common_name value="DF_INT_Hit" />
 		<num_copies value="1" />
 		<release_date value="4/25" />
 		<rating value="7" />
+		<eza value="None" />
 	</_358>
 	<_359>
 		<common_name value="DF_TEQ_SSGSS_Kaioken_Goku" />
 		<num_copies value="4" />
 		<release_date value="4/25" />
 		<rating value="7" />
+		<eza value="None" />
 	</_359>
 	<_360>
 		<common_name value="DF_AGL_SSGSS_Kaioken_Goku" />
 		<num_copies value="5" />
 		<release_date value="4/25" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_360>
 	<_361>
 		<common_name value="F2P_STR_Tien" />
 		<num_copies value="5" />
 		<release_date value="5/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_361>
 	<_362>
 		<common_name value="F2PLR_STR_Mercenary_Tao" />
 		<num_copies value="5" />
 		<release_date value="5/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_362>
 	<_363>
 		<common_name value="F2P_INT_SS_Future_Gohan" />
 		<num_copies value="3" />
 		<release_date value="5/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_363>
 	<_364>
 		<common_name value="F2P_PHY_Boujack" />
 		<num_copies value="5" />
 		<release_date value="5/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_364>
 	<_365>
 		<common_name value="F2P_TEQ_Mecha_Frieza" />
 		<num_copies value="5" />
 		<release_date value="5/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_365>
 	<_366>
 		<common_name value="CLR_PHY_SS2_Caulifla_Kale" />
 		<num_copies value="0" />
 		<release_date value="5/25" />
 		<rating value="3" />
+		<eza value="None" />
 	</_366>
 	<_367>
 		<common_name value="BU_TEQ_General_Blue" />
 		<num_copies value="3" />
 		<release_date value="5/25" />
 		<rating value="3" />
+		<eza value="None" />
 	</_367>
 	<_368>
 		<common_name value="DF_PHY_Mercenary_Tao" />
 		<num_copies value="0" />
 		<release_date value="5/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_368>
 	<_369>
 		<common_name value="BU_INT_Burter_Jeice" />
 		<num_copies value="5" />
 		<release_date value="5/25" />
 		<rating value="5" />
+		<eza value="EZA" />
 	</_369>
 	<_370>
 		<common_name value="LR_STR_Tien" />
 		<num_copies value="2" />
 		<release_date value="6/25" />
 		<rating value="6" />
+		<eza value="None" />
 	</_370>
 	<_371>
 		<common_name value="F2P_INT_Chiaotzu" />
 		<num_copies value="5" />
 		<release_date value="6/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_371>
 	<_372>
 		<common_name value="F2PLR_INT_Tien" />
 		<num_copies value="5" />
 		<release_date value="6/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_372>
 	<_373>
 		<common_name value="F2PLR_STR_Goku_Black" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_373>
 	<_374>
 		<common_name value="DFLR_STR_SSGSS_Goku_Vegeta" />
 		<num_copies value="3" />
 		<release_date value="7/25" />
 		<rating value="10" />
+		<eza value="None" />
 	</_374>
 	<_375>
 		<common_name value="CLR_STR_Goku_Black_Zamasu" />
 		<num_copies value="3" />
 		<release_date value="7/25" />
 		<rating value="6" />
+		<eza value="None" />
 	</_375>
 	<_376>
 		<common_name value="BU_AGL_Champa" />
 		<num_copies value="4" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_376>
 	<_377>
 		<common_name value="F2P_AGL_Goku_Black_Clone" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="2" />
+		<eza value="None" />
 	</_377>
 	<_378>
 		<common_name value="F2P_TEQ_Goku_Black_Clone" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_378>
 	<_379>
 		<common_name value="F2P_INT_Goku_Black_Clone" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_379>
 	<_380>
 		<common_name value="F2P_STR_Goku_Black_Clone" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_380>
 	<_381>
 		<common_name value="F2P_PHY_Goku_Black_Clone" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_381>
 	<_382>
 		<common_name value="DF_PHY_Vegito_Blue" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="3" />
+		<eza value="SEZA" />
 	</_382>
 	<_383>
 		<common_name value="DF_AGL_SSR_Goku_Black" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_383>
 	<_384>
 		<common_name value="F2PLR_STR_Nuova_Shenron" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_384>
 	<_385>
 		<common_name value="BU_STR_Pan_GT" />
 		<num_copies value="1" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_385>
 	<_386>
 		<common_name value="DFLR_PHY_Omega_Shenron" />
 		<num_copies value="1" />
 		<release_date value="7/25" />
 		<rating value="8" />
+		<eza value="None" />
 	</_386>
 	<_387>
 		<common_name value="CLR_AGL_SS4_Gogeta" />
 		<num_copies value="2" />
 		<release_date value="7/25" />
 		<rating value="6" />
+		<eza value="None" />
 	</_387>
 	<_388>
 		<common_name value="DF_STR_SS4_Goku" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="3" />
+		<eza value="SEZA" />
 	</_388>
 	<_389>
 		<common_name value="DF_AGL_SS4_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="2" />
+		<eza value="SEZA" />
 	</_389>
 	<_390>
 		<common_name value="DF_STR_Omega_Shenron" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="SEZA" />
 	</_390>
 	<_391>
 		<common_name value="BU_TEQ_Syn_Shenron" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_391>
 	<_392>
 		<common_name value="BU_AGL_SS3_Goku_GT" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_392>
 	<_393>
 		<common_name value="BU_STR_SS3_Goku_GT_GiantApe" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="2" />
+		<eza value="EZA" />
 	</_393>
 	<_394>
 		<common_name value="BU_STR_SS_Trunks_GT" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_394>
 	<_395>
 		<common_name value="BU_PHY_Pan_GT" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_395>
 	<_396>
 		<common_name value="BU_INT_Super_Baby_2" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_396>
 	<_397>
 		<common_name value="F2PLR_INT_Shadow_Dragons" />
 		<num_copies value="5" />
 		<release_date value="7/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_397>
 	<_398>
 		<common_name value="DF_INT_SS4_Gogeta" />
 		<num_copies value="5" />
 		<release_date value="8/25" />
 		<rating value="4" />
+		<eza value="EZA" />
 	</_398>
 	<_399>
 		<common_name value="LR_AGL_Goten_Trunks" />
 		<num_copies value="3" />
 		<release_date value="8/25" />
 		<rating value="3" />
+		<eza value="SEZA" />
 	</_399>
 	<_400>
 		<common_name value="BU_PHY_Spopovich" />
 		<num_copies value="1" />
 		<release_date value="8/25" />
 		<rating value="1" />
+		<eza value="None" />
 	</_400>
 	<_401>
 		<common_name value="DFLR_INT_SS_Hybrid_Saiyans" />
 		<num_copies value="1" />
 		<release_date value="8/25" />
 		<rating value="9" />
+		<eza value="None" />
 	</_401>
 	<_402>
 		<common_name value="LR_TEQ_SS2_Gohan" />
 		<num_copies value="4" />
 		<release_date value="8/25" />
 		<rating value="2" />
+		<eza value="EZA" />
 	</_402>
 	<_403>
 		<common_name value="BU_PHY_Fasha" />
 		<num_copies value="3" />
 		<release_date value="8/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_403>
 	<_404>
 		<common_name value="BU_TEQ_Ranfan" />
 		<num_copies value="0" />
 		<release_date value="8/25" />
 		<rating value="2" />
+		<eza value="None" />
 	</_404>
 	<_405>
 		<common_name value="BU_AGL_Videl" />
 		<num_copies value="1" />
 		<release_date value="8/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_405>
 	<_406>
 		<common_name value="F2P_INT_Annin" />
 		<num_copies value="4" />
 		<release_date value="8/25" />
 		<rating value="2" />
+		<eza value="EZA" />
 	</_406>
 	<_407>
 		<common_name value="F2P_TEQ_Yamcha" />
 		<num_copies value="2" />
 		<release_date value="8/25" />
 		<rating value="1" />
+		<eza value="None" />
 	</_407>
 	<_408>
 		<common_name value="BU_INT_DBS_Broly_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="8/25" />
 		<rating value="2" />
+		<eza value="None" />
 	</_408>
 	<_409>
 		<common_name value="DFLR_TEQ_Golden_Frieza_Gogeta" />
 		<num_copies value="3" />
 		<release_date value="8/25" />
 		<rating value="9" />
+		<eza value="None" />
 	</_409>
 	<_410>
 		<common_name value="CLR_TEQ_Wrathful_Broly" />
 		<num_copies value="3" />
 		<release_date value="9/25" />
 		<rating value="6" />
+		<eza value="None" />
 	</_410>
 	<_411>
 		<common_name value="BU_STR_DBS_Broly" />
 		<num_copies value="5" />
 		<release_date value="9/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_411>
 	<_412>
 		<common_name value="LR_STR_LSS_Broly" />
 		<num_copies value="4" />
 		<release_date value="9/25" />
 		<rating value="2" />
+		<eza value="SEZA" />
 	</_412>
 	<_413>
 		<common_name value="BU_AGL_Baby_Possessed_Trunks" />
 		<num_copies value="1" />
 		<release_date value="9/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_413>
 	<_414>
 		<common_name value="DF_STR_Super_Baby" />
 		<num_copies value="1" />
 		<release_date value="9/25" />
 		<rating value="7" />
+		<eza value="None" />
 	</_414>
 	<_415>
 		<common_name value="LR_TEQ_Super_17" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_415>
 	<_416>
 		<common_name value="LR_INT_Baby_Possessed_Bros" />
 		<num_copies value="1" />
 		<release_date value="10/25" />
 		<rating value="4" />
+		<eza value="None" />
 	</_416>
 	<_417>
 		<common_name value="LR_AGL_Majin_Vegeta" />
 		<num_copies value="3" />
 		<release_date value="10/25" />
 		<rating value="3" />
+		<eza value="SEZA" />
 	</_417>
 	<_418>
 		<common_name value="F2P_TEQ_Baby_Possessed_Gohan" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="1" />
+		<eza value="None" />
 	</_418>
 	<_419>
 		<common_name value="F2P_PHY_Baby_Possessed_Goten" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="1" />
+		<eza value="None" />
 	</_419>
 	<_420>
 		<common_name value="F2P_INT_Baby_Possessed_Trunks" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="1" />
+		<eza value="None" />
 	</_420>
 	<_421>
 		<common_name value="F2PLR_STR_Chi_Chi" />
 		<num_copies value="2" />
 		<release_date value="10/25" />
 		<rating value="1" />
+		<eza value="None" />
 	</_421>
 	<_422>
 		<common_name value="F2P_INT_Goten_Icarus" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_422>
 	<_423>
 		<common_name value="BU_PHY_Piccolo_Mini_Daima" />
 		<num_copies value="2" />
 		<release_date value="10/25" />
 		<rating value="3" />
+		<eza value="None" />
 	</_423>
 	<_424>
 		<common_name value="DF_TEQ_SS4_Goku_Mini_Daima" />
 		<num_copies value="0" />
 		<release_date value="10/25" />
 		<rating value="7" />
+		<eza value="None" />
 	</_424>
 	<_425>
 		<common_name value="F2P_PHY_Goku_Mini_Daima" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_425>
 	<_426>
 		<common_name value="F2P_INT_Vegeta_Mini_Daima" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_426>
 	<_427>
 		<common_name value="F2P_INT_Masked_Majin_Panzy" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="2" />
+		<eza value="None" />
 	</_427>
 	<_428>
 		<common_name value="F2P_STR_Glorio" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="1" />
+		<eza value="None" />
 	</_428>
 	<_429>
 		<common_name value="F2P_AGL_Manga_Goku" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_429>
 	<_430>
 		<common_name value="BU_PHY_Manga_Piccolo_Jr" />
 		<num_copies value="2" />
 		<release_date value="10/25" />
 		<rating value="2" />
+		<eza value="None" />
 	</_430>
 	<_431>
 		<common_name value="BU_STR_Manga_Vegeta" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_431>
 	<_432>
 		<common_name value="BU_TEQ_Manga_SS2_Gohan" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_432>
 	<_433>
 		<common_name value="BU_INT_Manga_Final_Form_Frieza" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="5" />
+		<eza value="None" />
 	</_433>
 	<_434>
 		<common_name value="BU_AGL_Manga_Majin_Buu" />
 		<num_copies value="5" />
 		<release_date value="10/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_434>
 	<_435>
 		<common_name value="LR_AGL_Third_Eye_Gomah" />
 		<num_copies value="2" />
 		<release_date value="11/25" />
 		<rating value="8" />
+		<eza value="None" />
 	</_435>
 	<_436>
 		<common_name value="BU_STR_Android_17_ToP" />
 		<num_copies value="1" />
 		<release_date value="11/25" />
 		<rating value="4" />
+		<eza value="None" />
 	</_436>
 	<_437>
 		<common_name value="DF_AGL_Android_16" />
 		<num_copies value="0" />
 		<release_date value="11/25" />
 		<rating value="4" />
+		<eza value="None" />
 	</_437>
 	<_438>
 		<common_name value="F2PLR_AGL_Garlic_Jr" />
 		<num_copies value="5" />
 		<release_date value="11/25" />
 		<rating value="0" />
+		<eza value="None" />
 	</_438>
 	<_439>
 		<common_name value="BU_INT_Androids_19_20" />
 		<num_copies value="5" />
 		<release_date value="11/25" />
 		<rating value="1" />
+		<eza value="EZA" />
 	</_439>
 	<_440>
 		<common_name value="F2PLR_INT_Jackie_Chun" />
 		<num_copies value="5" />
 		<release_date value="12/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_440>
 	<_441>
 		<common_name value="F2P_AGL_Piccolo_Jr" />
 		<num_copies value="5" />
 		<release_date value="12/25" />
 		<rating value="0" />
+		<eza value="EZA" />
 	</_441>
 	<_442>
 		<common_name value="F2P_INT_Broly_Movie_Trunks" />
 		<num_copies value="5" />
 		<release_date value="12/25" />
 		<rating value="3" />
+		<eza value="EZA" />
 	</_442>
 	<_443>
 		<common_name value="CLR_INT_Future_Gohan_Trunks" />
 		<num_copies value="1" />
 		<release_date value="12/25" />
 		<rating value="8" />
+		<eza value="None" />
 	</_443>
 	<_444>
 		<common_name value="DF_AGL_Gohan_Gamma1" />
 		<num_copies value="0" />
 		<release_date value="12/25" />
 		<rating value="6" />
+		<eza value="None" />
 	</_444>
 	<_445>
 		<common_name value="DF_STR_Gamma2_Piccolo" />
 		<num_copies value="1" />
 		<release_date value="12/25" />
 		<rating value="8" />
+		<eza value="None" />
 	</_445>
 	<_446>
 		<common_name value="F2PLR_STR_Login_Goku" />
 		<num_copies value="0" />
 		<release_date value="1/26" />
 		<rating value="5" />
+		<eza value="SEZA" />
 	</_446>
 	<_447>
 		<common_name value="F2P_AGL_Anni_Goku" />
 		<num_copies value="5" />
 		<release_date value="1/26" />
 		<rating value="3" />
+		<eza value="None" />
 	</_447>
 	<_448>
 		<common_name value="BU_TEQ_Majin_Duu" />
 		<num_copies value="1" />
 		<release_date value="1/26" />
 		<rating value="6" />
+		<eza value="None" />
 	</_448>
 	<_449>
 		<common_name value="CLR_TEQ_SS3_Vegeta_DAIMA" />
 		<num_copies value="1" />
 		<release_date value="1/26" />
 		<rating value="9" />
+		<eza value="None" />
 	</_449>
 	<_450>
 		<common_name value="DFLR_STR_SS4_Goku_DAIMA" />
 		<num_copies value="1" />
 		<release_date value="1/26" />
 		<rating value="10" />
+		<eza value="None" />
 	</_450>
 	<_451>
 		<common_name value="LR_PHY_SS_Sword_Trunks" />
 		<num_copies value="4" />
 		<release_date value="2/26" />
 		<rating value="5" />
+		<eza value="SEZA" />
 	</_451>
 	<_452>
 		<common_name value="F2P_TEQ_Majin_Kuu" />
 		<num_copies value="5" />
 		<release_date value="2/26" />
 		<rating value="3" />
+		<eza value="None" />
 	</_452>
 	<_453>
 		<common_name value="F2P_PHY_Tamagami_3" />
 		<num_copies value="5" />
 		<release_date value="2/26" />
 		<rating value="2" />
+		<eza value="None" />
 	</_453>
 	<_454>
 		<common_name value="F2P_TEQ_Tamagami_2" />
 		<num_copies value="5" />
 		<release_date value="2/26" />
 		<rating value="4" />
+		<eza value="None" />
 	</_454>
 	<_455>
 		<common_name value="F2P_AGL_Tamagami_1" />
 		<num_copies value="5" />
 		<release_date value="2/26" />
 		<rating value="4" />
+		<eza value="None" />
 	</_455>
 	<_456>
 		<common_name value="DF_INT_SSGSS_Vegeta" />
 		<num_copies value="3" />
 		<release_date value="2/26" />
 		<rating value="6" />
+		<eza value="SEZA" />
 	</_456>
 	<_457>
 		<common_name value="BU_AGL_Ledgic" />
 		<num_copies value="0" />
 		<release_date value="2/26" />
 		<rating value="4" />
+		<eza value="None" />
 	</_457>
 	<_458>
 		<common_name value="DFLR_INT_SS4_Vegeta_Goku" />
 		<num_copies value="2" />
 		<release_date value="2/26" />
 		<rating value="10" />
+		<eza value="None" />
 	</_458>
 	<_459>
 		<common_name value="CLR_PHY_UI_Goku_SSGSSE_Vegeta" />
 		<num_copies value="1" />
 		<release_date value="2/26" />
 		<rating value="10" />
+		<eza value="None" />
 	</_459>
 	<_460>
 		<common_name value="DF_INT_UI_Goku" />
 		<num_copies value="5" />
 		<release_date value="3/26" />
 		<rating value="7" />
+		<eza value="SEZA" />
 	</_460>
 	<_461>
 		<common_name value="BU_STR_Yakon" />
 		<num_copies value="0" />
 		<release_date value="3/26" />
 		<rating value="4" />
+		<eza value="None" />
 	</_461>
 	<_462>
 		<common_name value="DF_TEQ_Dabura" />
 		<num_copies value="0" />
 		<release_date value="3/26" />
 		<rating value="10" />
+		<eza value="None" />
 	</_462>
 </id>

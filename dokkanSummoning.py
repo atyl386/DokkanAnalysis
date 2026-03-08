@@ -6,12 +6,14 @@ from itertools import chain
 import numpy as np
 import os
 import xml.etree.ElementTree as ET
-from ast import literal_eval
 
 CWD = os.getcwd()
 DOKKAN_ACCOUNT_XML_FILE_PATH = os.path.join(CWD, "dokkanAccount.xml")
 NUM_COPIES_MAX = 5
 HiPo_dupes = ["55%", "69%", "79%", "90%", "100%"]
+# This number is a fudge factor to get sensible dupe improvement
+DI = {0: 0.7, 1: 0.1, 2: 0.1, 3: 0.05, 4: 0.05, 5: 0}
+D = {0: 0, 1: 0.7, 2:0.8, 3:0.9, 4:0.95, 5:1}
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
     dokkanAccountXML = ET.parse(dokkanAccountXmlFilePath)
@@ -41,48 +43,37 @@ def SummonRating(ID):
     evals = [0.0] * NUM_COPIES_MAX
     now = dt.datetime.today()
     EZADiscountFactor = 1/3
-    exclusivity = User[ID].split("_")[0]
+    exclusivity = User[ID]["common_name"].split("_")[0]
     eza = User[ID]["eza"]
-    # This number is a fudge factor to get sensible dupe improvement
-    match nCopies:
-        case 5:
-            EZADI = 0
-        case 4:
-            EZADI = 0.05
-        case 3:
-            EZADI = 0.05
-        case 2:
-            EZADI = 0.1
-        case 1:
-            EZADI = 0.1
-        case 0:
-            EZADI = 0.7
-
+    if User[ID]["common_name"] == "DFLR_INT_SS4_Vegeta_Goku":
+        exclusivity = "DFLR"
     if exclusivity in ["DFLR", "DF", "CLR", "LR"]:
-        rarityScore = 50  # These are summonRatings, have to be tuned
+        rarityScore = 7  # These are summonRatings, have to be tuned
     else:
-        rarityScore = 15
-    if unit.EZA:
+        rarityScore = 3
+    
+    EZADate = User[ID]["release_date"]
+    if eza == "EZA":
         EZA = 6 / 7
+    elif eza == "SEZA":
+        EZA = 3 / 7
         futureEZA = 0
-        EZADate = unit.date
-    else:
+    elif eza == "None":
         EZA = 1
-        EZADate = unit.date + relativedelta(months=4 * 12)
-        timeUntilEZA_years = relativedelta(EZADate, now)
-        futureEZA = rarityScore * EZADiscountFactor ** (timeUntilEZA_years.years + timeUntilEZA_years.months/12) * EZADI
-    if os.path.exists("DokkanUnits/" + HiPo_dupes[0] + "/unit_" + str(ID) + ".pkl"):
-        for i in range(NUM_COPIES_MAX):
-            evals[i] = unitSummaries[HiPo_dupes[i]].at[ID, "Evaluation"]
-        if nCopies == 5:
-            dupeImprovement = 0
-        elif nCopies > 0:
-            dupeImprovement = max((evals[nCopies] - evals[nCopies - 1]) / (evals[-1]), 0)
-        else:
-            dupeImprovement = max((evals[nCopies]) / (evals[-1]), 0)
-        summonRating = max(max(evals[-1], 0) * dupeImprovement * EZA, max(0.2, futureEZA), 0)
     else:
-        summonRating = max(0.2, futureEZA)
+        raise ValueError("Invalid EZA value for unit ID " + str(ID))
+    if eza != "SEZA":
+        EZADate += relativedelta(months=4 * 12)
+        timeUntilEZA_years = relativedelta(EZADate, now)
+        futureEZA = rarityScore * EZADiscountFactor ** (timeUntilEZA_years.years + timeUntilEZA_years.months/12) * DI[nCopies]
+    for i in range(NUM_COPIES_MAX):
+        evals[i] = User[ID]["rating"] * D[i + 1]
+    if nCopies == 5:
+        dupeImprovement = 0
+    else:
+        dupeImprovement = max(User[ID]["rating"] * DI[nCopies], 0)
+    summonRating = max(dupeImprovement * EZA, max(0.02, futureEZA), 0)
+
     return summonRating
 
 
