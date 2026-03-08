@@ -70,9 +70,10 @@ def SummonRatings():
     numEvalUnits = len(unitSummaries[HiPo_dupes[0]].index)
     evals = np.zeros((NUM_COPIES_MAX, numEvalUnits))
     dupeImprovement = np.zeros((NUM_COPIES_MAX, numEvalUnits))
+    commonNames = [unitSummaries[HiPo_dupes[0]].at[ID, "common_name:"] for ID in unitSummaries[HiPo_dupes[0]].index]
+    rarity = ["LR" if name.split("_")[0] in ["DFLR", "CLR", "LR"] else "TUR" for name in commonNames]
     medianDupeImprovement = np.zeros(NUM_COPIES_MAX)
     for i in range(NUM_COPIES_MAX):
-
         evals[i, :] = unitSummaries[HiPo_dupes[i]]["Evaluation"]
     for i in range(NUM_COPIES_MAX):
         if i > 0:
@@ -83,7 +84,12 @@ def SummonRatings():
         
     for nCopies in range(NUM_COPIES_MAX):
         plt.subplot(3, 2, nCopies + 1)
-        plt.plot(unitSummaries[HiPo_dupes[nCopies]].index, dupeImprovement[nCopies, :], "o")
+        for ID in unitSummaries[HiPo_dupes[nCopies]].index:
+            i = unitSummaries[HiPo_dupes[nCopies]].index.get_loc(ID)
+            if rarity[i] == "LR":
+                plt.scatter(ID, dupeImprovement[nCopies, i], color="gold")
+            else:
+                plt.scatter(ID, dupeImprovement[nCopies, i], color="blue")
         plt.axhline(y=medianDupeImprovement[nCopies], color="r", linestyle="--")
         plt.xlabel("Unit ID")
         plt.ylabel("Evaluation")
