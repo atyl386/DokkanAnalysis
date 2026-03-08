@@ -70,7 +70,7 @@ def SummonRatings():
     numEvalUnits = len(unitSummaries[HiPo_dupes[0]].index)
     evals = np.zeros((NUM_COPIES_MAX, numEvalUnits))
     dupeImprovement = np.zeros((NUM_COPIES_MAX, numEvalUnits))
-    meanDupeImprovement = np.zeros(NUM_COPIES_MAX)
+    medianDupeImprovement = np.zeros(NUM_COPIES_MAX)
     for i in range(NUM_COPIES_MAX):
 
         evals[i, :] = unitSummaries[HiPo_dupes[i]]["Evaluation"]
@@ -79,12 +79,12 @@ def SummonRatings():
             dupeImprovement[i ,:] = (evals[i] - evals[i - 1]) / (evals[-1])
         else:
             dupeImprovement[i ,:] = evals[i] / evals[-1]
-        meanDupeImprovement[i] = np.mean(dupeImprovement[i, :])
+        medianDupeImprovement[i] = np.median(dupeImprovement[i, :])
         
     for nCopies in range(NUM_COPIES_MAX):
         plt.subplot(3, 2, nCopies + 1)
         plt.plot(unitSummaries[HiPo_dupes[nCopies]].index, dupeImprovement[nCopies, :], "o")
-        plt.axhline(y=meanDupeImprovement[nCopies], color="r", linestyle="--")
+        plt.axhline(y=medianDupeImprovement[nCopies], color="r", linestyle="--")
         plt.xlabel("Unit ID")
         plt.ylabel("Evaluation")
         plt.title(HiPo_dupes[nCopies])
