@@ -6,6 +6,7 @@ from itertools import chain
 import numpy as np
 import os
 import xml.etree.ElementTree as ET
+import matplotlib.pyplot as plt
 
 CWD = os.getcwd()
 DOKKAN_ACCOUNT_XML_FILE_PATH = os.path.join(CWD, "dokkanAccount.xml")
@@ -45,8 +46,8 @@ def SummonRating(ID):
     EZADiscountFactor = 1/3
     exclusivity = User[ID]["common_name"].split("_")[0]
     eza = User[ID]["eza"]
-    if User[ID]["common_name"] == "DFLR_INT_SS4_Vegeta_Goku":
-        exclusivity = "DFLR"
+    if User[ID]["common_name"] == "DF_TEQ_Golden_Frieza":
+        exclusivity = "DF"
     if exclusivity in ["DFLR", "DF", "CLR", "LR"]:
         rarityScore = 7  # These are summonRatings, have to be tuned
     else:
@@ -64,8 +65,9 @@ def SummonRating(ID):
         raise ValueError("Invalid EZA value for unit ID " + str(ID))
     if eza != "SEZA":
         EZADate += relativedelta(months=4 * 12)
-        timeUntilEZA_years = relativedelta(EZADate, now)
-        futureEZA = rarityScore * EZADiscountFactor ** (timeUntilEZA_years.years + timeUntilEZA_years.months/12) * DI[nCopies]
+        timeUntilEZA = relativedelta(EZADate, now)
+        timeUntilEZA_years = max(timeUntilEZA.years + timeUntilEZA.months/12 + timeUntilEZA.days/365, 0)
+        futureEZA = rarityScore * EZADiscountFactor ** timeUntilEZA_years * DI[nCopies]
     for i in range(NUM_COPIES_MAX):
         evals[i] = User[ID]["rating"] * D[i + 1]
     if nCopies == 5:
@@ -82,10 +84,12 @@ def SummonRatings():
     commonName = [""] * nUnits
     nCopies = [0] * nUnits
     summonRatings = [0.0] * nUnits
+    releaseDates = [0.0] * nUnits
     for ID in IDs:
         commonName[ID - 1] = User[ID]["common_name"]
         nCopies[ID - 1] = User[ID]["num_copies"]
         summonRatings[ID - 1] = SummonRating(ID)
+        releaseDates[ID - 1] = User[ID]["release_date"]
     df = pd.DataFrame(
         data=np.transpose([IDs, commonName, nCopies, summonRatings]),
         columns=["ID", "common_name", "num_copies", "Summon Rating"],
@@ -93,6 +97,12 @@ def SummonRatings():
     df.set_index("ID", inplace=True)
     with pd.ExcelWriter("SummonRating.xlsx") as writer:
         df.to_excel(writer)
+    
+    plt.plot(releaseDates, summonRatings, "o")
+    plt.xlabel("Release Date")
+    plt.ylabel("Summon Rating")
+    plt.title("Summon Rating vs Release Date")
+    plt.show()
 
 
 class Banner:
