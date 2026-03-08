@@ -13,8 +13,8 @@ DOKKAN_ACCOUNT_XML_FILE_PATH = os.path.join(CWD, "dokkanAccount.xml")
 NUM_COPIES_MAX = 5
 HiPo_dupes = ["55%", "69%", "79%", "90%", "100%"]
 # This number is a fudge factor to get sensible dupe improvement
-DI = {0: 0.7, 1: 0.1, 2: 0.1, 3: 0.05, 4: 0.05, 5: 0}
-D = {0: 0, 1: 0.7, 2:0.8, 3:0.9, 4:0.95, 5:1}
+DI = {0: 0.45, 1: 0.2, 2: 0.2, 3: 0.075, 4: 0.075, 5: 0}
+D = {0: 0, 1: 0.45, 2: 0.65, 3: 0.85, 4: 0.925, 5 :1}
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
     dokkanAccountXML = ET.parse(dokkanAccountXmlFilePath)
