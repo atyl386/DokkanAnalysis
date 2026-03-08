@@ -6,6 +6,7 @@ from itertools import chain
 import numpy as np
 from dokkanUnitConstants import NUM_COPIES_MAX, DOKKAN_ACCOUNT_XML_FILE_PATH
 from dokkanEvaluation import parseDokkanAccountXML, Unit, os
+import matplotlib.pyplot as plt
 
 HiPo_dupes = ["55%", "69%", "79%", "90%", "100%"]
 User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
@@ -24,15 +25,15 @@ def SummonRating(ID, unitSummaries):
         case 5:
             EZADI = 0
         case 4:
-            EZADI = 0.05
+            EZADI = 0.1
         case 3:
-            EZADI = 0.05
+            EZADI = 0.1
         case 2:
-            EZADI = 0.1
+            EZADI = 0.2
         case 1:
-            EZADI = 0.1
+            EZADI = 0.2
         case 0:
-            EZADI = 0.7
+            EZADI = 0.4
 
     if unit.exclusivity in ["DFLR", "DF", "CLR", "LR"]:
         rarityScore = 50  # These are summonRatings, have to be tuned
@@ -66,6 +67,28 @@ def SummonRatings():
     unitSummaries = dict.fromkeys(HiPo_dupes)
     for i in range(NUM_COPIES_MAX):
         unitSummaries[HiPo_dupes[i]] = pd.read_excel("DokkanUnits/" + HiPo_dupes[i] + "/unitSummary.xlsx", index_col="ID")
+    numEvalUnits = len(unitSummaries[HiPo_dupes[0]].index)
+    evals = np.zeros((NUM_COPIES_MAX, numEvalUnits))
+    dupeImprovement = np.zeros((NUM_COPIES_MAX, numEvalUnits))
+    meanDupeImprovement = np.zeros(NUM_COPIES_MAX)
+    for i in range(NUM_COPIES_MAX):
+
+        evals[i, :] = unitSummaries[HiPo_dupes[i]]["Evaluation"]
+    for i in range(NUM_COPIES_MAX):
+        if i > 0:
+            dupeImprovement[i ,:] = (evals[i] - evals[i - 1]) / (evals[-1])
+        else:
+            dupeImprovement[i ,:] = evals[i] / evals[-1]
+        meanDupeImprovement[i] = np.mean(dupeImprovement[i, :])
+        
+    for nCopies in range(NUM_COPIES_MAX):
+        plt.subplot(3, 2, nCopies + 1)
+        plt.plot(unitSummaries[HiPo_dupes[nCopies]].index, dupeImprovement[nCopies, :], "o")
+        plt.axhline(y=meanDupeImprovement[nCopies], color="r", linestyle="--")
+        plt.xlabel("Unit ID")
+        plt.ylabel("Evaluation")
+        plt.title(HiPo_dupes[nCopies])
+    plt.show()
     IDs = list(User.keys())
     commonName = [""] * nUnits
     nCopies = [0] * nUnits
@@ -81,7 +104,6 @@ def SummonRatings():
     df.set_index("ID", inplace=True)
     with pd.ExcelWriter("SummonRating.xlsx") as writer:
         df.to_excel(writer)
-
 
 class Banner:
     def __init__(
