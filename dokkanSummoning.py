@@ -4,21 +4,45 @@ from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from itertools import chain
 import numpy as np
-from dokkanUnitConstants import NUM_COPIES_MAX, DOKKAN_ACCOUNT_XML_FILE_PATH
-from dokkanEvaluation import parseDokkanAccountXML, Unit, os
+import os
+import xml.etree.ElementTree as ET
+from ast import literal_eval
 
+CWD = os.getcwd()
+DOKKAN_ACCOUNT_XML_FILE_PATH = os.path.join(CWD, "dokkanAccount.xml")
+NUM_COPIES_MAX = 5
 HiPo_dupes = ["55%", "69%", "79%", "90%", "100%"]
+
+def parseDokkanAccountXML(dokkanAccountXmlFilePath):
+    dokkanAccountXML = ET.parse(dokkanAccountXmlFilePath)
+    units = list(dokkanAccountXML.getroot())
+    dokkanAccountDict = {}
+    for unit in units:
+        _id = int(unit.tag[1:])
+        fields = list(unit)
+        unitDict = {}
+        for field in fields:
+            if field.tag == "num_copies":
+                unitDict[field.tag] = int(field.attrib["value"])
+            elif field.tag == "release_date":
+                unitDict[field.tag] = dt.datetime.strptime(field.attrib["value"], "%m/%y")
+            elif field.tag == "rating":
+                unitDict[field.tag] = int(field.attrib["value"])
+            else:
+                unitDict[field.tag] = field.attrib["value"]
+        dokkanAccountDict[_id] = unitDict
+    return dokkanAccountDict
+
 User = parseDokkanAccountXML(DOKKAN_ACCOUNT_XML_FILE_PATH)
 nUnits = len(User)
 
-
-def SummonRating(ID, unitSummaries):
-    unit = Unit(ID, processUnit=False)
-    unit.getConstants()
+def SummonRating(ID):
     nCopies = User[ID]["num_copies"]
     evals = [0.0] * NUM_COPIES_MAX
     now = dt.datetime.today()
     EZADiscountFactor = 1/3
+    exclusivity = User[ID].split("_")[0]
+    eza = User[ID]["eza"]
     # This number is a fudge factor to get sensible dupe improvement
     match nCopies:
         case 5:
@@ -34,7 +58,7 @@ def SummonRating(ID, unitSummaries):
         case 0:
             EZADI = 0.7
 
-    if unit.exclusivity in ["DFLR", "DF", "CLR", "LR"]:
+    if exclusivity in ["DFLR", "DF", "CLR", "LR"]:
         rarityScore = 50  # These are summonRatings, have to be tuned
     else:
         rarityScore = 15
@@ -63,9 +87,6 @@ def SummonRating(ID, unitSummaries):
 
 
 def SummonRatings():
-    unitSummaries = dict.fromkeys(HiPo_dupes)
-    for i in range(NUM_COPIES_MAX):
-        unitSummaries[HiPo_dupes[i]] = pd.read_excel("DokkanUnits/" + HiPo_dupes[i] + "/unitSummary.xlsx", index_col="ID")
     IDs = list(User.keys())
     commonName = [""] * nUnits
     nCopies = [0] * nUnits
@@ -73,7 +94,7 @@ def SummonRatings():
     for ID in IDs:
         commonName[ID - 1] = User[ID]["common_name"]
         nCopies[ID - 1] = User[ID]["num_copies"]
-        summonRatings[ID - 1] = SummonRating(ID, unitSummaries)
+        summonRatings[ID - 1] = SummonRating(ID)
     df = pd.DataFrame(
         data=np.transpose([IDs, commonName, nCopies, summonRatings]),
         columns=["ID", "common_name", "num_copies", "Summon Rating"],
