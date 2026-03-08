@@ -145,7 +145,7 @@ class Banner:
         else:
             self.anniBonus = 1
         if summonPoints:
-            self.summonPoints = 15 * summonPointsPerMulti / 300 # avg 15 summon rating per ticket, 300 per ticket
+            self.summonPoints = 1.5 * summonPointsPerMulti / 300 # avg 1.5 summon rating per ticket, 300 per ticket
         else:
             self.summonPoints = 0
         if fourthiethAnniversary:
@@ -153,10 +153,10 @@ class Banner:
             coins = 0.25 * max(list(chain(*self.summonRatings.values())))
         else:
             coins = 0
-        self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus + summonPoints + coins
+        self.summonScore = self.units * self.coin * self.featuredRate * self.tickets * self.threePlus1 * discount * self.anniBonus + self.summonPoints + coins
 
     def shouldSummmon(self):
-        if self.summonScore > 12.5:  # Will need to be tuned. Could be as high as 15
+        if self.summonScore > 1.5:
             return True
         else:
             return False
@@ -177,7 +177,7 @@ print(SS4DaimaGokuAdult.summonRatings)
 print(SS4DaimaGokuAdult.summonScore)
 SS3DaimaVegetaAdult = Banner([449, 375, 335, 245, 83, 53, 13, 423, 186, 99], "cyan", threePlus1=True)
 print(SS3DaimaVegetaAdult.summonRatings)
-print(SS3DaimaVegetaAdult.summonScore + 50 / (500 / 14.5))
+print(SS3DaimaVegetaAdult.summonScore + 0.9 / (500 / 14.5))
 eleventhAnniversaryDF = Banner([253, 246, 218, 81, 66, 4, 63, 102, 3, 2, 37, 44, 62, 59, 85, 61, 58, 321, 320, 307, 282, 260, 233, 84, 160, 161, 110, 100, 97, 35, 42, 162, 28, 15, 5, 30, 43, 36, 17, 18, 7, 32, 31, 150, 134, 19, 45, 38, 46, 39, 34, 8, 33], "red")
 print(eleventhAnniversaryDF.summonRatings)
 print(eleventhAnniversaryDF.summonScore)
