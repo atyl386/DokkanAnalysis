@@ -14,6 +14,13 @@ EZA / SEZA date is assumed 3 years after initial release / EZA
 8 = Top 20
 9 = Top 10 unit
 10 = Top 5 unit in the game
+
+dis (dupe improvement score)
+2 = very little gain from dupes, i.e. high inbuilt dodge and crit
+1 = little gain from dupes, i.e. inbuilt crit or dodge
+0 = some gain form dupes
+-1 = significant gain from dupes
+-2 = massive gain from dupes, i.e. no inbuilt crit or dodge
  -->
 
 <id>
@@ -23,6 +30,7 @@ EZA / SEZA date is assumed 3 years after initial release / EZA
 		<release_date value="8/22" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_1>
 	<_2>
 		<common_name value="DFLR_PHY_Buu_Goku_Vegeta" />
@@ -30,6 +38,7 @@ EZA / SEZA date is assumed 3 years after initial release / EZA
 		<release_date value="2/26" />
 		<rating value="9" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_2>
 	<_3>
 		<common_name value="DFLR_STR_GT_Goku_Vegeta" />
