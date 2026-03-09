@@ -13,8 +13,10 @@ DOKKAN_ACCOUNT_XML_FILE_PATH = os.path.join(CWD, "dokkanAccount.xml")
 NUM_COPIES_MAX = 5
 HiPo_dupes = ["55%", "69%", "79%", "90%", "100%"]
 # This number is a fudge factor to get sensible dupe improvement
-DI = {0: 0.45, 1: 0.2, 2: 0.2, 3: 0.075, 4: 0.075, 5: 0}
-D = {0: 0, 1: 0.45, 2: 0.65, 3: 0.85, 4: 0.925, 5 :1}
+TUR_DI = {0: 0.35, 1: 0.2, 2: 0.25, 3: 0.1, 4: 0.1, 5: 0}
+LR_DI = {0: 0.5, 1: 0.15, 2: 0.25, 3: 0.05, 4: 0.05, 5: 0}
+TUR_D = {0: 0, 1: 0.35, 2: 0.55, 3: 0.8, 4: 0.9, 5 :1}
+LR_D = {0: 0, 1: 0.5, 2: 0.65, 3: 0.9, 4: 0.95, 5: 1}
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
     dokkanAccountXML = ET.parse(dokkanAccountXmlFilePath)
@@ -53,6 +55,9 @@ def SummonRating(ID):
     else:
         rarityScore = 3
     
+    rarity = User[ID]["common_name"].split("_")[0]
+    DI = LR_DI if rarity in ["LR", "DFLR", "CLR"] else TUR_DI
+    D = LR_D if rarity in ["LR", "DFLR", "CLR"] else TUR_D
     EZADate = User[ID]["release_date"]
     if eza == "EZA":
         EZA = 6 / 7
