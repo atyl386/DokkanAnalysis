@@ -82,7 +82,7 @@ def SummonRatings():
             dupeImprovement[i ,:] = evals[i] / evals[-1]
         medianDupeImprovement[i] = np.median([dupeImprovement[i, j] for j in range(numEvalUnits) if rarity[j] == "TUR"]), np.median([dupeImprovement[i, j] for j in range(numEvalUnits) if rarity[j] == "LR"])
         
-    for nCopies in range(NUM_COPIES_MAX):
+    """     for nCopies in range(NUM_COPIES_MAX):
         plt.subplot(3, 2, nCopies + 1)
         for ID in unitSummaries[HiPo_dupes[nCopies]].index:
             i = unitSummaries[HiPo_dupes[nCopies]].index.get_loc(ID)
@@ -95,18 +95,18 @@ def SummonRatings():
         plt.xlabel("Unit ID")
         plt.ylabel("Evaluation")
         plt.title(HiPo_dupes[nCopies])
-    plt.show()
-    IDs = list(User.keys())
-    commonName = [""] * nUnits
-    nCopies = [0] * nUnits
-    summonRatings = [0.0] * nUnits
+    plt.show() """
+    IDs = list(unitSummaries[HiPo_dupes[0]].index)
+    commonName = {}
+    nCopies = {}
+    summonRatings = {}
     for ID in IDs:
-        commonName[ID - 1] = User[ID]["common_name"]
-        nCopies[ID - 1] = User[ID]["num_copies"]
-        summonRatings[ID - 1] = SummonRating(ID, unitSummaries)
+        commonName[ID] = User[ID]["common_name"]
+        nCopies[ID] = User[ID]["num_copies"]
+        summonRatings[ID] = SummonRating(ID, unitSummaries)
     df = pd.DataFrame(
-        data=np.transpose([IDs, commonName, nCopies, summonRatings]),
-        columns=["ID", "common_name", "num_copies", "Summon Rating"],
+        data=np.transpose([IDs, list(commonName.values()), list(nCopies.values()), list(summonRatings.values()), dupeImprovement[0], dupeImprovement[1], dupeImprovement[2], dupeImprovement[3], dupeImprovement[4]]),
+        columns=["ID", "common_name", "num_copies", "Summon Rating", "Dupe Improvement 1", "Dupe Improvement 2", "Dupe Improvement 3", "Dupe Improvement 4", "Dupe Improvement 5"],
     )
     df.set_index("ID", inplace=True)
     with pd.ExcelWriter("SummonRating.xlsx") as writer:
