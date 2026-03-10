@@ -16,11 +16,12 @@ EZA / SEZA date is assumed 3 years after initial release / EZA
 10 = Top 5 unit in the game
 
 dis (dupe improvement score)
-2 = very little gain from dupes, i.e. high inbuilt dodge and crit
-1 = little gain from dupes, i.e. inbuilt crit or dodge
+
+2 = massive gain from dupes, i.e. no inbuilt crit or dodge
+1 = significant gain from dupes
 0 = some gain form dupes
--1 = significant gain from dupes
--2 = massive gain from dupes, i.e. no inbuilt crit or dodge
+-1 = little gain from dupes, i.e. inbuilt crit or dodge
+-2 = very little gain from dupes, i.e. high inbuilt dodge and crit
  -->
 
 <id>
@@ -38,7 +39,7 @@ dis (dupe improvement score)
 		<release_date value="2/26" />
 		<rating value="9" />
 		<eza value="EZA" />
-		<dis value="0" />
+		<dis value="1" /> 0.33
 	</_2>
 	<_3>
 		<common_name value="DFLR_STR_GT_Goku_Vegeta" />
@@ -46,6 +47,7 @@ dis (dupe improvement score)
 		<release_date value="2/26" />
 		<rating value="9" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.25
 	</_3>
 	<_4>
 		<common_name value="DFLR_TEQ_Fusion_Zamasu" />
@@ -53,6 +55,7 @@ dis (dupe improvement score)
 		<release_date value="7/24" />
 		<rating value="4" />
 		<eza value="None" />
+		<dis value="0" /> 0.45
 	</_4>
 	<_5>
 		<common_name value="DF_TEQ_Super_Trunks" />
@@ -60,6 +63,7 @@ dis (dupe improvement score)
 		<release_date value="7/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="2" /> 0.02
 	</_5>
 	<_6>
 		<common_name value="BU_STR_SS_Gohan_Youth" />
@@ -67,6 +71,7 @@ dis (dupe improvement score)
 		<release_date value="7/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_6>
 	<_7>
 		<common_name value="DF_STR_Super_17" />
@@ -74,6 +79,7 @@ dis (dupe improvement score)
 		<release_date value="3/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_7>
 	<_8>
 		<common_name value="DF_INT_Majin_Vegeta" />
@@ -81,6 +87,7 @@ dis (dupe improvement score)
 		<release_date value="3/22" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_8>
 	<_9>
 		<common_name value="DF_STR_Super_Vegeta" />
@@ -88,6 +95,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" /> 0
 	</_9>
 	<_10>
 		<common_name value="DF_AGL_Sword_Trunks" />
@@ -95,6 +103,7 @@ dis (dupe improvement score)
 		<release_date value="12/25" />
 		<rating value="6" />
 		<eza value="EZA" />
+		<dis value="-1" /> 0.55
 	</_10>
 	<_11>
 		<common_name value="DF_AGL_Kid_Gohan" />
@@ -102,6 +111,7 @@ dis (dupe improvement score)
 		<release_date value="11/25" />
 		<rating value="6" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.05
 	</_11>
 	<_12>
 		<common_name value="CLR_AGL_Omega_Shenron" />
@@ -109,6 +119,7 @@ dis (dupe improvement score)
 		<release_date value="7/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_12>
 	<_13>
 		<common_name value="CLR_STR_SS_Goku_Hatchiyak" />
@@ -116,6 +127,7 @@ dis (dupe improvement score)
 		<release_date value="1/26" />
 		<rating value="5" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.15
 	</_13>
 	<_14>
 		<common_name value="LR_AGL_Future_Gohan_Trunks" />
@@ -123,6 +135,7 @@ dis (dupe improvement score)
 		<release_date value="12/25" />
 		<rating value="3" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.01
 	</_14>
 	<_15>
 		<common_name value="DF_INT_ToP_Androids" />
@@ -130,6 +143,7 @@ dis (dupe improvement score)
 		<release_date value="10/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" /> 0.32
 	</_15>
 	<_16>
 		<common_name value="BU_STR_Universe_2" />
@@ -137,6 +151,7 @@ dis (dupe improvement score)
 		<release_date value="10/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_16>
 	<_17>
 		<common_name value="DF_AGL_Berserk_Kale" />
@@ -144,6 +159,7 @@ dis (dupe improvement score)
 		<release_date value="4/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_17>
 	<_18>
 		<common_name value="DF_PHY_God_Goku" />
@@ -151,6 +167,7 @@ dis (dupe improvement score)
 		<release_date value="3/23" />
 		<rating value="2" />
 		<eza value="None" />
+		<dis value="0" /> 0.47
 	</_18>
 	<_19>
 		<common_name value="DF_PHY_Kid_Goku" />
@@ -158,6 +175,7 @@ dis (dupe improvement score)
 		<release_date value="3/25" />
 		<rating value="4" />
 		<eza value="EZA" />
+		<dis value="1" /> 0.23
 	</_19>
 	<_20>
 		<common_name value="DF_TEQ_Fusing_Kefla" />
@@ -165,6 +183,7 @@ dis (dupe improvement score)
 		<release_date value="5/25" />
 		<rating value="5" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.47
 	</_20>
 	<_21>
 		<common_name value="DF_STR_Costume_Videl" />
@@ -172,6 +191,7 @@ dis (dupe improvement score)
 		<release_date value="8/24" />
 		<rating value="1" />
 		<eza value="EZA" />
+		<dis value="-1" /> 0.67
 	</_21>
 	<_22>
 		<common_name value="CLR_INT_Kid_Gohan" />
@@ -179,6 +199,7 @@ dis (dupe improvement score)
 		<release_date value="2/26" />
 		<rating value="8" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.49
 	</_22>
 	<_23>
 		<common_name value="CLR_AGL_Kai_Goku" />
@@ -186,6 +207,7 @@ dis (dupe improvement score)
 		<release_date value="2/26" />
 		<rating value="9" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.59
 	</_23>
 	<_24>
 		<common_name value="LR_TEQ_Universe_2" />
@@ -193,6 +215,7 @@ dis (dupe improvement score)
 		<release_date value="10/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_24>
 	<_25>
 		<common_name value="LR_STR_Bulma_Youth" />
@@ -200,6 +223,7 @@ dis (dupe improvement score)
 		<release_date value="5/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="1" /> 0.35
 	</_25>
 	<_26>
 		<common_name value="LR_AGL_SS2_Caulifla_Kale" />
@@ -207,6 +231,7 @@ dis (dupe improvement score)
 		<release_date value="4/23" />
 		<rating value="3" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.52
 	</_26>
 	<_27>
 		<common_name value="BU_TEQ_Frost_Final_Form" />
@@ -214,6 +239,7 @@ dis (dupe improvement score)
 		<release_date value="4/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_27>
 	<_28>
 		<common_name value="DF_STR_Piccolo_Gohan_Exchange" />
@@ -221,6 +247,7 @@ dis (dupe improvement score)
 		<release_date value="10/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" /> 0.45
 	</_28>
 	<_29>
 		<common_name value="BU_TEQ_Vegeta_Nappa" />
@@ -228,6 +255,7 @@ dis (dupe improvement score)
 		<release_date value="10/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_29>
 	<_30>
 		<common_name value="DF_PHY_Turles" />
@@ -235,6 +263,7 @@ dis (dupe improvement score)
 		<release_date value="5/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_30>
 	<_31>
 		<common_name value="DF_TEQ_Bardock" />
@@ -242,6 +271,7 @@ dis (dupe improvement score)
 		<release_date value="10/22" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_31>
 	<_32>
 		<common_name value="DF_INT_Yamcha" />
@@ -249,6 +279,7 @@ dis (dupe improvement score)
 		<release_date value="6/25" />
 		<rating value="5" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.43
 	</_32>
 	<_33>
 		<common_name value="DF_AGL_Captain_Ginyu" />
@@ -256,6 +287,7 @@ dis (dupe improvement score)
 		<release_date value="5/25" />
 		<rating value="1" />
 		<eza value="EZA" />
+		<dis value="1" /> 0.21
 	</_33>
 	<_34>
 		<common_name value="DF_PHY_Raditz" />
@@ -263,6 +295,7 @@ dis (dupe improvement score)
 		<release_date value="4/22" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_34>
 	<_35>
 		<common_name value="DF_INT_Hirudegarn" />
@@ -270,6 +303,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="4" />
 		<eza value="None" />
+		<dis value="-1" /> 0.62
 	</_35>
 	<_36>
 		<common_name value="DF_TEQ_23_WT_Goku" />
@@ -277,6 +311,7 @@ dis (dupe improvement score)
 		<release_date value="4/23" />
 		<rating value="2" />
 		<eza value="None" />
+		<dis value="0" /> 0.45
 	</_36>
 	<_37>
 		<common_name value="DFLR_TEQ_Orange_Piccolo" />
@@ -284,6 +319,7 @@ dis (dupe improvement score)
 		<release_date value="1/26" />
 		<rating value="6" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.10
 	</_37>
 	<_38>
 		<common_name value="DF_INT_RoF_Blues" />
@@ -291,6 +327,7 @@ dis (dupe improvement score)
 		<release_date value="2/26" />
 		<rating value="9" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.32
 	</_38>
 	<_39>
 		<common_name value="DF_STR_Goku_Gohan_Exchange" />
@@ -298,6 +335,7 @@ dis (dupe improvement score)
 		<release_date value="4/25" />
 		<rating value="2" />
 		<eza value="EZA" />
+		<dis value="1" /> 0.20
 	</_39>
 	<_40>
 		<common_name value="DF_STR_Kid_Buu" />
@@ -305,6 +343,7 @@ dis (dupe improvement score)
 		<release_date value="1/25" />
 		<rating value="3" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.1
 	</_40>
 	<_41>
 		<common_name value="DF_TEQ_Fat_Janemba" />
@@ -312,6 +351,7 @@ dis (dupe improvement score)
 		<release_date value="4/25" />
 		<rating value="1" />
 		<eza value="EZA" />
+		<dis value="1" /> 0.22
 	</_41>
 	<_42>
 		<common_name value="DF_STR_SS3_DragonFist_Goku" />
@@ -319,6 +359,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="5" />
 		<eza value="None" />
+		<dis value="-2" /> 0.73
 	</_42>
 	<_43>
 		<common_name value="DF_INT_Piccolo_Jr" />
@@ -326,6 +367,7 @@ dis (dupe improvement score)
 		<release_date value="4/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" /> 0.34
 	</_43>
 	<_44>
 		<common_name value="DFLR_PHY_Beast_Gohan" />
@@ -333,6 +375,7 @@ dis (dupe improvement score)
 		<release_date value="1/26" />
 		<rating value="6" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.17
 	</_44>
 	<_45>
 		<common_name value="DF_TEQ_GT_Pan" />
@@ -340,6 +383,7 @@ dis (dupe improvement score)
 		<release_date value="2/26" />
 		<rating value="7" />
 		<eza value="EZA" />
+		<dis value="1" /> 0.13
 	</_45>
 	<_46>
 		<common_name value="DF_AGL_Transforming_Cell" />
@@ -347,6 +391,7 @@ dis (dupe improvement score)
 		<release_date value="4/25" />
 		<rating value="5" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.34
 	</_46>
 	<_47>
 		<common_name value="DF_PHY_SS2_Goku" />
@@ -354,6 +399,7 @@ dis (dupe improvement score)
 		<release_date value="1/25" />
 		<rating value="3" />
 		<eza value="EZA" />
+		<dis value="1" /> 0.21
 	</_47>
 	<_48>
 		<common_name value="DF_AGL_Paikuhan" />
@@ -361,6 +407,7 @@ dis (dupe improvement score)
 		<release_date value="4/25" />
 		<rating value="6" />
 		<eza value="EZA" />
+		<dis value="-2" /> 0.71
 	</_48>
 	<_49>
 		<common_name value="LR_PHY_Broly_Cheelai_Lemo" />
@@ -368,6 +415,7 @@ dis (dupe improvement score)
 		<release_date value="2/24" />
 		<rating value="4" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.52
 	</_49>
 	<_50>
 		<common_name value="LR_STR_UI_Goku" />
@@ -375,6 +423,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="4" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.51
 	</_50>
 	<_51>
 		<common_name value="CLR_PHY_Metal_Cooler" />
@@ -382,6 +431,7 @@ dis (dupe improvement score)
 		<release_date value="9/22" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_51>
 	<_52>
 		<common_name value="LR_INT_Turles_Goku" />
@@ -389,6 +439,7 @@ dis (dupe improvement score)
 		<release_date value="6/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_52>
 	<_53>
 		<common_name value="CLR_PHY_SS_Future_Trunks" />
@@ -396,6 +447,7 @@ dis (dupe improvement score)
 		<release_date value="9/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="1" /> 0.32
 	</_53>
 	<_54>
 		<common_name value="DF_PHY_DBS_SS_Broly" />
@@ -403,6 +455,7 @@ dis (dupe improvement score)
 		<release_date value="1/23" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_54>
 	<_55>
 		<common_name value="DFLR_TEQ_Vegito_Blue" />
@@ -410,6 +463,7 @@ dis (dupe improvement score)
 		<release_date value="3/23" />
 		<rating value="3" />
 		<eza value="EZA" />
+		<dis value="-1" /> 0.72
 	</_55>
 	<_56>
 		<common_name value="DFLR_STR_Gogeta_Blue" />
@@ -417,6 +471,7 @@ dis (dupe improvement score)
 		<release_date value="3/23" />
 		<rating value="3" />
 		<eza value="EZA" />
+		<dis value="-1" /> 0.71
 	</_56>
 	<_57>
 		<common_name value="DFLR_PHY_Blue_Goku_Vegeta" />
@@ -424,6 +479,7 @@ dis (dupe improvement score)
 		<release_date value="2/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.23
 	</_57>
 	<_58>
 		<common_name value="DFLR_TEQ_God_Goku_Vegeta" />
@@ -431,6 +487,7 @@ dis (dupe improvement score)
 		<release_date value="3/25" />
 		<rating value="8" />
 		<eza value="EZA" />
+		<dis value="-2" /> 0.76
 	</_58>
 	<_59>
 		<common_name value="DFLR_STR_Final_Form_Cooler" />
@@ -438,6 +495,7 @@ dis (dupe improvement score)
 		<release_date value="8/22" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_59>
 	<_60>
 		<common_name value="DF_AGL_Gogeta_Blue" />
@@ -445,6 +503,7 @@ dis (dupe improvement score)
 		<release_date value="1/23" />
 		<rating value="2" />
 		<eza value="EZA" />
+		<dis value="-2" /> 0.65
 	</_60>
 	<_61>
 		<common_name value="DFLR_PHY_SS4_Gogeta" />
@@ -452,6 +511,7 @@ dis (dupe improvement score)
 		<release_date value="3/25" />
 		<rating value="7" />
 		<eza value="EZA" />
+		<dis value="1" /> 0.34
 	</_61>
 	<_62>
 		<common_name value="DFLR_AGL_SS_Goku_Vegeta" />
@@ -459,6 +519,7 @@ dis (dupe improvement score)
 		<release_date value="9/22" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_62>
 	<_63>
 		<common_name value="DFLR_AGL_Vegito_Blue" />
@@ -466,6 +527,7 @@ dis (dupe improvement score)
 		<release_date value="8/23" />
 		<rating value="1" />
 		<eza value="None" />
+		<dis value="1" /> 0.39
 	</_63>
 	<_64>
 		<common_name value="CLR_STR_SS_Future_Gohan" />
@@ -473,6 +535,7 @@ dis (dupe improvement score)
 		<release_date value="9/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="2" /> 0.24
 	</_64>
 	<_65>
 		<common_name value="BU_INT_Golden_Frieza" />
@@ -480,6 +543,7 @@ dis (dupe improvement score)
 		<release_date value="2/24" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_65>
 	<_66>
 		<common_name value="DFLR_AGL_DBS_SS_Broly" />
@@ -487,6 +551,7 @@ dis (dupe improvement score)
 		<release_date value="2/24" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="1" /> 0.31
 	</_66>
 	<_67>
 		<common_name value="CLR_PHY_Gogeta_Blue" />
@@ -494,6 +559,7 @@ dis (dupe improvement score)
 		<release_date value="2/24" />
 		<rating value="6" />
 		<eza value="None" />
+		<dis value="-2" /> 0.71
 	</_67>
 	<_68>
 		<common_name value="BU_PHY_Gohan_Teen" />
@@ -501,6 +567,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_68>
 	<_69>
 		<common_name value="BU_PHY_Super_Buu" />
@@ -508,6 +575,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_69>
 	<_70>
 		<common_name value="BU_AGL_Pan_GT" />
@@ -515,6 +583,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_70>
 	<_71>
 		<common_name value="BU_AGL_General_Rilldo" />
@@ -522,6 +591,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_71>
 	<_72>
 		<common_name value="BU_STR_SS_Cabba" />
@@ -529,6 +599,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_72>
 	<_73>
 		<common_name value="BU_STR_Hit" />
@@ -536,6 +607,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_73>
 	<_74>
 		<common_name value="BU_TEQ_Tien" />
@@ -543,6 +615,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_74>
 	<_75>
 		<common_name value="BU_TEQ_2nd_Form_Cell" />
@@ -550,6 +623,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_75>
 	<_76>
 		<common_name value="BU_INT_Kid_Gohan_Namek" />
@@ -557,6 +631,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_76>
 	<_77>
 		<common_name value="BU_INT_Namek_Vegeta" />
@@ -564,6 +639,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_77>
 	<_78>
 		<common_name value="LR_TEQ_SS3_DragonFist_Goku" />
@@ -571,6 +647,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_78>
 	<_79>
 		<common_name value="CLR_INT_SS_Trio" />
@@ -578,6 +655,7 @@ dis (dupe improvement score)
 		<release_date value="12/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_79>
 	<_80>
 		<common_name value="LR_PHY_Android_Trio" />
@@ -585,6 +663,7 @@ dis (dupe improvement score)
 		<release_date value="12/23" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.47
 	</_80>
 	<_81>
 		<common_name value="DFLR_STR_Beast_Gohan" />
@@ -592,6 +671,7 @@ dis (dupe improvement score)
 		<release_date value="2/24" />
 		<rating value="4" />
 		<eza value="None" />
+		<dis value="2" /> 0.14
 	</_81>
 	<_82>
 		<common_name value="BU_AGL_Krillin_Android18" />
@@ -599,6 +679,7 @@ dis (dupe improvement score)
 		<release_date value="2/24" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="-1" /> 0.59
 	</_82>
 	<_83>
 		<common_name value="CLR_INT_Gammas" />
@@ -606,6 +687,7 @@ dis (dupe improvement score)
 		<release_date value="2/24" />
 		<rating value="1" />
 		<eza value="None" />
+		<dis value="2" /> 0.09
 	</_83>
 	<_84>
 		<common_name value="DF_PHY_SSR_Goku_Black" />
@@ -613,6 +695,7 @@ dis (dupe improvement score)
 		<release_date value="6/24" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_84>
 	<_85>
 		<common_name value="DFLR_INT_Vegeta_Trunks" />
@@ -620,6 +703,7 @@ dis (dupe improvement score)
 		<release_date value="8/25" />
 		<rating value="2" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.01
 	</_85>
 	<_86>
 		<common_name value="DF_INT_Future_Gohan" />
@@ -627,6 +711,7 @@ dis (dupe improvement score)
 		<release_date value="9/23" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_86>
 	<_87>
 		<common_name value="BU_STR_Future_Mai" />
@@ -634,6 +719,7 @@ dis (dupe improvement score)
 		<release_date value="8/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_87>
 	<_88>
 		<common_name value="BU_PHY_Gowasu_Zamasu" />
@@ -641,6 +727,7 @@ dis (dupe improvement score)
 		<release_date value="9/23" />
 		<rating value="1" />
 		<eza value="EZA" />
+		<dis value="-1" /> 0.54
 	</_88>
 	<_89>
 		<common_name value="BU_PHY_Zamasu" />
@@ -648,6 +735,7 @@ dis (dupe improvement score)
 		<release_date value="9/23" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_89>
 	<_90>
 		<common_name value="DFLR_AGL_MUI_Goku" />
@@ -655,6 +743,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="6" />
 		<eza value="EZA" />
+		<dis value="-2" /> 0.81
 	</_90>
 	<_91>
 		<common_name value="DFLR_INT_Evolution_Blue_Vegeta" />
@@ -662,6 +751,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.10
 	</_91>
 	<_92>
 		<common_name value="BU_INT_Vados" />
@@ -669,6 +759,7 @@ dis (dupe improvement score)
 		<release_date value="4/24" />
 		<rating value="3" />
 		<eza value="EZA" />
+		<dis value="-2" /> 0.68
 	</_92>
 	<_93>
 		<common_name value="DF_STR_Transforming_Kelfa" />
@@ -676,6 +767,7 @@ dis (dupe improvement score)
 		<release_date value="4/24" />
 		<rating value="2" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.48
 	</_93>
 	<_94>
 		<common_name value="DFLR_PHY_Buutenks" />
@@ -683,6 +775,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="4" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.60
 	</_94>
 	<_95>
 		<common_name value="DFLR_STR_SS_Vegito" />
@@ -690,6 +783,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.29
 	</_95>
 	<_96>
 		<common_name value="BU_INT_Dodoria" />
@@ -697,6 +791,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_96>
 	<_97>
 		<common_name value="DF_AGL_1st_Form_Frieza" />
@@ -704,6 +799,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_97>
 	<_98>
 		<common_name value="DF_AGL_SS_Bardock" />
@@ -711,6 +807,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_98>
 	<_99>
 		<common_name value="BU_AGL_King_Vegeta" />
@@ -718,6 +815,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_99>
 	<_100>
 		<common_name value="DF_TEQ_SS_Vegeta" />
@@ -725,6 +823,7 @@ dis (dupe improvement score)
 		<release_date value="1/24" />
 		<rating value="4" />
 		<eza value="None" />
+		<dis value="-1" /> 0.54
 	</_100>
 	<_101>
 		<common_name value="DF_AGL_SS3_DragonFist_Goku" />
@@ -732,6 +831,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="1" />
 		<eza value="SEZA" />
+		<dis value="0" /> 0.39
 	</_101>
 	<_102>
 		<common_name value="DFLR_INT_SFPS4_Goku" />
@@ -739,6 +839,7 @@ dis (dupe improvement score)
 		<release_date value="6/23" />
 		<rating value="1" />
 		<eza value="None" />
+		<dis value="1" /> 0.32
 	</_102>
 	<_103>
 		<common_name value="DFLR_TEQ_Go_Bros" />
@@ -746,6 +847,7 @@ dis (dupe improvement score)
 		<release_date value="6/23" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.18
 	</_103>
 	<_104>
 		<common_name value="DF_PHY_Piccolo" />
@@ -753,6 +855,7 @@ dis (dupe improvement score)
 		<release_date value="5/23" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_104>
 	<_105>
 		<common_name value="LR_INT_Fusion_Zamasu" />
@@ -760,6 +863,7 @@ dis (dupe improvement score)
 		<release_date value="7/25" />
 		<rating value="2" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.16 
 	</_105>
 	<_106>
 		<common_name value="LR_INT_SSR_Goku_Black" />
@@ -767,6 +871,7 @@ dis (dupe improvement score)
 		<release_date value="10/23" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="1" /> 0.41
 	</_106>
 	<_107>
 		<common_name value="BU_INT_Android_16" />
@@ -774,6 +879,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_107>
 	<_108>
 		<common_name value="BU_AGL_Super_Vegeta" />
@@ -781,6 +887,7 @@ dis (dupe improvement score)
 		<release_date value="3/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_108>
 	<_109>
 		<common_name value="BU_TEQ_Katoplesa" />
@@ -788,6 +895,7 @@ dis (dupe improvement score)
 		<release_date value="4/24" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="0" />
 	</_109>
 	<_110>
 		<common_name value="DF_PHY_God_Toppo" />
@@ -795,6 +903,7 @@ dis (dupe improvement score)
 		<release_date value="4/24" />
 		<rating value="0" />
 		<eza value="None" />
+		<dis value="1" /> 0.24
 	</_110>
 	<_111>
 		<common_name value="DFLR_INT_Perfect_Cell" />
@@ -802,6 +911,7 @@ dis (dupe improvement score)
 		<release_date value="1/23" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_111>
 	<_112>
 		<common_name value="LR_INT_God_Goku" />
@@ -809,6 +919,7 @@ dis (dupe improvement score)
 		<release_date value="7/23" />
 		<rating value="1" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.51 
 	</_112>
 	<_113>
 		<common_name value="LR_PHY_Super_Janemba" />
@@ -816,6 +927,7 @@ dis (dupe improvement score)
 		<release_date value="10/24" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.24
 	</_113>
 	<_114>
 		<common_name value="LR_STR_Goku_Hit" />
@@ -823,6 +935,7 @@ dis (dupe improvement score)
 		<release_date value="5/25" />
 		<rating value="4" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.44 
 	</_114>
 	<_115>
 		<common_name value="LR_STR_Beerus_Whis" />
@@ -830,6 +943,7 @@ dis (dupe improvement score)
 		<release_date value="3/23" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" /> 0.47
 	</_115>
 	<_116>
 		<common_name value="LR_INT_Full_Power_Boujack" />
@@ -837,6 +951,7 @@ dis (dupe improvement score)
 		<release_date value="12/22" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="0" />
 	</_116>
 	<_117>
 		<common_name value="LR_TEQ_Great_Ape_Vegeta" />
@@ -844,6 +959,7 @@ dis (dupe improvement score)
 		<release_date value="2/25" />
 		<rating value="0" />
 		<eza value="EZA" />
+		<dis value="2" /> 0.22
 	</_117>
 	<_118>
 		<common_name value="LR_AGL_Nappa_Vegeta_Exchange" />
