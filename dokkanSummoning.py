@@ -13,10 +13,13 @@ DOKKAN_ACCOUNT_XML_FILE_PATH = os.path.join(CWD, "dokkanAccount.xml")
 NUM_COPIES_MAX = 5
 HiPo_dupes = ["55%", "69%", "79%", "90%", "100%"]
 # This number is a fudge factor to get sensible dupe improvement
-TUR_DI = {0: 0.35, 1: 0.2, 2: 0.25, 3: 0.1, 4: 0.1, 5: 0}
-LR_DI = {0: 0.5, 1: 0.15, 2: 0.25, 3: 0.05, 4: 0.05, 5: 0}
-TUR_D = {0: 0, 1: 0.35, 2: 0.55, 3: 0.8, 4: 0.9, 5 :1}
-LR_D = {0: 0, 1: 0.5, 2: 0.65, 3: 0.9, 4: 0.95, 5: 1}
+NUM_COPIES = [0, 1, 2, 3, 4, 5]
+DI_DICT = {-2: dict(zip(NUM_COPIES, [0.82, 0.06, 0.08, 0.02, 0.02, 0])),
+     -1: dict(zip(NUM_COPIES, [0.58, 0.14, 0.19, 0.05, 0.04, 0])),
+      0: dict(zip(NUM_COPIES, [0.46, 0.18, 0.24, 0.07, 0.05, 0])),
+      1: dict(zip(NUM_COPIES, [0.28, 0.24, 0.32, 0.09, 0.07, 0])),
+      2: dict(zip(NUM_COPIES, [0.1, 0.3, 0.4, 0.12, 0.08, 0]))
+      }
 
 def parseDokkanAccountXML(dokkanAccountXmlFilePath):
     dokkanAccountXML = ET.parse(dokkanAccountXmlFilePath)
@@ -33,6 +36,8 @@ def parseDokkanAccountXML(dokkanAccountXmlFilePath):
                 unitDict[field.tag] = dt.datetime.strptime(field.attrib["value"], "%m/%y")
             elif field.tag == "rating":
                 unitDict[field.tag] = int(field.attrib["value"])
+            elif field.tag == "dis":
+                unitDict[field.tag] = int(field.attrib["value"])
             else:
                 unitDict[field.tag] = field.attrib["value"]
         dokkanAccountDict[_id] = unitDict
@@ -48,6 +53,7 @@ def SummonRating(ID):
     EZADiscountFactor = 1/3
     exclusivity = User[ID]["common_name"].split("_")[0]
     eza = User[ID]["eza"]
+    dis = User[ID]["dis"]
     if User[ID]["common_name"] == "DF_TEQ_Golden_Frieza":
         exclusivity = "DF"
     if exclusivity in ["DFLR", "DF", "CLR", "LR"]:
@@ -55,9 +61,7 @@ def SummonRating(ID):
     else:
         rarityScore = 3
     
-    rarity = User[ID]["common_name"].split("_")[0]
-    DI = LR_DI if rarity in ["LR", "DFLR", "CLR"] else TUR_DI
-    D = LR_D if rarity in ["LR", "DFLR", "CLR"] else TUR_D
+    DI = DI_DICT[dis]
     EZADate = User[ID]["release_date"]
     if eza == "EZA":
         EZA = 6 / 7
@@ -73,8 +77,6 @@ def SummonRating(ID):
         timeUntilEZA = relativedelta(EZADate, now)
         timeUntilEZA_years = max(timeUntilEZA.years + timeUntilEZA.months/12 + timeUntilEZA.days/365, 0)
         futureEZA = rarityScore * EZADiscountFactor ** timeUntilEZA_years * DI[nCopies]
-    for i in range(NUM_COPIES_MAX):
-        evals[i] = User[ID]["rating"] * D[i + 1]
     if nCopies == 5:
         dupeImprovement = 0
     else:
