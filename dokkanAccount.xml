@@ -1487,7 +1487,7 @@ dis (dupe improvement score) from quintiles
 		<release_date value="3/20" />
 		<rating value="1" />
 		<eza value="None" />
-		<dis value="-2" /> 0.67
+		<dis value="-2" />
 	</_183>
 	<_184>
 		<common_name value="BU_INT_Dark_Masked_King" />
@@ -1735,7 +1735,7 @@ dis (dupe improvement score) from quintiles
 		<release_date value="6/24" />
 		<rating value="2" />
 		<eza value="None" />
-		<dis value="1" /> 0.32
+		<dis value="1" />
 	</_214>
 	<_215>
 		<common_name value="F2P_AGL_RoF_Krillin" />
@@ -1743,7 +1743,7 @@ dis (dupe improvement score) from quintiles
 		<release_date value="5/24" />
 		<rating value="1" />
 		<eza value="None" />
-		<dis value="-2" /> 0.63
+		<dis value="-2" />
 	</_215>
 	<_216>
 		<common_name value="BU_STR_Dyspo" />
@@ -1751,7 +1751,7 @@ dis (dupe improvement score) from quintiles
 		<release_date value="6/24" />
 		<rating value="1" />
 		<eza value="None" />
-		<dis value="-1" /> 0.59
+		<dis value="-1" />
 	</_216>
 	<_217>
 		<common_name value="LR_INT_Universe_7" />
@@ -1863,7 +1863,7 @@ dis (dupe improvement score) from quintiles
 		<release_date value="7/24" />
 		<rating value="7" />
 		<eza value="None" />
-		<dis value="-2" /> 0.83
+		<dis value="-2" />
 	</_230>
 	<_231>
 		<common_name value="LR_TEQ_Full_Power_Jiren" />
@@ -1871,7 +1871,7 @@ dis (dupe improvement score) from quintiles
 		<release_date value="7/24" />
 		<rating value="3" />
 		<eza value="EZA" />
-		<dis value="1" /> 0.53
+		<dis value="1" />
 	</_231>
 	<_232>
 		<common_name value="BU_AGL_Bulma_Bunny" />
@@ -1879,7 +1879,7 @@ dis (dupe improvement score) from quintiles
 		<release_date value="7/24" />
 		<rating value="2" />
 		<eza value="None" />
-		<dis value="-1" /> 0.54
+		<dis value="-1" />
 	</_232>
 	<_233>
 		<common_name value="DF_STR_Master_Roshi" />
@@ -3732,4 +3732,12 @@ dis (dupe improvement score) from quintiles
 		<eza value="None" />
 		<dis value="-1" />
 	</_463>
+	<_464>
+		<common_name value="DFLR_PHY_Majin_Vegeta_Goku" />
+		<num_copies value="0" />
+		<release_date value="3/26" />
+		<rating value="9" />
+		<eza value="None" />
+		<dis value="-2" />
+	</_464>
 </id>
