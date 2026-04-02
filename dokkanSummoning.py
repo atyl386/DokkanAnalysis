@@ -180,6 +180,12 @@ class Banner:
 
 
 SummonRatings()
+VegetaNappa = Banner([466, 465, 437, 368, 34, 33, 84, 233, 398, 32], "red", gFeaturedEvery3=True, summonPoints=True)
+print(VegetaNappa.summonRatings)
+print(VegetaNappa.summonScore)
+MajinVegeta = Banner([464, 463, 8, 401, 345, 307, 100], "red", threePlus1=True)
+print(MajinVegeta.summonRatings)
+print(MajinVegeta.summonScore)
 Dabura = Banner([462, 461, 424, 409, 460, 351, 282, 110, 311, 312], "red", gFeaturedEvery3=True)
 print(Dabura.summonRatings)
 print(Dabura.summonScore)
