@@ -180,6 +180,9 @@ class Banner:
 
 
 SummonRatings()
+SpecialBeamCannon = Banner([467, 435, 468, 460, 460, 324, 356, 303, 247, 137], "yellow", gFeaturedEvery3=True, summonPoints=True)
+print(SpecialBeamCannon.summonRatings)
+print(SpecialBeamCannon.summonScore)
 VegetaNappa = Banner([466, 465, 437, 368, 34, 33, 84, 233, 398, 32], "red", gFeaturedEvery3=True, summonPoints=True)
 print(VegetaNappa.summonRatings)
 print(VegetaNappa.summonScore)

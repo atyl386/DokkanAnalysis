@@ -3752,8 +3752,24 @@ dis (dupe improvement score) from quintiles
 		<common_name value="DF_AGL_Vegeta_Nappa" />
 		<num_copies value="0" />
 		<release_date value="4/26" />
-		<rating value="8" /> <!-- Generous rating -->
+		<rating value="9" /> <!-- Generous rating -->
 		<eza value="None" />
 		<dis value="2" />
 	</_466>
+	<_467>
+		<common_name value="LR_STR_Special_Beam_Cannon" />
+		<num_copies value="0" />
+		<release_date value="4/26" />
+		<rating value="9" /> <!-- Generous rating -->
+		<eza value="None" />
+		<dis value="-2" />
+	</_467>
+	<_468>
+		<common_name value="LR_PHY_Special_Beam_Cannon" />
+		<num_copies value="3" />
+		<release_date value="4/26" />
+		<rating value="8" /> <!-- Generous rating -->
+		<eza value="None" />
+		<dis value="2" /> <!-- Generous rating -->
+	</_468>
 </id>
