@@ -3772,4 +3772,28 @@ dis (dupe improvement score) from quintiles
 		<eza value="None" />
 		<dis value="2" /> <!-- Generous rating -->
 	</_468>
+	<_469>
+		<common_name value="BU_AGL_Towa_Mira" />
+		<num_copies value="0" />
+		<release_date value="4/26" />
+		<rating value="3" />
+		<eza value="None" />
+		<dis value="2" />
+	</_469>
+	<_470>
+		<common_name value="BU_INT_Xeno_Trunks" />
+		<num_copies value="0" />
+		<release_date value="4/26" />
+		<rating value="3" />
+		<eza value="None" />
+		<dis value="0" />
+	</_470>
+	<_471>
+		<common_name value="LR_STR_Supervillain_God_Vegeta" />
+		<num_copies value="0" />
+		<release_date value="4/26" />
+		<rating value="8" /> <!-- Generous rating -->
+		<eza value="None" />
+		<dis value="0" />
+	</_471>
 </id>
