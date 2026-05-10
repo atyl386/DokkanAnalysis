@@ -180,6 +180,12 @@ class Banner:
 
 
 SummonRatings()
+GodGoku = Banner([472, 445, 358, 320, 43, 47, 38], "red", threePlus1=True, summonPoints=False)
+print(GodGoku.summonRatings)
+print(GodGoku.summonScore)
+Beerus = Banner([473, 444, 359, 321, 36, 40, 298], "red", threePlus1=True, summonPoints=True)
+print(Beerus.summonRatings)
+print(Beerus.summonScore)
 SupervillainVegeta = Banner([471, 470, 469, 414, 162, 5, 17], "red", threePlus1=True, summonPoints=True)
 print(SupervillainVegeta.summonRatings)
 print(SupervillainVegeta.summonScore)

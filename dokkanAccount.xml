@@ -59,7 +59,7 @@ dis (dupe improvement score) from quintiles
 	</_4>
 	<_5>
 		<common_name value="DF_TEQ_Super_Trunks" />
-		<num_copies value="4" />
+		<num_copies value="5" />
 		<release_date value="7/23" />
 		<rating value="0" />
 		<eza value="None" />
@@ -323,7 +323,7 @@ dis (dupe improvement score) from quintiles
 	</_37>
 	<_38>
 		<common_name value="DF_INT_RoF_Blues" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<release_date value="2/26" />
 		<rating value="9" />
 		<eza value="EZA" />
@@ -1315,7 +1315,7 @@ dis (dupe improvement score) from quintiles
 	</_161>
 	<_162>
 		<common_name value="DF_AGL_Android_21_Good" />
-		<num_copies value="3" />
+		<num_copies value="4" />
 		<release_date value="11/23" />
 		<rating value="0" />
 		<eza value="None" />
@@ -3582,7 +3582,7 @@ dis (dupe improvement score) from quintiles
 	</_444>
 	<_445>
 		<common_name value="DF_STR_Gamma2_Piccolo" />
-		<num_copies value="1" />
+		<num_copies value="3" />
 		<release_date value="12/25" />
 		<rating value="8" />
 		<eza value="None" />
@@ -3796,4 +3796,20 @@ dis (dupe improvement score) from quintiles
 		<eza value="None" />
 		<dis value="0" />
 	</_471>
+	<_472>
+		<common_name value="DF_AGL_God_Goku" />
+		<num_copies value="0" />
+		<release_date value="5/26" />
+		<rating value="9" />
+		<eza value="None" />
+		<dis value="0" />
+	</_472>
+	<_473>
+		<common_name value="DF_INT_Beerus" />
+		<num_copies value="0" />
+		<release_date value="5/26" />
+		<rating value="10" /> <!-- Generous rating -->
+		<eza value="None" />
+		<dis value="1" />
+	</_473>
 </id>
