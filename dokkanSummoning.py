@@ -180,6 +180,9 @@ class Banner:
 
 
 SummonRatings()
+AlternateArt = Banner([18, 18, 161, 161], "red", gFeatured=True)
+print(AlternateArt.summonRatings)
+print(AlternateArt.summonScore)
 GodGoku = Banner([472, 445, 358, 320, 43, 47, 38], "red", threePlus1=True, summonPoints=False)
 print(GodGoku.summonRatings)
 print(GodGoku.summonScore)
