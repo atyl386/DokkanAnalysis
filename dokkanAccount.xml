@@ -1299,7 +1299,7 @@ dis (dupe improvement score) from quintiles
 	</_159>
 	<_160>
 		<common_name value="DF_INT_Fat_Buu" />
-		<num_copies value="1" />
+		<num_copies value="2" />
 		<release_date value="4/24" />
 		<rating value="3" />
 		<eza value="None" />
@@ -3812,4 +3812,20 @@ dis (dupe improvement score) from quintiles
 		<eza value="None" />
 		<dis value="1" />
 	</_473>
+	<_474>
+		<common_name value="BU_PHY_King_Cold" />
+		<num_copies value="1" />
+		<release_date value="5/26" />
+		<rating value="5" /> <!-- Generous rating -->
+		<eza value="None" />
+		<dis value="-1" />
+	</_474>
+	<_475>
+		<common_name value="DF_TEQ_Metal_Cooler_Army" />
+		<num_copies value="0" />
+		<release_date value="5/26" />
+		<rating value="9" /> <!-- Generous rating -->
+		<eza value="None" />
+		<dis value="-1" />
+	</_475>
 </id>

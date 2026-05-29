@@ -180,6 +180,9 @@ class Banner:
 
 
 SummonRatings()
+MetalCooler = Banner([475, 474, 343, 160, 456, 97, 28, 15, 30, 7], "red", gFeaturedEvery3=True)
+print(MetalCooler.summonRatings)
+print(MetalCooler.summonScore)
 AlternateArt = Banner([18, 18, 161, 161], "red", gFeatured=True)
 print(AlternateArt.summonRatings)
 print(AlternateArt.summonScore)
