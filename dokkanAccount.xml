@@ -1219,7 +1219,7 @@ dis (dupe improvement score) from quintiles
 	</_149>
 	<_150>
 		<common_name value="DF_AGL_Gamma_2" />
-		<num_copies value="2" />
+		<num_copies value="3" />
 		<release_date value="11/23" />
 		<rating value="6" />
 		<eza value="EZA" />
@@ -3828,4 +3828,20 @@ dis (dupe improvement score) from quintiles
 		<eza value="None" />
 		<dis value="-1" />
 	</_475>
+	<_476>
+		<common_name value="BU_INT_Super_Hero_Piccolo" />
+		<num_copies value="0" />
+		<release_date value="6/26" />
+		<rating value="4" /> <!-- Generous rating -->
+		<eza value="None" />
+		<dis value="-2" />
+	</_476>
+	<_477>
+		<common_name value="DFLR_TEQ_Beast_Gohan" />
+		<num_copies value="0" />
+		<release_date value="6/26" />
+		<rating value="9" /> <!-- Generous rating -->
+		<eza value="None" />
+		<dis value="2" />
+	</_477>
 </id>

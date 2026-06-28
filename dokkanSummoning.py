@@ -180,6 +180,9 @@ class Banner:
 
 
 SummonRatings()
+BeastGohan = Banner([477, 476, 462, 59, 62, 218, 85], "red", summonPoints=True, threePlus1=True)
+print(BeastGohan.summonRatings)
+print(BeastGohan.summonScore)
 MetalCooler = Banner([475, 474, 343, 160, 456, 97, 28, 15, 30, 7], "red", gFeaturedEvery3=True)
 print(MetalCooler.summonRatings)
 print(MetalCooler.summonScore)
