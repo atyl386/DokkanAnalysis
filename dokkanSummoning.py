@@ -180,6 +180,9 @@ class Banner:
 
 
 SummonRatings()
+Tanabata2026 = Banner([477, 476, 450, 458, 44, 37, 81, 66, 58, 61, 134, 150, 460, 38, 45, 164, 60, 54], "red", summonPoints=False, threePlus1=True)
+print(Tanabata2026.summonRatings)
+print(Tanabata2026.summonScore)
 BeastGohan = Banner([477, 476, 462, 59, 62, 218, 85], "red", summonPoints=True, threePlus1=True)
 print(BeastGohan.summonRatings)
 print(BeastGohan.summonScore)
