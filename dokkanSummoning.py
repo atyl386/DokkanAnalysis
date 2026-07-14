@@ -180,6 +180,9 @@ class Banner:
 
 
 SummonRatings()
+CellMax2026 = Banner([478, 410, 1, 51, 423, 411, 396, 396, 396, 396], "cyan", SSR_rate=0.2, threePlus1=True, summonPoints=True)
+print(CellMax2026.summonRatings)
+print(CellMax2026.summonScore)
 Tanabata2026 = Banner([477, 476, 450, 458, 44, 37, 81, 66, 58, 61, 134, 150, 460, 38, 45, 164, 60, 54], "red", summonPoints=False, threePlus1=True)
 print(Tanabata2026.summonRatings)
 print(Tanabata2026.summonScore)

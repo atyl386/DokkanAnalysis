@@ -28,10 +28,10 @@ dis (dupe improvement score) from quintiles
 	<_1>
 		<common_name value="CLR_TEQ_SS_Goku" />
 		<num_copies value="4" />
-		<release_date value="8/22" />
-		<rating value="0" />
-		<eza value="None" />
-		<dis value="0" />
+		<release_date value="7/26" />
+		<rating value="8" />
+		<eza value="EZA" />
+		<dis value="1" />
 	</_1>
 	<_2>
 		<common_name value="DFLR_PHY_Buu_Goku_Vegeta" />
@@ -428,10 +428,10 @@ dis (dupe improvement score) from quintiles
 	<_51>
 		<common_name value="CLR_PHY_Metal_Cooler" />
 		<num_copies value="4" />
-		<release_date value="9/22" />
-		<rating value="0" />
-		<eza value="None" />
-		<dis value="0" />
+		<release_date value="7/26" />
+		<rating value="8" />
+		<eza value="EZA" />
+		<dis value="1" />
 	</_51>
 	<_52>
 		<common_name value="LR_INT_Turles_Goku" />
@@ -3844,4 +3844,12 @@ dis (dupe improvement score) from quintiles
 		<eza value="None" />
 		<dis value="2" />
 	</_477>
+	<_478>
+		<common_name value="CLR_AGL_Cell_Max" />
+		<num_copies value="0" />
+		<release_date value="7/26" />
+		<rating value="8" />
+		<eza value="None" />
+		<dis value="1" />
+	</_478>
 </id>
