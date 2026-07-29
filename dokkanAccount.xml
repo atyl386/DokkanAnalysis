@@ -300,9 +300,9 @@ dis (dupe improvement score) from quintiles
 	<_35>
 		<common_name value="DF_INT_Hirudegarn" />
 		<num_copies value="1" />
-		<release_date value="1/24" />
-		<rating value="4" />
-		<eza value="None" />
+		<release_date value="7/26" />
+		<rating value="8" />
+		<eza value="EZA" />
 		<dis value="-2" />
 	</_35>
 	<_36>
@@ -355,10 +355,10 @@ dis (dupe improvement score) from quintiles
 	</_41>
 	<_42>
 		<common_name value="DF_STR_SS3_DragonFist_Goku" />
-		<num_copies value="2" />
-		<release_date value="1/24" />
-		<rating value="5" />
-		<eza value="None" />
+		<num_copies value="3" />
+		<release_date value="7/26" />
+		<rating value="8" />
+		<eza value="EZA" />
 		<dis value="-2" />
 	</_42>
 	<_43>
@@ -827,7 +827,7 @@ dis (dupe improvement score) from quintiles
 	</_100>
 	<_101>
 		<common_name value="DF_AGL_SS3_DragonFist_Goku" />
-		<num_copies value="3" />
+		<num_copies value="5" />
 		<release_date value="3/24" />
 		<rating value="1" />
 		<eza value="SEZA" />
@@ -3414,7 +3414,7 @@ dis (dupe improvement score) from quintiles
 	</_423>
 	<_424>
 		<common_name value="DF_TEQ_SS4_Goku_Mini_Daima" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<release_date value="10/25" />
 		<rating value="7" />
 		<eza value="None" />
@@ -3852,4 +3852,20 @@ dis (dupe improvement score) from quintiles
 		<eza value="None" />
 		<dis value="1" />
 	</_478>
+	<_479>
+		<common_name value="BU_AGL_Supreme_Kai_DAIMA" />
+		<num_copies value="1" />
+		<release_date value="7/26" />
+		<rating value="4" />
+		<eza value="None" />
+		<dis value="-1" />
+	</_479>
+	<_480>
+		<common_name value="DF_PHY_SS3_Goku_Mini_DAIMA" />
+		<num_copies value="0" />
+		<release_date value="7/26" />
+		<rating value="9" /> <!-- Generous rating -->
+		<eza value="None" />
+		<dis value="-1" />
+	</_480>
 </id>

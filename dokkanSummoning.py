@@ -180,6 +180,9 @@ class Banner:
 
 
 SummonRatings()
+DaimaSS3GokuMini = Banner([480, 479, 466, 424, 345, 42, 35, 162, 19, 101], "red", gFeaturedEvery3=True)
+print(DaimaSS3GokuMini.summonRatings)
+print(DaimaSS3GokuMini.summonScore)
 CellMax2026 = Banner([478, 410, 1, 51, 423, 411, 396, 396, 396, 396], "cyan", SSR_rate=0.2, threePlus1=True, summonPoints=True)
 print(CellMax2026.summonRatings)
 print(CellMax2026.summonScore)
