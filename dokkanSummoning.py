@@ -180,6 +180,9 @@ class Banner:
 
 
 SummonRatings()
+PeppyGals = Banner([482, 481, 483, 484, 173, 405, 404], "blue", gFeatured=True)
+print(PeppyGals.summonRatings)
+print(PeppyGals.summonScore)
 DaimaSS3GokuMini = Banner([480, 479, 466, 424, 345, 42, 35, 162, 19, 101], "red", gFeaturedEvery3=True)
 print(DaimaSS3GokuMini.summonRatings)
 print(DaimaSS3GokuMini.summonScore)

@@ -3254,7 +3254,7 @@ dis (dupe improvement score) from quintiles
 	</_403>
 	<_404>
 		<common_name value="BU_TEQ_Ranfan" />
-		<num_copies value="0" />
+		<num_copies value="1" />
 		<release_date value="8/25" />
 		<rating value="2" />
 		<eza value="None" />
@@ -3868,4 +3868,36 @@ dis (dupe improvement score) from quintiles
 		<eza value="None" />
 		<dis value="0" />
 	</_480>
+	<_481>
+		<common_name value="BU_INT_Dr_Arinsu" />
+		<num_copies value="3" />
+		<release_date value="8/26" />
+		<rating value="8" />
+		<eza value="None" />
+		<dis value="1" />
+	</_481>
+	<_482>
+		<common_name value="BU_STR_Panzy" />
+		<num_copies value="0" />
+		<release_date value="8/26" />
+		<rating value="6" />
+		<eza value="None" />
+		<dis value="0" />
+	</_482>
+	<_483>
+		<common_name value="BU_AGL_Mamba" />
+		<num_copies value="4" />
+		<release_date value="8/26" />
+		<rating value="3" /> <!-- Generous rating -->
+		<eza value="EZA" />
+		<dis value="2" />
+	</_483>
+	<_484>
+		<common_name value="BU_STR_Android_18" />
+		<num_copies value="5" />
+		<release_date value="8/26" />
+		<rating value="4" /> <!-- Generous rating -->
+		<eza value="EZA" />
+		<dis value="2" />
+	</_484>
 </id>
