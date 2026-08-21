@@ -180,6 +180,12 @@ class Banner:
 
 
 SummonRatings()
+RadiantSummerCarnival = Banner([443, 22, 23, 79, 435, 370, 355], "cyan", discount=2)
+print(RadiantSummerCarnival.summonRatings)
+print(RadiantSummerCarnival.summonScore)
+RadiantSummerDF = Banner([464, 409, 2, 3, 368, 233, 100], "red", gFeatured=True)
+print(RadiantSummerDF.summonRatings)
+print(RadiantSummerDF.summonScore)
 PeppyGals = Banner([482, 481, 483, 484, 173, 405, 404], "blue", gFeatured=True)
 print(PeppyGals.summonRatings)
 print(PeppyGals.summonScore)
